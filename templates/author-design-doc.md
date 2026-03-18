@@ -15,6 +15,7 @@ params:
   project_name: "Name of the project or feature"
   requirements_doc: "The requirements document content (output of author-requirements-doc)"
   technical_context: "Existing architecture, tech stack, constraints, team conventions"
+  audience: "Who will read the output — e.g., 'expert engineers', 'project stakeholders'"
 input_contract:
   type: requirements-document
   description: >

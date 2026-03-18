@@ -15,6 +15,7 @@ params:
   project_name: "Name of the project or feature"
   requirements_doc: "The requirements document content"
   design_doc: "The design document content (optional but recommended)"
+  audience: "Who will read the output — e.g., 'QA engineers', 'development team'"
 input_contract:
   type: requirements-document
   description: >

@@ -88,6 +88,13 @@ protocols:
         Requirements extraction from natural language. Produces numbered,
         atomic, testable requirements with RFC 2119 keywords.
 
+    - name: iterative-refinement
+      path: protocols/reasoning/iterative-refinement.md
+      description: >
+        Protocol for revising documents through feedback cycles while
+        preserving structural integrity, numbering, cross-references,
+        and internal consistency.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -142,10 +149,22 @@ templates:
       path: templates/author-requirements-doc.md
       description: >
         Generate a requirements document from a natural language description.
+        Single-shot generation. For complex/ambiguous projects, use
+        interactive-design instead.
       persona: software-architect
-      protocols: [anti-hallucination, requirements-elicitation]
+      protocols: [anti-hallucination, self-verification, requirements-elicitation]
       format: requirements-doc
       pipeline_position: 1
+
+    - name: interactive-design
+      path: templates/interactive-design.md
+      description: >
+        Multi-phase interactive design session. Phase 1: reason, question,
+        and challenge before generating. Phase 2: generate when told.
+        Phase 3: iterative refinement. Use for complex or ambiguous projects.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
+      format: requirements-doc
 
     - name: author-design-doc
       path: templates/author-design-doc.md

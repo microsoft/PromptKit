@@ -16,6 +16,7 @@ params:
   project_name: "Name of the project or feature"
   description: "Natural language description of what needs to be built"
   context: "Additional context — existing system, constraints, stakeholders"
+  audience: "Who will read the output — e.g., 'expert engineers', 'project stakeholders'"
 input_contract: null
 output_contract:
   type: requirements-document
