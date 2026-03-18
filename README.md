@@ -31,7 +31,7 @@ cd promptkit
 
 # Start a session — Copilot reads bootstrap.md, loads the manifest,
 # and asks what you need.
-gh copilot "Read and execute bootstrap.md"
+gh copilot -i "Read and execute bootstrap.md"
 ```
 
 #### What a session looks like
