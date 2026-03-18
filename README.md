@@ -14,7 +14,7 @@ Designed for software engineers who design, develop, and debug software.
 
 - **Git** — [Install Git](https://git-scm.com/)
 
-The sections below require one of the following LLM CLI tools:
+To follow the Quick Start using a CLI, you’ll need one of the following LLM CLI tools:
 
 - **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), then run `gh extension install github/gh-copilot`
 - **Claude Code** — [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
