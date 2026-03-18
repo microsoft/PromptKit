@@ -12,7 +12,7 @@ include all required metadata.
 
 ```bash
 cd promptkit
-copilot "Read bootstrap.md and execute the prompt"
+copilot -i "Read bootstrap.md and execute the prompt"
 # Then: "I want to add a template for <your use case>"
 ```
 

@@ -118,7 +118,7 @@ The preferred workflow is to use PromptKit's own `extend-library` template
 (interactive mode) rather than hand-authoring:
 
 ```bash
-copilot "Read bootstrap.md and execute the prompt"
+copilot -i "Read bootstrap.md and execute the prompt"
 # Then: "I want to add a template for <your use case>"
 ```
 
