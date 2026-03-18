@@ -45,12 +45,10 @@ You are the **composition engine** for PromptKit. Your job is to:
    format), then **execute the template directly in this session**. Begin
    the interactive workflow (e.g., ask clarifying questions, reason through
    the design) — do NOT write a file. Skip steps 5b–10.
-5b. **Single-shot mode**: Ask for the required parameters defined in the
-   template's `params` field.
-6. **Ask about the output mode.** Before assembling, ask the user how they
-   want to receive the output:
+5b. **Single-shot mode**: Ask about the output mode before collecting
+   template parameters (since the chosen mode may switch the active template):
    - **(a) Raw prompt** *(default)*: A Markdown file to load into a fresh
-     LLM session for this specific task.
+     LLM session for this specific task. Keep the current template.
    - **(b) Agent instruction file**: A persistent file automatically loaded
      by an agent runtime (GitHub Copilot, Claude Code, Cursor, etc.) that
      encodes the selected persona and protocols as reusable, standing
@@ -70,6 +68,10 @@ You are the **composition engine** for PromptKit. Your job is to:
      - Assemble using the `agent-instructions` format. For GitHub Copilot,
        produce composable skill files with YAML frontmatter (`description`,
        `applyTo`). For other platforms, produce a single combined file.
+6. **Collect parameters.** Ask for the required parameters defined in the
+   active template's `params` field (this is the template selected in step 3,
+   or the `author-agent-instructions` template if the user chose output
+   mode (b) in step 5b).
 7. **Ask for the target project directory.** The output files must be written
    to the **user's project**, not to the PromptKit repository. Ask the user
    for the path to their target project root. Suggest a sensible default

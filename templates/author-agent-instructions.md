@@ -18,7 +18,7 @@ params:
   base_persona: "PromptKit persona to use as the base identity (e.g., 'systems-engineer', 'security-auditor', 'software-architect', 'devops-engineer'). Specify 'custom' to define a new persona inline."
   selected_protocols: "Comma-separated list of PromptKit protocols to encode as standing instructions (e.g., 'anti-hallucination, self-verification, memory-safety-c'). Leave blank for persona-only output."
   behaviors: "Description of the reusable behaviors and skills to encode. What should the agent always do, never do, and how should it reason in this context?"
-  scope: "Scope of the instructions: 'project' (per-repository file) or 'user' (global agent settings, if platform supports it). Defaults to 'project'."
+  scope: "Scope of the instructions. Currently only 'project' (per-repository file) is supported."
   context: "Additional project or domain context to embed in the instruction file (e.g., tech stack, coding conventions, team preferences)."
 input_contract: null
 output_contract:
