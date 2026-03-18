@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) PromptKit Contributors
+
+name: Validate Manifest
+
+on:
+  push:
+    paths:
+      - 'manifest.yaml'
+      - 'templates/**'
+      - 'tests/validate-manifest.py'
+  pull_request:
+    paths:
+      - 'manifest.yaml'
+      - 'templates/**'
+      - 'tests/validate-manifest.py'
+
+jobs:
+  validate-manifest:
+    name: Check manifest ↔ template protocol sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate manifest protocols
+        run: python tests/validate-manifest.py
