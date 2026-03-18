@@ -16,7 +16,7 @@ Designed for software engineers who design, develop, and debug software.
 
 To follow the Quick Start using a CLI, you’ll need one of the following LLM CLI tools:
 
-- **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), then run `gh extension install github/gh-copilot`
+- **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), authenticate with `gh auth login`, ensure Copilot access is enabled for your account/organization, then run `gh extension install github/gh-copilot`
 - **Claude Code** — [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
 Not using a CLI tool? See [Using with any LLM (manual)](#using-with-any-llm-manual).
