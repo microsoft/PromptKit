@@ -4,11 +4,10 @@
 ---
 name: author-agent-instructions
 description: >
-  Assemble a set of PromptKit components (persona, protocols) into a
-  persistent agent instruction file for a specific agent runtime. Produces
-  ready-to-commit files for GitHub Copilot, Claude Code, Cursor, or all
-  supported platforms. Use this template to create reusable, version-controlled
-  agent behaviors instead of ephemeral one-off prompts.
+  Assemble PromptKit components (persona, protocols) into composable
+  agent skill files. For GitHub Copilot, produces individual
+  .github/instructions/*.instructions.md files with applyTo targeting.
+  Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
 persona: spl-contributor
 protocols:
   - guardrails/anti-hallucination
@@ -25,17 +24,19 @@ input_contract: null
 output_contract:
   type: agent-instruction-file
   description: >
-    One or more ready-to-commit agent instruction files at the correct
-    path for each target platform, containing condensed persona and protocol
-    guidance as continuous, natural Markdown.
+    One or more ready-to-commit agent instruction files. For GitHub Copilot,
+    produces composable skill files under .github/instructions/ with
+    applyTo targeting. For Claude Code and Cursor, produces a single
+    combined file.
 ---
 
-# Task: Author Agent Instruction File
+# Task: Author Agent Instruction Files
 
-You are tasked with assembling PromptKit components into a persistent agent
-instruction file for the specified platform(s). The output will be
-version-controlled and automatically loaded by the agent runtime — it is
-**not** a one-off prompt.
+You are tasked with assembling PromptKit components into persistent agent
+instruction files for the specified platform(s). For GitHub Copilot, you
+will produce **composable skill files** — one per logical concern — that
+the runtime loads and combines automatically. The output will be
+version-controlled and automatically loaded by the agent runtime.
 
 ## Inputs
 
@@ -63,13 +64,42 @@ version-controlled and automatically loaded by the agent runtime — it is
 2. **Read each protocol** listed in `{{selected_protocols}}`:
    - Locate the file under `protocols/` using the manifest.
    - Understand what each protocol enforces and how it interacts with the persona.
+   - Note the protocol's category (`guardrails/`, `analysis/`, `reasoning/`)
+     and any language specificity — these determine `applyTo` targeting.
 
 3. **Understand the target platform(s)**:
-   - Review the Platform Notes in the `agent-instructions` format spec for
-     each target platform.
+   - Review the Platform Reference in the `agent-instructions` format spec.
    - Note any size constraints or syntax restrictions that apply.
 
-### Step 2: Condense and Adapt the Content
+### Step 2: Plan the Skill Decomposition (GitHub Copilot)
+
+For GitHub Copilot output, determine how to split the content into
+composable skill files. The recommended decomposition:
+
+1. **Persona + guardrails skill** — One file containing:
+   - Condensed persona identity (3–8 sentences)
+   - All guardrail protocols (anti-hallucination, self-verification,
+     operational-constraints)
+   - `applyTo: '**'` (applies to all files)
+   - Filename: `<persona-name>.instructions.md`
+
+2. **One skill file per analysis/reasoning protocol** — Each containing:
+   - The protocol's phases and checks as standing directives
+   - `applyTo` set to the protocol's natural scope:
+     - Language-specific → `**/*.c, **/*.h` (or appropriate extensions)
+     - Domain-specific → relevant path patterns
+     - General → `**`
+   - Filename: `<protocol-name>.instructions.md`
+
+3. **Project context skill** *(optional, if `{{context}}` is non-empty)* —
+   - Project-specific conventions, tech stack, team preferences
+   - `applyTo: '**'`
+   - Filename: `project-context.instructions.md`
+
+For Claude Code and Cursor, combine all content into a single file (these
+platforms do not support per-file skill targeting).
+
+### Step 3: Condense and Adapt the Content
 
 Transform the loaded components into agent instruction prose:
 
@@ -89,22 +119,22 @@ Transform the loaded components into agent instruction prose:
    - Ensure they do not conflict with the persona or protocol directives
 
 4. **Incorporate the project context** from `{{context}}`:
-   - Include tech stack, conventions, or constraints as a short "Project Context"
-     section at the end of the instruction file
+   - Include tech stack, conventions, or constraints
 
 5. **Check for conflicts**:
    - Verify no two directives contradict each other
    - If a conflict is found, resolve it in favor of the more conservative/safe
      directive and note the resolution
 
-### Step 3: Apply Platform Constraints
+### Step 4: Apply Platform Constraints
 
 For each target platform, adapt the content:
 
-1. **GitHub Copilot** (`.github/copilot-instructions.md`):
-   - Target ~2–6 KB of content for reliable ingestion
+1. **GitHub Copilot** (`.github/instructions/*.instructions.md`):
+   - Each skill file targets ~1–4 KB
+   - Total combined instructions should stay under ~8 KB
+   - Each file has YAML frontmatter with `description` and `applyTo`
    - Use plain Markdown with clear headings and bullets
-   - If content exceeds 8 KB, summarize protocol sections and note what was condensed
 
 2. **Claude Code** (`CLAUDE.md`):
    - No strict size limit — prefer completeness over brevity
@@ -116,49 +146,61 @@ For each target platform, adapt the content:
    - Note any omitted content in a comment at the end of the file
 
 4. **All platforms** (when `{{platform}}` is `All`):
-   - Produce a separate, platform-appropriate file for each supported platform
-     (GitHub Copilot, Claude Code, and Cursor) — three distinct output files
-   - Apply each platform's size and syntax constraints independently
+   - Produce skill files for GitHub Copilot AND a combined file each for
+     Claude Code and Cursor
+   - Apply each platform's constraints independently
    - Note differences between variants in the Platform Notes section
-   - The File Manifest in the output MUST list all three file paths
 
-### Step 4: Produce the Output Files
+### Step 5: Produce the Output Files
 
 Following the `agent-instructions` format specification:
 
-1. **Write the file manifest** listing each file to be created with its path and scope.
+1. **Write the file manifest** listing every file to be created with its
+   path, `applyTo` scope (for Copilot), and purpose.
 
-2. **Write the complete file content** for each target platform:
-   - Open with: `<!-- Generated by PromptKit — edit with care -->`
-   - Include condensed persona, protocol directives, behaviors, and context
-   - Use second-person directives throughout
-   - Do NOT include PromptKit-internal headers (`# Identity`, `# Reasoning
-     Protocols`, `# Output Format`, `# Task`)
+2. **Write each GitHub Copilot skill file** with proper frontmatter:
 
-3. **Write the Platform Notes** section covering how each file is loaded,
-   known constraints, and recommended maintenance.
+       ---
+       description: '<one-line summary>'
+       applyTo: '<glob pattern>'
+       ---
+       <!-- Generated by PromptKit — edit with care -->
 
-4. **Write the Activation Checklist** for each platform.
+       <instruction content>
 
-### Step 5: Verify the Output
+3. **Write combined files** for Claude Code / Cursor (if targeted):
+   - Open with `<!-- Generated by PromptKit — edit with care -->`
+   - Include all persona, protocol, behavior, and context content
+
+4. **Write the Platform Notes** section covering how each file is loaded.
+
+5. **Write the Activation Checklist** for each platform.
+
+### Step 6: Verify the Output
 
 Apply the `self-verification` protocol:
 
 1. **Content completeness**: Every component from Step 1 is represented
-   in the output (verify each persona attribute, each protocol phase).
+   in at least one output file (verify each persona attribute, each
+   protocol phase).
 
 2. **Platform compliance**:
-   - File paths are correct for each platform
-   - Content size is within platform guidance
+   - Copilot skill files have valid YAML frontmatter with `description`
+     and `applyTo`
+   - Filenames are lowercase, hyphen-separated, ending in `.instructions.md`
+   - Content size is within platform guidance per file
    - No PromptKit-internal headers appear in generated file content
 
-3. **Directive consistency**: No contradictory instructions exist within
-   a single output file.
+3. **Skill composability**: Each Copilot skill file is self-contained and
+   makes sense when loaded independently or in combination.
 
-4. **Actionability**: All instructions are specific and actionable — no
+4. **Directive consistency**: No contradictory instructions exist within
+   or across skill files.
+
+5. **Actionability**: All instructions are specific and actionable — no
    vague guidance like "be careful" or "think deeply".
 
-5. **No placeholders**: All `{{param}}` references are resolved; no
+6. **No placeholders**: All `{{param}}` references are resolved; no
    unsubstituted placeholders remain in any output file.
 
 ## Non-Goals
@@ -176,13 +218,15 @@ Apply the `self-verification` protocol:
 
 Before presenting the output, verify:
 
-- [ ] All output files begin with the PromptKit generation comment
+- [ ] GitHub Copilot files have valid YAML frontmatter (`description`, `applyTo`)
+- [ ] Filenames are lowercase, hyphen-separated, ending in `.instructions.md`
+- [ ] `applyTo` globs match the protocol's natural scope
+- [ ] Each skill file is self-contained and independently coherent
 - [ ] No PromptKit-internal section headers appear in any output file
 - [ ] All `{{param}}` placeholders are resolved
-- [ ] File paths are correct for each target platform
-- [ ] Content size is within platform guidance for each platform
-- [ ] Persona identity is clearly stated in the first paragraph
+- [ ] Content size is within platform guidance for each file
+- [ ] Persona identity is clearly stated in the persona skill file
 - [ ] Every protocol phase is represented as a standing directive
-- [ ] No contradictory directives exist within a single file
+- [ ] No contradictory directives exist within or across files
 - [ ] Platform Notes and Activation Checklist are complete
 - [ ] Output is ready to commit without further editing
