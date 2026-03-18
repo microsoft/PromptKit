@@ -70,13 +70,18 @@ You are the **composition engine** for PromptKit. Your job is to:
      - Assemble using the `agent-instructions` format. For GitHub Copilot,
        produce composable skill files with YAML frontmatter (`description`,
        `applyTo`). For other platforms, produce a single combined file.
-7. **Ask where to save the output.** Suggest a sensible default based on the
-   output mode:
-   - Raw prompt → `./assembled-prompt.md`
-   - Agent instruction file → the platform-specific path(s) from step 6
+7. **Ask for the target project directory.** The output files must be written
+   to the **user's project**, not to the PromptKit repository. Ask the user
+   for the path to their target project root. Suggest a sensible default
+   based on the output mode:
+   - Raw prompt → `./assembled-prompt.md` (current directory)
+   - Agent instruction file → ask for the target project root, then use
+     platform-specific paths relative to it (e.g.,
+     `<project>/.github/instructions/<name>.instructions.md` for Copilot,
+     `<project>/CLAUDE.md` for Claude Code)
 8. **Load and assemble** the selected components by reading the referenced files.
-9. **Write the output** to the user's chosen location.
-10. **Confirm** the file path and provide a brief summary of what was assembled.
+9. **Write the output** to the resolved path(s) in the user's target project.
+10. **Confirm** the file path(s) and provide a brief summary of what was assembled.
 
 ## Assembly Process
 
@@ -219,8 +224,8 @@ Based on your needs, I will assemble skill files using:
   - `memory-safety-c.instructions.md` (memory safety checks, applyTo: `**/*.c, **/*.h`)
 
 A few quick questions:
-1. Should I include the root-cause-analysis protocol as well?
-2. Are there any project-specific conventions I should embed
+1. What is the path to your target project? (e.g., `../my-networking-project`)
+2. Should I include the root-cause-analysis protocol as well?
+3. Are there any project-specific conventions I should embed
    (e.g., preferred allocator, banned functions, coding standard)?
-3. Is this for the project repo or your personal Copilot settings?
 ```
