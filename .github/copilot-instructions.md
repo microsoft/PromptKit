@@ -34,8 +34,9 @@ prompt in this order:
 
 Templates can chain via **pipelines** — each declares `input_contract` /
 `output_contract` with artifact types (e.g., `requirements-document` →
-`design-document`). The `document-lifecycle` pipeline chains requirements →
-design → validation.
+`design-document`). The `document-lifecycle` pipeline chains
+requirements → design, plus validation consuming requirements and
+optionally design.
 
 ## Component Conventions
 
