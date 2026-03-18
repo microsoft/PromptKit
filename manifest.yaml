@@ -227,7 +227,7 @@ templates:
       description: >
         Generate a design document that addresses a requirements document.
       persona: software-architect
-      protocols: [anti-hallucination]
+      protocols: [anti-hallucination, self-verification]
       format: design-doc
       pipeline_position: 2
       requires: requirements-document
@@ -237,7 +237,7 @@ templates:
       description: >
         Generate a validation plan covering all requirements.
       persona: systems-engineer
-      protocols: [anti-hallucination]
+      protocols: [anti-hallucination, self-verification]
       format: validation-plan
       pipeline_position: 3
       requires: requirements-document
@@ -249,7 +249,7 @@ templates:
         Investigate a bug from a problem description. Apply root cause
         analysis and produce an investigation report.
       persona: systems-engineer
-      protocols: [anti-hallucination, root-cause-analysis]
+      protocols: [anti-hallucination, self-verification, operational-constraints, root-cause-analysis]
       format: investigation-report
 
     - name: investigate-security
@@ -258,7 +258,7 @@ templates:
         Security audit of code or a system component. Systematic
         vulnerability analysis with severity classification.
       persona: security-auditor
-      protocols: [anti-hallucination, security-vulnerability]
+      protocols: [anti-hallucination, self-verification, operational-constraints, security-vulnerability]
       format: investigation-report
 
   code-analysis:
@@ -268,7 +268,7 @@ templates:
         Thorough code review for correctness, safety, security,
         and maintainability. Supports additional analysis protocols.
       persona: systems-engineer
-      protocols: [anti-hallucination]
+      protocols: [anti-hallucination, self-verification, operational-constraints]
       format: investigation-report
 
   planning:
@@ -278,7 +278,7 @@ templates:
         Decompose a project into an actionable implementation plan
         with tasks, dependencies, and risk assessment.
       persona: software-architect
-      protocols: [anti-hallucination]
+      protocols: [anti-hallucination, self-verification]
 
     - name: plan-refactoring
       path: templates/plan-refactoring.md
@@ -286,7 +286,7 @@ templates:
         Plan a safe, incremental refactoring with step-by-step
         changes that maintain correctness at each step.
       persona: software-architect
-      protocols: [anti-hallucination]
+      protocols: [anti-hallucination, self-verification]
 
   contribution:
     - name: extend-library
