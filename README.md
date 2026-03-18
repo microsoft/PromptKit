@@ -29,18 +29,53 @@ Clone the repo and point Copilot at the bootstrap prompt:
 git clone https://github.com/microsoft/promptkit.git
 cd promptkit
 
-# Copilot reads bootstrap.md, discovers the library via manifest.yaml,
-# asks what you need, assembles the prompt, and writes it to a file.
-gh copilot "Read bootstrap.md and execute the prompt"
+# Start a session — Copilot reads bootstrap.md, loads the manifest,
+# and asks what you need.
+gh copilot "Read and execute bootstrap.md"
 ```
+
+#### What a session looks like
+
+Copilot reads `bootstrap.md`, discovers all components via `manifest.yaml`,
+and presents the available templates:
+
+```
+● Read bootstrap.md
+● Read manifest.yaml
+
+I've loaded the PromptKit manifest. I'm ready to help you build a task-specific prompt.
+
+Available templates:
+
+┌────────────────────────┬──────────────────────────────────────────────────────────────┐
+│ Category               │ Templates                                                    │
+├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ Document Authoring     │ author-requirements-doc, interactive-design,                 │
+│                        │ author-design-doc, author-validation-plan                    │
+├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ Investigation          │ investigate-bug, investigate-security                        │
+├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ Code Analysis          │ review-code                                                  │
+├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ Planning               │ plan-implementation, plan-refactoring                        │
+├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ DevOps                 │ author-pipeline, triage-issues, triage-pull-requests,        │
+│                        │ root-cause-ci-failure, author-release, review-infrastructure │
+└────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+Personas: systems-engineer · security-auditor · software-architect · ...
+
+What would you like to accomplish?
+```
+
+Describe your task and the LLM selects the right persona, protocols, and
+format, then assembles a complete prompt you can use in a fresh session.
 
 ### Using with Claude Code
 
 ```bash
 cd promptkit
-
-# Claude Code can read local files — point it at the bootstrap.
-claude "Read bootstrap.md and execute the prompt"
+claude "Read and execute bootstrap.md"
 ```
 
 ### Using with any LLM (manual)
