@@ -3,6 +3,11 @@
 
 # Contributing to PromptKit
 
+## Prerequisites
+
+Before following this guide, ensure you have the required tools installed.
+See the [Prerequisites section in README.md](README.md#prerequisites) for the full list and installation links.
+
 ## Preferred Workflow: Use PromptKit to Extend Itself
 
 The recommended way to add new components is to **use the library's own
