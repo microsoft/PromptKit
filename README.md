@@ -10,6 +10,17 @@
 A composable, versioned library of prompt templates for software engineering tasks.
 Designed for software engineers who design, develop, and debug software.
 
+## Prerequisites
+
+- **Git** — [Install Git](https://git-scm.com/)
+
+The sections below require one of the following LLM CLI tools:
+
+- **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), then run `gh extension install github/gh-copilot`
+- **Claude Code** — [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+
+Not using a CLI tool? See [Using with any LLM (manual)](#using-with-any-llm-manual).
+
 ## Quick Start
 
 1. **Load the bootstrap prompt** (`bootstrap.md`) into an LLM session.
@@ -31,7 +42,7 @@ cd promptkit
 
 # Start a session — Copilot reads bootstrap.md, loads the manifest,
 # and asks what you need.
-gh copilot "Read and execute bootstrap.md"
+gh copilot -i "Read and execute bootstrap.md"
 ```
 
 #### What a session looks like

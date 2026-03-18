@@ -5,6 +5,8 @@
 
 ## Preferred Workflow: Use PromptKit to Extend Itself
 
+> **Note:** Make sure you have the prerequisite tools installed first — see [Prerequisites](README.md#prerequisites) in the README.
+
 The recommended way to add new components is to **use the library's own
 `extend-library` template**, not to hand-author files. This ensures new
 components follow the library's conventions, fit the architecture, and
@@ -12,7 +14,7 @@ include all required metadata.
 
 ```bash
 cd promptkit
-gh copilot "Read bootstrap.md and execute the prompt"
+gh copilot -i "Read bootstrap.md and execute the prompt"
 # Then: "I want to add a template for <your use case>"
 ```
 
