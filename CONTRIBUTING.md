@@ -1,0 +1,149 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) Standard Prompt Library Contributors -->
+
+# Contributing to the Standard Prompt Library
+
+## Adding New Components
+
+The SPL is designed to be extended. You can add new personas, protocols,
+formats, and templates by following the conventions below.
+
+### General Rules
+
+1. **Every component gets a YAML frontmatter block** with at minimum:
+   `name`, `description`, and type-specific fields.
+2. **Use kebab-case** for file names and component names.
+3. **Update `manifest.yaml`** when adding any new component.
+4. **Test your component** by assembling it via the bootstrap prompt
+   and verifying the output is coherent.
+
+### Adding a Persona
+
+Create a file in `personas/<name>.md`:
+
+```yaml
+---
+name: <kebab-case-name>
+description: <one-line summary>
+domain:
+  - <area of expertise>
+tone: <comma-separated tone descriptors>
+---
+```
+
+The body should include:
+- A clear statement of expertise areas
+- **Behavioral constraints** — how the persona reasons, what it refuses
+  to do, how it handles uncertainty
+
+**Guidelines:**
+- Personas define *expertise and stance*, not task behavior
+- Keep personas thin — they should be composable with any task
+- Include anti-hallucination behaviors (distinguish known/inferred/assumed)
+
+### Adding a Protocol
+
+Create a file in `protocols/<category>/<name>.md`:
+
+```yaml
+---
+name: <kebab-case-name>
+type: <guardrail | analysis | reasoning>
+description: <one-line summary>
+language: <programming language, if language-specific>
+applicable_to:
+  - <template names this protocol works with>
+---
+```
+
+The body should include:
+- **Numbered phases** — protocols execute in order
+- **Specific checks** within each phase — not vague instructions
+- **Output format** for findings (if applicable)
+
+**Guidelines:**
+- Protocols must be **independent and additive** — applying two protocols
+  together should not produce conflicting instructions
+- Language-specific protocols should be separate files (e.g., `memory-safety-c.md`,
+  `memory-safety-rust.md`), not conditional blocks
+- Guardrail protocols apply to all tasks; analysis protocols are selective
+
+### Adding a Format
+
+Create a file in `formats/<name>.md`:
+
+```yaml
+---
+name: <kebab-case-name>
+type: format
+description: <one-line summary>
+produces: <artifact-type-name>
+consumes: <artifact-type-name, if this format expects input from a pipeline>
+---
+```
+
+The body should include:
+- **Complete document structure** — every section, in order
+- **Formatting rules** — naming conventions, required fields, cross-reference style
+- **Template markers** showing where content goes
+
+**Guidelines:**
+- Formats define structure, not content
+- Every section should have a brief description of what goes in it
+- Include a "do not omit sections" rule — if a section is empty,
+  state "None identified"
+
+### Adding a Template
+
+Create a file in `templates/<name>.md`:
+
+```yaml
+---
+name: <kebab-case-name>
+description: <one-line summary>
+persona: <persona-name>
+protocols:
+  - <protocol-path>
+format: <format-name>
+params:
+  <param_name>: "<description>"
+input_contract:
+  type: <artifact-type or null>
+  description: <what input this template expects>
+output_contract:
+  type: <artifact-type>
+  description: <what this template produces>
+---
+```
+
+The body should include:
+- **Inputs section** — listing all `{{param}}` placeholders
+- **Instructions** — numbered, specific steps for the LLM to follow
+- **Quality checklist** — verification steps before finalizing output
+
+**Guidelines:**
+- Templates are the orchestration layer — they should contain meaningful
+  task-specific instructions, not just be lists of references
+- Reference protocols by path in the frontmatter; the bootstrap assembles them
+- Use `{{param_name}}` for all variable content
+
+### Pipeline Integration
+
+If your template is part of a chain:
+
+1. Set `input_contract` to declare what artifact it consumes
+2. Set `output_contract` to declare what it produces
+3. Add the pipeline stage to `manifest.yaml` under `pipelines`
+
+### Quality Checklist
+
+Before submitting a new component:
+
+- [ ] YAML frontmatter is valid and complete
+- [ ] Component name matches the file name
+- [ ] `manifest.yaml` is updated with the new component
+- [ ] No vague instructions ("analyze carefully" → specify what to analyze and how)
+- [ ] Protocols have numbered, ordered phases
+- [ ] Templates have a quality checklist section
+- [ ] Assembled prompt (via bootstrap) produces coherent output
+- [ ] No conflicts with existing protocols when composed together

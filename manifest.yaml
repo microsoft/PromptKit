@@ -1,0 +1,229 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) Standard Prompt Library Contributors
+
+# Standard Prompt Library — Manifest
+# This file indexes all components in the library.
+# The bootstrap prompt reads this manifest to discover available
+# personas, protocols, formats, and task templates.
+
+version: "0.1.0"
+
+personas:
+  - name: systems-engineer
+    path: personas/systems-engineer.md
+    description: >
+      Senior systems engineer. Deep expertise in memory management,
+      concurrency, performance, and debugging. Reasons from first principles.
+
+  - name: security-auditor
+    path: personas/security-auditor.md
+    description: >
+      Principal security engineer. Adversarial mindset. Specializes in
+      vulnerability discovery, threat modeling, and secure design.
+
+  - name: software-architect
+    path: personas/software-architect.md
+    description: >
+      Staff software architect. System design, API contracts, tradeoff
+      analysis, and long-term maintainability.
+
+protocols:
+  guardrails:
+    - name: anti-hallucination
+      path: protocols/guardrails/anti-hallucination.md
+      description: >
+        Prevents fabrication. Enforces epistemic labeling (KNOWN/INFERRED/ASSUMED),
+        uncertainty disclosure, and source attribution. Apply to all tasks.
+
+    - name: self-verification
+      path: protocols/guardrails/self-verification.md
+      description: >
+        Quality gate requiring the LLM to verify its own output before finalizing.
+        Sampling checks, citation audits, coverage confirmation, consistency checks.
+
+    - name: operational-constraints
+      path: protocols/guardrails/operational-constraints.md
+      description: >
+        Governs how the LLM scopes work, uses tools, manages context, and
+        prefers deterministic analysis. Prevents over-ingestion and ensures
+        reproducibility.
+
+  analysis:
+    - name: memory-safety-c
+      path: protocols/analysis/memory-safety-c.md
+      description: >
+        Memory safety analysis for C. Covers allocation/deallocation pairing,
+        pointer lifecycle, buffer boundaries, and undefined behavior.
+      language: C
+
+    - name: memory-safety-rust
+      path: protocols/analysis/memory-safety-rust.md
+      description: >
+        Memory safety analysis for Rust. Focuses on unsafe blocks, FFI
+        boundaries, interior mutability, and resource leaks.
+      language: Rust
+
+    - name: thread-safety
+      path: protocols/analysis/thread-safety.md
+      description: >
+        Concurrency analysis. Covers data races, deadlocks, atomicity
+        violations, and thread lifecycle. Language-agnostic.
+
+    - name: security-vulnerability
+      path: protocols/analysis/security-vulnerability.md
+      description: >
+        Security vulnerability analysis. Trust boundaries, input validation,
+        auth, crypto, and information disclosure. Language-agnostic.
+
+  reasoning:
+    - name: root-cause-analysis
+      path: protocols/reasoning/root-cause-analysis.md
+      description: >
+        Systematic root cause analysis. Symptom characterization, hypothesis
+        generation, evidence evaluation, and causal chain tracing.
+
+    - name: requirements-elicitation
+      path: protocols/reasoning/requirements-elicitation.md
+      description: >
+        Requirements extraction from natural language. Produces numbered,
+        atomic, testable requirements with RFC 2119 keywords.
+
+formats:
+  - name: requirements-doc
+    path: formats/requirements-doc.md
+    produces: requirements-document
+    description: >
+      Structured requirements document with numbered REQ-IDs, acceptance
+      criteria, constraints, assumptions, and risks.
+
+  - name: design-doc
+    path: formats/design-doc.md
+    produces: design-document
+    consumes: requirements-document
+    description: >
+      Software design document with architecture, API contracts, data models,
+      tradeoff analysis, and open questions.
+
+  - name: validation-plan
+    path: formats/validation-plan.md
+    produces: validation-plan
+    consumes: requirements-document
+    description: >
+      Test and validation plan with traceability matrix, test cases,
+      risk prioritization, and pass/fail criteria.
+
+  - name: investigation-report
+    path: formats/investigation-report.md
+    produces: investigation-report
+    description: >
+      Investigation report with findings, root cause analysis, evidence,
+      remediation plan, and prevention recommendations.
+
+  - name: multi-artifact
+    path: formats/multi-artifact.md
+    produces: artifact-set
+    description: >
+      Multi-file output format for tasks producing multiple deliverables
+      (structured data, reports, coverage logs). Defines artifact manifests,
+      per-artifact schemas, and cross-artifact consistency rules.
+
+taxonomies:
+  - name: stack-lifetime-hazards
+    path: taxonomies/stack-lifetime-hazards.md
+    domain: memory-safety
+    description: >
+      Classification scheme (H1-H5) for stack lifetime and memory escape
+      hazards at system boundaries. Covers stack address escape, async
+      pend/complete lifetime violations, and writable views of read-only data.
+
+templates:
+  document-authoring:
+    - name: author-requirements-doc
+      path: templates/author-requirements-doc.md
+      description: >
+        Generate a requirements document from a natural language description.
+      persona: software-architect
+      protocols: [anti-hallucination, requirements-elicitation]
+      format: requirements-doc
+      pipeline_position: 1
+
+    - name: author-design-doc
+      path: templates/author-design-doc.md
+      description: >
+        Generate a design document that addresses a requirements document.
+      persona: software-architect
+      protocols: [anti-hallucination]
+      format: design-doc
+      pipeline_position: 2
+      requires: requirements-document
+
+    - name: author-validation-plan
+      path: templates/author-validation-plan.md
+      description: >
+        Generate a validation plan covering all requirements.
+      persona: systems-engineer
+      protocols: [anti-hallucination]
+      format: validation-plan
+      pipeline_position: 3
+      requires: requirements-document
+
+  investigation:
+    - name: investigate-bug
+      path: templates/investigate-bug.md
+      description: >
+        Investigate a bug from a problem description. Apply root cause
+        analysis and produce an investigation report.
+      persona: systems-engineer
+      protocols: [anti-hallucination, root-cause-analysis]
+      format: investigation-report
+
+    - name: investigate-security
+      path: templates/investigate-security.md
+      description: >
+        Security audit of code or a system component. Systematic
+        vulnerability analysis with severity classification.
+      persona: security-auditor
+      protocols: [anti-hallucination, security-vulnerability]
+      format: investigation-report
+
+  code-analysis:
+    - name: review-code
+      path: templates/review-code.md
+      description: >
+        Thorough code review for correctness, safety, security,
+        and maintainability. Supports additional analysis protocols.
+      persona: systems-engineer
+      protocols: [anti-hallucination]
+      format: investigation-report
+
+  planning:
+    - name: plan-implementation
+      path: templates/plan-implementation.md
+      description: >
+        Decompose a project into an actionable implementation plan
+        with tasks, dependencies, and risk assessment.
+      persona: software-architect
+      protocols: [anti-hallucination]
+
+    - name: plan-refactoring
+      path: templates/plan-refactoring.md
+      description: >
+        Plan a safe, incremental refactoring with step-by-step
+        changes that maintain correctness at each step.
+      persona: software-architect
+      protocols: [anti-hallucination]
+
+pipelines:
+  document-lifecycle:
+    description: >
+      Full document lifecycle from requirements through validation.
+      Each stage produces an artifact consumed by the next.
+    stages:
+      - template: author-requirements-doc
+        produces: requirements-document
+      - template: author-design-doc
+        consumes: requirements-document
+        produces: design-document
+      - template: author-validation-plan
+        consumes: requirements-document
+        produces: validation-plan
