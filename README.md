@@ -26,7 +26,7 @@ You → bootstrap.md → LLM reads manifest → selects components → assembled
 Clone the repo and point Copilot at the bootstrap prompt:
 
 ```bash
-git clone https://github.com/Alan-Jowett/promptkit.git
+git clone https://github.com/microsoft/promptkit.git
 cd promptkit
 
 # Copilot reads bootstrap.md, discovers the library via manifest.yaml,
