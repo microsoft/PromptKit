@@ -91,6 +91,22 @@ Once the user confirms the design:
 2. Make changes as requested, preserving consistency across all files.
 3. Continue until the user is satisfied.
 
+### Step 5: Commit and Submit (Phase 4)
+
+Once the user is satisfied with the generated files:
+
+1. **Create a new branch** off `main` for the contribution. Use a
+   descriptive branch name derived from the template name
+   (e.g., `add-repo-management-template`). Do NOT commit to the
+   current branch or directly to `main`.
+2. **Ask the user before committing.** Present a summary of what
+   will be committed (files created, manifest changes) and ask
+   for confirmation before running any git commands.
+3. **Commit** the new component files and manifest update.
+4. **Offer to create a pull request.** Ask the user if they want
+   a PR created. If yes, push the branch and create the PR using
+   the PR description generated in Step 3.
+
 ## Non-Goals
 
 - Do NOT modify existing components (except `manifest.yaml`).
