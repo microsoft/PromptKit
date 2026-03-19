@@ -114,7 +114,7 @@ existing code safely and incrementally.
 
 Before finalizing, verify:
 
-- [ ] Every step is a self-contained, commitable change
+- [ ] Every step is a self-contained, committable change
 - [ ] Every step maintains existing behavior (unless explicitly stated)
 - [ ] Every step has a verification method
 - [ ] Every step has a rollback path
