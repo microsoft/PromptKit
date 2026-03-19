@@ -109,3 +109,15 @@ tailored to this specific investigation. The plan should:
 5. **Report**: Produce the output according to the specified format.
 
 This plan replaces ad-hoc exploration with systematic analysis.
+
+## Quality Checklist
+
+Before finalizing, verify:
+
+- [ ] Every finding cites specific code evidence (file, line, function)
+- [ ] Every finding has a severity rating with justification
+- [ ] Root cause is identified, not just the proximate trigger
+- [ ] Remediation recommendations are specific and actionable
+- [ ] At least 3 findings have been re-verified against the source
+- [ ] Coverage statement documents what was and was not examined
+- [ ] No fabricated code paths or behaviors — unknowns marked with [UNKNOWN]

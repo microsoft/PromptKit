@@ -108,3 +108,16 @@ Before beginning analysis, produce a concrete step-by-step plan:
    to each attack surface element.
 4. **Rank**: Order findings by exploitability and impact.
 5. **Report**: Produce the output according to the specified format.
+
+## Quality Checklist
+
+Before finalizing, verify:
+
+- [ ] Every finding cites specific code evidence (file, line, function)
+- [ ] Every finding has a severity rating with justification
+- [ ] Confirmed vulnerabilities have concrete exploit scenarios
+- [ ] Every finding rated High or Critical includes an attack scenario
+- [ ] CWE identifiers are included where applicable
+- [ ] At least 3 findings have been re-verified against the source
+- [ ] Coverage statement documents what was and was not examined
+- [ ] No fabricated vulnerabilities — unknowns marked with [UNKNOWN]

@@ -103,3 +103,15 @@ following code.
   directly called by or calls into the reviewed code.
 - Do NOT comment on personal style preferences — focus on
   correctness, safety, security, and maintainability.
+
+## Quality Checklist
+
+Before finalizing, verify:
+
+- [ ] Every finding cites a specific code location
+- [ ] Every finding has a severity rating (Critical/High/Medium/Low/Nit)
+- [ ] Every finding includes a concrete fix suggestion
+- [ ] Findings are ordered by severity
+- [ ] At least 3 findings have been re-verified against the source
+- [ ] Overall assessment (approve / approve with changes / request changes) is stated
+- [ ] Top 3 most important items are identified in the summary

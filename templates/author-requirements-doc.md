@@ -69,3 +69,11 @@ project or feature.
    - [ ] Out-of-scope section is populated
    - [ ] Assumptions are explicitly listed
    - [ ] No fabricated details — all unknowns marked with [UNKNOWN]
+
+## Non-Goals
+
+- Do NOT produce a design document — focus on requirements only.
+- Do NOT specify implementation approach or technology choices.
+- Do NOT generate test cases — those belong in a validation plan.
+- Do NOT resolve ambiguities silently — flag them in the
+  Pre-Authoring Analysis section for stakeholder review.

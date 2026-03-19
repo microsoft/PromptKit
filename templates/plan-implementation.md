@@ -107,3 +107,24 @@ down a project into actionable, ordered tasks.
 
 6. **Flag risky tasks**: tasks with high uncertainty, external
    dependencies, or novel technology that could cause delays.
+
+## Non-Goals
+
+- Do NOT implement any tasks — produce the plan only.
+- Do NOT generate requirements or design — consume them as inputs.
+- Do NOT estimate calendar time or assign tasks to specific people.
+- Do NOT recommend technology choices unless directly relevant to
+  task decomposition.
+
+## Quality Checklist
+
+Before finalizing, verify:
+
+- [ ] Every task has a unique TASK-ID
+- [ ] Every task has acceptance criteria
+- [ ] Every task has a complexity estimate (Small/Medium/Large)
+- [ ] Dependencies between tasks are explicit (no implicit ordering)
+- [ ] The critical path is identified
+- [ ] Risk assessment covers at least the top 3 risks
+- [ ] Requirements traceability is present (REQ-IDs mapped to tasks)
+- [ ] No fabricated requirements — unknowns marked with [UNKNOWN]

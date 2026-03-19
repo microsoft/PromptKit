@@ -73,3 +73,11 @@ requirements specified below.
    - [ ] Security considerations section is populated
    - [ ] Open questions are listed, not silently resolved
    - [ ] No fabricated details — all unknowns marked with [UNKNOWN]
+
+## Non-Goals
+
+- Do NOT generate requirements — consume them as input.
+- Do NOT implement the design — this is a specification document.
+- Do NOT make technology choices without stating them as open
+  questions when the requirements do not mandate a specific choice.
+- Do NOT omit tradeoff analysis for non-trivial decisions.

@@ -75,3 +75,10 @@ requirements are tested and verifiable.
    - [ ] Every test case has a measurable expected result
    - [ ] Coverage gaps are explicitly flagged
    - [ ] Pass/fail criteria are defined at both test and aggregate level
+
+## Non-Goals
+
+- Do NOT implement or execute the tests — produce the plan only.
+- Do NOT generate requirements — consume them as input.
+- Do NOT test implementation details that are not tied to requirements.
+- Do NOT expand scope beyond the provided requirements document.

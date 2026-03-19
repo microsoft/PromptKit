@@ -101,3 +101,23 @@ existing code safely and incrementally.
 6. **Prefer small, safe steps** over large, risky ones.
    The ideal refactoring step changes structure without changing behavior
    (or changes behavior without changing structure), never both at once.
+
+## Non-Goals
+
+- Do NOT perform the refactoring — produce the plan only.
+- Do NOT redesign the architecture — focus on incremental improvement.
+- Do NOT add new features as part of the refactoring plan.
+- Do NOT assume callers, tests, or dependencies not shown in the
+  provided code.
+
+## Quality Checklist
+
+Before finalizing, verify:
+
+- [ ] Every step is a self-contained, commitable change
+- [ ] Every step maintains existing behavior (unless explicitly stated)
+- [ ] Every step has a verification method
+- [ ] Every step has a rollback path
+- [ ] Risks and mitigations are documented
+- [ ] Current state analysis matches the provided code
+- [ ] No fabricated code paths or behaviors — unknowns marked with [UNKNOWN]
