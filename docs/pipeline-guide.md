@@ -101,7 +101,7 @@ This is the built-in pipeline that demonstrates the full workflow:
 ### Stage 1: Author Requirements Document
 
 ```bash
-npx @alan-jowett/promptkit assemble author-requirements-doc \
+npx promptkit assemble author-requirements-doc \
   -p project_name="Auth Service" \
   -p description="OAuth2 authorization service with PKCE support" \
   -p stakeholders="Backend team, security team, API consumers" \
@@ -118,7 +118,7 @@ acceptance criteria.
 Take the requirements document from Stage 1 and feed it as input:
 
 ```bash
-npx @alan-jowett/promptkit assemble author-design-doc \
+npx promptkit assemble author-design-doc \
   -p project_name="Auth Service" \
   -p requirements_doc="<paste requirements output here>" \
   -p technical_context="Go microservice, PostgreSQL, Redis for sessions" \
@@ -134,7 +134,7 @@ architecture decisions, API contracts, data models, and tradeoff analysis.
 Take the requirements document and create a test plan:
 
 ```bash
-npx @alan-jowett/promptkit assemble author-validation-plan \
+npx promptkit assemble author-validation-plan \
   -p project_name="Auth Service" \
   -p requirements_doc="<paste requirements output here>" \
   -p technical_context="Go microservice, integration test framework" \

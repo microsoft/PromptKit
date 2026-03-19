@@ -80,8 +80,8 @@ See the [Testing Guide](testing-guide.md) for the full workflow.
 No installation needed. Use `npx` to run it directly:
 
 ```bash
-npx @alan-jowett/promptkit list
-npx @alan-jowett/promptkit assemble investigate-bug -p ...
+npx promptkit list
+npx promptkit assemble investigate-bug -p ...
 ```
 
 Or clone the repo if you want to modify components:
@@ -101,10 +101,11 @@ git clone https://github.com/microsoft/promptkit.git
 
 ### Can I customize the persona for a template?
 
-Some templates have `persona: configurable` in their frontmatter (e.g.,
-`review-code`), which lets you pick any persona. For templates with a fixed
-persona (e.g., `investigate-bug` uses `systems-engineer`), you can fork the
-template and change the persona reference.
+Some templates (e.g., `interactive-design`) let you choose the persona via
+a `{{persona}}` parameter and are marked configurable in the manifest.
+Most templates (including `review-code` and `investigate-bug`) use a fixed
+persona such as `systems-engineer`; to change it, fork the template and
+update the persona reference.
 
 ### Can I use multiple templates together?
 
@@ -122,7 +123,7 @@ See the [Pipeline Guide](pipeline-guide.md) for details.
 Yes. The `assemble` command is designed for scripting:
 
 ```bash
-npx @alan-jowett/promptkit assemble author-release \
+npx promptkit assemble author-release \
   -p version="2.1.0" \
   -p changes="$(git log --oneline v2.0.0..HEAD)" \
   -o release-notes-prompt.md
@@ -193,13 +194,13 @@ methodology, output specification, operational guidance, quality assurance).
 
 ## Troubleshooting
 
-### `npx @alan-jowett/promptkit` gives a 404
+### `npx promptkit` gives a 404
 
 The npm registry may have a stale cache. Run:
 
 ```bash
 npm cache clean --force
-npx @alan-jowett/promptkit list
+npx promptkit list
 ```
 
 ### Interactive mode says "No supported LLM CLI found"

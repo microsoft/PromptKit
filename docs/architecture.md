@@ -22,6 +22,12 @@ together into a single coherent prompt.
 Each layer is a standalone Markdown file with YAML frontmatter. Components
 are composed at assembly time, not baked together at authoring time.
 
+> **Note:** The CLI assembly engine currently composes layers ①②③⑤
+> (persona, protocols, format, template). Taxonomies are included when the
+> bootstrap engine runs interactively (it reads taxonomy content inline when
+> a template references one), but the `npx promptkit assemble` command does
+> not yet inject taxonomies automatically. This is a known gap.
+
 ## The Five Layers
 
 ### Layer 1: Personas
@@ -104,7 +110,8 @@ categories, making results harder to aggregate or compare over time.
 If your task doesn't involve classifying findings into predefined
 categories, you can ignore this layer entirely.
 
-**Frontmatter fields:** `name`, `path`, `domain`, `description`
+**Frontmatter fields:** `name`, `type` (taxonomy), `description`, `domain`,
+`applicable_to`
 
 **Available:** stack-lifetime-hazards (H1–H5 classification for memory
 safety)

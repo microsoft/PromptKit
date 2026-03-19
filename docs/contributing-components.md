@@ -11,7 +11,7 @@ Use PromptKit's own `extend-library` template rather than hand-authoring.
 This ensures new components follow conventions and fit the architecture:
 
 ```bash
-npx @alan-jowett/promptkit
+npx promptkit
 # Then: "I want to add a template for <use case>"
 ```
 
@@ -111,8 +111,9 @@ Numbered, ordered steps. Each phase should have clear entry/exit criteria.
 ```
 
 **Rules:**
-- Protocols MUST have numbered, ordered phases
-- Each phase should be self-contained with clear deliverables
+- Analysis and reasoning protocols MUST have numbered, ordered phases
+- Guardrail protocols may use a rule/checklist structure instead of phases
+- Each phase or rule section should be self-contained with clear deliverables
 - Language-specific protocols are separate files, not conditional blocks
 
 ### Formats
@@ -291,7 +292,8 @@ its frontmatter.
 - [ ] Protocol naming is consistent (category paths in template,
       short names in manifest)
 - [ ] No vague instructions — specify what to analyze and how
-- [ ] Protocols have numbered, ordered phases
+- [ ] Protocols have numbered, ordered phases (analysis/reasoning) or
+      structured rules (guardrails)
 - [ ] Templates have Non-Goals and Quality Checklist sections
 - [ ] `python tests/validate-manifest.py` passes
 - [ ] Assembled prompt produces coherent output when tested
@@ -315,7 +317,7 @@ Here's a concrete example of adding a `review-api` template:
 
 3. **Run** `python tests/validate-manifest.py` to verify sync.
 
-4. **Test** with `npx @alan-jowett/promptkit assemble review-api -p …`
+4. **Test** with `npx promptkit assemble review-api -p …`
    to verify the assembled prompt is coherent.
 
 5. **Submit** a PR with all three files changed: the new template,

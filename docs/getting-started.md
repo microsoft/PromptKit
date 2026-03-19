@@ -24,10 +24,10 @@ your behalf.
 ### 1. List available templates
 
 ```bash
-npx @alan-jowett/promptkit list
+npx promptkit list
 ```
 
-This prints every template in the library with its description, persona,
+This prints every templatein the library with its description, persona,
 protocols, and format. Add `--json` for machine-readable output.
 
 ### 2. Assemble a prompt
@@ -35,7 +35,7 @@ protocols, and format. Add `--json` for machine-readable output.
 Pick a template and supply its parameters:
 
 ```bash
-npx @alan-jowett/promptkit assemble investigate-bug \
+npx promptkit assemble investigate-bug \
   -p problem_description="Segfault when parsing untrusted input on Linux" \
   -p code_context="See src/parser.c lines 120-180" \
   -p environment="Ubuntu 22.04, gcc 12, AddressSanitizer enabled" \
@@ -56,10 +56,10 @@ and you're running.
 ### 3. Interactive mode (recommended)
 
 ```bash
-npx @alan-jowett/promptkit
+npx promptkit
 ```
 
-Interactive mode auto-detects your LLM CLI (GitHub Copilot CLI or Claude
+Interactive modeauto-detects your LLM CLI (GitHub Copilot CLI or Claude
 Code), copies PromptKit's content to a temp directory, and launches an
 interactive session with `bootstrap.md` as the custom instruction. The
 bootstrap engine walks you through:
@@ -85,7 +85,7 @@ For the full composition model and assembly internals, see the
 | I want to… | Template | Persona |
 |------------|----------|---------|
 | Investigate a bug | `investigate-bug` | systems-engineer |
-| Review code | `review-code` | configurable |
+| Review code | `review-code` | systems-engineer |
 | Write requirements | `author-requirements-doc` | software-architect |
 | Design a system | `author-design-doc` | software-architect |
 | Plan implementation | `plan-implementation` | software-architect |
@@ -97,7 +97,7 @@ For the full composition model and assembly internals, see the
 | Create agent instructions | `author-agent-instructions` | spl-contributor |
 | Extract requirements from code | `reverse-engineer-requirements` | reverse-engineer |
 
-Run `npx @alan-jowett/promptkit list` for the full list with descriptions.
+Run `npx promptkit list` for the full list with descriptions.
 
 ## Using the Output as Agent Instructions
 

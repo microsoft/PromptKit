@@ -18,7 +18,7 @@ consideration of concurrency, no structured report.
 ### Assembling the Prompt
 
 ```bash
-npx @alan-jowett/promptkit assemble investigate-bug \
+npx promptkit assemble investigate-bug \
   -p problem_description="Intermittent segfault in packet_handler.c when \
      processing >100 concurrent connections. Crash occurs in parse_header() \
      at line 247. Not reproducible in single-threaded unit tests. Started \

@@ -12,17 +12,16 @@ Items are organized by theme, not by timeline.
 
 ### npm Scope Migration
 
-The package is currently published as `@alan-jowett/promptkit`. The plan is
-to migrate to an official scope (e.g., `@microsoft/promptkit`) once
-organizational approval is in place. The CLI commands and functionality will
-remain identical.
+The CLI package is published on npm as `promptkit` (used via `npx promptkit`).
+The plan is to migrate to an official scope (e.g., `@microsoft/promptkit`)
+once organizational approval is in place. The CLI commands and functionality
+will remain identical.
 
 ### Trusted Publishing
 
 The npm publish workflow uses OIDC-based trusted publishing from GitHub
 Actions. This eliminates the need for npm tokens as secrets — publishing is
-authenticated via GitHub's identity provider. Configuration is in
-`.github/workflows/publish-npm.yml`.
+authenticated via GitHub's identity provider.
 
 ## Copilot Extension
 
@@ -155,7 +154,7 @@ templates that layer on top of the public library:
 ```
 ~/.promptkit/           # user-level overrides
 .promptkit/             # project-level overrides
-node_modules/@alan-jowett/promptkit/content/  # base library
+node_modules/promptkit/content/  # base library
 ```
 
 The assembly engine would search for components in order: project → user →

@@ -19,7 +19,7 @@ automatically and enforce consistent behavior.
 ### Assembling the Prompt
 
 ```bash
-npx @alan-jowett/promptkit assemble author-agent-instructions \
+npx promptkit assemble author-agent-instructions \
   -p platform="GitHub Copilot" \
   -p base_persona="systems-engineer" \
   -p selected_protocols="anti-hallucination, memory-safety-c, thread-safety" \
@@ -131,7 +131,7 @@ The same prompt can generate instructions for multiple platforms:
 
 ```bash
 # For all platforms at once
-npx @alan-jowett/promptkit assemble author-agent-instructions \
+npx promptkit assemble author-agent-instructions \
   -p platform="All" \
   ...
 ```

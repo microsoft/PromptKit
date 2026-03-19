@@ -23,14 +23,13 @@ component (persona, protocol, format, or template) that needs improvement.
 ```
 tests/
 ├── references/                          # Hand-crafted reference prompts
-│   ├── investigate-stack-corruption.txt
-│   ├── author-auth-requirements.txt
-│   └── review-c-networking-code.txt
+│   ├── investigate-stack-corruption.md
+│   ├── prevail-design.md
+│   └── memory-safety-c-skill.instructions.md
 │
 └── generated/                           # PromptKit-generated (gitignored)
     ├── investigate-stack-corruption.md
-    ├── author-auth-requirements.md
-    └── review-c-networking-code.md
+    └── prevail-design.md
 ```
 
 - `tests/references/` — version-controlled, hand-crafted prompts
@@ -47,7 +46,7 @@ LLM output.
 - Battle-tested (produced excellent results in practice)
 - Complete (all context, constraints, deliverables included)
 
-Save it to `tests/references/<descriptive-name>.txt`.
+Save it to `tests/references/<descriptive-name>.md`.
 
 **Example:** A prompt you used to investigate a stack corruption bug,
 including persona instructions, reasoning methodology, output format
@@ -58,7 +57,7 @@ expectations, and the specific problem context.
 Use PromptKit to generate a prompt for the same task:
 
 ```bash
-npx @alan-jowett/promptkit assemble investigate-bug \
+npx promptkit assemble investigate-bug \
   -p problem_description="Stack corruption when processing network packets" \
   -p code_context="See packet_handler.c lines 200-350" \
   -p environment="Linux x86_64, gcc 12, valgrind" \
@@ -185,7 +184,7 @@ This is useful for batch-testing across many reference prompts.
 
 ```bash
 # 1. Generate the PromptKit version
-npx @alan-jowett/promptkit assemble review-code \
+npx promptkit assemble review-code \
   -p code_to_review="networking stack in src/net/" \
   -p review_focus="Memory safety and error handling" \
   -p context="C codebase, Linux kernel-style conventions" \
