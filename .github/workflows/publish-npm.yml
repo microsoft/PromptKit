@@ -28,8 +28,8 @@ jobs:
 
       - name: Sync version from release tag
         run: |
-          TAG="${GITHUB_REF#refs/tags/}"
-          VERSION="${TAG#v}"
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
           cd cli
           npm version "$VERSION" --no-git-tag-version --allow-same-version
 
@@ -52,4 +52,4 @@ jobs:
       - name: Publish to npm
         run: |
           cd cli
-          npm publish --access public
+          npm publish --provenance --access public
