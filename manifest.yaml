@@ -41,6 +41,13 @@ personas:
       release engineering, infrastructure-as-code, and platform APIs across
       GitHub Actions, Azure DevOps, GitLab CI, and other DevOps platforms.
 
+  - name: reverse-engineer
+    path: personas/reverse-engineer.md
+    description: >
+      Senior reverse engineer. Extracts specifications, contracts, and
+      behavioral requirements from existing implementations. Separates
+      essential behavior from implementation details.
+
 protocols:
   guardrails:
     - name: anti-hallucination
@@ -122,6 +129,13 @@ protocols:
         Systematic reasoning about DevOps platform constructs: pipelines,
         triggers, jobs, environments, secrets, approvals, and artifacts.
         Platform-agnostic methodology with platform-specific instantiation.
+
+    - name: requirements-from-implementation
+      path: protocols/reasoning/requirements-from-implementation.md
+      description: >
+        Systematic reasoning protocol for deriving structured requirements
+        from existing source code. Transforms code understanding into
+        testable, atomic requirements with acceptance criteria.
 
 formats:
   - name: requirements-doc
@@ -250,6 +264,16 @@ templates:
       format: validation-plan
       pipeline_position: 3
       requires: requirements-document
+
+    - name: reverse-engineer-requirements
+      path: templates/reverse-engineer-requirements.md
+      description: >
+        Reverse-engineer a structured requirements document from existing
+        source code. Analyzes implementation to extract behavioral contracts,
+        API specifications, and invariants.
+      persona: reverse-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, requirements-from-implementation]
+      format: requirements-doc
 
   investigation:
     - name: investigate-bug
