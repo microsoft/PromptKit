@@ -107,12 +107,15 @@ function launchInteractive(contentDir, cliName) {
     process.exit(1);
   });
 
-  child.on("exit", (code) => {
+  child.on("exit", (code, signal) => {
     // Clean up temp dir
     try {
       fs.rmSync(tmpDir, { recursive: true });
     } catch {
       // best effort cleanup
+    }
+    if (signal) {
+      process.kill(process.pid, signal);
     }
     process.exit(code || 0);
   });

@@ -29,6 +29,14 @@ function copyDirRecursive(src, dest) {
 }
 
 // Clean and recreate
+if (!fs.existsSync(path.join(repoRoot, "manifest.yaml"))) {
+  console.error(
+    "Error: manifest.yaml not found at repo root. " +
+      "Run this script from the promptkit repository."
+  );
+  process.exit(1);
+}
+
 if (fs.existsSync(contentDir)) {
   fs.rmSync(contentDir, { recursive: true });
 }
