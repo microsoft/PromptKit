@@ -1,0 +1,414 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) PromptKit Contributors
+
+# PromptKit — Manifest
+# This file indexes all components in the library.
+# The bootstrap prompt reads this manifest to discover available
+# personas, protocols, formats, and task templates.
+
+version: "0.1.0"
+
+personas:
+  - name: systems-engineer
+    path: personas/systems-engineer.md
+    description: >
+      Senior systems engineer. Deep expertise in memory management,
+      concurrency, performance, and debugging. Reasons from first principles.
+
+  - name: security-auditor
+    path: personas/security-auditor.md
+    description: >
+      Principal security engineer. Adversarial mindset. Specializes in
+      vulnerability discovery, threat modeling, and secure design.
+
+  - name: software-architect
+    path: personas/software-architect.md
+    description: >
+      Staff software architect. System design, API contracts, tradeoff
+      analysis, and long-term maintainability.
+
+  - name: spl-contributor
+    path: personas/spl-contributor.md
+    description: >
+      SPL contribution guide. Understands the library's architecture,
+      conventions, and quality standards. Guides contributors through
+      designing and building new components.
+
+  - name: devops-engineer
+    path: personas/devops-engineer.md
+    description: >
+      Senior DevOps / platform engineer. Deep expertise in CI/CD pipelines,
+      release engineering, infrastructure-as-code, and platform APIs across
+      GitHub Actions, Azure DevOps, GitLab CI, and other DevOps platforms.
+
+  - name: reverse-engineer
+    path: personas/reverse-engineer.md
+    description: >
+      Senior reverse engineer. Extracts specifications, contracts, and
+      behavioral requirements from existing implementations. Separates
+      essential behavior from implementation details.
+
+protocols:
+  guardrails:
+    - name: anti-hallucination
+      path: protocols/guardrails/anti-hallucination.md
+      description: >
+        Prevents fabrication. Enforces epistemic labeling (KNOWN/INFERRED/ASSUMED),
+        uncertainty disclosure, and source attribution. Apply to all tasks.
+
+    - name: self-verification
+      path: protocols/guardrails/self-verification.md
+      description: >
+        Quality gate requiring the LLM to verify its own output before finalizing.
+        Sampling checks, citation audits, coverage confirmation, consistency checks.
+
+    - name: operational-constraints
+      path: protocols/guardrails/operational-constraints.md
+      description: >
+        Governs how the LLM scopes work, uses tools, manages context, and
+        prefers deterministic analysis. Prevents over-ingestion and ensures
+        reproducibility.
+
+  analysis:
+    - name: memory-safety-c
+      path: protocols/analysis/memory-safety-c.md
+      description: >
+        Memory safety analysis for C. Covers allocation/deallocation pairing,
+        pointer lifecycle, buffer boundaries, and undefined behavior.
+      language: C
+
+    - name: memory-safety-rust
+      path: protocols/analysis/memory-safety-rust.md
+      description: >
+        Memory safety analysis for Rust. Focuses on unsafe blocks, FFI
+        boundaries, interior mutability, and resource leaks.
+      language: Rust
+
+    - name: thread-safety
+      path: protocols/analysis/thread-safety.md
+      description: >
+        Concurrency analysis. Covers data races, deadlocks, atomicity
+        violations, and thread lifecycle. Language-agnostic.
+
+    - name: security-vulnerability
+      path: protocols/analysis/security-vulnerability.md
+      description: >
+        Security vulnerability analysis. Trust boundaries, input validation,
+        auth, crypto, and information disclosure. Language-agnostic.
+
+  reasoning:
+    - name: root-cause-analysis
+      path: protocols/reasoning/root-cause-analysis.md
+      description: >
+        Systematic root cause analysis. Symptom characterization, hypothesis
+        generation, evidence evaluation, and causal chain tracing.
+
+    - name: requirements-elicitation
+      path: protocols/reasoning/requirements-elicitation.md
+      description: >
+        Requirements extraction from natural language. Produces numbered,
+        atomic, testable requirements with RFC 2119 keywords.
+
+    - name: iterative-refinement
+      path: protocols/reasoning/iterative-refinement.md
+      description: >
+        Protocol for revising documents through feedback cycles while
+        preserving structural integrity, numbering, cross-references,
+        and internal consistency.
+
+    - name: spl-design
+      path: protocols/reasoning/spl-design.md
+      description: >
+        Reasoning protocol for designing new SPL components. Scoping,
+        component type selection, dependency analysis, and convention
+        compliance.
+
+    - name: devops-platform-analysis
+      path: protocols/reasoning/devops-platform-analysis.md
+      description: >
+        Systematic reasoning about DevOps platform constructs: pipelines,
+        triggers, jobs, environments, secrets, approvals, and artifacts.
+        Platform-agnostic methodology with platform-specific instantiation.
+
+    - name: requirements-from-implementation
+      path: protocols/reasoning/requirements-from-implementation.md
+      description: >
+        Systematic reasoning protocol for deriving structured requirements
+        from existing source code. Transforms code understanding into
+        testable, atomic requirements with acceptance criteria.
+
+formats:
+  - name: requirements-doc
+    path: formats/requirements-doc.md
+    produces: requirements-document
+    description: >
+      Structured requirements document with numbered REQ-IDs, acceptance
+      criteria, constraints, assumptions, and risks.
+
+  - name: design-doc
+    path: formats/design-doc.md
+    produces: design-document
+    consumes: requirements-document
+    description: >
+      Software design document with architecture, API contracts, data models,
+      tradeoff analysis, and open questions.
+
+  - name: validation-plan
+    path: formats/validation-plan.md
+    produces: validation-plan
+    consumes: requirements-document
+    description: >
+      Test and validation plan with traceability matrix, test cases,
+      risk prioritization, and pass/fail criteria.
+
+  - name: investigation-report
+    path: formats/investigation-report.md
+    produces: investigation-report
+    description: >
+      Investigation report with findings, root cause analysis, evidence,
+      remediation plan, and prevention recommendations.
+
+  - name: multi-artifact
+    path: formats/multi-artifact.md
+    produces: artifact-set
+    description: >
+      Multi-file output format for tasks producing multiple deliverables
+      (structured data, reports, coverage logs). Defines artifact manifests,
+      per-artifact schemas, and cross-artifact consistency rules.
+
+  - name: spl-pull-request
+    path: formats/spl-pull-request.md
+    produces: spl-contribution
+    description: >
+      Output format for SPL contributions. Produces PR-ready component
+      files, manifest update, and pull request description.
+
+  - name: pipeline-spec
+    path: formats/pipeline-spec.md
+    produces: pipeline-spec
+    description: >
+      CI/CD pipeline specification with platform-specific YAML, design
+      rationale, configuration requirements, and deployment notes.
+
+  - name: triage-report
+    path: formats/triage-report.md
+    produces: triage-report
+    description: >
+      Prioritized triage report for issues, pull requests, or work items.
+      Classifies items by priority, effort, and recommended action.
+
+  - name: release-notes
+    path: formats/release-notes.md
+    produces: release-notes
+    description: >
+      Structured release notes with changelog, breaking changes, upgrade
+      instructions, and contributor acknowledgment.
+
+  - name: agent-instructions
+    path: formats/agent-instructions.md
+    produces: agent-instruction-file
+    description: >
+      Output format for persistent agent instruction files. For GitHub
+      Copilot, produces composable skill files under
+      .github/instructions/*.instructions.md with applyTo targeting.
+      Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
+
+taxonomies:
+  - name: stack-lifetime-hazards
+    path: taxonomies/stack-lifetime-hazards.md
+    domain: memory-safety
+    description: >
+      Classification scheme (H1-H5) for stack lifetime and memory escape
+      hazards at system boundaries. Covers stack address escape, async
+      pend/complete lifetime violations, and writable views of read-only data.
+
+templates:
+  document-authoring:
+    - name: author-requirements-doc
+      path: templates/author-requirements-doc.md
+      description: >
+        Generate a requirements document from a natural language description.
+        Single-shot generation. For complex/ambiguous projects, use
+        interactive-design instead.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification, requirements-elicitation]
+      format: requirements-doc
+      pipeline_position: 1
+
+    - name: interactive-design
+      path: templates/interactive-design.md
+      description: >
+        Multi-phase interactive design session. Phase 1: reason, question,
+        and challenge before generating. Phase 2: generate when told.
+        Phase 3: iterative refinement. Use for complex or ambiguous projects.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
+      format: requirements-doc
+
+    - name: author-design-doc
+      path: templates/author-design-doc.md
+      description: >
+        Generate a design document that addresses a requirements document.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification]
+      format: design-doc
+      pipeline_position: 2
+      requires: requirements-document
+
+    - name: author-validation-plan
+      path: templates/author-validation-plan.md
+      description: >
+        Generate a validation plan covering all requirements.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: validation-plan
+      pipeline_position: 3
+      requires: requirements-document
+
+    - name: reverse-engineer-requirements
+      path: templates/reverse-engineer-requirements.md
+      description: >
+        Reverse-engineer a structured requirements document from existing
+        source code. Analyzes implementation to extract behavioral contracts,
+        API specifications, and invariants.
+      persona: reverse-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, requirements-from-implementation]
+      format: requirements-doc
+
+  investigation:
+    - name: investigate-bug
+      path: templates/investigate-bug.md
+      description: >
+        Investigate a bug from a problem description. Apply root cause
+        analysis and produce an investigation report.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, root-cause-analysis]
+      format: investigation-report
+
+    - name: investigate-security
+      path: templates/investigate-security.md
+      description: >
+        Security audit of code or a system component. Systematic
+        vulnerability analysis with severity classification.
+      persona: security-auditor
+      protocols: [anti-hallucination, self-verification, operational-constraints, security-vulnerability]
+      format: investigation-report
+
+  code-analysis:
+    - name: review-code
+      path: templates/review-code.md
+      description: >
+        Thorough code review for correctness, safety, security,
+        and maintainability. Supports additional analysis protocols.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints]
+      format: investigation-report
+
+  planning:
+    - name: plan-implementation
+      path: templates/plan-implementation.md
+      description: >
+        Decompose a project into an actionable implementation plan
+        with tasks, dependencies, and risk assessment.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification]
+
+    - name: plan-refactoring
+      path: templates/plan-refactoring.md
+      description: >
+        Plan a safe, incremental refactoring with step-by-step
+        changes that maintain correctness at each step.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification]
+
+  agent-authoring:
+    - name: author-agent-instructions
+      path: templates/author-agent-instructions.md
+      description: >
+        Assemble PromptKit components (persona, protocols) into composable
+        agent skill files. For GitHub Copilot, produces individual
+        .github/instructions/*.instructions.md files with applyTo targeting.
+        Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
+      persona: spl-contributor
+      protocols: [anti-hallucination, self-verification]
+      format: agent-instructions
+
+  contribution:
+    - name: extend-library
+      path: templates/extend-library.md
+      description: >
+        Guide a contributor through designing and building new SPL
+        components. Interactive workflow producing PR-ready files.
+      persona: spl-contributor
+      protocols: [anti-hallucination, self-verification, spl-design]
+      format: spl-pull-request
+
+  devops:
+    - name: author-pipeline
+      path: templates/author-pipeline.md
+      description: >
+        Generate a production-ready CI/CD pipeline for a given application
+        and target platform. Supports GitHub Actions, Azure DevOps, GitLab CI.
+      persona: devops-engineer
+      protocols: [anti-hallucination, self-verification, devops-platform-analysis]
+      format: pipeline-spec
+
+    - name: triage-issues
+      path: templates/triage-issues.md
+      description: >
+        Triage and prioritize open issues or work items. Classify by
+        priority and effort, identify patterns, recommend a workflow.
+      persona: devops-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: triage-report
+
+    - name: triage-pull-requests
+      path: templates/triage-pull-requests.md
+      description: >
+        Triage open pull requests to identify which need review, are stale,
+        have conflicts, or are ready to merge. Prioritize review effort.
+      persona: devops-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: triage-report
+
+    - name: root-cause-ci-failure
+      path: templates/root-cause-ci-failure.md
+      description: >
+        Investigate a failing CI/CD pipeline run. Analyze logs, pipeline
+        configuration, and platform behavior. Produce an investigation report.
+      persona: devops-engineer
+      protocols: [anti-hallucination, self-verification, root-cause-analysis, devops-platform-analysis]
+      format: investigation-report
+
+    - name: author-release
+      path: templates/author-release.md
+      description: >
+        Generate structured release notes from commits, PRs, and issues
+        between two versions. Changelog, breaking changes, upgrade instructions.
+      persona: devops-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: release-notes
+
+    - name: review-infrastructure
+      path: templates/review-infrastructure.md
+      description: >
+        Review infrastructure-as-code (Terraform, Bicep, ARM, Pulumi,
+        CloudFormation) for correctness, security, and best practices.
+      persona: devops-engineer
+      protocols: [anti-hallucination, self-verification, security-vulnerability]
+      format: investigation-report
+
+pipelines:
+  document-lifecycle:
+    description: >
+      Full document lifecycle from requirements through validation.
+      Each stage produces an artifact consumed by the next.
+    stages:
+      - template: author-requirements-doc
+        produces: requirements-document
+      - template: author-design-doc
+        consumes: requirements-document
+        produces: design-document
+      - template: author-validation-plan
+        consumes: requirements-document
+        produces: validation-plan
