@@ -3,7 +3,7 @@
 
 // Detects LLM CLIs on PATH and launches bootstrap sessions.
 
-const { execSync, spawn } = require("child_process");
+const { execFileSync, spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
@@ -11,7 +11,7 @@ const os = require("os");
 function isOnPath(cmd) {
   try {
     const whereCmd = process.platform === "win32" ? "where" : "which";
-    execSync(`${whereCmd} ${cmd}`, { stdio: "ignore" });
+    execFileSync(whereCmd, [cmd], { stdio: "ignore" });
     return true;
   } catch {
     return false;
@@ -24,7 +24,7 @@ function detectCli() {
   // Check for gh with copilot extension
   if (isOnPath("gh")) {
     try {
-      execSync("gh copilot --help", { stdio: "ignore" });
+      execFileSync("gh", ["copilot", "--help"], { stdio: "ignore" });
       return "gh-copilot";
     } catch {
       // gh exists but no copilot extension
@@ -95,6 +95,16 @@ function launchInteractive(contentDir, cliName) {
   const child = spawn(cmd, args, {
     cwd: tmpDir,
     stdio: "inherit",
+  });
+
+  child.on("error", (err) => {
+    console.error(`Failed to launch ${cli}: ${err.message}`);
+    try {
+      fs.rmSync(tmpDir, { recursive: true });
+    } catch {
+      // best effort cleanup
+    }
+    process.exit(1);
   });
 
   child.on("exit", (code) => {

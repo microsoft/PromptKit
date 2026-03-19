@@ -47,5 +47,16 @@ for (const dir of dirs) {
   copyDirRecursive(path.join(repoRoot, dir), path.join(contentDir, dir));
 }
 
-const count = fs.readdirSync(contentDir, { recursive: true }).length;
+function countEntries(dir) {
+  let count = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    count++;
+    if (entry.isDirectory()) {
+      count += countEntries(path.join(dir, entry.name));
+    }
+  }
+  return count;
+}
+
+const count = countEntries(contentDir);
 console.log(`Copied PromptKit content to cli/content/ (${count} entries)`);

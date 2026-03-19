@@ -44,17 +44,6 @@ npx promptkit assemble investigate-bug \
 
 ### Using the repo directly
 
-1. **Load the bootstrap prompt** (`bootstrap.md`) into an LLM session.
-2. **Describe your task** — the LLM will select the right components.
-3. **Provide context** — code, requirements, problem descriptions.
-4. **Get an assembled prompt** — ready to use in a fresh LLM session.
-
-```
-You → bootstrap.md → LLM reads manifest → selects components → assembled prompt → LLM → output
-```
-
-### Using the repo directly
-
 Clone the repo and point Copilot at the bootstrap prompt:
 
 ```bash
