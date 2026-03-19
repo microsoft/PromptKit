@@ -95,7 +95,6 @@ function launchInteractive(contentDir, cliName) {
   const child = spawn(cmd, args, {
     cwd: tmpDir,
     stdio: "inherit",
-    shell: true,
   });
 
   child.on("exit", (code) => {
