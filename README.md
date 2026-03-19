@@ -12,16 +12,37 @@ Designed for software engineers who design, develop, and debug software.
 
 ## Prerequisites
 
-- **Git** — [Install Git](https://git-scm.com/)
+- **Node.js 18+** — [Install Node.js](https://nodejs.org/) (required for `npx promptkit`)
+- **Git** — [Install Git](https://git-scm.com/) (only needed if cloning the repo)
 
-To follow the Quick Start using a CLI, you'll need one of the following LLM CLI tools:
+To use the interactive mode, you'll also need one of the following LLM CLI tools:
 
 - **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), authenticate with `gh auth login`, ensure Copilot access is enabled for your account/organization, then run `gh extension install github/gh-copilot`
 - **Claude Code** — [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
-Not using a CLI tool? See [Using with any LLM (manual)](#using-with-any-llm-manual).
+Not using a CLI tool? Use `promptkit assemble` to generate prompt files, or see
+[Using with any LLM (manual)](#using-with-any-llm-manual).
 
 ## Quick Start
+
+### Using npx (recommended — no clone needed)
+
+```bash
+# Interactive mode — detects your LLM CLI and launches bootstrap
+npx promptkit
+
+# List available templates
+npx promptkit list
+
+# Assemble a specific prompt to a file
+npx promptkit assemble investigate-bug \
+  -p problem_description="Segfault on startup" \
+  -p code_context="See attached files" \
+  -p environment="Linux x86_64" \
+  -o bug-investigation.md
+```
+
+### Using the repo directly
 
 1. **Load the bootstrap prompt** (`bootstrap.md`) into an LLM session.
 2. **Describe your task** — the LLM will select the right components.
@@ -32,7 +53,7 @@ Not using a CLI tool? See [Using with any LLM (manual)](#using-with-any-llm-manu
 You → bootstrap.md → LLM reads manifest → selects components → assembled prompt → LLM → output
 ```
 
-### Using with GitHub Copilot CLI
+### Using the repo directly
 
 Clone the repo and point Copilot at the bootstrap prompt:
 
@@ -101,6 +122,33 @@ into a session along with the manifest, then follow the interactive flow:
 4. The LLM will tell you which files to paste in (persona, protocols, etc.)
 5. Paste the requested files, get the assembled prompt back.
 ```
+
+## CLI Reference
+
+The `promptkit` CLI provides three commands:
+
+| Command | Description |
+|---------|-------------|
+| `promptkit` | Launch interactive session with auto-detected LLM CLI |
+| `promptkit list` | List all available templates with descriptions |
+| `promptkit assemble <template>` | Assemble a prompt from a template to a file |
+
+### `promptkit assemble`
+
+```bash
+promptkit assemble <template> [options]
+
+Options:
+  -o, --output <file>       Output file path (default: "assembled-prompt.md")
+  -p, --param <key=value>   Template parameter (repeatable)
+```
+
+The assembled prompt follows the PromptKit composition order:
+Identity → Reasoning Protocols → Output Format → Task (with parameters filled).
+
+### `promptkit list --json`
+
+Outputs the full template catalog as JSON for scripting.
 
 ## Architecture
 
@@ -246,6 +294,10 @@ promptkit/
 ├── formats/                 # Output structure definitions
 ├── taxonomies/              # Domain-specific classification schemes
 ├── templates/               # Task templates (compose other layers)
+├── cli/                     # npx CLI package
+│   ├── bin/cli.js           # Entry point
+│   ├── lib/                 # Manifest parsing, assembly, CLI launch
+│   └── content/             # Bundled content (generated, gitignored)
 └── tests/                   # Prompt unit tests
     ├── references/          # Known-good reference prompts
     └── generated/           # SPL-generated prompts for comparison
