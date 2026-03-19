@@ -11,6 +11,7 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+format: implementation-plan
 params:
   goal: "What the refactoring should achieve"
   current_code: "The code to refactor"

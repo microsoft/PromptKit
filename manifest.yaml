@@ -213,6 +213,14 @@ formats:
       .github/instructions/*.instructions.md with applyTo targeting.
       Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
 
+  - name: implementation-plan
+    path: formats/implementation-plan.md
+    produces: implementation-plan
+    description: >
+      Output format for implementation and refactoring plans. Task
+      breakdown, dependency ordering, risk assessment, and verification
+      strategy.
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -312,6 +320,7 @@ templates:
         with tasks, dependencies, and risk assessment.
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
+      format: implementation-plan
 
     - name: plan-refactoring
       path: templates/plan-refactoring.md
@@ -320,6 +329,7 @@ templates:
         changes that maintain correctness at each step.
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
+      format: implementation-plan
 
   agent-authoring:
     - name: author-agent-instructions

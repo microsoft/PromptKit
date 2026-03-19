@@ -12,6 +12,7 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
+format: investigation-report
 params:
   code: "The code to review"
   review_focus: "What to focus on — e.g., correctness, security, performance, all"

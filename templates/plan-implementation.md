@@ -10,6 +10,7 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+format: implementation-plan
 params:
   project_name: "Name of the project or feature"
   requirements_doc: "Requirements document (if available)"
