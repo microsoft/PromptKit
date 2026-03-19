@@ -10,6 +10,7 @@ description: >
   testable, atomic requirements with acceptance criteria.
 applicable_to:
   - reverse-engineer-requirements
+  - review-code
 ---
 
 # Protocol: Requirements from Implementation
@@ -29,9 +30,11 @@ Systematically catalog every public-facing element of the codebase:
 2. **Types and data structures**: Structs, enums, unions, typedefs.
    Identify which are opaque (implementation detail) vs. transparent
    (part of the API contract).
-3. **Macros and preprocessor constructs**: For macro-based APIs, expand
-   representative invocations to understand the actual behavior. Document
-   macro parameters, their types, and constraints.
+3. **Metaprogramming and indirection constructs** (if applicable):
+   Preprocessor macros (C/C++), decorators (Python), annotations (Java),
+   attribute macros (Rust), code generation. Expand representative
+   invocations to understand the actual behavior. Document parameters,
+   their types, and constraints.
 4. **Constants and configuration surfaces**: Compile-time switches,
    feature flags, tuning parameters. Identify which are user-facing
    configuration vs. internal implementation constants.

@@ -17,7 +17,7 @@ to Rust. The workflow they envisioned:
 3. Generate a validation plan
 4. Implement the Rust crate based on the design
 
-Steps 2–4 were already supported by PromptKit's existing
+Steps 2–3 were already supported by PromptKit's existing
 `document-lifecycle` pipeline (`author-design-doc` →
 `author-validation-plan`). But step 1 — reverse-engineering
 requirements from existing code — had no template.
@@ -101,7 +101,8 @@ are API guarantees. The two-test heuristic helps:
 **Semantic fidelity over correctness**: The template explicitly
 instructs the LLM to document what the code *does*, even if it appears
 buggy. If a bug is established behavior, it becomes a requirement
-flagged with `[REVIEW]`. This prevents the LLM from "helpfully"
+flagged with `[REVIEW: may be a defect in the reference implementation]`.
+This prevents the LLM from "helpfully"
 fixing bugs during requirements extraction.
 
 **Source traceability**: Every requirement must cite specific code

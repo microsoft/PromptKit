@@ -49,41 +49,39 @@ its behavioral contracts, guarantees, and API specifications.
 
 ## Instructions
 
-1. **Read and understand the codebase** before deriving any requirements.
-   Start by understanding the overall architecture, entry points, and
-   primary abstractions. Do not begin requirement extraction until you
-   have a coherent mental model of the codebase.
-
-2. **Apply the requirements-from-implementation protocol** systematically:
+1. **Apply the requirements-from-implementation protocol** systematically.
+   Begin by reading and understanding the codebase — its overall
+   architecture, entry points, and primary abstractions. Do not begin
+   requirement extraction until you have a coherent mental model. Then:
    - Phase 1: Enumerate the complete API surface
    - Phase 2: Extract behavioral contracts for each element
    - Phase 3: Classify each behavior as essential vs. incidental
    - Phase 4: Synthesize requirements from essential behaviors
    - Phase 5: Verify completeness against the API surface
 
-3. **Apply the anti-hallucination protocol** throughout:
+2. **Apply the anti-hallucination protocol** throughout:
    - Every requirement MUST be traceable to specific code evidence
    - Cite file paths, function names, and line numbers where possible
    - Do NOT invent behaviors not demonstrated by the code
    - If behavior is unclear, use `[UNKNOWN]` rather than guessing
    - When code and documentation disagree, report both
 
-4. **Apply the operational-constraints protocol** when reading the codebase:
+3. **Apply the operational-constraints protocol** when reading the codebase:
    - Scope your analysis before reading — identify the relevant files
      and directories first
    - Enumerate API elements systematically rather than ad-hoc
    - Document your analysis strategy for reproducibility
 
-5. **Format the output** according to the requirements-doc format
+4. **Format the output** according to the requirements-doc format
    specification. Additionally:
    - In the Overview section, describe the purpose and architecture
      of the analyzed codebase
    - In the Definitions section, include domain terminology extracted
      from the code (type names, macro conventions, error codes)
-   - Add a "Source Traceability" subsection to each requirement group
-     mapping REQ-IDs to source file locations
+   - For each requirement, include a source citation inline
+     (e.g., "Source: `auth.c:142`, `validate_token()`)
 
-6. **Apply the self-verification protocol** before finalizing:
+5. **Apply the self-verification protocol** before finalizing:
    - Sample at least 5 requirements and re-verify each against
      the source code
    - Confirm the API surface enumeration is complete
@@ -100,7 +98,7 @@ its behavioral contracts, guarantees, and API specifications.
 - Do NOT attempt to fix bugs in the requirements — if the implementation
   has apparent defects, document them as requirements and flag for review.
 
-## Analysis Plan
+## Investigation Plan
 
 Before beginning requirement extraction, produce a concrete analysis plan:
 
@@ -133,4 +131,3 @@ Before finalizing, verify:
 - [ ] Ambiguous behaviors are flagged with [AMBIGUOUS]
 - [ ] Cross-cutting concerns (threading, errors, resources) are covered
 - [ ] No fabricated behaviors — all unknowns marked with [UNKNOWN]
-- [ ] Source traceability mapping is complete
