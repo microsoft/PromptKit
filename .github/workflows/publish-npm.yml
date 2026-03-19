@@ -1,0 +1,55 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) PromptKit Contributors
+
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: Publish npm package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Ensure latest npm (for trusted publishing)
+        run: npm install -g npm@latest
+
+      - name: Sync version from release tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          cd cli
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+
+      - name: Install dependencies
+        run: |
+          cd cli
+          npm ci
+
+      - name: Bundle content
+        run: |
+          cd cli
+          node scripts/copy-content.js
+
+      - name: Verify package
+        run: |
+          cd cli
+          node bin/cli.js --version
+          node bin/cli.js list
+
+      - name: Publish to npm
+        run: |
+          cd cli
+          npm publish --access public

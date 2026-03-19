@@ -22,7 +22,7 @@ Designed for software engineers who design, develop, and debug software.
 
 ## Prerequisites
 
-- **Node.js 18+** — [Install Node.js](https://nodejs.org/) (required for `npx promptkit`)
+- **Node.js 18+** — [Install Node.js](https://nodejs.org/) (required for `npx @alan-jowett/promptkit`)
 - **Git** — [Install Git](https://git-scm.com/) (only needed if cloning the repo)
 
 To use the interactive mode, you'll also need one of the following LLM CLI tools:
@@ -39,13 +39,13 @@ Not using a CLI tool? Use `promptkit assemble` to generate prompt files, or see
 
 ```bash
 # Interactive mode — detects your LLM CLI and launches bootstrap
-npx promptkit
+npx @alan-jowett/promptkit
 
 # List available templates
-npx promptkit list
+npx @alan-jowett/promptkit list
 
 # Assemble a specific prompt to a file
-npx promptkit assemble investigate-bug \
+npx @alan-jowett/promptkit assemble investigate-bug \
   -p problem_description="Segfault on startup" \
   -p code_context="See attached files" \
   -p environment="Linux x86_64" \
