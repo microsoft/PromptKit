@@ -7,9 +7,6 @@
   <img src="PromptKit-logo.png" alt="PromptKit logo — composable prompt toolkit" width="400">
 </p>
 
-A composable, versioned library of prompt templates for software engineering tasks.
-Designed for software engineers who design, develop, and debug software.
-
 **Agentic prompts are the most important code you're not engineering.**
 Every AI-assisted task — investigating bugs, writing requirements, reviewing code — lives or dies by the prompt that drives it.
 Yet most teams still write these prompts ad hoc: copy-pasted, untested, inconsistent, and impossible to improve systematically.
@@ -19,6 +16,9 @@ components — personas, reasoning protocols, output formats, and task
 templates — that snap together into reliable, repeatable prompts. The same
 engineering rigor you apply to your software (modularity, reuse, testing,
 code review) now applies to the prompts that build it.
+
+A composable, versioned library of prompt templates for software engineering tasks.
+Designed for software engineers who design, develop, and debug software.
 
 ## Prerequisites
 
