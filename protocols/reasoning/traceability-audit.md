@@ -182,6 +182,8 @@ After reporting individual findings, produce aggregate metrics:
      negative tests
    - Boundary tests: count of threshold requirements with/without
      boundary tests
+   - Ordering tests: count of sequence-constraint requirements
+     with/without order-enforcing tests
 4. **Assumption consistency**: count of aligned vs. conflicting vs.
    unstated assumptions.
 5. **Overall assessment**: a summary judgment of specification integrity
