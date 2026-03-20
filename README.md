@@ -198,12 +198,38 @@ prompt based on the user's needs.
 Templates declare **input and output contracts** so they can be chained:
 
 ```
-author-requirements-doc  →  author-design-doc  →  author-validation-plan
-  (produces: requirements)    (consumes: requirements,   (consumes: requirements,
-                               produces: design)          produces: validation)
+author-requirements-doc  →  author-design-doc  →  author-validation-plan  →  audit-traceability
+  (produces: requirements)    (consumes: requirements,   (consumes: requirements,    (consumes: all three,
+                               produces: design)          produces: validation)       produces: drift report)
 ```
 
 The output of one template becomes the input parameter of the next.
+
+### Use Case: Specification Traceability Audit
+
+After authoring requirements, design, and validation documents — whether
+through PromptKit's pipeline or by hand — you can audit all three for
+**specification drift**: gaps, contradictions, and divergence that
+accumulate as documents evolve independently.
+
+```bash
+# Assemble a traceability audit prompt
+npx @alan-jowett/promptkit assemble audit-traceability \
+  -p project_name="Auth Service" \
+  -p requirements_doc="$(cat requirements.md)" \
+  -p design_doc="$(cat design.md)" \
+  -p validation_plan="$(cat validation-plan.md)" \
+  -o audit-report.md
+```
+
+The audit uses the `specification-drift` taxonomy (D1–D7) to classify
+findings — untraced requirements, orphaned design decisions, assumption
+drift, constraint violations, and illusory test coverage. Each finding
+includes specific document locations, evidence, severity, and remediation
+guidance.
+
+The design document is optional — omit it for a focused
+requirements ↔ validation plan audit.
 
 ## Components
 
@@ -214,6 +240,7 @@ The output of one template becomes the input parameter of the next.
 | `systems-engineer` | Memory management, concurrency, performance, debugging |
 | `security-auditor` | Vulnerability discovery, threat modeling, secure design |
 | `software-architect` | System design, API contracts, tradeoff analysis |
+| `specification-analyst` | Cross-document traceability, coverage analysis, specification drift |
 
 ### Protocols
 
@@ -240,6 +267,7 @@ The output of one template becomes the input parameter of the next.
 |------|-------------|
 | `root-cause-analysis` | Systematic root cause analysis |
 | `requirements-elicitation` | Requirements extraction from natural language |
+| `traceability-audit` | Cross-document specification drift detection |
 
 ### Formats
 
@@ -256,6 +284,7 @@ The output of one template becomes the input parameter of the next.
 | Name | Domain | Description |
 |------|--------|-------------|
 | `stack-lifetime-hazards` | Memory safety | H1–H5 labels for stack escape and lifetime violations |
+| `specification-drift` | Specification traceability | D1–D7 labels for cross-document drift and divergence |
 
 ### Templates
 
@@ -269,6 +298,7 @@ The output of one template becomes the input parameter of the next.
 | `review-code` | Code analysis | Code review for correctness and safety |
 | `plan-implementation` | Planning | Implementation task breakdown |
 | `plan-refactoring` | Planning | Safe, incremental refactoring plan |
+| `audit-traceability` | Document auditing | Cross-document specification drift audit |
 
 ## Directory Structure
 

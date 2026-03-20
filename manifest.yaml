@@ -48,6 +48,13 @@ personas:
       behavioral requirements from existing implementations. Separates
       essential behavior from implementation details.
 
+  - name: specification-analyst
+    path: personas/specification-analyst.md
+    description: >
+      Senior specification analyst. Cross-examines requirements, design,
+      and validation artifacts for consistency, completeness, and
+      traceability. Adversarial toward completeness claims.
+
 protocols:
   guardrails:
     - name: anti-hallucination
@@ -136,6 +143,14 @@ protocols:
         Systematic reasoning protocol for deriving structured requirements
         from existing source code. Transforms code understanding into
         testable, atomic requirements with acceptance criteria.
+
+    - name: traceability-audit
+      path: protocols/reasoning/traceability-audit.md
+      description: >
+        Systematic cross-document comparison protocol for auditing
+        requirements, design, and validation artifacts. Builds
+        traceability matrices and classifies divergence using the
+        specification-drift taxonomy.
 
 formats:
   - name: requirements-doc
@@ -230,6 +245,15 @@ taxonomies:
       hazards at system boundaries. Covers stack address escape, async
       pend/complete lifetime violations, and writable views of read-only data.
 
+  - name: specification-drift
+    path: taxonomies/specification-drift.md
+    domain: specification-traceability
+    description: >
+      Classification scheme (D1-D7) for specification drift across
+      requirements, design, and validation artifacts. Covers untraced
+      requirements, orphaned design decisions, assumption drift, and
+      acceptance criteria mismatch. Extensible to D8+ for code/test audits.
+
 templates:
   document-authoring:
     - name: author-requirements-doc
@@ -282,6 +306,18 @@ templates:
       persona: reverse-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints, requirements-from-implementation]
       format: requirements-doc
+
+    - name: audit-traceability
+      path: templates/audit-traceability.md
+      description: >
+        Audit requirements, design, and validation documents for
+        specification drift. Cross-checks traceability, assumption
+        consistency, constraint propagation, and coverage completeness.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, traceability-audit]
+      format: investigation-report
+      pipeline_position: 4
+      requires: [requirements-document, validation-plan]
 
   investigation:
     - name: investigate-bug
@@ -422,3 +458,6 @@ pipelines:
       - template: author-validation-plan
         consumes: requirements-document
         produces: validation-plan
+      - template: audit-traceability
+        consumes: [requirements-document, design-document, validation-plan]
+        produces: investigation-report
