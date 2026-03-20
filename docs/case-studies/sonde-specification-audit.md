@@ -296,6 +296,55 @@ documents. An ad-hoc prompt skims; the protocol enumerates.
 Enumeration is tedious but exhaustive — and that's exactly what makes
 it effective for finding what's missing rather than what's wrong.
 
+### What the Ad-Hoc Audit Caught That PromptKit Missed
+
+The comparison cuts both ways. The ad-hoc audit found **11 spec-relevant
+issues (~100+ individual gaps)** that the trifecta audit did not surface.
+They fall into three categories the structural audit cannot detect by
+design:
+
+**Semantic test gaps (6 issues, ~45 individual gaps).** Tests exist and
+are linked to requirements, but don't verify deeply enough. For example:
+issue #357 found that protocol tests check output exists but not that
+randomness is cryptographic, CBOR is deterministic, or HMAC state is
+isolated. Issue #354 found 11 node tests that check outcomes but not
+timing/ordering constraints ("MUST wait for X before Y"). Issue #359
+found requirements with happy-path tests but no negative tests.
+
+*Why missed:* The trifecta audit checks "does a test case exist for this
+requirement?" (D2). It does not read test procedures to judge whether
+they're thorough enough. That's D7 territory, which it only spot-checks
+at the acceptance-criteria level.
+
+**Domain-specific safety gaps (4 issues, ~50+ individual gaps).** These
+require deep understanding of the BPF interpreter's safety model. Issue
+#330 found 28 tagged register safety invariants with zero test coverage.
+Issue #334 found 8 BPF helper trust boundary gaps. These come from
+`safe-bpf-interpreter.md` — a separate specification not included in
+any component's trifecta.
+
+*Why missed:* The audit examines the three documents it's given. Specs
+outside the trifecta are invisible to it.
+
+**Cross-component integration (1 issue, 5 gaps).** The end-to-end BLE
+onboarding flow across gateway + modem + pairing tool was never
+integration-tested (#361).
+
+*Why missed:* The trifecta audit examines each component independently.
+Cross-component flows are invisible to per-component audits.
+
+### The Complementarity Is the Point
+
+| Approach | Strength | Blind spot |
+|----------|----------|------------|
+| **PromptKit trifecta** | Structural traceability — missing cross-references, orphaned IDs, numbering gaps (30 net-new findings) | Cannot judge test depth, domain safety invariants, or cross-component flows |
+| **Ad-hoc prompt** | Semantic depth — are tests thorough enough? are safety invariants verified? are negative cases covered? (11 issues, ~100+ gaps) | Misses systematic traceability gaps across document sets |
+
+Neither approach alone gives full coverage. The structural audit is
+exhaustive but shallow (does a test *exist*?). The ad-hoc audit is
+deep but selective (is this test *good enough*?). Used together, they
+cover both dimensions.
+
 ## Takeaways
 
 - **Specification drift is real and systemic.** BLE pairing was added
@@ -304,10 +353,11 @@ it effective for finding what's missing rather than what's wrong.
   the audit caught it in all three and quantified the gap precisely.
 
 - **Structured prompts find different issues than ad-hoc prompts.**
-  Both used LLMs. The difference was prompt engineering: the ad-hoc
-  prompt caught test gaps (what an LLM naturally surfaces), while the
-  PromptKit prompt caught design traceability gaps (what the protocol
-  forces the LLM to check). 50% of findings were net-new.
+  Both used LLMs. PromptKit found 30 net-new structural traceability
+  gaps. The ad-hoc prompt found 11 issues (~100+ individual gaps) in
+  semantic test depth and domain safety that the structural audit
+  can't see. Neither alone gives full coverage — the two are
+  complementary by design, not competing.
 
 - **One prompt, five audits.** The assembled prompt is reusable —
   the methodology doesn't change, only the inputs. This scales to
