@@ -56,41 +56,48 @@ is inherently authoritative.
 
 **Focus Areas**: {{focus_areas}}
 
+**Audience**: {{audience}}
+
 ## Instructions
 
 1. **Apply the requirements-reconciliation protocol.** Execute all
    phases in order. This is the core methodology — do not skip phases.
 
-2. **Treat all sources as equal.** No source is authoritative. If an
+2. **Use the provided tag** for all unified REQ-IDs. Format:
+   `REQ-{{unified_tag}}-<CAT>-<NNN>` (e.g., `REQ-TCP-UNIFIED-CONN-001`
+   for the first connection establishment requirement). The tag
+   distinguishes unified requirements from source requirements.
+
+3. **Treat all sources as equal.** No source is authoritative. If an
    RFC says MUST but every implementation does something different,
    that is a DIVERGENT requirement — not an implementation bug. The
    unified spec documents reality, not aspiration.
 
-3. **Preserve source traceability.** Every unified requirement must
+4. **Preserve source traceability.** Every unified requirement must
    map back to its originating requirements in each source. Use the
    original REQ-IDs as cross-references.
 
-4. **Preserve keyword strength per source.** When sources disagree on
+5. **Preserve keyword strength per source.** When sources disagree on
    MUST/SHOULD/MAY, record each source's keyword in the divergence
    notes. For UNIVERSAL requirements, use the agreed keyword. For
    MAJORITY, use the majority keyword and note the outlier.
 
-5. **Do NOT resolve DIVERGENT requirements.** Document all variants
+6. **Do NOT resolve DIVERGENT requirements.** Document all variants
    and their interoperability impact. Suggest resolution options but
    do NOT pick a winner — that requires human judgment about the
    target use case.
 
-6. **If focus areas are specified**, perform the full source inventory
+7. **If focus areas are specified**, perform the full source inventory
    (Phase 1) but restrict alignment and classification (Phases 2–5) to
    requirements in the specified functional areas.
 
-7. **Apply the anti-hallucination protocol.** Every alignment must cite
+8. **Apply the anti-hallucination protocol.** Every alignment must cite
    specific REQ-IDs from the source documents. Do NOT invent
    requirements that are not in any source. If you infer a behavioral
    equivalence between requirements in different sources, explain your
    reasoning so it can be verified.
 
-8. **Format the output** according to the requirements-doc format with
+9. **Format the output** according to the requirements-doc format with
    additional metadata per requirement:
    - Compatibility class (UNIVERSAL / MAJORITY / DIVERGENT / EXTENSION)
    - Source mapping table (unified REQ-ID → source REQ-IDs)
@@ -98,7 +105,7 @@ is inherently authoritative.
    - Interoperability hotspots expressed as risk rows in the Risks
      section (Risk ID, Description, Likelihood, Impact, Mitigation)
 
-9. **Quality checklist** — before finalizing, verify:
+10. **Quality checklist** — before finalizing, verify:
    - [ ] Every requirement from every source appears in the alignment
          table or is documented as unmatched
    - [ ] Every unified requirement has a compatibility class

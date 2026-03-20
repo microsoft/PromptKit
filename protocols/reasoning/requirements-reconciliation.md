@@ -65,10 +65,12 @@ Map requirements across sources to identify equivalences.
    requirements can use similar words but specify different behaviors.
 
 2. **Build an alignment table**: Each row represents a single behavior
-   or constraint. Columns show how each source addresses it:
+   or constraint. Use temporary alignment IDs (U-001, U-002, ...) for
+   working reference — these will be replaced with final unified
+   REQ-IDs in Phase 5. Columns show how each source addresses it:
 
-   | Unified ID | Behavior | Source 1 | Source 2 | Source 3 | ... |
-   |------------|----------|----------|----------|----------|-----|
+   | Alignment ID | Behavior | Source 1 | Source 2 | Source 3 | ... |
+   |--------------|----------|----------|----------|----------|-----|
    | U-001 | SYN retransmit timeout | REQ-TCP-034-012 (MUST, 3s) | LINUX-CONN-007 (MUST, 1s) | BSD-CONN-004 (MUST, 3s) | |
 
 3. **Flag unmatched requirements**: Requirements that exist in only
