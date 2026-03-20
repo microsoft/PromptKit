@@ -99,8 +99,9 @@ Check that every requirement flows forward into downstream documents.
 
    - A test case that is *linked* but fails any of the above sub-checks
      is a D7_ACCEPTANCE_CRITERIA_MISMATCH. In the finding, specify which
-     sub-check failed (criterion coverage, negative case, boundary, or
-     ordering) so the remediation is actionable.
+     sub-check failed (criterion-level coverage, negative case coverage,
+     boundary and threshold verification, or ordering and timing
+     constraints) so the remediation is actionable.
 
 ## Phase 3: Backward Traceability (Downstream → Requirements)
 
@@ -176,14 +177,15 @@ After reporting individual findings, produce aggregate metrics:
 2. **Backward traceability rate**: % of design elements traced to
    requirements, % of test cases traced to requirements.
 3. **Acceptance criteria coverage**: % of acceptance criteria with
-   corresponding test verification. Break down by sub-check:
-   - Criterion-level: % of individual acceptance criteria exercised
-   - Negative cases: count of MUST NOT requirements with/without
-     negative tests
-   - Boundary tests: count of threshold requirements with/without
-     boundary tests
-   - Ordering tests: count of sequence-constraint requirements
-     with/without order-enforcing tests
+   corresponding test verification. Break down by sub-check
+   (report each as N/M = %):
+   - Criterion-level: individual acceptance criteria exercised / total
+   - Negative case coverage: MUST NOT requirements with negative
+     tests / total MUST NOT requirements
+   - Boundary and threshold verification: threshold requirements with
+     boundary tests / total threshold requirements
+   - Ordering and timing constraints: sequence-constraint requirements
+     with order-enforcing tests / total sequence-constraint requirements
 4. **Assumption consistency**: count of aligned vs. conflicting vs.
    unstated assumptions.
 5. **Overall assessment**: a summary judgment of specification integrity
