@@ -168,6 +168,14 @@ protocols:
         test implementations and classifies findings using the
         specification-drift taxonomy (D11–D13).
 
+    - name: rfc-extraction
+      path: protocols/reasoning/rfc-extraction.md
+      description: >
+        Systematic protocol for extracting structured requirements from
+        RFCs and internet-drafts. Handles normative language (RFC 2119),
+        state machines, cross-RFC dependencies, ABNF grammars, and
+        IANA/security considerations.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -359,6 +367,17 @@ templates:
       taxonomies: [specification-drift]
       format: investigation-report
       requires: [requirements-document, validation-plan]
+
+  standards:
+    - name: extract-rfc-requirements
+      path: templates/extract-rfc-requirements.md
+      description: >
+        Extract structured requirements from an RFC or internet-draft.
+        Normalizes normative language, state machines, message formats,
+        and cross-RFC dependencies into a requirements document.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, rfc-extraction]
+      format: requirements-doc
 
   investigation:
     - name: investigate-bug
