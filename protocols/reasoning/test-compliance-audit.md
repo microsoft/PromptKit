@@ -107,10 +107,12 @@ For each automatable test case in the validation plan:
        D12_UNTESTED_ACCEPTANCE_CRITERION
      - Wrong assertions or mismatched expected results →
        D13_ASSERTION_MISMATCH
-     - Test stub exists (e.g., empty body, skip annotation) with no
-       meaningful assertions → D11_UNIMPLEMENTED_TEST_CASE
-   - **NOT IMPLEMENTED**: No test implements this test case. Flag as
-     D11_UNIMPLEMENTED_TEST_CASE.
+   - **NOT IMPLEMENTED**: No test implements this test case (no
+     matching test function found in the provided code). Flag as
+     D11_UNIMPLEMENTED_TEST_CASE. Note: a test stub with an empty
+     body or skip annotation is NOT an implementation — classify it
+     as D13 (assertions don't match because there are none) and
+     record its code location.
 
 ## Phase 4: Backward Traceability (Test Code → Validation Plan)
 
@@ -127,8 +129,10 @@ Identify tests that don't trace to the validation plan.
      indicate validation plan gaps (candidates for new test cases).
    - **Orphaned tests**: Tests that reference TC-NNN IDs or REQ-IDs
      that do not exist in the validation plan or requirements. These
-     may be stale after a renumbering. Flag if they reference invalid
-     identifiers.
+     may be stale after a renumbering. Report orphaned tests as
+     observations in the coverage summary (Phase 6), not as D11–D13
+     findings — they don't fit the taxonomy since no valid TC-NNN
+     is involved.
 
 ## Phase 5: Classification and Reporting
 
