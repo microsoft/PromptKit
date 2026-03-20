@@ -132,8 +132,8 @@ is optional. Extends the `document-lifecycle` pipeline as stage 4.
 > that outlive their authors.
 
 PromptKit already has the `reverse-engineer` persona and the
-`requirements-from-implementation` protocol, which extract structured
-requirements from source code. This pillar extends that foundation to
+`requirements-from-implementation` protocol, which together extract
+structured requirements from source code.This pillar extends that foundation to
 handle the harder problems of legacy system understanding.
 
 ### Code Behavior Reconstruction
@@ -544,7 +544,7 @@ Phase 2: Code ↔ Spec Audits ✅ (code) / planned (test)
     │       ├── Pillar 3: Protocol & Standards Engineering
     │       │       ├── RFC Normalization
     │       │       ├── RFC ↔ Implementation Audits
-    │       │       ├── Multi-Implementation Semantic Diff
+    │       │       ├── Multi-Implementation Semantic Diffing
     │       │       └── Specification Evolution & Migration
     │       │
     │       └── Pillar 5: Continuous Semantic Integration
