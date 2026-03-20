@@ -176,6 +176,14 @@ protocols:
         state machines, cross-RFC dependencies, ABNF grammars, and
         IANA/security considerations.
 
+    - name: requirements-reconciliation
+      path: protocols/reasoning/requirements-reconciliation.md
+      description: >
+        Systematic protocol for reconciling multiple requirements
+        documents from different sources into a unified specification.
+        Classifies each requirement by cross-source compatibility
+        (Universal, Majority, Divergent, Extension).
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -377,6 +385,16 @@ templates:
         and cross-RFC dependencies into a requirements document.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, rfc-extraction]
+      format: requirements-doc
+
+    - name: reconcile-requirements
+      path: templates/reconcile-requirements.md
+      description: >
+        Reconcile multiple requirements documents from different sources
+        (RFCs, implementations, specifications) into a unified spec.
+        Classifies requirements by cross-source compatibility.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, requirements-reconciliation]
       format: requirements-doc
 
   investigation:
