@@ -56,12 +56,13 @@ content for the missing document.
    - Identifiers or section numbers that the core documents cite
    - Assumptions that bear on the requirements or design
 
-5. **External reference check** — scan the requirements and design
-   documents for references to external specifications (by name, URL,
-   or document ID) that are not included in the provided document set.
-   Record each missing reference so it can be reported in the coverage
-   summary. This catches the case where a component's full specification
-   surface is larger than the provided trifecta.
+5. **External reference check** — scan the provided documents
+   (requirements, design if present, validation plan) for references to
+   external specifications (by name, URL, or document ID) that are not
+   included in the provided document set. Record each missing reference
+   so it can be reported in the coverage summary. This catches the case
+   where a component's full specification surface is larger than the
+   provided trifecta.
 
 ## Phase 2: Forward Traceability (Requirements → Downstream)
 

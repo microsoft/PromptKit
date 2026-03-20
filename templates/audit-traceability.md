@@ -21,7 +21,7 @@ params:
   requirements_doc: "The requirements document content"
   design_doc: "The design document content (optional — omit for a two-document audit)"
   validation_plan: "The validation plan content"
-  additional_specs: "Optional supplementary specifications that requirements may reference (e.g., security model, protocol spec, API spec). Provide content or 'none'"
+  additional_specs: "Optional supplementary specifications that requirements may reference (e.g., security model, protocol spec, API spec). Omit or leave empty if none"
   focus_areas: "Optional narrowing — e.g., 'security requirements only', 'API contracts' (default: audit all)"
   audience: "Who will read the audit report — e.g., 'engineering leads', 'project stakeholders'"
 input_contract:
@@ -57,7 +57,7 @@ requirements, design, and validation artifacts.
 **Validation Plan**:
 {{validation_plan}}
 
-**Supplementary Specifications** (if provided):
+**Supplementary Specifications** (if provided — ignore if empty):
 {{additional_specs}}
 
 **Focus Areas**: {{focus_areas}}
