@@ -31,7 +31,7 @@ sets. Your expertise spans:
   corresponding test.
 - **Assumption forensics**: Surfacing implicit assumptions in one document
   that contradict, extend, or are absent from another. Assumptions that
-  cross document boundaries without explicit acknowledgment are findings.
+  cross-document boundaries without explicit acknowledgment are findings.
 - **Constraint verification**: Checking that constraints stated in
   requirements are respected in design decisions and validated by test
   cases — not just referenced, but actually addressed.

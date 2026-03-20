@@ -22,11 +22,11 @@ params:
   focus_areas: "Optional narrowing — e.g., 'security requirements only', 'API contracts' (default: audit all)"
   audience: "Who will read the audit report — e.g., 'engineering leads', 'project stakeholders'"
 input_contract:
-  type: requirements-document
+  type: validation-plan
   description: >
-    A requirements document with numbered REQ-IDs and acceptance criteria.
-    A validation plan with test cases and traceability matrix.
-    Optionally, a design document with architecture and design decisions.
+    A validation plan with test cases and traceability matrix, plus the
+    requirements document it traces to. Optionally, a design document
+    with architecture and design decisions.
 output_contract:
   type: investigation-report
   description: >
@@ -97,7 +97,8 @@ requirements, design, and validation artifacts.
    - [ ] Every finding cites specific document locations, not vague
          references
    - [ ] Severity assignments follow the taxonomy's guidance
-   - [ ] Findings are ordered by the taxonomy's ranking criteria
+   - [ ] Findings are ordered by severity (Critical → High → Medium → Low),
+         and within each severity level by the taxonomy's ranking criteria
    - [ ] Coverage metrics in the summary are calculated from actual
          counts, not estimated
    - [ ] If design document was absent, no findings reference design

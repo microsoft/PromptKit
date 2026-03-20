@@ -135,8 +135,9 @@ Classify every finding using the specification-drift taxonomy.
    - Evidence (what is present, what is absent, what conflicts)
    - Impact (what could go wrong if this drift is not resolved)
    - Recommended resolution
-4. Order findings by the taxonomy's ranking criteria (D6/D7 first,
-   then D2/D5, then D1/D3, then D4).
+4. Order findings primarily by severity (Critical, then High, then
+   Medium, then Low). Within each severity tier, order by the taxonomy's
+   ranking criteria (D6/D7 first, then D2/D5, then D1/D3, then D4).
 
 ## Phase 6: Coverage Summary
 

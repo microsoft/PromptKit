@@ -459,5 +459,5 @@ pipelines:
         consumes: requirements-document
         produces: validation-plan
       - template: audit-traceability
-        consumes: [requirements-document, design-document, validation-plan]
+        consumes: [requirements-document, validation-plan]
         produces: investigation-report

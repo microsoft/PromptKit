@@ -159,7 +159,8 @@ library.
 
 ## Ranking Criteria
 
-Order findings by impact on specification integrity:
+Within a given severity level, order findings by impact on specification
+integrity:
 
 1. **Highest risk**: D6 (active constraint violation) and D7 (illusory
    coverage) — these indicate the documents are actively misleading.
