@@ -199,8 +199,9 @@ Templates declare **input and output contracts** so they can be chained:
 
 ```
 author-requirements-doc  →  author-design-doc  →  author-validation-plan  →  audit-traceability
-  (produces: requirements)    (consumes: requirements,   (consumes: requirements,    (consumes: all three,
-                               produces: design)          produces: validation)       produces: drift report)
+  (produces: requirements)    (consumes: requirements,   (consumes: requirements,    (consumes: requirements +
+                               produces: design)          produces: validation)        validation; design optional,
+                                                                                      produces: drift report)
 ```
 
 The output of one template becomes the input parameter of the next.

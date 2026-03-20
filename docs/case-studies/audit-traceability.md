@@ -23,7 +23,7 @@ is directly contradicted by the design's synchronous API call chain.
 ### Assembling the Prompt
 
 ```bash
-npx promptkit assemble audit-traceability \
+npx @alan-jowett/promptkit assemble audit-traceability \
   -p project_name="Auth Service v2" \
   -p requirements_doc="$(cat auth-requirements.md)" \
   -p design_doc="$(cat auth-design.md)" \

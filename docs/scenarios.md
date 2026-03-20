@@ -57,17 +57,19 @@ requirements document with stable identifiers.
 ### "The design doesn't match what we agreed on"
 
 You wrote a requirements document last month. Now the design document
-is done, but you suspect it drifted — new features crept in, a
-performance constraint might be violated, and some requirements seem
-to have been quietly dropped.
+and validation plan are done, but you suspect they drifted — new
+features crept in, a performance constraint might be violated, and some
+requirements seem to have been quietly dropped.
 
-**Template:** `audit-traceability` (without the validation plan) ·
-**Taxonomy:** `specification-drift`
+**Template:** `audit-traceability` · **Persona:** `specification-analyst` ·
+**Taxonomy:** `specification-drift` (D1–D7)
 
-**What you get:** A two-document audit identifying orphaned design
-decisions (D3), untraced requirements (D1), assumption drift (D5),
-and constraint violations (D6). Each finding has specific document
-locations and a recommended resolution.
+**What you get:** A three-document audit identifying untraced
+requirements (D1), untested requirements (D2), orphaned design
+decisions (D3), orphaned test cases (D4), assumption drift (D5),
+constraint violations (D6), and acceptance criteria mismatches (D7).
+Each finding has specific document locations and a recommended
+resolution.
 
 ### "Review this PR for memory safety"
 
