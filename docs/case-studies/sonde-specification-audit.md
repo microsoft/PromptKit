@@ -236,19 +236,20 @@ node: 43 code-auditable vs. 57 total).
 
 ### Results Across All Five Components
 
-| Component | Requirements | Compliance | D8 (Missing) | D9 (Undocumented) | D10 (Violation) | Findings |
-|-----------|-------------|------------|--------------|-------------------|-----------------|----------|
+| Component | Requirements | Implemented (no D8) | D8 (Missing) | D9 (Undocumented) | D10 (Violation) | Findings |
+|-----------|-------------|---------------------|--------------|-------------------|-----------------|----------|
 | Protocol | ~11 | 91% | 1 | 6 | 4 | 11 |
 | Node | 43 | **100%** | 0 | 7 | 1 | 8 |
-| Gateway | 76 | 85.5% | 2 | 5 | 2 | 9 |
-| Modem | 27 | 81% | 1 | 6 | 4 | 11 |
-| BLE Tool | 60 | 82% | 6 | 5 | 4 | 15 |
-| **Total** | **217** | **~85%** | **10** | **29** | **15** | **54** |
+| Gateway | 76 | 97% | 2 | 5 | 2 | 9 |
+| Modem | 27 | 96% | 1 | 6 | 4 | 11 |
+| BLE Tool | 60 | 90% | 6 | 5 | 4 | 15 |
+| **Total** | **217** | **~95%** | **10** | **29** | **15** | **54** |
 
-**54 findings** across 217 requirements — a different class of issues
-than the trifecta audit. Where the trifecta found documentation drift
-(specs not in sync with each other), the code audit found implementation
-drift (code not in sync with specs).
+**54 findings** across 217 requirements — with 95% of requirements
+having at least one implementation in code (only 10 D8s). But the
+findings reveal a different class of issues than the trifecta audit:
+undocumented defensive behaviors (D9) and constraint violations (D10)
+that no document-level audit could catch.
 
 ### The Code Audit Found Different Issues
 
@@ -264,9 +265,10 @@ are fundamentally different questions with different answers:
 
 The node firmware illustrates this perfectly: the trifecta audit found
 11 findings (18 untraced BLE requirements, internal design
-contradictions), but the code audit found **100% implementation
-compliance** — zero D8s. The code was correct even though the design
-document was stale. Conversely, the gateway had moderate trifecta
+contradictions), but the code audit found **every requirement
+implemented** (zero D8s) with only minor issues — 7 undocumented
+defensive behaviors (D9) and 1 low-severity type mismatch (D10). The
+code was correct even though the design document was stale.Conversely, the gateway had moderate trifecta
 findings but the code audit revealed the admin API bypasses ELF
 verification entirely — a D8 that no document-level audit could catch.
 
@@ -481,9 +483,9 @@ cover both dimensions.
 - **Document drift and code drift are different problems.** The
   trifecta audit found 60 findings about specs not matching each other.
   The code audit found 54 findings about code not matching specs. The
-  node firmware had 100% code compliance but 11 document-level
-  findings — the code was right, the docs were stale. You need both
-  audits to see the full picture.
+  node firmware had every requirement implemented (zero D8s) but 11
+  document-level findings — the code was right, the docs were stale.
+  You need both audits to see the full picture.
 
 - **Undocumented behavior is not always bad.** 29 of 54 code findings
   were D9 (undocumented behavior), and nearly all were defensive safety
