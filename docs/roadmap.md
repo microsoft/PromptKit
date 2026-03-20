@@ -78,6 +78,109 @@ A lighter-weight option: a VS Code extension that provides:
 - One-click assembly with output to a new editor tab
 - Integration with VS Code's Copilot Chat via chat participants
 
+## Specification Integrity & Drift Detection
+
+> **Status: Phase 1 shipped.** The traceability audit template and
+> specification-drift taxonomy landed in PR #35. Phases 2–4 are planned.
+
+PromptKit is evolving toward a **specification integrity engine** — a
+set of composable templates that detect gaps, contradictions, and drift
+across the artifacts that define a software system: requirements, design,
+validation plans, source code, and tests.
+
+### Phase 1: Cross-Document Specification Audits ✅
+
+Shipped: `audit-traceability` template, `specification-analyst` persona,
+`traceability-audit` protocol, and `specification-drift` taxonomy (D1–D7).
+
+Audits requirements, design, and validation documents for:
+- Untraced requirements (D1) and untested requirements (D2)
+- Orphaned design decisions (D3) and orphaned test cases (D4)
+- Assumption drift (D5) and constraint violations (D6)
+- Acceptance criteria mismatch (D7) — illusory test coverage
+
+The design document is optional, enabling two-document (requirements ↔
+validation) or three-document audits. Extends the `document-lifecycle`
+pipeline as stage 4.
+
+### Phase 2: Bidirectional Code ↔ Spec Audits
+
+The specification-drift taxonomy reserves D8–D13 for these templates:
+
+- **`audit-code-compliance`** — Given requirements + design, audit source
+  code for unimplemented requirements, violated constraints, and
+  undocumented behavior. Answers: "Does the code implement what was
+  specified?"
+- **`audit-test-compliance`** — Given requirements + validation plan,
+  audit test code for unimplemented test cases, missing assertions, and
+  coverage gaps. Answers: "Do the tests verify what the plan says they
+  should?"
+- **Drift detection** — Surface spec-only behavior (specified but not
+  implemented), code-only behavior (implemented but not specified), and
+  mismatched assumptions between documents and code.
+
+These templates reuse the `specification-analyst` persona and extend the
+`specification-drift` taxonomy. New protocols will handle the distinct
+challenge of mapping document-level claims to code-level behavior.
+
+### Phase 3: Invariant Extraction
+
+- **Invariant extraction template** — Extract MUST/SHOULD/MAY constraints,
+  state transitions, timing assumptions, and error conditions from
+  existing specifications or code. Produces structured, machine-readable
+  invariant sets that can feed into audit templates.
+- **Spec evolution diffing** — Compare two versions of the same
+  specification to detect breaking changes, relaxed constraints, and
+  shifted assumptions. Same pattern as traceability audit but applied
+  across time rather than across document types.
+
+### Phase 4: RFC & Standards Support
+
+An RFC is fundamentally a requirements document with a specific format
+and RFC 2119 normative language — the same MUST/SHOULD/MAY keywords
+that PromptKit's `requirements-elicitation` protocol already produces.
+This means RFC support is primarily an **input normalization** and
+**output format** problem, not a new capability stack.
+
+**RFC in** — `extract-rfc-requirements` template:
+- Takes an RFC (or internet-draft) as input, produces a standard
+  requirements-document as output.
+- Reuses the `specification-analyst` persona (no new persona needed —
+  RFCs are specs).
+- Needs a thin `rfc-extraction` protocol covering: section
+  classification, normative statement extraction, state machine
+  identification, cross-RFC dependency tracking, and IANA/security
+  considerations parsing.
+- Once normalized to a requirements-document, all existing audit
+  machinery applies — `audit-traceability` for RFC ↔ design ↔ validation,
+  and future `audit-code-compliance` for RFC ↔ implementation.
+
+**Spec out** — `rfc-document` format:
+- Produces xml2rfc v3 (RFC 7991) output: `<rfc>`, `<section>`,
+  `<bcp14>MUST</bcp14>`, `<artwork>`, proper `<references>` blocks.
+- Output is structurally valid xml2rfc that feeds directly into the
+  `xml2rfc` toolchain for rendering.
+- Pairs with `author-requirements-doc` or a new `author-rfc` template
+  for writing internet-drafts from scratch.
+
+**Downstream** — everything else reuses existing components:
+- RFC ↔ implementation audits = `audit-code-compliance` with
+  RFC-derived requirements as input.
+- RFC ↔ validation = `audit-traceability` as-is.
+- RFC version diffing = spec evolution diffing from Phase 3.
+
+### Vision: Continuous Semantic Integration
+
+The long-term direction is enabling specification integrity checks as
+part of continuous integration — every PR triggers doc ↔ code ↔ validation
+audits, drift is caught at commit time, and specifications stay aligned
+with implementation.
+
+This is an **integration concern** rather than a PromptKit template — the
+component that runs audits in CI would be a separate tool that *uses*
+PromptKit prompts. PromptKit's role is providing the composable audit
+methodology; the CI integration consumes it.
+
 ## New Templates
 
 Planned templates based on common engineering workflows:
