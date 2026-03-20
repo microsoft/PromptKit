@@ -39,6 +39,10 @@ function getFormat(manifest, name) {
   return (manifest.formats || []).find((f) => f.name === name);
 }
 
+function getTaxonomy(manifest, name) {
+  return (manifest.taxonomies || []).find((t) => t.name === name);
+}
+
 function resolveTemplateDeps(manifest, template) {
   const persona = getPersona(manifest, template.persona);
 
@@ -54,7 +58,15 @@ function resolveTemplateDeps(manifest, template) {
 
   const format = template.format ? getFormat(manifest, template.format) : null;
 
-  return { persona, protocols, format };
+  const taxonomies = (template.taxonomies || []).map((name) => {
+    const tax = getTaxonomy(manifest, name);
+    if (!tax) {
+      console.warn(`Warning: taxonomy '${name}' not found in manifest`);
+    }
+    return tax;
+  }).filter(Boolean);
+
+  return { persona, protocols, taxonomies, format };
 }
 
 module.exports = {
@@ -63,5 +75,6 @@ module.exports = {
   getPersona,
   getProtocol,
   getFormat,
+  getTaxonomy,
   resolveTemplateDeps,
 };

@@ -315,6 +315,7 @@ templates:
         consistency, constraint propagation, and coverage completeness.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, traceability-audit]
+      taxonomies: [specification-drift]
       format: investigation-report
       pipeline_position: 4
       requires: [requirements-document, validation-plan]

@@ -42,7 +42,7 @@ function substituteParams(content, params) {
 
 function assemble(contentDir, manifest, templateEntry, params = {}) {
   const { resolveTemplateDeps } = require("./manifest");
-  const { persona, protocols, format } = resolveTemplateDeps(
+  const { persona, protocols, taxonomies, format } = resolveTemplateDeps(
     manifest,
     templateEntry
   );
@@ -69,7 +69,19 @@ function assemble(contentDir, manifest, templateEntry, params = {}) {
     }
   }
 
-  // 3. Output Format
+  // 3. Classification Taxonomy
+  if (taxonomies.length > 0) {
+    const taxonomyBodies = taxonomies
+      .map((t) => loadComponent(contentDir, t.path))
+      .filter(Boolean);
+    if (taxonomyBodies.length > 0) {
+      sections.push(
+        "# Classification Taxonomy\n\n" + taxonomyBodies.join("\n\n---\n\n")
+      );
+    }
+  }
+
+  // 4. Output Format
   if (format) {
     const body = loadComponent(contentDir, format.path);
     if (body) {
@@ -77,7 +89,7 @@ function assemble(contentDir, manifest, templateEntry, params = {}) {
     }
   }
 
-  // 4. Task (template)
+  // 5. Task (template)
   const templateBody = loadComponent(contentDir, templateEntry.path);
   if (templateBody) {
     sections.push("# Task\n\n" + templateBody);

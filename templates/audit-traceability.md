@@ -13,6 +13,8 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - reasoning/traceability-audit
+taxonomies:
+  - specification-drift
 format: investigation-report
 params:
   project_name: "Name of the project or feature being audited"
