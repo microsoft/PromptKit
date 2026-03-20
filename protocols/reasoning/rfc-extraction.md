@@ -67,7 +67,9 @@ Extract every normative statement from the RFC.
 
 2. **For each normative statement**:
    - Record the exact text containing the keyword.
-   - Record the RFC section number and paragraph.
+   - Record the RFC section number and a brief quoted excerpt of the
+     source text (RFCs lack stable paragraph numbering, so a quoted
+     fragment provides verifiable traceability).
    - Classify the keyword strength:
      - MUST / SHALL / REQUIRED → absolute requirement
      - MUST NOT / SHALL NOT → absolute prohibition
@@ -128,14 +130,18 @@ Transform extracted statements into structured requirements.
    `REQ-<TAG>-<SECTION>-<NNN>` where:
    - `<TAG>` is a short tag (e.g., `TCP` for RFC 9293, `TLS` for
      RFC 8446)
-   - `<SECTION>` maps to the RFC section (e.g., `3.4` → `034`)
+   - `<SECTION>` is a deterministic encoding of the RFC section:
+     numeric sections use zero-padded digits (e.g., `3.4` → `034`,
+     `3.10` → `0310`); subsections append (e.g., `3.4.1` → `0341`);
+     appendices use letter prefix (e.g., `A.1` → `A01`)
    - `<NNN>` is sequential within the section
 
 2. **Write each requirement** in the form:
    ```
    REQ-<TAG>-<SECTION>-<NNN>: The <subject> <KEYWORD> <behavior>
-   when <condition> so that <rationale>.
-   Source: RFC NNNN, Section X.Y, paragraph Z.
+   when <condition>.
+   Rationale: <rationale, if stated in the RFC; otherwise omit>
+   Source: RFC NNNN, Section X.Y — "<quoted excerpt>"
    ```
 
 3. **Define acceptance criteria**: For each requirement, define at

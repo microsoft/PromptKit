@@ -50,6 +50,8 @@ full traceability back to the source RFC sections.
 
 **Context**: {{context}}
 
+**Audience**: {{audience}}
+
 ## Instructions
 
 1. **Apply the rfc-extraction protocol.** Execute all phases in order.
@@ -72,7 +74,7 @@ full traceability back to the source RFC sections.
    sections matching the focus areas. Report what was excluded.
 
 5. **Apply the anti-hallucination protocol.** Every requirement must
-   trace to a specific RFC section and paragraph. Do NOT invent
+   trace to a specific RFC section with a quoted excerpt. Do NOT invent
    requirements that are not stated or clearly implied in the RFC text.
    If you infer a requirement from context (e.g., a state machine
    transition that implies a MUST but isn't explicitly stated), label
@@ -95,10 +97,10 @@ full traceability back to the source RFC sections.
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every normative section of the RFC has at least one extracted
          requirement or is documented as informational-only
-   - [ ] Every requirement cites its source RFC section and paragraph
+   - [ ] Every requirement cites its source RFC section and quoted
+         excerpt
    - [ ] Every requirement preserves its RFC 2119 keyword strength
-   - [ ] Every MUST/SHALL requirement has at least one acceptance
-         criterion
+   - [ ] Every requirement has at least one acceptance criterion
    - [ ] State machine transitions (if any) are complete — no missing
          transitions for defined states and events
    - [ ] Cross-RFC dependencies are listed with their normative status
