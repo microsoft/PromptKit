@@ -268,7 +268,7 @@ The node firmware illustrates this perfectly: the trifecta audit found
 contradictions), but the code audit found **every requirement
 implemented** (zero D8s) with only minor issues — 7 undocumented
 defensive behaviors (D9) and 1 low-severity type mismatch (D10). The
-code was correct even though the design document was stale.Conversely, the gateway had moderate trifecta
+code was correct even though the design document was stale. Conversely, the gateway had moderate trifecta
 findings but the code audit revealed the admin API bypasses ELF
 verification entirely — a D8 that no document-level audit could catch.
 
