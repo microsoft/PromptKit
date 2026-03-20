@@ -228,6 +228,12 @@ The same reusable-prompt approach was applied — one `audit-code-compliance`
 prompt assembled once, run against all five components with their
 requirements document and source code as inputs.
 
+The code audit evaluated 217 requirements with direct implementation
+implications — a subset of the 260 total requirements in the trifecta
+audit, which also counted structural, meta, and documentation-only
+requirements. Per-component counts differ for the same reason (e.g.,
+node: 43 code-auditable vs. 57 total).
+
 ### Results Across All Five Components
 
 | Component | Requirements | Compliance | D8 (Missing) | D9 (Undocumented) | D10 (Violation) | Findings |
@@ -301,7 +307,7 @@ the specs to match the (better) implementation.
 
 **Gateway bypasses ELF verification (D8, High)**: The admin API accepts
 raw program bytes and distributes them to nodes without extracting
-bytecode from ELF or running the Prevail verifier. The verification
+bytecode from ELF or running the PREVAIL verifier. The verification
 code exists in `ingest_elf()` but is unreachable from the admin path.
 A comment reads: "ELF→CBOR extraction/verification will be added in a
 future phase." This means nodes in the field could receive unverified
@@ -315,10 +321,10 @@ to the gateway for display, but the cryptographic handshake is already
 complete.
 
 **Protocol crate missing `key_hint_from_psk()` (D8, High)**: The spec
-defines a key-hint derivation function (`u16::from_be_bytes(SHA-256(PSK)
-[30..32])`), but the protocol crate doesn't implement it. Every
-consumer (gateway, node, admin CLI) must independently re-implement
-the recipe — a divergence risk.
+defines a key-hint derivation function
+(`u16::from_be_bytes(SHA-256(PSK)[30..32])`), but the protocol crate
+doesn't implement it. Every consumer (gateway, node, admin CLI) must
+independently re-implement the recipe — a divergence risk.
 
 ### Combined Audit Summary
 
