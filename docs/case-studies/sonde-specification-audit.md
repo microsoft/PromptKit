@@ -1,5 +1,8 @@
 # Case Study: Auditing a Real Project with PromptKit
 
+> **Two audit passes, 114 findings, 217 requirements, 5 components** —
+> using two reusable prompts across a production IoT runtime.
+
 ## The Project
 
 [Sonde](https://github.com/alan-jowett/sonde) is a programmable runtime
@@ -217,6 +220,116 @@ effort across all five components: **~10–15 hours**, broken down as:
 No breaking changes required. All findings are additive — add design
 sections, add tests, add cross-references.
 
+## Pass 2: Code Compliance Audit (D8–D10)
+
+After the trifecta audit identified specification drift, the next
+question was: **does the code actually implement what the specs say?**
+The same reusable-prompt approach was applied — one `audit-code-compliance`
+prompt assembled once, run against all five components with their
+requirements document and source code as inputs.
+
+### Results Across All Five Components
+
+| Component | Requirements | Compliance | D8 (Missing) | D9 (Undocumented) | D10 (Violation) | Findings |
+|-----------|-------------|------------|--------------|-------------------|-----------------|----------|
+| Protocol | ~11 | 91% | 1 | 6 | 4 | 11 |
+| Node | 43 | **100%** | 0 | 7 | 1 | 8 |
+| Gateway | 76 | 85.5% | 2 | 5 | 2 | 9 |
+| Modem | 27 | 81% | 1 | 6 | 4 | 11 |
+| BLE Tool | 60 | 82% | 6 | 5 | 4 | 15 |
+| **Total** | **217** | **~85%** | **10** | **29** | **15** | **54** |
+
+**54 findings** across 217 requirements — a different class of issues
+than the trifecta audit. Where the trifecta found documentation drift
+(specs not in sync with each other), the code audit found implementation
+drift (code not in sync with specs).
+
+### The Code Audit Found Different Issues
+
+The trifecta audit (D1–D7) asked: "are the documents consistent?" The
+code audit (D8–D10) asked: "does the code match the documents?" These
+are fundamentally different questions with different answers:
+
+| Drift type | Trifecta findings | Code findings |
+|------------|-------------------|---------------|
+| Missing coverage | D1 (req not in design), D2 (req not in tests) | D8 (req not in code) |
+| Contradictions | D6 (design violates req) | D10 (code violates constraint) |
+| Scope creep | D3 (orphaned design) | D9 (undocumented behavior) |
+
+The node firmware illustrates this perfectly: the trifecta audit found
+11 findings (18 untraced BLE requirements, internal design
+contradictions), but the code audit found **100% implementation
+compliance** — zero D8s. The code was correct even though the design
+document was stale. Conversely, the gateway had moderate trifecta
+findings but the code audit revealed the admin API bypasses ELF
+verification entirely — a D8 that no document-level audit could catch.
+
+### Systemic Pattern: BLE Is the Weak Link Everywhere
+
+The same pattern from the trifecta audit reappeared at the code level.
+BLE pairing was the weakest subsystem across three components:
+
+- **Modem**: BLE subsystem at 62% compliance (vs. 100% for USB-CDC
+  and ESP-NOW). Missing 30-second pairing timeout. Numeric Comparison
+  accepted before operator approval.
+- **BLE Tool**: LESC Numeric Comparison enforcement not observable —
+  Android can fall back to Just Works pairing, a security downgrade
+  the spec explicitly prohibits.
+- **Gateway**: ELF verification code exists (`ingest_elf()`) but is
+  not wired to the admin API — programs are distributed without
+  bytecode safety checks.
+
+### D9 Findings Were Mostly Positive
+
+Of the 29 undocumented behavior findings (D9), almost all were
+**defensive safety nets** the implementation added beyond what the
+specs required:
+
+- Node firmware: buffer size limits, retry guards, permanent error
+  handling for malformed payloads
+- Gateway: program deletion protection, active-session rejection for
+  state imports, handler log drain limits, cancellation-safe
+  concurrency patterns
+- BLE Tool: loopback test transport, bond removal via reflection,
+  plaintext-to-encrypted storage migration
+
+These are good engineering practices. The right remediation is not to
+remove them but to **document them as design decisions** — updating
+the specs to match the (better) implementation.
+
+### Notable Findings
+
+**Gateway bypasses ELF verification (D8, High)**: The admin API accepts
+raw program bytes and distributes them to nodes without extracting
+bytecode from ELF or running the Prevail verifier. The verification
+code exists in `ingest_elf()` but is unreachable from the admin path.
+A comment reads: "ELF→CBOR extraction/verification will be added in a
+future phase." This means nodes in the field could receive unverified
+bytecode.
+
+**Modem accepts pairing before operator approval (D10, Medium)**: The
+`on_confirm_pin` callback always returns `true` immediately at the BLE
+stack level, establishing an encrypted link before the operator has a
+chance to approve the Numeric Comparison. The modem then sends the PIN
+to the gateway for display, but the cryptographic handshake is already
+complete.
+
+**Protocol crate missing `key_hint_from_psk()` (D8, High)**: The spec
+defines a key-hint derivation function (`u16::from_be_bytes(SHA-256(PSK)
+[30..32])`), but the protocol crate doesn't implement it. Every
+consumer (gateway, node, admin CLI) must independently re-implement
+the recipe — a divergence risk.
+
+### Combined Audit Summary
+
+Across both audit passes (trifecta + code compliance), the full picture:
+
+| Audit | Findings | What it caught |
+|-------|----------|----------------|
+| Trifecta (D1–D7) | 60 | Spec drift — BLE design gaps, assumption conflicts, test traceability |
+| Code compliance (D8–D10) | 54 | Implementation drift — missing features, undocumented behavior, constraint violations |
+| **Total** | **114** | **Two complementary views of the same system** |
+
 ## PromptKit vs. Ad-Hoc Prompts
 
 The Sonde project had already been through an audit pass before this
@@ -359,6 +472,17 @@ cover both dimensions.
   documents lagged. Manual review would catch this in one component;
   the audit caught it in all three and quantified the gap precisely.
 
+- **Document drift and code drift are different problems.** The
+  trifecta audit found 60 findings about specs not matching each other.
+  The code audit found 54 findings about code not matching specs. The
+  node firmware had 100% code compliance but 11 document-level
+  findings — the code was right, the docs were stale. You need both
+  audits to see the full picture.
+
+- **Undocumented behavior is not always bad.** 29 of 54 code findings
+  were D9 (undocumented behavior), and nearly all were defensive safety
+  nets. The right fix is to update the specs, not remove the code.
+
 - **Structured prompts find different issues than ad-hoc prompts.**
   Both used LLMs. PromptKit found 30 net-new structural traceability
   gaps. The ad-hoc prompt found 11 issues (~100+ individual gaps) in
@@ -366,20 +490,15 @@ cover both dimensions.
   can't see. Neither alone gives full coverage — the two are
   complementary by design, not competing.
 
-- **One prompt, five audits.** The assembled prompt is reusable —
-  the methodology doesn't change, only the inputs. This scales to
-  any project with structured specification documents.
+- **One prompt, five audits — twice.** The same reusable-prompt
+  approach worked for both the trifecta and code compliance audits.
+  Ten total audit runs from two assembled prompts.
 
-- **Taxonomy classification drives remediation.** D1 (add a section)
-  requires different effort than D6 (fix a contradiction) or D7 (fix
-  a test). The taxonomy makes prioritization mechanical rather than
-  subjective.
+- **Taxonomy classification drives remediation.** D8 (implement the
+  feature) requires different effort than D9 (document the behavior)
+  or D10 (fix the constraint violation). The taxonomy makes
+  prioritization mechanical rather than subjective.
 
-- **Coverage metrics tell the story.** "93% test coverage but 52%
-  design coverage" immediately identifies where to focus. The metrics
-  are calculated from actual identifier counts, not impressions.
-
-- **Zero orphaned tests.** Strong backward traceability (D4 = 0 across
-  all components) shows the project's testing discipline. The drift is
-  forward-only — requirements outpacing design, not tests diverging
-  from requirements.
+- **114 findings, one system.** The combined audit surface — documents,
+  code, and the gaps between them — gives a complete picture of
+  specification integrity that no single audit type can provide.
