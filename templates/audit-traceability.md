@@ -101,6 +101,12 @@ requirements, design, and validation artifacts.
    - [ ] Severity assignments follow the taxonomy's guidance
    - [ ] Findings are ordered by severity (Critical → High → Medium → Low),
          and within each severity level by the taxonomy's ranking criteria
+   - [ ] D7 findings specify which sub-check failed (criterion coverage,
+         negative case, boundary, or ordering)
+   - [ ] Requirements with MUST NOT / SHALL NOT language have been checked
+         for negative test coverage
+   - [ ] Requirements with quantitative thresholds have been checked for
+         boundary test coverage
    - [ ] Coverage metrics in the summary are calculated from actual
          counts, not estimated
    - [ ] If design document was absent, no findings reference design
