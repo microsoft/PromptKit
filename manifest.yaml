@@ -160,6 +160,14 @@ protocols:
         and classifies findings using the specification-drift taxonomy
         (D8–D10).
 
+    - name: test-compliance-audit
+      path: protocols/reasoning/test-compliance-audit.md
+      description: >
+        Systematic protocol for auditing test code against a validation
+        plan and requirements document. Maps test case definitions to
+        test implementations and classifies findings using the
+        specification-drift taxonomy (D11–D13).
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -339,6 +347,18 @@ templates:
       taxonomies: [specification-drift]
       format: investigation-report
       requires: requirements-document
+
+    - name: audit-test-compliance
+      path: templates/audit-test-compliance.md
+      description: >
+        Audit test code against a validation plan and requirements
+        document. Detects unimplemented test cases, missing acceptance
+        criterion assertions, and assertion mismatches.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, operational-constraints, test-compliance-audit]
+      taxonomies: [specification-drift]
+      format: investigation-report
+      requires: [requirements-document, validation-plan]
 
   investigation:
     - name: investigate-bug

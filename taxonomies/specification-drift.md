@@ -13,6 +13,7 @@ domain: specification-traceability
 applicable_to:
   - audit-traceability
   - audit-code-compliance
+  - audit-test-compliance
 ---
 
 # Taxonomy: Specification Drift
@@ -200,17 +201,72 @@ safety-critical, security-related, or regulatory. High for performance
 or functional constraints. Assess based on the constraint itself,
 not the code's complexity.
 
-## Reserved Labels (Future Use)
+## Test Compliance Labels
 
-The following label range is reserved for future specification drift
-categories involving test code:
+### D11_UNIMPLEMENTED_TEST_CASE
 
-- **D11–D13**: Reserved for **test compliance** drift (validation plan
-  vs. test code). Example: D11_UNIMPLEMENTED_TEST_CASE — a test case in
-  the validation plan has no corresponding automated test.
+A test case is defined in the validation plan but has no corresponding
+automated test in the test code.
 
-These labels will be defined when the `audit-test-compliance` template
-is added to the library.
+**Pattern**: TC-NNN is specified in the validation plan with steps,
+inputs, and expected results. No test function, test class, or test
+file in the test code implements this test case — either by name
+reference, by TC-NNN identifier, or by behavioral equivalence.
+
+**Risk**: The validation plan claims coverage that does not exist in
+the automated test suite. The requirement linked to this test case
+is effectively untested in CI, even though the validation plan says
+it is covered.
+
+**Severity guidance**: High when the linked requirement is
+safety-critical or security-related. Medium for functional
+requirements. Low for non-functional or exploratory test cases
+explicitly marked as manual-only in the validation plan.
+
+### D12_UNTESTED_ACCEPTANCE_CRITERION
+
+A test implementation exists for a test case, but it does not assert
+one or more acceptance criteria specified for the linked requirement.
+
+**Pattern**: TC-NNN is implemented as an automated test. The linked
+requirement (REQ-XXX-NNN) has multiple acceptance criteria. The test
+implementation asserts some criteria but omits others — for example,
+it checks the happy-path output but does not verify error handling,
+boundary conditions, or timing constraints specified in the acceptance
+criteria.
+
+**Risk**: The test passes but does not verify the full requirement.
+Defects in the untested acceptance criteria will not be caught by CI.
+This is the test-code equivalent of D7 (acceptance criteria mismatch
+in the validation plan) but at the implementation level.
+
+**Severity guidance**: High when the missing criterion is a security
+or safety property. Medium for functional criteria. Assess based on
+what the missing criterion protects, not on the test's overall
+coverage.
+
+### D13_ASSERTION_MISMATCH
+
+A test implementation exists for a test case, but its assertions do
+not match the expected behavior specified in the validation plan.
+
+**Pattern**: TC-NNN is implemented as an automated test. The test
+asserts different conditions, thresholds, or outcomes than what the
+validation plan specifies — for example, the plan says "verify
+response within 200ms" but the test asserts "response is not null",
+or the plan says "verify error code 403" but the test asserts "status
+is not 200".
+
+**Risk**: The test passes but does not verify what the validation plan
+says it should. This creates illusory coverage — the traceability
+matrix shows the requirement as tested, but the actual test checks
+something different. More dangerous than D11 (missing test) because
+it is invisible without comparing test code to the validation plan.
+
+**Severity guidance**: High. This is the most dangerous test
+compliance drift type because it creates false confidence. Severity
+should be assessed based on the gap between what is asserted and what
+should be asserted.
 
 ## Ranking Criteria
 
@@ -218,14 +274,15 @@ Within a given severity level, order findings by impact on specification
 integrity:
 
 1. **Highest risk**: D6 (constraint violation in design), D7 (illusory
-   test coverage), and D10 (constraint violation in code) — these
-   indicate active conflicts between artifacts.
-2. **High risk**: D2 (untested requirement), D5 (assumption drift), and
-   D8 (unimplemented requirement) — these indicate silent gaps that
-   will surface late.
+   test coverage), D10 (constraint violation in code), and D13
+   (assertion mismatch) — these indicate active conflicts between
+   artifacts.
+2. **High risk**: D2 (untested requirement), D5 (assumption drift),
+   D8 (unimplemented requirement), and D12 (untested acceptance
+   criterion) — these indicate silent gaps that will surface late.
 3. **Medium risk**: D1 (untraced requirement), D3 (orphaned design),
-   and D9 (undocumented behavior) — these indicate incomplete
-   traceability that needs human resolution.
+   D9 (undocumented behavior), and D11 (unimplemented test case) —
+   these indicate incomplete traceability that needs human resolution.
 4. **Lowest risk**: D4 (orphaned test case) — effort misdirection but
    no safety or correctness impact.
 

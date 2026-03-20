@@ -152,26 +152,28 @@ requirements (D8), code behavior not traced to any requirement (D9),
 and constraint violations in the implementation (D10), with
 implementation coverage metrics and specific code locations.
 
+### "Do our tests actually test what the plan says they should?"
+
+Your validation plan specifies 58 test cases. Your test suite has
+tests. But are they the same tests? Do the assertions match the
+acceptance criteria? Are there test cases in the plan that have no
+automated test at all?
+
+**Template:** `audit-test-compliance` · **Persona:** `specification-analyst` ·
+**Protocol:** `test-compliance-audit` · **Taxonomy:** `specification-drift` (D11–D13)
+
+**What you get:** An investigation report mapping validation plan test
+cases to actual test implementations, identifying unimplemented test
+cases (D11), missing acceptance criterion assertions (D12), and
+assertion mismatches where the test checks different conditions than
+the plan specifies (D13).
+
 ---
 
 ## Future Scenarios (Roadmap)
 
 These scenarios describe capabilities that are planned but not yet
 implemented. See the [roadmap](roadmap.md) for details.
-
-### "Do our tests actually test what the plan says they should?"
-
-Your validation plan specifies 58 test cases. Your test suite has
-tests. But are they the same tests? Do the assertions match the
-acceptance criteria?
-
-**Planned template:** `audit-test-compliance` ·
-**Taxonomy:** `specification-drift` (D11–D13)
-
-**What you'd get:** A report mapping validation plan test cases to
-actual test implementations, identifying unimplemented test cases,
-tests with wrong assertions, and coverage gaps between the plan and
-reality.
 
 ### "Extract the invariants from this RFC"
 
