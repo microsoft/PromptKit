@@ -5,7 +5,7 @@
 name: audit-test-compliance
 description: >
   Audit test code against a validation plan and requirements document.
-  Detects unimplemented test cases, missing acceptance criterion
+  Detects unimplemented test cases, missing acceptance criteria
   assertions, and assertion mismatches. Classifies findings using the
   specification-drift taxonomy (D11–D13).
 persona: specification-analyst
@@ -80,8 +80,10 @@ testing and what the automated tests actually verify.
    specific TC-NNN IDs and test code locations. Do NOT invent test
    cases or claim tests verify behavior you cannot point to. If you
    cannot fully trace a test case due to incomplete test code context,
-   assign the appropriate drift label (D11) but set its confidence to
-   Low and state what additional test code would be needed to confirm.
+   do NOT assign D11 — instead note the test case as INCONCLUSIVE with
+   confidence Low and state what additional test code would be needed.
+   Only assign D11 after explicitly searching the provided test code
+   and failing to find an implementation.
 
 5. **Apply the operational-constraints protocol.** Do not attempt to
    ingest the entire test suite. Focus on the test functions that map

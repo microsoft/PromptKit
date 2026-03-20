@@ -220,8 +220,9 @@ it is covered.
 
 **Severity guidance**: High when the linked requirement is
 safety-critical or security-related. Medium for functional
-requirements. Low for non-functional or exploratory test cases
-explicitly marked as manual-only in the validation plan.
+requirements. Note: test cases classified as manual-only or deferred
+in the validation plan are excluded from D11 findings and reported
+only in the coverage summary.
 
 ### D12_UNTESTED_ACCEPTANCE_CRITERION
 

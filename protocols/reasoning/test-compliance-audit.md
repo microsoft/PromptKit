@@ -101,9 +101,14 @@ For each automatable test case in the validation plan:
 3. **Classify the result**:
    - **IMPLEMENTED**: Test fully implements the validation plan's
      test case with correct assertions. Record the test location.
-   - **PARTIALLY IMPLEMENTED**: Test exists but is missing steps,
-     assertions, or acceptance criteria. Flag as D12 with details on
-     what is present and what is missing.
+   - **PARTIALLY IMPLEMENTED**: Test exists but is incomplete.
+     Classify based on *what* is missing:
+     - Missing acceptance criteria assertions →
+       D12_UNTESTED_ACCEPTANCE_CRITERION
+     - Wrong assertions or mismatched expected results →
+       D13_ASSERTION_MISMATCH
+     - Test stub exists (e.g., empty body, skip annotation) with no
+       meaningful assertions → D11_UNIMPLEMENTED_TEST_CASE
    - **NOT IMPLEMENTED**: No test implements this test case. Flag as
      D11_UNIMPLEMENTED_TEST_CASE.
 
