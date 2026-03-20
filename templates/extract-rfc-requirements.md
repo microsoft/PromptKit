@@ -57,7 +57,10 @@ full traceability back to the source RFC sections.
 
 2. **Use the provided tag** for all REQ-IDs. Format:
    `REQ-{{tag}}-<SECTION>-<NNN>` (e.g., `REQ-TCP-034-001` for the
-   first requirement from section 3.4).
+   first requirement from section 3.4). This differs from the standard
+   PromptKit scheme (`REQ-<CATEGORY>-<NNN>`) because RFC requirements
+   must trace back to specific RFC sections for verification — the
+   section number in the ID provides that traceability.
 
 3. **Preserve RFC 2119 keyword strength.** Every requirement must
    record whether the original statement used MUST, SHOULD, or MAY.
@@ -77,10 +80,17 @@ full traceability back to the source RFC sections.
 
 6. **Format the output** according to the requirements-doc format.
    Map the protocol's output to the document structure:
-   - Phase 1 analysis → Scope and Definitions sections
-   - Phases 2–4 extraction → Requirements section (grouped by category)
-   - Phase 5 structuring → REQ-IDs, acceptance criteria, classification
-   - Phase 6 cross-references → Dependencies and Assumptions sections
+   - Overview → RFC title, abstract, and purpose
+   - Scope → Phase 1 section classification (what is normative)
+   - Definitions → Terms and acronyms from the RFC
+   - Requirements (Functional) → Phases 2–4 extracted requirements
+   - Requirements (Non-Functional) → Performance, security, and
+     interoperability requirements from the RFC
+   - Requirements (Constraints) → ABNF grammars, field sizes, encoding
+   - Dependencies → Phase 6 cross-RFC dependencies
+   - Assumptions → Implicit assumptions identified during extraction
+   - Risks → Ambiguities flagged during extraction
+   - Revision History → RFC publication date and any errata
 
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every normative section of the RFC has at least one extracted

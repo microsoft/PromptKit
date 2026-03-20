@@ -125,15 +125,15 @@ If the RFC defines message formats:
 Transform extracted statements into structured requirements.
 
 1. **Assign stable identifiers**: Use the scheme
-   `REQ-<RFC>-<SECTION>-<NNN>` where:
-   - `<RFC>` is a short tag (e.g., `TCP` for RFC 9293, `TLS` for
+   `REQ-<TAG>-<SECTION>-<NNN>` where:
+   - `<TAG>` is a short tag (e.g., `TCP` for RFC 9293, `TLS` for
      RFC 8446)
    - `<SECTION>` maps to the RFC section (e.g., `3.4` → `034`)
    - `<NNN>` is sequential within the section
 
 2. **Write each requirement** in the form:
    ```
-   REQ-<TAG>-<SEC>-<NNN>: The <subject> <KEYWORD> <behavior>
+   REQ-<TAG>-<SECTION>-<NNN>: The <subject> <KEYWORD> <behavior>
    when <condition> so that <rationale>.
    Source: RFC NNNN, Section X.Y, paragraph Z.
    ```
