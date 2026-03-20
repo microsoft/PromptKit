@@ -305,11 +305,15 @@ design:
 
 **Semantic test gaps (6 issues, ~45 individual gaps).** Tests exist and
 are linked to requirements, but don't verify deeply enough. For example:
-issue #357 found that protocol tests check output exists but not that
-randomness is cryptographic, CBOR is deterministic, or HMAC state is
-isolated. Issue #354 found 11 node tests that check outcomes but not
-timing/ordering constraints ("MUST wait for X before Y"). Issue #359
-found requirements with happy-path tests but no negative tests.
+Sonde issue
+[#357](https://github.com/alan-jowett/sonde/issues/357) found that
+protocol tests check output exists but not that randomness is
+cryptographic, CBOR is deterministic, or HMAC state is isolated. Sonde
+[#354](https://github.com/alan-jowett/sonde/issues/354) found 11 node
+tests that check outcomes but not timing/ordering constraints ("MUST
+wait for X before Y"). Sonde
+[#359](https://github.com/alan-jowett/sonde/issues/359) found
+requirements with happy-path tests but no negative tests.
 
 *Why missed:* The trifecta audit checks "does a test case exist for this
 requirement?" (D2). It does not read test procedures to judge whether
@@ -317,9 +321,11 @@ they're thorough enough. That's D7 territory, which it only spot-checks
 at the acceptance-criteria level.
 
 **Domain-specific safety gaps (4 issues, ~50+ individual gaps).** These
-require deep understanding of the BPF interpreter's safety model. Issue
-#330 found 28 tagged register safety invariants with zero test coverage.
-Issue #334 found 8 BPF helper trust boundary gaps. These come from
+require deep understanding of the BPF interpreter's safety model. Sonde
+[#330](https://github.com/alan-jowett/sonde/issues/330) found 28 tagged
+register safety invariants with zero test coverage. Sonde
+[#334](https://github.com/alan-jowett/sonde/issues/334) found 8 BPF
+helper trust boundary gaps. These come from
 `safe-bpf-interpreter.md` — a separate specification not included in
 any component's trifecta.
 
@@ -328,7 +334,8 @@ outside the trifecta are invisible to it.
 
 **Cross-component integration (1 issue, 5 gaps).** The end-to-end BLE
 onboarding flow across gateway + modem + pairing tool was never
-integration-tested (#361).
+integration-tested (Sonde
+[#361](https://github.com/alan-jowett/sonde/issues/361)).
 
 *Why missed:* The trifecta audit examines each component independently.
 Cross-component flows are invisible to per-component audits.
