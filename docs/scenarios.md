@@ -137,13 +137,6 @@ stale, and the critical ones are buried under feature requests.
 priority and effort, identifying patterns and duplicates, and
 recommending a workflow for the next sprint.
 
----
-
-## Future Scenarios (Roadmap)
-
-These scenarios describe capabilities that are planned but not yet
-implemented. See the [roadmap](roadmap.md) for details.
-
 ### "Does the code actually implement what the spec says?"
 
 You have a requirements document and a design document. The code has
@@ -151,12 +144,20 @@ been written. But does it actually implement the specified behavior?
 Are there requirements with no implementation? Features in the code
 that nobody asked for?
 
-**Planned template:** `audit-code-compliance` ·
-**Taxonomy:** `specification-drift` (D8–D10)
+**Template:** `audit-code-compliance` · **Persona:** `specification-analyst` ·
+**Protocol:** `code-compliance-audit` · **Taxonomy:** `specification-drift` (D8–D10)
 
-**What you'd get:** An investigation report listing unimplemented
-requirements, code behavior not traced to any requirement, and
-mismatched assumptions between the spec and the implementation.
+**What you get:** An investigation report listing unimplemented
+requirements (D8), code behavior not traced to any requirement (D9),
+and constraint violations in the implementation (D10), with
+implementation coverage metrics and specific code locations.
+
+---
+
+## Future Scenarios (Roadmap)
+
+These scenarios describe capabilities that are planned but not yet
+implemented. See the [roadmap](roadmap.md) for details.
 
 ### "Do our tests actually test what the plan says they should?"
 

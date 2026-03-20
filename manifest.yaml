@@ -152,6 +152,14 @@ protocols:
         traceability matrices and classifies divergence using the
         specification-drift taxonomy.
 
+    - name: code-compliance-audit
+      path: protocols/reasoning/code-compliance-audit.md
+      description: >
+        Systematic protocol for auditing source code against requirements
+        and design documents. Maps specification claims to code behavior
+        and classifies findings using the specification-drift taxonomy
+        (D8–D10).
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -319,6 +327,18 @@ templates:
       format: investigation-report
       pipeline_position: 4
       requires: [requirements-document, validation-plan]
+
+    - name: audit-code-compliance
+      path: templates/audit-code-compliance.md
+      description: >
+        Audit source code against requirements and design documents.
+        Detects unimplemented requirements, undocumented behavior, and
+        constraint violations.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, operational-constraints, code-compliance-audit]
+      taxonomies: [specification-drift]
+      format: investigation-report
+      requires: requirements-document
 
   investigation:
     - name: investigate-bug

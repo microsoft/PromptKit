@@ -12,6 +12,7 @@ description: >
 domain: specification-traceability
 applicable_to:
   - audit-traceability
+  - audit-code-compliance
 ---
 
 # Taxonomy: Specification Drift
@@ -141,33 +142,90 @@ criteria are not verified.
 **Severity guidance**: High. This is more dangerous than D2 (untested
 requirement) because it creates a false sense of coverage.
 
+## Code Compliance Labels
+
+### D8_UNIMPLEMENTED_REQUIREMENT
+
+A requirement exists in the requirements document but has no
+corresponding implementation in the source code.
+
+**Pattern**: REQ-ID specifies a behavior, constraint, or capability.
+No function, module, class, or code path in the source implements
+or enforces this requirement.
+
+**Risk**: The requirement was specified but never built. The system
+does not deliver this capability despite it being in the spec.
+
+**Severity guidance**: Critical when the requirement is safety-critical
+or security-related. High for functional requirements. Medium for
+non-functional requirements that affect quality attributes.
+
+### D9_UNDOCUMENTED_BEHAVIOR
+
+The source code implements behavior that is not specified in any
+requirement or design document.
+
+**Pattern**: A function, module, or code path implements meaningful
+behavior (not just infrastructure like logging or error handling)
+that does not trace to any REQ-ID in the requirements document or
+any section in the design document.
+
+**Risk**: Scope creep in implementation — the code does more than
+was specified. The undocumented behavior may be intentional (a missing
+requirement) or accidental (a developer's assumption). Either way,
+it is untested against any specification.
+
+**Severity guidance**: Medium when the behavior is benign feature
+logic. High when the behavior involves security, access control,
+data mutation, or external communication — undocumented behavior
+in these areas is a security concern.
+
+### D10_CONSTRAINT_VIOLATION_IN_CODE
+
+The source code violates a constraint stated in the requirements or
+design document.
+
+**Pattern**: The requirements document states a constraint (e.g.,
+"MUST respond within 200ms", "MUST NOT store passwords in plaintext",
+"MUST use TLS 1.3 or later") and the source code demonstrably violates
+it — through algorithmic choice, missing implementation, or explicit
+contradiction.
+
+**Risk**: The implementation will not meet requirements. Unlike D6
+(constraint violation in design), this is a concrete defect in code,
+not a planning gap.
+
+**Severity guidance**: Critical when the violated constraint is
+safety-critical, security-related, or regulatory. High for performance
+or functional constraints. Assess based on the constraint itself,
+not the code's complexity.
+
 ## Reserved Labels (Future Use)
 
-The following label ranges are reserved for future specification drift
-categories involving implementation and test code:
+The following label range is reserved for future specification drift
+categories involving test code:
 
-- **D8–D10**: Reserved for **code compliance** drift (requirements/design
-  vs. source code). Example: D8_UNIMPLEMENTED_REQUIREMENT — a requirement
-  has no corresponding implementation in source code.
 - **D11–D13**: Reserved for **test compliance** drift (validation plan
   vs. test code). Example: D11_UNIMPLEMENTED_TEST_CASE — a test case in
   the validation plan has no corresponding automated test.
 
-These labels will be defined when the corresponding audit templates
-(`audit-code-compliance`, `audit-test-compliance`) are added to the
-library.
+These labels will be defined when the `audit-test-compliance` template
+is added to the library.
 
 ## Ranking Criteria
 
 Within a given severity level, order findings by impact on specification
 integrity:
 
-1. **Highest risk**: D6 (active constraint violation) and D7 (illusory
-   coverage) — these indicate the documents are actively misleading.
-2. **High risk**: D2 (untested requirement) and D5 (assumption drift) —
-   these indicate silent gaps that will surface late.
-3. **Medium risk**: D1 (untraced requirement) and D3 (orphaned design) —
-   these indicate incomplete traceability that needs human resolution.
+1. **Highest risk**: D6 (constraint violation in design), D7 (illusory
+   test coverage), and D10 (constraint violation in code) — these
+   indicate active conflicts between artifacts.
+2. **High risk**: D2 (untested requirement), D5 (assumption drift), and
+   D8 (unimplemented requirement) — these indicate silent gaps that
+   will surface late.
+3. **Medium risk**: D1 (untraced requirement), D3 (orphaned design),
+   and D9 (undocumented behavior) — these indicate incomplete
+   traceability that needs human resolution.
 4. **Lowest risk**: D4 (orphaned test case) — effort misdirection but
    no safety or correctness impact.
 
