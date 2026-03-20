@@ -50,6 +50,19 @@ items from each document provided.
 not provided, note its absence and skip its inventory — do NOT invent
 content for the missing document.
 
+4. **Supplementary specifications** (if provided) — extract:
+   - Key definitions, constraints, or invariants that requirements
+     reference
+   - Identifiers or section numbers that the core documents cite
+   - Assumptions that bear on the requirements or design
+
+5. **External reference check** — scan the requirements and design
+   documents for references to external specifications (by name, URL,
+   or document ID) that are not included in the provided document set.
+   Record each missing reference so it can be reported in the coverage
+   summary. This catches the case where a component's full specification
+   surface is larger than the provided trifecta.
+
 ## Phase 2: Forward Traceability (Requirements → Downstream)
 
 Check that every requirement flows forward into downstream documents.
@@ -151,6 +164,10 @@ After reporting individual findings, produce aggregate metrics:
    corresponding test verification.
 4. **Assumption consistency**: count of aligned vs. conflicting vs.
    unstated assumptions.
-5. **Overall assessment**: a summary judgment of specification integrity
+5. **External references**: list any specifications referenced by the
+   core documents that were not provided for audit. For each, note
+   which requirements or design sections reference it and what coverage
+   gap results from its absence.
+6. **Overall assessment**: a summary judgment of specification integrity
    (e.g., "High confidence — 2 minor gaps" or "Low confidence —
    systemic traceability failures across all three documents").

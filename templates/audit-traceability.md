@@ -21,6 +21,7 @@ params:
   requirements_doc: "The requirements document content"
   design_doc: "The design document content (optional — omit for a two-document audit)"
   validation_plan: "The validation plan content"
+  additional_specs: "Optional supplementary specifications that requirements may reference (e.g., security model, protocol spec, API spec). Provide content or 'none'"
   focus_areas: "Optional narrowing — e.g., 'security requirements only', 'API contracts' (default: audit all)"
   audience: "Who will read the audit report — e.g., 'engineering leads', 'project stakeholders'"
 input_contract:
@@ -56,6 +57,9 @@ requirements, design, and validation artifacts.
 **Validation Plan**:
 {{validation_plan}}
 
+**Supplementary Specifications** (if provided):
+{{additional_specs}}
+
 **Focus Areas**: {{focus_areas}}
 
 ## Instructions
@@ -78,7 +82,15 @@ requirements, design, and validation artifacts.
    the focus areas. Still report if the focus-area filter causes
    significant portions of the document set to be excluded from audit.
 
-5. **Apply the anti-hallucination protocol.** Every finding must cite
+5. **If supplementary specifications are provided**, inventory them in
+   Phase 1 and use them to verify cross-references, assumptions, and
+   constraints that the core trifecta documents reference. If
+   supplementary specs are NOT provided but the requirements or design
+   documents reference external specifications by name, flag each
+   missing reference in the coverage summary so the user knows which
+   additional documents to provide for a more complete audit.
+
+6. **Apply the anti-hallucination protocol.** Every finding must cite
    specific identifiers and locations in the provided documents. Do NOT
    invent requirements, test cases, or design sections that are not in
    the inputs. If you infer a gap, label the inference explicitly.
