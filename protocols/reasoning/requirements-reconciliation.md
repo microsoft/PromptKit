@@ -145,8 +145,9 @@ For DIVERGENT requirements, perform deeper analysis:
 
 Produce the unified requirements document.
 
-1. **Assign unified REQ-IDs**: Use the scheme provided by the user
-   (or default to `REQ-UNIFIED-<CAT>-<NNN>`).
+1. **Assign unified REQ-IDs**: Use the tag and scheme provided by the
+   template (e.g., `REQ-<TAG>-<CAT>-<NNN>` where `<TAG>` is the
+   user-provided unified tag).
 
 2. **For each unified requirement**, include:
    - The unified REQ-ID and requirement text
