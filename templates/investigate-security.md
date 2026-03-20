@@ -13,6 +13,8 @@ protocols:
   - guardrails/self-verification
   - guardrails/operational-constraints
   - analysis/security-vulnerability
+taxonomies:
+  - stack-lifetime-hazards
 format: investigation-report
 params:
   target_description: "What is being audited — component, service, or feature"
