@@ -95,7 +95,8 @@ is inherently authoritative.
    - Compatibility class (UNIVERSAL / MAJORITY / DIVERGENT / EXTENSION)
    - Source mapping table (unified REQ-ID → source REQ-IDs)
    - Divergence notes (for non-UNIVERSAL requirements)
-   - Interoperability assessment as a subsection under Risks
+   - Interoperability hotspots expressed as risk rows in the Risks
+     section (Risk ID, Description, Likelihood, Impact, Mitigation)
 
 9. **Quality checklist** — before finalizing, verify:
    - [ ] Every requirement from every source appears in the alignment
