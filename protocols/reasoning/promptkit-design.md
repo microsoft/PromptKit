@@ -2,17 +2,17 @@
 <!-- Copyright (c) PromptKit Contributors -->
 
 ---
-name: spl-design
+name: promptkit-design
 type: reasoning
 description: >
-  Reasoning protocol for designing new SPL components. Walks through
+  Reasoning protocol for designing new PromptKit components. Walks through
   scoping, component type selection, dependency analysis, and
   convention compliance before generating any files.
 applicable_to:
   - extend-library
 ---
 
-# Protocol: SPL Component Design
+# Protocol: PromptKit Component Design
 
 Apply this protocol when designing a new component for
 PromptKit. Execute all phases before generating files.

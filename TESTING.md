@@ -4,7 +4,7 @@
 ---
 name: prompt-testing
 description: >
-  Methodology for unit testing SPL-generated prompts by comparing
+  Methodology for unit testing PromptKit-generated prompts by comparing
   them against known-good reference prompts. Defines a structured
   gap analysis process for validating prompt quality.
 ---

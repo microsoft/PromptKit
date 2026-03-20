@@ -33,7 +33,7 @@ npx promptkit assemble author-agent-instructions \
 
 ### What Gets Assembled
 
-The prompt composes the `spl-contributor` persona with anti-hallucination
+The prompt composes the `promptkit-contributor` persona with anti-hallucination
 and self-verification protocols, plus the `agent-instructions` format. The
 template body instructs the LLM to:
 

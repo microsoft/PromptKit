@@ -94,7 +94,7 @@ For the full composition model and assembly internals, see the
 | Audit for security | `investigate-security` | security-auditor |
 | Set up CI/CD | `author-pipeline` | devops-engineer |
 | Generate release notes | `author-release` | devops-engineer |
-| Create agent instructions | `author-agent-instructions` | spl-contributor |
+| Create agent instructions | `author-agent-instructions` | promptkit-contributor |
 | Extract requirements from code | `reverse-engineer-requirements` | reverse-engineer |
 
 Run `npx promptkit list` for the full list with descriptions.

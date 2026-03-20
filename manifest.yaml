@@ -27,10 +27,10 @@ personas:
       Staff software architect. System design, API contracts, tradeoff
       analysis, and long-term maintainability.
 
-  - name: spl-contributor
-    path: personas/spl-contributor.md
+  - name: promptkit-contributor
+    path: personas/promptkit-contributor.md
     description: >
-      SPL contribution guide. Understands the library's architecture,
+      PromptKit contribution guide. Understands the library's architecture,
       conventions, and quality standards. Guides contributors through
       designing and building new components.
 
@@ -123,10 +123,10 @@ protocols:
         preserving structural integrity, numbering, cross-references,
         and internal consistency.
 
-    - name: spl-design
-      path: protocols/reasoning/spl-design.md
+    - name: promptkit-design
+      path: protocols/reasoning/promptkit-design.md
       description: >
-        Reasoning protocol for designing new SPL components. Scoping,
+        Reasoning protocol for designing new PromptKit components. Scoping,
         component type selection, dependency analysis, and convention
         compliance.
 
@@ -199,11 +199,11 @@ formats:
       (structured data, reports, coverage logs). Defines artifact manifests,
       per-artifact schemas, and cross-artifact consistency rules.
 
-  - name: spl-pull-request
-    path: formats/spl-pull-request.md
-    produces: spl-contribution
+  - name: promptkit-pull-request
+    path: formats/promptkit-pull-request.md
+    produces: promptkit-contribution
     description: >
-      Output format for SPL contributions. Produces PR-ready component
+      Output format for PromptKit contributions. Produces PR-ready component
       files, manifest update, and pull request description.
 
   - name: pipeline-spec
@@ -399,7 +399,7 @@ templates:
         agent skill files. For GitHub Copilot, produces individual
         .github/instructions/*.instructions.md files with applyTo targeting.
         Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
-      persona: spl-contributor
+      persona: promptkit-contributor
       protocols: [anti-hallucination, self-verification]
       format: agent-instructions
 
@@ -407,11 +407,11 @@ templates:
     - name: extend-library
       path: templates/extend-library.md
       description: >
-        Guide a contributor through designing and building new SPL
+        Guide a contributor through designing and building new PromptKit
         components. Interactive workflow producing PR-ready files.
-      persona: spl-contributor
-      protocols: [anti-hallucination, self-verification, spl-design]
-      format: spl-pull-request
+      persona: promptkit-contributor
+      protocols: [anti-hallucination, self-verification, promptkit-design]
+      format: promptkit-pull-request
 
   devops:
     - name: author-pipeline

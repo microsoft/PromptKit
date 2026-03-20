@@ -56,7 +56,7 @@ The Markdown body contains expertise areas and behavioral constraints like
 headings should include seniority level (e.g., "Senior Systems Engineer").
 
 **Available:** systems-engineer, security-auditor, software-architect,
-devops-engineer, reverse-engineer, spl-contributor
+devops-engineer, reverse-engineer, promptkit-contributor
 
 ### Layer 2: Protocols
 

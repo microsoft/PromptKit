@@ -62,7 +62,7 @@ For machine-readable artifacts (JSONL, JSON, CSV):
 
 For reports, summaries, and analysis documents:
 
-- Follow the relevant SPL format (investigation-report, requirements-doc, etc.)
+- Follow the relevant PromptKit format (investigation-report, requirements-doc, etc.)
   OR define a custom structure in the task template.
 - Every claim MUST reference evidence by identifier from the structured
   data artifact (e.g., "see call site CS-042 in boundary_callsites.jsonl").

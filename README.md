@@ -330,7 +330,7 @@ promptkit/
 │   └── content/             # Bundled content (generated, gitignored)
 └── tests/                   # Prompt unit tests
     ├── references/          # Known-good reference prompts
-    └── generated/           # SPL-generated prompts for comparison
+    └── generated/           # PromptKit-generated prompts for comparison
 ```
 
 ## Template Format

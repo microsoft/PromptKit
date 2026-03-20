@@ -5,22 +5,22 @@
 name: extend-library
 mode: interactive
 description: >
-  Guide a contributor through designing and building new SPL components.
+  Guide a contributor through designing and building new PromptKit components.
   Uses the interactive-design workflow: reason through the design,
   then generate PR-ready files. Produces all necessary components
   (persona, protocol, format, taxonomy, template) and a manifest update.
-persona: spl-contributor
+persona: promptkit-contributor
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
-  - reasoning/spl-design
-format: spl-pull-request
+  - reasoning/promptkit-design
+format: promptkit-pull-request
 params:
   use_case: "What the new prompt template should help users accomplish"
   context: "Any additional context — target domain, example workflows, existing tools"
 input_contract: null
 output_contract:
-  type: spl-contribution
+  type: promptkit-contribution
   description: >
     A complete set of PR-ready files (components + manifest update)
     and a pull request description.
@@ -53,7 +53,7 @@ and conventions:
 
 ### Step 2: Interactive Design (Phase 1)
 
-**Apply the spl-design protocol.** Work interactively with the user:
+**Apply the promptkit-design protocol.** Work interactively with the user:
 
 1. **Clarify the use case.** Ask specific questions:
    - What task does the user want to support?
@@ -81,7 +81,7 @@ Once the user confirms the design:
 
 1. **Generate each component file** following CONTRIBUTING.md conventions.
 2. **Generate the manifest update** showing exactly what to add.
-3. **Generate the PR description** following the spl-pull-request format.
+3. **Generate the PR description** following the promptkit-pull-request format.
 4. **Apply the self-verification protocol** — check every file against
    the CONTRIBUTING.md quality checklist.
 

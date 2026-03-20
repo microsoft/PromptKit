@@ -2,15 +2,15 @@
 <!-- Copyright (c) PromptKit Contributors -->
 
 ---
-name: spl-pull-request
+name: promptkit-pull-request
 type: format
 description: >
-  Output format for SPL contributions. Produces PR-ready component
+  Output format for PromptKit contributions. Produces PR-ready component
   files, a manifest update, and a pull request description.
-produces: spl-contribution
+produces: promptkit-contribution
 ---
 
-# Format: SPL Pull Request
+# Format: PromptKit Pull Request
 
 The output MUST be a complete, PR-ready set of files and a pull
 request description. Every file must be ready to commit — no

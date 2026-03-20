@@ -8,7 +8,7 @@ description: >
   agent skill files. For GitHub Copilot, produces individual
   .github/instructions/*.instructions.md files with applyTo targeting.
   Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
-persona: spl-contributor
+persona: promptkit-contributor
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
