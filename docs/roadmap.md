@@ -134,22 +134,40 @@ challenge of mapping document-level claims to code-level behavior.
   shifted assumptions. Same pattern as traceability audit but applied
   across time rather than across document types.
 
-### Phase 4: Standards & Protocol Analysis
+### Phase 4: RFC & Standards Support
 
-Applying the spec integrity methodology to formal standards (RFCs, IETF
-protocols, API specifications):
+An RFC is fundamentally a requirements document with a specific format
+and RFC 2119 normative language — the same MUST/SHOULD/MAY keywords
+that PromptKit's `requirements-elicitation` protocol already produces.
+This means RFC support is primarily an **input normalization** and
+**output format** problem, not a new capability stack.
 
-- **`standards-analyst` persona** — Domain expertise in normative language
-  (RFC 2119), protocol state machines, negotiation semantics, and
-  interoperability requirements.
-- **RFC structural audits** — Internal consistency, normative language
-  correctness, state machine extraction, contradiction detection.
-- **RFC → validation spec generation** — Convert MUST/SHOULD/MAY
-  requirements from RFCs into structured test conditions covering
-  negotiation, error handling, timing, and interoperability.
-- **RFC ↔ implementation audits** — Audit reference implementations
-  against their governing RFCs for drift, undocumented capabilities,
-  and security mismatches.
+**RFC in** — `extract-rfc-requirements` template:
+- Takes an RFC (or internet-draft) as input, produces a standard
+  requirements-document as output.
+- Reuses the `specification-analyst` persona (no new persona needed —
+  RFCs are specs).
+- Needs a thin `rfc-extraction` protocol covering: section
+  classification, normative statement extraction, state machine
+  identification, cross-RFC dependency tracking, and IANA/security
+  considerations parsing.
+- Once normalized to a requirements-document, all existing audit
+  machinery applies — `audit-traceability` for RFC ↔ design ↔ validation,
+  and future `audit-code-compliance` for RFC ↔ implementation.
+
+**Spec out** — `rfc-document` format:
+- Produces xml2rfc v3 (RFC 7991) output: `<rfc>`, `<section>`,
+  `<bcp14>MUST</bcp14>`, `<artwork>`, proper `<references>` blocks.
+- Output is structurally valid xml2rfc that feeds directly into the
+  `xml2rfc` toolchain for rendering.
+- Pairs with `author-requirements-doc` or a new `author-rfc` template
+  for writing internet-drafts from scratch.
+
+**Downstream** — everything else reuses existing components:
+- RFC ↔ implementation audits = `audit-code-compliance` with
+  RFC-derived requirements as input.
+- RFC ↔ validation = `audit-traceability` as-is.
+- RFC version diffing = spec evolution diffing from Phase 3.
 
 ### Vision: Continuous Semantic Integration
 
