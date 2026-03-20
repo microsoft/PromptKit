@@ -8,7 +8,8 @@ description: >
   Systematic protocol for reconciling multiple requirements documents
   from different sources (RFCs, implementations, specifications) into
   a unified requirements document. Aligns requirements across sources,
-  classifies compatibility, and resolves or documents conflicts.
+  classifies compatibility, and documents conflicts with resolution
+  options for human decision-making.
 applicable_to:
   - reconcile-requirements
 ---
@@ -116,14 +117,13 @@ For DIVERGENT requirements, perform deeper analysis:
 
 1. **Categorize the conflict**:
    - **Value disagreement**: Same behavior, different parameters
-     (e.g., timeout 1s vs. 3s). These are often resolvable by
-     picking the most conservative value.
+     (e.g., timeout 1s vs. 3s). Document the range across sources.
    - **Strength disagreement**: Same behavior, different keyword
      (e.g., MUST vs. SHOULD). May indicate different risk
      assessments.
    - **Behavioral disagreement**: Different behaviors for the same
      condition (e.g., "close connection" vs. "send reset"). These
-     are true conflicts that require human resolution.
+     are true conflicts requiring human resolution.
    - **Presence disagreement**: One source requires behavior another
      explicitly prohibits. These are the most dangerous conflicts.
 
