@@ -134,8 +134,7 @@ realized in design and validation).
 
 ### Severity Profile
 
-No findings were informational-only. The distribution skews toward
-actionable items:
+The severity distribution skews toward actionable items:
 
 | Severity | Count | Percentage |
 |----------|-------|------------|
@@ -228,21 +227,21 @@ find that an ad-hoc LLM audit misses — and vice versa?
 
 ### Cross-Reference Results
 
-The 59 PromptKit findings were cross-referenced against existing
+The 60 PromptKit findings were cross-referenced against existing
 GitHub issues filed from the ad-hoc audit:
 
 | Component | Findings | Direct Match | Partial Match | No Issue |
 |-----------|----------|--------------|---------------|----------|
 | Protocol | 14 | 8 | 2 | 4 |
 | BLE Tool | 15 | 6 | 3 | 6 |
-| Modem | 12 | 2 | 3 | 7 |
+| Modem | 13 | 2 | 3 | 8 |
 | Gateway | 7 | 1 | 2 | 4 |
 | Node | 11 | 0 | 3 | 8 |
-| **Total** | **59** | **17 (29%)** | **13 (22%)** | **29 (49%)** |
+| **Total** | **60** | **17 (28%)** | **13 (22%)** | **30 (50%)** |
 
-**29% of findings were already known** — the ad-hoc audit had caught
+**28% of findings were already known** — the ad-hoc audit had caught
 them. **22% partially overlapped** — the issue existed but the finding
-was more specific or broader. **49% were net-new** — issues the ad-hoc
+was more specific or broader. **50% were net-new** — issues the ad-hoc
 audit did not surface at all.
 
 ### Different Prompts Find Different Things
@@ -308,7 +307,7 @@ it effective for finding what's missing rather than what's wrong.
   Both used LLMs. The difference was prompt engineering: the ad-hoc
   prompt caught test gaps (what an LLM naturally surfaces), while the
   PromptKit prompt caught design traceability gaps (what the protocol
-  forces the LLM to check). 49% of findings were net-new.
+  forces the LLM to check). 50% of findings were net-new.
 
 - **One prompt, five audits.** The assembled prompt is reusable —
   the methodology doesn't change, only the inputs. This scales to
