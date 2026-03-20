@@ -218,18 +218,18 @@ effort across all five components: **~10–15 hours**, broken down as:
 No breaking changes required. All findings are additive — add design
 sections, add tests, add cross-references.
 
-## PromptKit vs. Manual Audit
+## PromptKit vs. Ad-Hoc Prompts
 
-The Sonde project had already been through a manual audit pass before
-this exercise. The maintainer had filed ~20 GitHub issues based on
-hand-rolled prompts and direct review. This created a natural
-experiment: what does a structured PromptKit audit find that a manual
-audit misses — and vice versa?
+The Sonde project had already been through an audit pass before this
+exercise. The maintainer had used ad-hoc LLM prompts to review the
+specifications, filing ~20 GitHub issues from those results. This
+created a natural experiment: what does a structured PromptKit audit
+find that an ad-hoc LLM audit misses — and vice versa?
 
 ### Cross-Reference Results
 
 The 59 PromptKit findings were cross-referenced against existing
-GitHub issues:
+GitHub issues filed from the ad-hoc audit:
 
 | Component | Findings | Direct Match | Partial Match | No Issue |
 |-----------|----------|--------------|---------------|----------|
@@ -240,23 +240,26 @@ GitHub issues:
 | Node | 11 | 0 | 3 | 8 |
 | **Total** | **59** | **17 (29%)** | **13 (22%)** | **29 (49%)** |
 
-**29% of findings were already known** — the manual audit had caught
+**29% of findings were already known** — the ad-hoc audit had caught
 them. **22% partially overlapped** — the issue existed but the finding
-was more specific or broader. **49% were net-new** — issues the manual
+was more specific or broader. **49% were net-new** — issues the ad-hoc
 audit did not surface at all.
 
-### Different Audits Find Different Things
+### Different Prompts Find Different Things
 
-The most revealing pattern was not how many findings overlapped, but
-which *types* each approach caught:
+Both audits used LLMs. The difference was the prompt: one was ad-hoc
+("review this spec for gaps"), the other was a composed PromptKit prompt
+with a defined persona, a 6-phase protocol, and a classification
+taxonomy. The most revealing pattern was not how many findings
+overlapped, but which *types* each approach caught:
 
-**Manual audit strength: validation gaps.** The maintainer's manual
-review excelled at finding missing tests, incomplete test cases, and
-validation plan gaps — particularly in the protocol crate and BLE tool.
-These are the issues an engineer naturally notices when reading test
-plans against requirements.
+**Ad-hoc prompt strength: validation gaps.** The ad-hoc audit excelled
+at finding missing tests, incomplete test cases, and validation plan
+gaps — particularly in the protocol crate and BLE tool. These are the
+issues an LLM naturally surfaces when asked to "review" a spec, because
+test gaps are concrete and obvious.
 
-**PromptKit audit strength: design traceability.** The automated
+**PromptKit audit strength: design traceability.** The structured
 trifecta audit found a fundamentally different class of issues —
 cross-document traceability gaps between requirements and design. The
 10 highest-severity net-new findings were almost entirely D1/D3/D6
@@ -269,18 +272,19 @@ cross-document traceability gaps between requirements and design. The
 - Gateway F-006: Module table missing Admin API and BLE modules
 - Protocol F-010: Redundant `command_type` field inconsistency risk
 
-**The two approaches are complementary, not competing.** A human
-reviewer reads a test plan and thinks "is this test right?" — catching
-D2 and D7 issues. The structured protocol reads all three documents
-and mechanically checks "does every REQ-ID appear in the design?" —
-catching D1 and D6 issues that require comparing documents a human
-doesn't hold in working memory simultaneously.
+**The two approaches are complementary, not competing.** An ad-hoc
+prompt tends to read each document in isolation and spot issues within
+it — catching D2 and D7 issues. The structured protocol forces the LLM
+to build a complete identifier inventory across all three documents
+and check every cell in the traceability matrix — catching D1 and D6
+issues that require holding three documents in working memory
+simultaneously.
 
-### Why the Manual Audit Missed Design Drift
+### Why the Ad-Hoc Audit Missed Design Drift
 
-The manual audit focused on a natural question: "are the tests
-complete?" This is the question engineers instinctively ask, because
-test gaps have immediate consequences (bugs in production). Design
+The ad-hoc audit focused on a natural question: "are the tests
+complete?" This is the question engineers instinctively ask (and
+prompt for), because test gaps have immediate consequences. Design
 traceability gaps have deferred consequences — the code might still be
 correct even if the design document is stale. But when BLE pairing
 design was absent from three design documents simultaneously, the risk
@@ -289,9 +293,9 @@ would have no design guidance for 30-45% of requirements.
 
 The PromptKit audit caught this because the traceability-audit protocol
 requires building a **complete identifier inventory** before comparing
-documents. A human skims; the protocol enumerates. Enumeration is
-tedious but exhaustive — and that's exactly what makes it effective for
-finding what's missing rather than what's wrong.
+documents. An ad-hoc prompt skims; the protocol enumerates.
+Enumeration is tedious but exhaustive — and that's exactly what makes
+it effective for finding what's missing rather than what's wrong.
 
 ## Takeaways
 
@@ -300,10 +304,11 @@ finding what's missing rather than what's wrong.
   documents lagged. Manual review would catch this in one component;
   the audit caught it in all three and quantified the gap precisely.
 
-- **Structured audits find different issues than manual review.**
-  49% of findings were net-new — almost all design traceability gaps
-  that the manual audit's test-focused lens naturally missed. The two
-  approaches are complementary.
+- **Structured prompts find different issues than ad-hoc prompts.**
+  Both used LLMs. The difference was prompt engineering: the ad-hoc
+  prompt caught test gaps (what an LLM naturally surfaces), while the
+  PromptKit prompt caught design traceability gaps (what the protocol
+  forces the LLM to check). 49% of findings were net-new.
 
 - **One prompt, five audits.** The assembled prompt is reusable —
   the methodology doesn't change, only the inputs. This scales to
