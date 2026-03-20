@@ -64,10 +64,12 @@ full traceability back to the source RFC sections.
    must trace back to specific RFC sections for verification — the
    section number in the ID provides that traceability.
 
-3. **Preserve RFC 2119 keyword strength.** Every requirement must
-   record whether the original statement used MUST, SHOULD, or MAY.
-   This is critical metadata — downstream tools use it to distinguish
-   absolute requirements from implementation choices.
+3. **Preserve the exact RFC 2119 keyword.** Every requirement must
+   record the original keyword: MUST, MUST NOT, SHALL, SHALL NOT,
+   SHOULD, SHOULD NOT, MAY, REQUIRED, RECOMMENDED, or OPTIONAL.
+   Prohibitions (MUST NOT, SHALL NOT) are especially important —
+   they generate negative acceptance criteria. This is critical
+   metadata for downstream reconciliation and auditing.
 
 4. **If focus areas are specified**, perform the full document structure
    analysis (Phase 1) but restrict detailed extraction (Phases 2–5) to
