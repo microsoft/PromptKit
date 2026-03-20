@@ -13,6 +13,8 @@ protocols:
   - guardrails/self-verification
   - guardrails/operational-constraints
   - reasoning/root-cause-analysis
+taxonomies:
+  - stack-lifetime-hazards
 format: investigation-report
 params:
   problem_description: "Natural language description of the bug or failure"

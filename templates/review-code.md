@@ -12,6 +12,8 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
+taxonomies:
+  - stack-lifetime-hazards
 format: investigation-report
 params:
   code: "The code to review"

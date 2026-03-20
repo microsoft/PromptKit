@@ -328,6 +328,7 @@ templates:
         analysis and produce an investigation report.
       persona: systems-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints, root-cause-analysis]
+      taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
     - name: investigate-security
@@ -337,6 +338,7 @@ templates:
         vulnerability analysis with severity classification.
       persona: security-auditor
       protocols: [anti-hallucination, self-verification, operational-constraints, security-vulnerability]
+      taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
   code-analysis:
@@ -347,6 +349,7 @@ templates:
         and maintainability. Supports additional analysis protocols.
       persona: systems-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints]
+      taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
   planning:
