@@ -66,8 +66,10 @@ specified and what was built.
 
 2. **Classify every finding** using the specification-drift taxonomy
    (D8–D10). Every finding MUST have exactly one drift label, a severity,
-   specific locations in both the spec and the code, evidence, and a
-   recommended resolution.
+   evidence, and a recommended resolution. Include specific locations in
+   both the spec and the code — except for D9 findings, which by
+   definition have no spec location (use "None — no matching requirement
+   identified" and describe what was searched).
 
 3. **If the design document is not provided**, skip design-related
    checks. Trace requirements directly to code without an intermediate
@@ -75,14 +77,14 @@ specified and what was built.
 
 4. **If focus areas are specified**, perform the full inventories
    (Phases 1–2) but restrict detailed tracing (Phases 3–5) to
-   requirements matching the focus areas.
+   requirements and code modules related to the focus areas.
 
 5. **Apply the anti-hallucination protocol.** Every finding must cite
    specific REQ-IDs and code locations. Do NOT invent requirements or
    claim code implements behavior you cannot point to. If you cannot
-   fully trace a requirement due to incomplete code context, label
-   the finding as INCONCLUSIVE and state what additional code would
-   be needed.
+   fully trace a requirement due to incomplete code context, assign the
+   appropriate drift label (D8) but set its confidence to Low and state
+   what additional code would be needed to confirm.
 
 6. **Apply the operational-constraints protocol.** Do not attempt to
    ingest the entire codebase. Focus on the behavioral surface — public
@@ -102,7 +104,8 @@ specified and what was built.
    - [ ] Every REQ-ID from the requirements document appears in at least
          one finding or is confirmed as implemented
    - [ ] Every finding has a specific drift label (D8, D9, or D10)
-   - [ ] Every finding cites both spec and code locations
+   - [ ] Every finding cites both spec and code locations (D9 findings
+         use "None — no matching requirement identified" for spec location)
    - [ ] D8 findings include what was expected and why no implementation
          was found
    - [ ] D9 findings include the undocumented code behavior and why it

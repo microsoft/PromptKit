@@ -85,10 +85,11 @@ For each requirement in the checklist:
    - **IMPLEMENTED**: Code clearly implements the requirement. Record
      the code location(s) as evidence.
    - **PARTIALLY IMPLEMENTED**: Some aspects are present but acceptance
-     criteria are not fully met. Record what is present and what is
-     missing.
+     criteria are not fully met. Flag as D8_UNIMPLEMENTED_REQUIREMENT
+     with the finding describing what is present and what is missing.
+     Set confidence to Medium.
    - **NOT IMPLEMENTED**: No code implements this requirement. Flag as
-     D8_UNIMPLEMENTED_REQUIREMENT.
+     D8_UNIMPLEMENTED_REQUIREMENT with confidence High.
 
 ## Phase 4: Backward Traceability (Code → Specification)
 
@@ -142,8 +143,10 @@ Classify every finding using the specification-drift taxonomy.
 2. Assign severity using the taxonomy's severity guidance.
 3. For each finding, provide:
    - The drift label and short title
-   - The requirement location (REQ-ID, section) and code location
-     (file, function, line range)
+   - The spec location (REQ-ID, section) and code location (file,
+     function, line range). For D9 findings, the spec location is
+     "None — no matching requirement identified" with a description
+     of what was searched.
    - Evidence: what the spec says and what the code does (or doesn't)
    - Impact: what could go wrong
    - Recommended resolution
