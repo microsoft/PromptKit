@@ -18,8 +18,9 @@ repository at the current directory.
 1. Paste this prompt into an LLM session
 2. Paste the contents of `CONTRIBUTING.md`
 3. Paste the contents of `manifest.yaml`
-4. For each component referenced in the manifest, paste its YAML
-   frontmatter (the `---` delimited block at the top of each file)
+4. For each component referenced in the manifest, paste the **full file
+   contents** (not just frontmatter — the audit checks body content
+   including numbered phases, quality checklists, and param usage)
 
 ---
 
@@ -53,6 +54,7 @@ For each persona in `manifest.yaml`:
 For each protocol in `manifest.yaml`:
 - Does the file exist at the declared `path`?
 - Does it have `name`, `type`, `description` in frontmatter?
+- Does it have `applicable_to` listing relevant template names?
 - Does `type` match the category directory (`guardrails/` → guardrail,
   `analysis/` → analysis, `reasoning/` → reasoning)?
 - Does the body have numbered phases with specific checks?
@@ -94,7 +96,10 @@ For each taxonomy in `manifest.yaml`:
 #### 6. Cross-Reference Integrity
 
 - Do template `protocols` lists in frontmatter match the manifest's
-  `protocols` list for that template (short names)?
+  `protocols` list for that template? Note: template frontmatter uses
+  category paths (e.g., `guardrails/anti-hallucination`) while the
+  manifest uses short names (e.g., `anti-hallucination`). Compare
+  using the short name only (strip the category prefix).
 - Do template `taxonomies` fields reference taxonomies that exist in
   the manifest?
 - Do manifest `path` entries point to files that exist?
@@ -104,7 +109,8 @@ For each taxonomy in `manifest.yaml`:
 Report findings as:
 
 ```
-F-NNN: [D8/D9/D10] Short title
+F-NNN: Short title
+  Category: MISSING / UNUSED / VIOLATION
   Location: file path and line
   Requirement: which CONTRIBUTING.md rule is violated
   Evidence: what is missing, wrong, or inconsistent
@@ -112,10 +118,10 @@ F-NNN: [D8/D9/D10] Short title
   Affected files: (list if multiple)
 ```
 
-- **D8**: Required component or field is missing
-- **D9**: Component has undocumented behavior (exists but not in
-  CONTRIBUTING.md conventions)
-- **D10**: Component violates a stated convention
+Categories:
+- **MISSING**: Required component, field, or section is absent
+- **UNUSED**: Component or parameter is declared but not used
+- **VIOLATION**: Component violates a stated convention
 
 Order findings by severity. Focus on REAL gaps — every finding must
 cite a specific CONTRIBUTING.md requirement and a specific file.
