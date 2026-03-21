@@ -431,7 +431,7 @@ templates:
         for a generate/verify loop.
       persona: test-engineer
       protocols: [anti-hallucination, self-verification]
-      format: requirements-doc
+      format: validation-plan
       requires: [requirements-document, validation-plan]
 
   investigation:

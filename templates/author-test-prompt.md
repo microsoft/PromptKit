@@ -12,7 +12,7 @@ persona: test-engineer
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
-format: requirements-doc
+format: validation-plan
 params:
   project_name: "Name of the project or module being tested"
   requirements_doc: "The requirements document content"
@@ -28,12 +28,11 @@ input_contract:
     linked requirements (REQ-IDs), and expected results. A requirements
     document with acceptance criteria.
 output_contract:
-  type: requirements-document
+  type: validation-plan
   description: >
-    A structured test generation brief formatted as a requirements
-    document that a coding agent consumes to generate spec-compliant
-    test code. Includes TC-NNN traceability instructions and
-    assertion guidance.
+    A structured test generation brief formatted as a validation plan
+    that a coding agent consumes to generate spec-compliant test code.
+    Includes TC-NNN traceability instructions and assertion guidance.
 ---
 
 # Task: Author Test Generation Prompt
@@ -99,12 +98,12 @@ document — you do NOT write test code yourself.
    - Implementation details not tied to requirements
    - Code paths not specified in any requirement
 
-6. **Format the output** according to the requirements-doc format.
-   The coding agent receives this as a structured specification:
-   - Overview → what is being tested and in what framework
-   - Requirements → the test specifications grouped by TC-NNN
-   - Constraints → assertion guidance and coverage expectations
-   - Non-Goals → what NOT to test
+6. **Format the output** according to the validation-plan format.
+   The coding agent receives this as a structured test specification:
+   - Test strategy → what is being tested and in what framework
+   - Test cases → the test specifications grouped by TC-NNN
+   - Traceability matrix → TC-NNN → REQ-ID → assertions mapping
+   - Out of scope → what NOT to test
 
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every automatable TC-NNN from the validation plan appears in

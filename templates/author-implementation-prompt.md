@@ -98,9 +98,11 @@ prompt document — you do NOT write code yourself.
 6. **Format the output** according to the requirements-doc format.
    The coding agent receives this as a structured specification:
    - Overview → what is being implemented and in what language
-   - Requirements → the coding instructions grouped by category
-   - Constraints → enforcement guidance
-   - Non-Goals → what NOT to implement
+   - Scope → modules and functional areas in/out of scope
+   - Requirements → the coding instructions grouped by category,
+     each with REQ-ID, acceptance criteria, and enforcement guidance
+   - Assumptions → language/platform assumptions
+   - Non-Goals (under Scope) → what NOT to implement
 
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every REQ-ID from the input requirements appears in the
