@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) PromptKit Contributors -->
+
 # PromptKit Self-Audit Prompt
 
 Use this prompt to audit PromptKit's own components against
@@ -53,8 +56,10 @@ For each persona in `manifest.yaml`:
 
 For each protocol in `manifest.yaml`:
 - Does the file exist at the declared `path`?
+- Does `name` match the filename (kebab-case, without `.md`)?
 - Does it have `name`, `type`, `description` in frontmatter?
-- Does it have `applicable_to` listing relevant template names?
+- Does it have `applicable_to` listing relevant template names
+  (or `all` for guardrail protocols)?
 - Does `type` match the category directory (`guardrails/` → guardrail,
   `analysis/` → analysis, `reasoning/` → reasoning)?
 - Does the body have numbered phases with specific checks?
@@ -64,6 +69,7 @@ For each protocol in `manifest.yaml`:
 
 For each format in `manifest.yaml`:
 - Does the file exist at the declared `path`?
+- Does `name` match the filename (kebab-case, without `.md`)?
 - Does it have `name`, `type: format`, `description`, `produces`?
 - Does the body include complete document structure?
 - Does the body include formatting rules?
@@ -72,6 +78,7 @@ For each format in `manifest.yaml`:
 
 For each template in `manifest.yaml`:
 - Does the file exist at the declared `path`?
+- Does `name` match the filename (kebab-case, without `.md`)?
 - Does it have all required frontmatter fields: `name`, `description`,
   `persona`, `protocols`, `format`, `params`, `input_contract`,
   `output_contract`?
@@ -90,6 +97,7 @@ For each template in `manifest.yaml`:
 
 For each taxonomy in `manifest.yaml`:
 - Does the file exist at the declared `path`?
+- Does `name` match the filename (kebab-case, without `.md`)?
 - Does it have `name`, `type: taxonomy`, `description`, `domain`?
 - Does it have an `applicable_to` list?
 
