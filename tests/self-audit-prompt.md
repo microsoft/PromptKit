@@ -5,7 +5,7 @@
 
 Use this prompt to audit PromptKit's own components against
 CONTRIBUTING.md conventions. Feed it to an LLM with access to the
-repository, or paste the manifest + component frontmatter as context.
+repository, or paste the manifest and full component files as context.
 
 ## How to Run
 
@@ -88,6 +88,8 @@ For each template in `manifest.yaml`:
 - If `taxonomies` is declared, do the referenced taxonomies exist?
 - Does the body have an **Inputs section** listing all `{{param}}`
   placeholders from frontmatter `params`?
+- Does the body have an **Instructions section** with numbered,
+  specific steps?
 - Does the body have a **Quality checklist** section?
 - **Param usage**: For each key in frontmatter `params`, does
   `{{key}}` appear in the template body? Flag params that are declared
@@ -95,7 +97,9 @@ For each template in `manifest.yaml`:
 
 #### 5. Taxonomy Compliance
 
-For each taxonomy in `manifest.yaml`:
+For each taxonomy in `manifest.yaml` (taxonomy conventions are
+documented in `docs/architecture.md`, not CONTRIBUTING.md — cite
+that file for taxonomy-specific findings):
 - Does the file exist at the declared `path`?
 - Does `name` match the filename (kebab-case, without `.md`)?
 - Does it have `name`, `type: taxonomy`, `description`, `domain`?
