@@ -91,19 +91,15 @@ prompt document — you do NOT write code yourself.
    - Specify what to do when the constraint is violated (error,
      rejection, fallback)
 
-5. **Include a "do NOT implement" section.** List behaviors that are
-   explicitly out of scope — requirements not in the focus area,
-   features not in the spec, optimizations not required. This prevents
-   the coding agent from adding undocumented behavior (D9).
+5. **Specify exclusions** for the "Out of Scope" section. List
+   behaviors that are explicitly excluded — requirements not in the
+   focus area, features not in the spec, optimizations not required.
+   This prevents the coding agent from adding undocumented behavior
+   (D9).
 
 6. **Format the output** according to the requirements-doc format.
-   The coding agent receives this as a structured specification:
-   - Overview → what is being implemented and in what language
-   - Scope → modules and functional areas in/out of scope
-   - Requirements → the coding instructions grouped by category,
-     each with REQ-ID, acceptance criteria, and enforcement guidance
-   - Assumptions → language/platform assumptions
-   - Non-Goals (under Scope) → what NOT to implement
+   Place non-goals under section "2.2 Out of Scope" per the format's
+   structure.
 
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every REQ-ID from the input requirements appears in the
@@ -112,7 +108,7 @@ prompt document — you do NOT write code yourself.
    - [ ] Every constraint has an enforcement instruction
    - [ ] Traceability instructions are included (REQ-ID in comments)
    - [ ] Language-specific conventions are specified
-   - [ ] A "do NOT implement" section exists
+   - [ ] An "Out of Scope" section exists under Scope
    - [ ] The output is consumable by the target audience (coding agent)
 
 ## Non-Goals

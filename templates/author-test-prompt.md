@@ -93,18 +93,15 @@ document — you do NOT write test code yourself.
    - Specify assertion style (assert_eq, expect, should, etc.)
    - Specify how to handle async tests, timeouts, and cleanup
 
-5. **Include a "do NOT test" section.** List behaviors that are
-   explicitly out of scope:
+5. **Specify exclusions** for the "Out of Scope" section. List
+   behaviors that are explicitly excluded:
    - Test cases marked as manual-only or deferred in the validation plan
    - Implementation details not tied to requirements
    - Code paths not specified in any requirement
 
 6. **Format the output** according to the validation-plan format.
-   The coding agent receives this as a structured test specification:
-   - Test strategy → what is being tested and in what framework
-   - Test cases → the test specifications grouped by TC-NNN
-   - Traceability matrix → TC-NNN → REQ-ID → assertions mapping
-   - Out of scope → what NOT to test
+   Place exclusions under section "2.2 Out of Scope" per the format's
+   structure.
 
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every automatable TC-NNN from the validation plan appears in
@@ -117,7 +114,7 @@ document — you do NOT write test code yourself.
    - [ ] Traceability instructions are included (TC-NNN in test names,
          REQ-ID in comments)
    - [ ] Test framework conventions are specified
-   - [ ] A "do NOT test" section exists
+   - [ ] An "Out of Scope" section exists under Scope
    - [ ] The output is consumable by the target audience (coding agent)
 
 ## Non-Goals
