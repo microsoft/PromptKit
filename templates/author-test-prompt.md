@@ -66,8 +66,9 @@ document — you do NOT write test code yourself.
    - The TC-NNN ID and linked REQ-ID(s)
    - The test steps from the validation plan (inputs, actions, sequence)
    - The expected results and pass/fail criteria
-   - A traceability instruction: "Name the test function with TC-NNN
-     reference and include a comment linking to REQ-<ID>"
+   - A traceability instruction: "Name the test function with the
+     TC-NNN ID and include a comment with the exact REQ-ID(s) from
+     the requirements document (e.g., `// Verifies REQ-AUTH-003`)"
 
 2. **For each test case**, specify the assertions needed:
    - **Positive assertions**: Verify the expected behavior occurs
