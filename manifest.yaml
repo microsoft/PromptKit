@@ -55,6 +55,20 @@ personas:
       and validation artifacts for consistency, completeness, and
       traceability. Adversarial toward completeness claims.
 
+  - name: implementation-engineer
+    path: personas/implementation-engineer.md
+    description: >
+      Senior implementation engineer. Builds correct, maintainable code
+      from specifications. Traces every implementation decision back to
+      a requirement.
+
+  - name: test-engineer
+    path: personas/test-engineer.md
+    description: >
+      Senior test engineer. Writes thorough, specification-driven tests
+      that verify every requirement and acceptance criterion. Prioritizes
+      coverage breadth, negative cases, and boundary conditions.
+
 protocols:
   guardrails:
     - name: anti-hallucination
@@ -396,6 +410,29 @@ templates:
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, requirements-reconciliation]
       format: requirements-doc
+
+  code-generation:
+    - name: author-implementation-prompt
+      path: templates/author-implementation-prompt.md
+      description: >
+        Produce a structured prompt for a coding agent to generate
+        spec-compliant implementation code. Pairs with
+        audit-code-compliance for a generate/verify loop.
+      persona: implementation-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: requirements-doc
+      requires: requirements-document
+
+    - name: author-test-prompt
+      path: templates/author-test-prompt.md
+      description: >
+        Produce a structured prompt for a coding agent to generate
+        spec-compliant test code. Pairs with audit-test-compliance
+        for a generate/verify loop.
+      persona: test-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: requirements-doc
+      requires: [requirements-document, validation-plan]
 
   investigation:
     - name: investigate-bug
