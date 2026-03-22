@@ -128,6 +128,7 @@ document — you do NOT write test code yourself.
 - Do NOT write test code — produce the prompt only.
 - Do NOT invent test cases not in the validation plan — if you
   identify a coverage gap, flag it as a note, don't add tests.
-- Do NOT include test cases outside the focus areas.
+- Do NOT write detailed test specifications for test cases outside
+  the focus areas — list them under Out of Scope instead.
 - Do NOT generate implementation code — that is the job of
   `author-implementation-prompt`.

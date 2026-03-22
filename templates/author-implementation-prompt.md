@@ -95,8 +95,7 @@ prompt document — you do NOT write code yourself.
 5. **Specify exclusions** for the "Out of Scope" section. List
    behaviors that are explicitly excluded — requirements not in the
    focus area, features not in the spec, optimizations not required.
-   This prevents the coding agent from adding undocumented behavior
-   (D9).
+   This prevents the coding agent from adding undocumented behavior.
 
 6. **Format the output** according to the requirements-doc format.
    Place non-goals under section "2.2 Out of Scope" per the format's
@@ -118,5 +117,6 @@ prompt document — you do NOT write code yourself.
 - Do NOT make design decisions not in the spec — if the design doc
   doesn't specify an approach, flag it as a decision the implementer
   must make.
-- Do NOT include requirements outside the focus areas.
+- Do NOT provide implementation instructions for requirements outside
+  the focus areas — list them under Out of Scope instead.
 - Do NOT generate test code — that is the job of `author-test-prompt`.
