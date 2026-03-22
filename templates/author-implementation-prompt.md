@@ -72,9 +72,10 @@ prompt document — you do NOT write code yourself.
    - The acceptance criteria (what "done" looks like)
    - Constraints to enforce in code (performance, security, validation)
    - Error handling expectations (what happens on invalid input, failure)
-   - A traceability instruction: "Include a comment referencing the
-     exact REQ-ID (e.g., `// Implements REQ-AUTH-003`) at the
-     implementation site"
+   - A traceability instruction: "Include a comment using the
+     language-appropriate syntax referencing the exact REQ-ID (e.g.,
+     `# Implements REQ-AUTH-003` in Python, `// Implements REQ-AUTH-003`
+     in Rust/Java/C) at the implementation site"
 
 3. **Include language-specific guidance.** Using the target language
    and conventions provided:

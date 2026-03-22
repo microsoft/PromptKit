@@ -67,8 +67,12 @@ document — you do NOT write test code yourself.
    - The test steps from the validation plan (inputs, actions, sequence)
    - The expected results and pass/fail criteria
    - A traceability instruction: "Name the test function with the
-     TC-NNN ID and include a comment with the exact REQ-ID(s) from
-     the requirements document (e.g., `// Verifies REQ-AUTH-003`)"
+     TC-NNN ID normalized for the target language (e.g., `TC-001` →
+     `test_tc_001_...` in Python/Rust, `testTc001...` in Java) and
+     include a comment using the language-appropriate syntax with the
+     exact REQ-ID(s) from the requirements document (e.g.,
+     `# Verifies REQ-AUTH-003` in Python, `// Verifies REQ-AUTH-003`
+     in Rust/Java)"
 
 2. **For each test case**, specify the assertions needed:
    - **Positive assertions**: Verify the expected behavior occurs
@@ -87,8 +91,9 @@ document — you do NOT write test code yourself.
 
 4. **Include test framework guidance.** Using the target language and
    test framework:
-   - Specify test function naming conventions (e.g.,
-     `test_tc001_syn_retransmit_timeout`)
+   - Specify test function naming conventions using the normalized
+     TC-NNN ID (e.g., `test_tc_001_syn_retransmit_timeout` in
+     Python/Rust, `testTc001SynRetransmitTimeout` in Java)
    - Specify fixture/setup patterns
    - Specify assertion style (assert_eq, expect, should, etc.)
    - Specify how to handle async tests, timeouts, and cleanup
@@ -104,8 +109,9 @@ document — you do NOT write test code yourself.
    structure.
 
 7. **Quality checklist** — before finalizing, verify:
-   - [ ] Every automatable TC-NNN from the validation plan appears in
-         the test brief (or is documented as out of scope)
+   - [ ] Every automatable TC-NNN from the validation plan within the
+         focus areas appears in the test brief. TC-NNNs outside the
+         focus areas are listed under Out of Scope.
    - [ ] Every test specification includes its linked REQ-ID(s) and
          acceptance criteria
    - [ ] Every acceptance criterion has at least one specified assertion
