@@ -192,5 +192,7 @@ Before finalizing, verify:
   external runtime to consume.
 - Do NOT generate code — the coder agent generates code when it
   receives the coder prompt.
-- Do NOT merge the four artifacts into a single prompt — they must
-  remain separate so the orchestrator can feed each to the right agent.
+- Do NOT combine the four artifacts into a single undifferentiated
+  prompt — they must be clearly separated within the multi-artifact
+  response so the orchestrator can extract and feed each to the right
+  agent independently.

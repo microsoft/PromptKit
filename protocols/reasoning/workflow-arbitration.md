@@ -44,17 +44,25 @@ For each finding raised by the reviewer:
      addressed
    - **BIKESHEDDING**: Not spec-grounded, not substantive, or both
      — dismiss
-   - **REPEATED**: Same issue as a previous iteration — dismiss
-   - **RESOLVED**: Was valid but coder's response adequately addressed
-     it
+   - **REPEATED**: Previously raised AND already resolved or dismissed
+     — dismiss
+
+   Note: RESOLVED status is assigned after Phase 2 response evaluation,
+   not during Phase 1 classification.
 
 ## Phase 2: Response Evaluation
 
 For each VALID finding:
 
-1. **Did the coder change the code?** A response that argues without
-   changing code is not a resolution — it is a defense. The finding
-   remains open.
+1. **Did the coder address the finding?** This can happen two ways:
+   - **Code change**: The coder modified code to fix the issue.
+     Verify the change actually addresses the finding.
+   - **Spec-grounded rebuttal**: The coder explains, citing the spec,
+     that the requirement does not actually mandate the change the
+     reviewer requested. If the rebuttal is valid (the spec supports
+     the coder's interpretation), reclassify the finding as
+     BIKESHEDDING. If the rebuttal is not convincing, the finding
+     remains VALID and NOT ADDRESSED.
 
 2. **Does the code change address the finding?** Verify that the
    specific issue is fixed, not just that code was modified. A change
@@ -64,10 +72,12 @@ For each VALID finding:
    finding but creates another is net-zero progress.
 
 4. **Classify each response**:
+   - **RESOLVED**: Finding adequately addressed (via code change or
+     valid rebuttal)
    - **ADDRESSED**: Code changed and finding is resolved
    - **PARTIALLY ADDRESSED**: Code changed but finding is only
      partially resolved — specify what remains
-   - **NOT ADDRESSED**: No code change, or change doesn't fix the issue
+   - **NOT ADDRESSED**: No code change and no valid rebuttal
    - **REGRESSED**: Code change introduced a new issue
 
 ## Phase 3: Convergence Analysis
