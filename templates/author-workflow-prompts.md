@@ -77,7 +77,7 @@ The orchestrator runs these agents in a loop:
 │        │
 │   CONTINUE ←──┘
 │        │
-└── DONE → Output final code
+└── DONE → Output final code + validator verdict + finding history
 ```
 
 Each iteration, the coder receives the previous validator verdict
@@ -114,7 +114,7 @@ Produce a structured audit brief for the reviewer agent:
 2. **Instruct the reviewer to audit the code against the spec**,
    producing findings with:
    - REQ-ID reference (what requirement is violated or unimplemented)
-   - Severity (Critical / High / Medium / Low)
+   - Severity (Critical / High / Medium / Low / Informational)
    - Evidence (what the code does vs. what the spec requires)
    - Recommended fix
 3. **Require spec-grounding**: Every finding MUST cite a specific
@@ -140,8 +140,8 @@ Produce a structured arbitration brief for the validator agent:
    - DONE if iteration count reaches {{max_iterations}}
    - DONE if livelock detected (repeated findings, no progress)
 3. **Include the classification scheme**: VALID, BIKESHEDDING,
-   REPEATED, RESOLVED for findings; ADDRESSED, NOT ADDRESSED,
-   REGRESSED for responses.
+   REPEATED, RESOLVED for findings; ADDRESSED, PARTIALLY ADDRESSED,
+   NOT ADDRESSED, REGRESSED for responses.
 4. **Require a definitive verdict**: CONTINUE or DONE with reasoning.
 5. **If CONTINUE**: Specify what the coder should focus on next.
 6. **If DONE**: Summarize final status of all findings.

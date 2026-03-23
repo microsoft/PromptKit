@@ -26,20 +26,23 @@ For each finding raised by the reviewer:
 
 1. **Is it spec-grounded?** Does the finding cite a specific
    requirement (REQ-ID) or acceptance criterion? If not, it is
-   an opinion, not a finding. Classify as DISMISSED (not spec-grounded).
+   an opinion, not a finding. Classify as BIKESHEDDING.
 
 2. **Is it novel?** Has this exact issue (or a semantically equivalent
    one) been raised in a previous iteration? If so, classify as
    REPEATED. The reviewer must raise new issues or the workflow
    terminates.
 
-3. **Is it substantive?** Does the finding affect correctness, safety,
-   or specification compliance? Or is it about style, naming, or
-   subjective quality? Classify as SUBSTANTIVE or BIKESHEDDING.
+3. **Is it substantive or bikeshedding?** Does the finding affect
+   correctness, safety, or specification compliance? Or is it about
+   style, naming, or subjective quality? If not substantive, classify
+   as BIKESHEDDING.
 
 4. **Classify each finding**:
-   - **VALID**: Spec-grounded, novel, substantive — must be addressed
-   - **BIKESHEDDING**: Not spec-grounded or not substantive — dismiss
+   - **VALID**: Spec-grounded, novel, and substantive — must be
+     addressed
+   - **BIKESHEDDING**: Not spec-grounded, not substantive, or both
+     — dismiss
    - **REPEATED**: Same issue as a previous iteration — dismiss
    - **RESOLVED**: Was valid but coder's response adequately addressed
      it
@@ -74,7 +77,7 @@ Assess whether the workflow is making forward progress.
    - New VALID findings this iteration
    - Findings ADDRESSED this iteration
    - Findings NOT ADDRESSED (carried forward)
-   - Findings DISMISSED (bikeshedding + repeated)
+   - Findings BIKESHEDDING or REPEATED (dismissed)
 
 2. **Calculate progress**:
    - Is the count of open findings decreasing each iteration?
