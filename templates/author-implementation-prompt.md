@@ -16,7 +16,7 @@ format: requirements-doc
 params:
   project_name: "Name of the project or module being implemented"
   requirements_doc: "The requirements document content"
-  design_doc: "The design document content (optional — omit if implementation is requirements-only)"
+  design_doc: "The design document content (optional — pass 'None' if no design document is available)"
   language: "Target programming language — e.g., 'Rust', 'Python', 'C', 'TypeScript'"
   conventions: "Language and project conventions — e.g., 'use anyhow for errors, async/await, no unwrap in production code'"
   focus_areas: "Optional narrowing — e.g., 'authentication module only', 'REQ-AUTH-001 through REQ-AUTH-010' (default: all)"
@@ -49,7 +49,7 @@ prompt document — you do NOT write code yourself.
 **Requirements Document**:
 {{requirements_doc}}
 
-**Design Document** (if provided):
+**Design Document** (if provided — ignore if "None"):
 {{design_doc}}
 
 **Target Language**: {{language}}
