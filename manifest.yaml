@@ -55,6 +55,13 @@ personas:
       and validation artifacts for consistency, completeness, and
       traceability. Adversarial toward completeness claims.
 
+  - name: workflow-arbiter
+    path: personas/workflow-arbiter.md
+    description: >
+      Senior workflow arbiter. Evaluates multi-agent workflow progress,
+      detects livelock and bikeshedding, and decides whether a
+      coding/review/validation loop should continue or terminate.
+
   - name: implementation-engineer
     path: personas/implementation-engineer.md
     description: >
@@ -198,6 +205,14 @@ protocols:
         rules, error conditions) from specifications or source code.
         Produces a dense, filtered subset of a full requirements
         extraction.
+
+    - name: workflow-arbitration
+      path: protocols/reasoning/workflow-arbitration.md
+      description: >
+        Protocol for evaluating progress in a multi-agent coding
+        workflow. Determines whether reviewer findings are valid,
+        coder responses are adequate, and whether the workflow should
+        continue or terminate.
 
     - name: requirements-reconciliation
       path: protocols/reasoning/requirements-reconciliation.md
@@ -453,6 +468,18 @@ templates:
       protocols: [anti-hallucination, self-verification]
       format: validation-plan
       requires: [requirements-document, validation-plan]
+
+    - name: author-workflow-prompts
+      path: templates/author-workflow-prompts.md
+      description: >
+        Generate prompt assets for a multi-agent coding workflow:
+        coder, reviewer, validator, and orchestrator prompts.
+        Designed for external orchestrators — PromptKit produces
+        the prompts, not the runtime.
+      persona: workflow-arbiter
+      protocols: [anti-hallucination, self-verification, workflow-arbitration]
+      format: multi-artifact
+      requires: requirements-document
 
   investigation:
     - name: investigate-bug
