@@ -85,7 +85,9 @@ For each VALID finding:
    - Finding becomes **RESOLVED** if response is ADDRESSED or
      validly REBUTTED
    - Finding remains **OPEN** if response is NOT ADDRESSED,
-     PARTIALLY ADDRESSED, or REGRESSED
+     PARTIALLY ADDRESSED, or REGRESSED (regression is a response
+     status; the original finding stays OPEN and the new issue is
+     logged separately)
    - **REGRESSED**: Code change introduced a new issue
 
 ## Phase 3: Convergence Analysis

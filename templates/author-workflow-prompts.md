@@ -88,7 +88,7 @@ changes, and the iteration history.
 ## Instructions
 
 Generate four self-contained prompt documents with these filenames.
-Separate each artifact with a heading `## Artifact N: <filename>` so
+Separate each artifact with a heading `### Artifact N: <filename>` so
 an external orchestrator can reliably extract them:
 
 - `coder-prompt.md` — implementation brief for the coder agent
@@ -96,7 +96,7 @@ an external orchestrator can reliably extract them:
 - `validator-prompt.md` — arbitration brief for the validator agent
 - `orchestrator.md` — workflow description for the runtime
 
-### Artifact 1: Coder Prompt
+### Artifact 1: coder-prompt.md
 
 Produce a structured implementation brief for the coder agent:
 
@@ -113,7 +113,7 @@ Produce a structured implementation brief for the coder agent:
    spec. Do not argue with reviewer findings — fix them or explain
    why the spec does not require the change.
 
-### Artifact 2: Reviewer Prompt
+### Artifact 2: reviewer-prompt.md
 
 Produce a structured audit brief for the reviewer agent:
 
@@ -134,7 +134,7 @@ Produce a structured audit brief for the reviewer agent:
    or formatting unless the spec requires it. Do not invent
    requirements.
 
-### Artifact 3: Validator Prompt
+### Artifact 3: validator-prompt.md
 
 Produce a structured arbitration brief for the validator agent:
 
@@ -158,7 +158,7 @@ Produce a structured arbitration brief for the validator agent:
 5. **If CONTINUE**: Specify what the coder should focus on next.
 6. **If DONE**: Summarize final status of all findings.
 
-### Artifact 4: Orchestrator Description
+### Artifact 4: orchestrator.md
 
 Produce a structured description of the workflow for the runtime:
 
@@ -175,8 +175,12 @@ Produce a structured description of the workflow for the runtime:
 
 Before finalizing, verify:
 
+- [ ] Output begins with a Deliverables manifest table listing all
+      four artifacts with filenames (per multi-artifact format)
 - [ ] All four artifacts are self-contained (each can be consumed
       independently by an agent)
+- [ ] Each artifact is separated by a `### Artifact N: <filename>`
+      heading
 - [ ] All three agent prompts reference the same requirements document
 - [ ] The coder prompt includes traceability instructions (REQ-IDs
       in comments)
