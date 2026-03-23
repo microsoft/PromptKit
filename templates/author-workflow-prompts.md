@@ -110,7 +110,9 @@ Produce a structured implementation brief for the coder agent:
    the agent to read the validator's previous verdict (if any) and
    address the specific findings that remain OPEN (NOT ADDRESSED,
    PARTIALLY ADDRESSED, or REGRESSED).
-5. **Include a "do NOT" section**: Do not add features not in the
+5. **Include design context**: If a design document is provided,
+   include it as architectural guidance for implementation decisions.
+6. **Include a "do NOT" section**: Do not add features not in the
    spec. Do not argue with reviewer findings — fix them or explain
    why the spec does not require the change.
 
@@ -131,7 +133,11 @@ Produce a structured audit brief for the reviewer agent:
 4. **Require novelty**: The reviewer MUST NOT raise issues that were
    addressed in previous iterations. If the coder fixed an issue,
    it is resolved — do not re-raise it.
-5. **Include a "do NOT" section**: Do not comment on style, naming,
+5. **Include validation context**: If a validation plan is provided,
+   include its test case definitions (TC-NNN) as additional
+   verification criteria — the reviewer can check whether the code
+   implements behaviors that the validation plan expects to test.
+6. **Include a "do NOT" section**: Do not comment on style, naming,
    or formatting unless the spec requires it. Do not invent
    requirements.
 

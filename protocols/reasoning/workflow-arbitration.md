@@ -100,8 +100,11 @@ Assess whether the workflow is making forward progress.
    - Findings BIKESHEDDING or REPEATED (dismissed)
 
 2. **Calculate progress**:
-   - Is the count of open findings decreasing each iteration?
-   - Is the ratio of ADDRESSED to new VALID findings > 1?
+   - Is the count of OPEN findings decreasing each iteration?
+   - If there are new VALID findings this iteration: is the count
+     of findings RESOLVED ≥ the count of new VALID findings?
+   - If there are zero new VALID findings: has at least one OPEN
+     finding been RESOLVED this iteration?
    - Is the reviewer producing novel findings or recycling old ones?
 
 3. **Detect livelock patterns**:
