@@ -88,7 +88,6 @@ For each VALID finding:
      PARTIALLY ADDRESSED, or REGRESSED (regression is a response
      status; the original finding stays OPEN and the new issue is
      logged separately)
-   - **REGRESSED**: Code change introduced a new issue
 
 ## Phase 3: Convergence Analysis
 
@@ -120,7 +119,7 @@ Assess whether the workflow is making forward progress.
 Issue a definitive verdict:
 
 ### CONTINUE — if:
-- There are VALID findings that are NOT ADDRESSED
+- There are VALID findings that remain OPEN
 - The workflow is converging (open finding count is decreasing)
 - The reviewer is producing novel findings
 - Progress is being made (issues are being resolved)

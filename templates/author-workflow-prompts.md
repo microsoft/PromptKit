@@ -108,7 +108,8 @@ Produce a structured implementation brief for the coder agent:
    REQ-IDs in code comments at implementation sites.
 4. **Include iteration awareness**: The coder prompt must instruct
    the agent to read the validator's previous verdict (if any) and
-   address the specific findings marked as NOT ADDRESSED.
+   address the specific findings that remain OPEN (NOT ADDRESSED,
+   PARTIALLY ADDRESSED, or REGRESSED).
 5. **Include a "do NOT" section**: Do not add features not in the
    spec. Do not argue with reviewer findings — fix them or explain
    why the spec does not require the change.
@@ -148,7 +149,9 @@ Produce a structured arbitration brief for the validator agent:
      Medium > Low > Informational; e.g., threshold "Medium" means
      only Low and Informational findings may remain)
    - DONE if iteration count reaches {{max_iterations}}
-   - DONE if livelock detected (repeated findings, no progress)
+   - DONE if livelock detected (convergence failure per Phase 3)
+   - DONE if reviewer has no novel findings (only re-raising
+     resolved issues)
 3. **Include the classification scheme**:
    - Finding statuses: VALID, BIKESHEDDING, REPEATED (from Phase 1);
      RESOLVED, OPEN (after Phase 2 evaluation)
