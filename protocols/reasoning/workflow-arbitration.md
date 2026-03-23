@@ -29,9 +29,10 @@ For each finding raised by the reviewer:
    an opinion, not a finding. Classify as BIKESHEDDING.
 
 2. **Is it novel?** Has this exact issue (or a semantically equivalent
-   one) been raised in a previous iteration? If so, classify as
-   REPEATED. The reviewer must raise new issues or the workflow
-   terminates.
+   one) been raised in a previous iteration AND already been RESOLVED
+   or dismissed? If so, classify as REPEATED. Note: findings that
+   were raised previously but remain NOT ADDRESSED are still open —
+   they are carried forward, not repeated.
 
 3. **Is it substantive or bikeshedding?** Does the finding affect
    correctness, safety, or specification compliance? Or is it about
@@ -106,10 +107,10 @@ Issue a definitive verdict:
 
 ### DONE — if any of:
 - All VALID findings are ADDRESSED (clean pass)
-- Remaining findings are all below a severity threshold (e.g., all
-  Low/Informational)
+- Remaining findings are all strictly below the severity threshold
+  (severity ordering: Critical > High > Medium > Low > Informational)
 - The workflow is no longer converging (livelock detected)
-- The reviewer has no novel findings (recycling)
+- The reviewer has no novel findings (only re-raising resolved issues)
 - A maximum iteration count has been reached
 
 ### For each verdict, provide:

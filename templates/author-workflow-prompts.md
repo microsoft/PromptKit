@@ -87,7 +87,12 @@ changes, and the iteration history.
 
 ## Instructions
 
-Generate four self-contained prompt documents:
+Generate four self-contained prompt documents with these filenames:
+
+- `coder-prompt.md` — implementation brief for the coder agent
+- `reviewer-prompt.md` — audit brief for the reviewer agent
+- `validator-prompt.md` — arbitration brief for the validator agent
+- `orchestrator.md` — workflow description for the runtime
 
 ### Artifact 1: Coder Prompt
 
@@ -136,7 +141,10 @@ Produce a structured arbitration brief for the validator agent:
    verdict).
 2. **Include termination conditions**:
    - DONE if all findings are ADDRESSED
-   - DONE if remaining findings are below {{severity_threshold}}
+   - DONE if remaining findings are strictly below
+     {{severity_threshold}} (severity ordering: Critical > High >
+     Medium > Low > Informational; e.g., threshold "Medium" means
+     only Low and Informational findings may remain)
    - DONE if iteration count reaches {{max_iterations}}
    - DONE if livelock detected (repeated findings, no progress)
 3. **Include the classification scheme**: VALID, BIKESHEDDING,
