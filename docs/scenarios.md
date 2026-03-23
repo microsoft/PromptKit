@@ -168,6 +168,23 @@ cases (D11), missing acceptance criterion assertions (D12), and
 assertion mismatches where the test checks different conditions than
 the plan specifies (D13).
 
+### "What does this code actually guarantee?"
+
+You have a legacy codebase with sparse documentation. You need to know
+what constraints it enforces — state machines, timing bounds, ordering
+rules, validation logic — without reading every line. Or you have a
+specification and want just the enforceable constraints, not the full
+prose.
+
+**Template:** `extract-invariants` · **Persona:** `specification-analyst` ·
+**Protocol:** `invariant-extraction`
+
+**What you get:** A dense requirements document containing only the
+constraints — value bounds, behavioral rules, ordering requirements,
+timing deadlines, resource limits — plus a state machine appendix if
+state-driven behavior is found. Each invariant has an acceptance
+criterion and traces to a specific source location.
+
 ---
 
 ## Future Scenarios (Roadmap)

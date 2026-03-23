@@ -57,6 +57,20 @@ personas:
 
   - name: prompt-engineer
     path: library/personas/prompt-engineer.md
+    
+  - name: implementation-engineer
+    path: personas/implementation-engineer.md
+    description: >
+      Senior implementation engineer. Builds correct, maintainable code
+      from specifications. Traces every implementation decision back to
+      a requirement.
+
+  - name: test-engineer
+    path: personas/test-engineer.md
+    description: >
+      Senior test engineer. Writes thorough, specification-driven tests
+      that verify every requirement and acceptance criterion. Prioritizes
+      coverage breadth, negative cases, and boundary conditions.
 
 protocols:
   - name: session-profiler
@@ -194,6 +208,15 @@ reasoning:
       documents from different sources into a unified specification.
       Classifies each requirement by cross-source compatibility
       (Universal, Majority, Divergent, Extension).
+      
+    - name: invariant-extraction
+      path: protocols/reasoning/invariant-extraction.md
+      description: >
+        Systematic protocol for extracting structured invariants
+        (constraints, state machines, timing assumptions, ordering
+        rules, error conditions) from specifications or source code.
+        Produces a dense, filtered subset of a full requirements
+        extraction.
 
 formats:
   - name: requirements-doc
@@ -449,6 +472,40 @@ templates:
       protocols:
         [anti-hallucination, self-verification, requirements-reconciliation]
       format: requirements-doc
+
+    - name: extract-invariants
+      path: templates/extract-invariants.md
+      description: >
+        Extract structured invariants (constraints, state machines,
+        timing assumptions, error conditions) from a specification or
+        source code. Produces a dense, filtered subset of a full
+        requirements extraction.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, invariant-extraction]
+      format: requirements-doc
+
+  code-generation:
+    - name: author-implementation-prompt
+      path: templates/author-implementation-prompt.md
+      description: >
+        Produce a structured prompt for a coding agent to generate
+        spec-compliant implementation code. Pairs with
+        audit-code-compliance for a generate/verify loop.
+      persona: implementation-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: requirements-doc
+      requires: requirements-document
+
+    - name: author-test-prompt
+      path: templates/author-test-prompt.md
+      description: >
+        Produce a structured prompt for a coding agent to generate
+        spec-compliant test code. Pairs with audit-test-compliance
+        for a generate/verify loop.
+      persona: test-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: validation-plan
+      requires: [requirements-document, validation-plan]
 
   investigation:
     - name: investigate-bug
