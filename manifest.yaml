@@ -10,10 +10,10 @@ version: "0.2.0"
 
 personas:
   - name: systems-engineer
-    path: personas/systems-engineer.md
+    path: library/personas/systems-engineer-optimized.md
     description: >
       Senior systems engineer. Deep expertise in memory management,
-      concurrency, performance, and debugging. Reasons from first principles.
+      concurrency, performance, and debugging. Optimized for token efficiency.
 
   - name: security-auditor
     path: personas/security-auditor.md
@@ -55,134 +55,145 @@ personas:
       and validation artifacts for consistency, completeness, and
       traceability. Adversarial toward completeness claims.
 
+  - name: prompt-engineer
+    path: library/personas/prompt-engineer.md
+
 protocols:
-  guardrails:
-    - name: anti-hallucination
-      path: protocols/guardrails/anti-hallucination.md
-      description: >
-        Prevents fabrication. Enforces epistemic labeling (KNOWN/INFERRED/ASSUMED),
-        uncertainty disclosure, and source attribution. Apply to all tasks.
+  - name: session-profiler
+    path: library/protocols/session-profiler.md
+guardrails:
+  - name: anti-hallucination
+    path: protocols/guardrails/anti-hallucination.md
+    description: >
+      Prevents fabrication. Enforces epistemic labeling (KNOWN/INFERRED/ASSUMED),
+      uncertainty disclosure, and source attribution. Apply to all tasks.
 
-    - name: self-verification
-      path: protocols/guardrails/self-verification.md
-      description: >
-        Quality gate requiring the LLM to verify its own output before finalizing.
-        Sampling checks, citation audits, coverage confirmation, consistency checks.
+  - name: self-verification
+    path: protocols/guardrails/self-verification.md
+    description: >
+      Quality gate requiring the LLM to verify its own output before finalizing.
+      Sampling checks, citation audits, coverage confirmation, consistency checks.
 
-    - name: operational-constraints
-      path: protocols/guardrails/operational-constraints.md
-      description: >
-        Governs how the LLM scopes work, uses tools, manages context, and
-        prefers deterministic analysis. Prevents over-ingestion and ensures
-        reproducibility.
+  - name: operational-constraints
+    path: protocols/guardrails/operational-constraints.md
+    description: >
+      Governs how the LLM scopes work, uses tools, manages context, and
+      prefers deterministic analysis. Prevents over-ingestion and ensures
+      reproducibility.
 
-  analysis:
-    - name: memory-safety-c
-      path: protocols/analysis/memory-safety-c.md
-      description: >
-        Memory safety analysis for C. Covers allocation/deallocation pairing,
-        pointer lifecycle, buffer boundaries, and undefined behavior.
-      language: C
+analysis:
+  - name: memory-safety-c
+    path: protocols/analysis/memory-safety-c.md
+    description: >
+      Memory safety analysis for C. Covers allocation/deallocation pairing,
+      pointer lifecycle, buffer boundaries, and undefined behavior.
+    language: C
 
-    - name: memory-safety-rust
-      path: protocols/analysis/memory-safety-rust.md
-      description: >
-        Memory safety analysis for Rust. Focuses on unsafe blocks, FFI
-        boundaries, interior mutability, and resource leaks.
-      language: Rust
+  - name: memory-safety-rust
+    path: protocols/analysis/memory-safety-rust.md
+    description: >
+      Memory safety analysis for Rust. Focuses on unsafe blocks, FFI
+      boundaries, interior mutability, and resource leaks.
+    language: Rust
 
-    - name: thread-safety
-      path: protocols/analysis/thread-safety.md
-      description: >
-        Concurrency analysis. Covers data races, deadlocks, atomicity
-        violations, and thread lifecycle. Language-agnostic.
+  - name: thread-safety
+    path: protocols/analysis/thread-safety.md
+    description: >
+      Concurrency analysis. Covers data races, deadlocks, atomicity
+      violations, and thread lifecycle. Language-agnostic.
 
-    - name: security-vulnerability
-      path: protocols/analysis/security-vulnerability.md
-      description: >
-        Security vulnerability analysis. Trust boundaries, input validation,
-        auth, crypto, and information disclosure. Language-agnostic.
+  - name: security-vulnerability
+    path: protocols/analysis/security-vulnerability.md
+    description: >
+      Security vulnerability analysis. Trust boundaries, input validation,
+      auth, crypto, and information disclosure. Language-agnostic.
 
-  reasoning:
-    - name: root-cause-analysis
-      path: protocols/reasoning/root-cause-analysis.md
-      description: >
-        Systematic root cause analysis. Symptom characterization, hypothesis
-        generation, evidence evaluation, and causal chain tracing.
+  - name: session-profiler
+    path: library/protocols/session-profiler.md
+    description: >
+      Systematic session profiling. Detects redundant reasoning, 
+      protocol loops, and unused context while estimating token usage.
 
-    - name: requirements-elicitation
-      path: protocols/reasoning/requirements-elicitation.md
-      description: >
-        Requirements extraction from natural language. Produces numbered,
-        atomic, testable requirements with RFC 2119 keywords.
+reasoning:
+  - name: root-cause-analysis
+    path: protocols/reasoning/root-cause-analysis.md
+    description: >
+      Systematic root cause analysis. Symptom characterization, hypothesis
+      generation, evidence evaluation, and causal chain tracing.
 
-    - name: iterative-refinement
-      path: protocols/reasoning/iterative-refinement.md
-      description: >
-        Protocol for revising documents through feedback cycles while
-        preserving structural integrity, numbering, cross-references,
-        and internal consistency.
+  - name: requirements-elicitation
+    path: protocols/reasoning/requirements-elicitation.md
+    description: >
+      Requirements extraction from natural language. Produces numbered,
+      atomic, testable requirements with RFC 2119 keywords.
 
-    - name: promptkit-design
-      path: protocols/reasoning/promptkit-design.md
-      description: >
-        Reasoning protocol for designing new PromptKit components. Scoping,
-        component type selection, dependency analysis, and convention
-        compliance.
+  - name: iterative-refinement
+    path: protocols/reasoning/iterative-refinement.md
+    description: >
+      Protocol for revising documents through feedback cycles while
+      preserving structural integrity, numbering, cross-references,
+      and internal consistency.
 
-    - name: devops-platform-analysis
-      path: protocols/reasoning/devops-platform-analysis.md
-      description: >
-        Systematic reasoning about DevOps platform constructs: pipelines,
-        triggers, jobs, environments, secrets, approvals, and artifacts.
-        Platform-agnostic methodology with platform-specific instantiation.
+  - name: promptkit-design
+    path: protocols/reasoning/promptkit-design.md
+    description: >
+      Reasoning protocol for designing new PromptKit components. Scoping,
+      component type selection, dependency analysis, and convention
+      compliance.
 
-    - name: requirements-from-implementation
-      path: protocols/reasoning/requirements-from-implementation.md
-      description: >
-        Systematic reasoning protocol for deriving structured requirements
-        from existing source code. Transforms code understanding into
-        testable, atomic requirements with acceptance criteria.
+  - name: devops-platform-analysis
+    path: protocols/reasoning/devops-platform-analysis.md
+    description: >
+      Systematic reasoning about DevOps platform constructs: pipelines,
+      triggers, jobs, environments, secrets, approvals, and artifacts.
+      Platform-agnostic methodology with platform-specific instantiation.
 
-    - name: traceability-audit
-      path: protocols/reasoning/traceability-audit.md
-      description: >
-        Systematic cross-document comparison protocol for auditing
-        requirements, design, and validation artifacts. Builds
-        traceability matrices and classifies divergence using the
-        specification-drift taxonomy.
+  - name: requirements-from-implementation
+    path: protocols/reasoning/requirements-from-implementation.md
+    description: >
+      Systematic reasoning protocol for deriving structured requirements
+      from existing source code. Transforms code understanding into
+      testable, atomic requirements with acceptance criteria.
 
-    - name: code-compliance-audit
-      path: protocols/reasoning/code-compliance-audit.md
-      description: >
-        Systematic protocol for auditing source code against requirements
-        and design documents. Maps specification claims to code behavior
-        and classifies findings using the specification-drift taxonomy
-        (D8–D10).
+  - name: traceability-audit
+    path: protocols/reasoning/traceability-audit.md
+    description: >
+      Systematic cross-document comparison protocol for auditing
+      requirements, design, and validation artifacts. Builds
+      traceability matrices and classifies divergence using the
+      specification-drift taxonomy.
 
-    - name: test-compliance-audit
-      path: protocols/reasoning/test-compliance-audit.md
-      description: >
-        Systematic protocol for auditing test code against a validation
-        plan and requirements document. Maps test case definitions to
-        test implementations and classifies findings using the
-        specification-drift taxonomy (D11–D13).
+  - name: code-compliance-audit
+    path: protocols/reasoning/code-compliance-audit.md
+    description: >
+      Systematic protocol for auditing source code against requirements
+      and design documents. Maps specification claims to code behavior
+      and classifies findings using the specification-drift taxonomy
+      (D8–D10).
 
-    - name: rfc-extraction
-      path: protocols/reasoning/rfc-extraction.md
-      description: >
-        Systematic protocol for extracting structured requirements from
-        RFCs and internet-drafts. Handles normative language (RFC 2119),
-        state machines, cross-RFC dependencies, ABNF grammars, and
-        IANA/security considerations.
+  - name: test-compliance-audit
+    path: protocols/reasoning/test-compliance-audit.md
+    description: >
+      Systematic protocol for auditing test code against a validation
+      plan and requirements document. Maps test case definitions to
+      test implementations and classifies findings using the
+      specification-drift taxonomy (D11–D13).
 
-    - name: requirements-reconciliation
-      path: protocols/reasoning/requirements-reconciliation.md
-      description: >
-        Systematic protocol for reconciling multiple requirements
-        documents from different sources into a unified specification.
-        Classifies each requirement by cross-source compatibility
-        (Universal, Majority, Divergent, Extension).
+  - name: rfc-extraction
+    path: protocols/reasoning/rfc-extraction.md
+    description: >
+      Systematic protocol for extracting structured requirements from
+      RFCs and internet-drafts. Handles normative language (RFC 2119),
+      state machines, cross-RFC dependencies, ABNF grammars, and
+      IANA/security considerations.
+
+  - name: requirements-reconciliation
+    path: protocols/reasoning/requirements-reconciliation.md
+    description: >
+      Systematic protocol for reconciling multiple requirements
+      documents from different sources into a unified specification.
+      Classifies each requirement by cross-source compatibility
+      (Universal, Majority, Divergent, Extension).
 
 formats:
   - name: requirements-doc
@@ -268,6 +279,13 @@ formats:
       breakdown, dependency ordering, risk assessment, and verification
       strategy.
 
+  - name: investigation-report
+    path: library/formats/investigation-report.md
+    produces: investigation-report
+    description: >
+      Structured investigation report for session profiling. Includes 
+      efficiency scoring, token breakdown, and prioritized remediation plans.
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -295,7 +313,8 @@ templates:
         Single-shot generation. For complex/ambiguous projects, use
         interactive-design instead.
       persona: software-architect
-      protocols: [anti-hallucination, self-verification, requirements-elicitation]
+      protocols:
+        [anti-hallucination, self-verification, requirements-elicitation]
       format: requirements-doc
       pipeline_position: 1
 
@@ -306,7 +325,13 @@ templates:
         and challenge before generating. Phase 2: generate when told.
         Phase 3: iterative refinement. Use for complex or ambiguous projects.
       persona: configurable
-      protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          requirements-elicitation,
+          iterative-refinement,
+        ]
       format: requirements-doc
 
     - name: author-design-doc
@@ -336,7 +361,13 @@ templates:
         source code. Analyzes implementation to extract behavioral contracts,
         API specifications, and invariants.
       persona: reverse-engineer
-      protocols: [anti-hallucination, self-verification, operational-constraints, requirements-from-implementation]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          operational-constraints,
+          requirements-from-implementation,
+        ]
       format: requirements-doc
 
     - name: audit-traceability
@@ -359,7 +390,13 @@ templates:
         Detects unimplemented requirements, undocumented behavior, and
         constraint violations.
       persona: specification-analyst
-      protocols: [anti-hallucination, self-verification, operational-constraints, code-compliance-audit]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          operational-constraints,
+          code-compliance-audit,
+        ]
       taxonomies: [specification-drift]
       format: investigation-report
       requires: requirements-document
@@ -371,10 +408,25 @@ templates:
         document. Detects unimplemented test cases, missing acceptance
         criterion assertions, and assertion mismatches.
       persona: specification-analyst
-      protocols: [anti-hallucination, self-verification, operational-constraints, test-compliance-audit]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          operational-constraints,
+          test-compliance-audit,
+        ]
       taxonomies: [specification-drift]
       format: investigation-report
       requires: [requirements-document, validation-plan]
+
+    - name: profile-session
+      description: >
+        Analyze a full LLM session log to detect inefficiencies, redundant 
+        reasoning, and unused context. Provides optimization recommendations.
+      persona: prompt-engineer
+      protocols: [session-profiler, anti-hallucination]
+      format: investigation-report
+      path: library/templates/profile-session.md
 
   standards:
     - name: extract-rfc-requirements
@@ -394,7 +446,8 @@ templates:
         (RFCs, implementations, specifications) into a unified spec.
         Classifies requirements by cross-source compatibility.
       persona: specification-analyst
-      protocols: [anti-hallucination, self-verification, requirements-reconciliation]
+      protocols:
+        [anti-hallucination, self-verification, requirements-reconciliation]
       format: requirements-doc
 
   investigation:
@@ -404,7 +457,13 @@ templates:
         Investigate a bug from a problem description. Apply root cause
         analysis and produce an investigation report.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification, operational-constraints, root-cause-analysis]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          operational-constraints,
+          root-cause-analysis,
+        ]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
@@ -414,7 +473,13 @@ templates:
         Security audit of code or a system component. Systematic
         vulnerability analysis with severity classification.
       persona: security-auditor
-      protocols: [anti-hallucination, self-verification, operational-constraints, security-vulnerability]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          operational-constraints,
+          security-vulnerability,
+        ]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
@@ -425,7 +490,8 @@ templates:
         Thorough code review for correctness, safety, security,
         and maintainability. Supports additional analysis protocols.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification, operational-constraints]
+      protocols:
+        [anti-hallucination, self-verification, operational-constraints]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
@@ -477,7 +543,8 @@ templates:
         Generate a production-ready CI/CD pipeline for a given application
         and target platform. Supports GitHub Actions, Azure DevOps, GitLab CI.
       persona: devops-engineer
-      protocols: [anti-hallucination, self-verification, devops-platform-analysis]
+      protocols:
+        [anti-hallucination, self-verification, devops-platform-analysis]
       format: pipeline-spec
 
     - name: triage-issues
@@ -504,7 +571,13 @@ templates:
         Investigate a failing CI/CD pipeline run. Analyze logs, pipeline
         configuration, and platform behavior. Produce an investigation report.
       persona: devops-engineer
-      protocols: [anti-hallucination, self-verification, root-cause-analysis, devops-platform-analysis]
+      protocols:
+        [
+          anti-hallucination,
+          self-verification,
+          root-cause-analysis,
+          devops-platform-analysis,
+        ]
       format: investigation-report
 
     - name: author-release
