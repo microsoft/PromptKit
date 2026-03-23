@@ -85,17 +85,13 @@ requirements (D1), untested requirements (D2), orphaned design decisions
 violations (D6), and acceptance criteria mismatch (D7). Design document
 is optional. Extends the `document-lifecycle` pipeline as stage 4.
 
-### Phase 2: Bidirectional Code ↔ Spec Audits
-
-> **Status:** `audit-code-compliance` template and D8–D10 taxonomy
-> extension shipped in PR #42. `audit-test-compliance` (D11–D13) is
-> tracked in issue #38.
+### Phase 2: Bidirectional Code ↔ Spec Audits ✅
 
 - **`audit-code-compliance`** ✅ — Given requirements + design, audit
   source code for unimplemented requirements (D8), undocumented behavior
   (D9), and constraint violations in code (D10). Answers: "Does the code
   implement what was specified?"
-- **`audit-test-compliance`** — Given requirements + validation plan,
+- **`audit-test-compliance`** ✅ — Given requirements + validation plan,
   audit test code for unimplemented test cases (D11), untested acceptance
   criteria (D12), and assertion mismatches (D13). Answers: "Do the tests
   verify what the plan says they should?"
@@ -108,7 +104,10 @@ is optional. Extends the `document-lifecycle` pipeline as stage 4.
 
 ### Phase 3: Invariant Extraction & Spec Evolution
 
-- **Invariant extraction template** — Extract MUST/SHOULD/MAY
+> **Status:** Invariant extraction shipped (`extract-invariants` template,
+> `invariant-extraction` protocol). Spec evolution diffing is planned.
+
+- **Invariant extraction template** ✅ — Extract MUST/SHOULD/MAY
   constraints, state transitions, timing assumptions, and error
   conditions from existing specifications or source code. Produces
   structured, machine-readable invariant sets that feed into audit
@@ -197,23 +196,33 @@ assessing whether it's exploitable.
 
 ### RFC Normalization
 
+> **Status:** `extract-rfc-requirements` template, `rfc-extraction`
+> protocol, and `reconcile-requirements` template shipped. The
+> `rfc-document` output format (xml2rfc v3) is planned.
+
 An RFC is fundamentally a requirements document with a specific format
 and RFC 2119 normative language — the same MUST/SHOULD/MAY keywords
 that PromptKit's `requirements-elicitation` protocol already produces.
 RFC support is primarily an **input normalization** and **output format**
 problem, not a new capability stack.
 
-**RFC in** — `extract-rfc-requirements` template:
+**RFC in** — `extract-rfc-requirements` template ✅:
 - Takes an RFC (or internet-draft) as input, produces a standard
   requirements-document as output.
 - Reuses the `specification-analyst` persona.
-- Needs a thin `rfc-extraction` protocol covering: section
+- Uses the `rfc-extraction` protocol covering: section
   classification, normative statement extraction, state machine
   identification, cross-RFC dependency tracking, and IANA/security
   considerations parsing.
 - Once normalized to a requirements-document, all existing audit
   machinery applies — `audit-traceability`, `audit-code-compliance`,
   spec evolution diffing.
+
+**Multi-source reconciliation** — `reconcile-requirements` template ✅:
+- Reconciles multiple requirements documents from different sources
+  (RFCs, implementations, specifications) into a unified spec.
+- Classifies requirements by cross-source compatibility (Universal,
+  Majority, Divergent, Extension).
 
 **Spec out** — `rfc-document` format:
 - Produces xml2rfc v3 (RFC 7991) output: `<rfc>`, `<section>`,
@@ -222,9 +231,6 @@ problem, not a new capability stack.
   toolchain.
 - Pairs with `author-requirements-doc` or a new `author-rfc` template
   for writing internet-drafts from scratch.
-
-**Depends on:** Phase 1 (traceability audit), Phase 3 (invariant
-extraction for state machines).
 
 ### RFC Self-Consistency Audits
 
@@ -420,9 +426,23 @@ drift, the system proposes resolutions.
 
 ---
 
-## New Templates
+## New Components
 
-Planned templates based on common engineering workflows:
+### Shipped
+
+The following components from earlier roadmap plans have been shipped:
+
+- **Templates:** `author-implementation-prompt` ✅,
+  `author-test-prompt` ✅, `author-workflow-prompts` ✅
+- **Protocols:** `requirements-reconciliation` ✅,
+  `workflow-arbitration` ✅
+- **Personas:** `implementation-engineer` ✅, `test-engineer` ✅,
+  `workflow-arbiter` ✅
+- **Formats:** `multi-artifact` ✅
+
+### Planned Templates
+
+Templates based on common engineering workflows:
 
 ### Code-Related
 - `review-api` — API design review (contracts, versioning, error
@@ -537,12 +557,12 @@ Items lower in the graph depend on items above them.
 
 ```
 Phase 1: Cross-Doc Audits ✅
-Phase 2: Code ↔ Spec Audits ✅ (code) / planned (test)
+Phase 2: Code ↔ Spec Audits ✅
     │
-    ├── Phase 3: Invariant Extraction & Spec Evolution
+    ├── Phase 3: Invariant Extraction ✅ / Spec Evolution (planned)
     │       │
     │       ├── Pillar 3: Protocol & Standards Engineering
-    │       │       ├── RFC Normalization
+    │       │       ├── RFC Normalization ✅ (extract + reconcile)
     │       │       ├── RFC ↔ Implementation Audits
     │       │       ├── Multi-Implementation Semantic Diffing
     │       │       └── Specification Evolution & Migration
