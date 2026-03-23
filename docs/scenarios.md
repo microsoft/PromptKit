@@ -175,8 +175,7 @@ what constraints it enforces — state machines, timing bounds, ordering
 rules, validation logic — without reading every line. Or you have an
 RFC and want just the enforceable constraints, not the full prose.
 
-**Template:** `extract-invariants` · **Persona:** `specification-analyst`
-(for specs) or `reverse-engineer` (for code) ·
+**Template:** `extract-invariants` · **Persona:** `specification-analyst` ·
 **Protocol:** `invariant-extraction`
 
 **What you get:** A dense requirements document containing only the

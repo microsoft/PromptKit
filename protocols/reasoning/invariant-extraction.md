@@ -77,8 +77,9 @@ Extract every enforceable constraint from the source.
 For each constraint, record:
 - The constraint text
 - The source location (section or file:function:line)
-- The keyword strength (MUST/SHOULD/MAY) or, for code, whether it is
-  enforced (assertion/error) or assumed (comment/convention)
+- The keyword strength: always express as MUST/SHOULD/MAY in the
+  requirement text. For code sources, annotate enforcement status
+  (e.g., "MUST [enforced via assertion]" or "SHOULD [assumed]")
 
 ## Phase 3: State Machine Extraction
 
@@ -136,7 +137,8 @@ Transform extracted invariants into structured requirements.
 
 2. **For each invariant**, produce:
    - REQ-ID and constraint text
-   - Keyword strength (MUST/SHOULD/MAY or enforced/assumed)
+   - Keyword strength (MUST/SHOULD/MAY in requirement text; for code
+     sources, annotate enforcement status separately)
    - Source location
    - Acceptance criterion — how to verify this invariant holds
    - Category (value, behavioral, ordering, timing, resource, state,

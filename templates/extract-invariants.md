@@ -95,8 +95,10 @@ document.
 
 7. **Quality checklist** — before finalizing, verify:
    - [ ] Every invariant cites a specific source location
-   - [ ] Every invariant has a keyword strength (MUST/SHOULD/MAY for
-         specs; enforced/assumed for code)
+   - [ ] Every invariant uses MUST/SHOULD/MAY keyword in the
+         requirement text. For code sources, annotate enforcement
+         status separately (e.g., "MUST [enforced via assertion]"
+         or "SHOULD [assumed, no runtime check]")
    - [ ] Every invariant has at least one acceptance criterion
    - [ ] State machines (if any) have complete transition tables — no
          missing transitions for defined states and events
