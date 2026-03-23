@@ -189,6 +189,15 @@ protocols:
         test implementations and classifies findings using the
         specification-drift taxonomy (D11–D13).
 
+    - name: integration-audit
+      path: protocols/reasoning/integration-audit.md
+      description: >
+        Systematic protocol for auditing cross-component integration
+        points. Maps integration flows across component boundaries,
+        verifies interface contracts, and checks integration test
+        coverage. Classifies findings using the specification-drift
+        taxonomy (D14–D16).
+
     - name: rfc-extraction
       path: protocols/reasoning/rfc-extraction.md
       description: >
@@ -319,10 +328,11 @@ taxonomies:
     path: taxonomies/specification-drift.md
     domain: specification-traceability
     description: >
-      Classification scheme (D1-D7) for specification drift across
-      requirements, design, and validation artifacts. Covers untraced
-      requirements, orphaned design decisions, assumption drift, and
-      acceptance criteria mismatch. Extensible to D8+ for code/test audits.
+      Classification scheme (D1-D16) for specification drift across
+      requirements, design, validation, code, test, and integration
+      artifacts. Covers untraced requirements, orphaned design decisions,
+      assumption drift, coverage failures, code/test compliance gaps,
+      and cross-component integration drift.
 
 templates:
   document-authoring:
@@ -413,6 +423,19 @@ templates:
       taxonomies: [specification-drift]
       format: investigation-report
       requires: [requirements-document, validation-plan]
+
+    - name: audit-integration-compliance
+      path: templates/audit-integration-compliance.md
+      description: >
+        Audit cross-component integration points against an integration
+        specification and per-component specs. Detects unspecified
+        integration flows, interface contract mismatches, and untested
+        integration paths.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, operational-constraints, integration-audit]
+      taxonomies: [specification-drift]
+      format: investigation-report
+      requires: requirements-document
 
   standards:
     - name: extract-rfc-requirements

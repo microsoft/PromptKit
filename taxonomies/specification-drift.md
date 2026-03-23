@@ -14,6 +14,7 @@ applicable_to:
   - audit-traceability
   - audit-code-compliance
   - audit-test-compliance
+  - audit-integration-compliance
 ---
 
 # Taxonomy: Specification Drift
@@ -269,21 +270,92 @@ compliance drift type because it creates false confidence. Severity
 should be assessed based on the gap between what is asserted and what
 should be asserted.
 
+## Integration Compliance Labels
+
+### D14_UNSPECIFIED_INTEGRATION_FLOW
+
+A cross-component integration flow is described in the integration
+specification but is not reflected in one or more component specs.
+
+**Pattern**: The integration spec describes an end-to-end flow that
+traverses components A → B → C. Component B's specification does not
+mention its role in this flow, does not describe receiving input from
+A, or does not describe producing output for C. The flow exists at
+the system level but has a gap at the component level.
+
+**Risk**: The flow may be implemented by convention or tribal knowledge
+but is not contractually specified. Changes to component B may break
+the flow without any specification-level signal. Per-component audits
+will not detect this because no component's spec claims responsibility
+for the missing step.
+
+**Severity guidance**: High when the flow is safety-critical, involves
+data integrity, or is a core user-facing workflow. Medium for
+operational or diagnostic flows. Assess based on what breaks if the
+gap causes a runtime failure.
+
+### D15_INTERFACE_CONTRACT_MISMATCH
+
+Two components describe the same interface differently in their
+respective specifications.
+
+**Pattern**: Component A's spec says it produces output in format X
+with error codes {E1, E2}. Component B's spec says it consumes input
+in format Y with error codes {E2, E3}. The interface exists on both
+sides but the descriptions are incompatible — different data formats,
+different error sets, different sequencing assumptions, or different
+timing constraints.
+
+**Risk**: Runtime failures at the integration boundary — data
+corruption, unhandled errors, deadlocks, or silent degradation.
+Per-component audits see each side as internally consistent; the
+mismatch is only visible when comparing both sides.
+
+**Severity guidance**: Critical when the mismatch involves data
+integrity, security properties, or will cause deterministic runtime
+failure. High when it involves error handling or sequencing that may
+cause intermittent failures. Medium for cosmetic or logging
+differences that do not affect correctness.
+
+### D16_UNTESTED_INTEGRATION_PATH
+
+A cross-component integration flow or interface contract is specified
+but has no corresponding integration or end-to-end test.
+
+**Pattern**: The integration spec describes flow F-NNN traversing
+components A → B → C. No integration test exercises this flow
+end-to-end. Individual component tests may test A's output and B's
+input separately, but no test verifies the handoff between them under
+realistic conditions.
+
+**Risk**: Defects at integration boundaries will not be caught until
+production. Per-component test-compliance audits will show full
+coverage within each component, masking the integration gap. This is
+the integration-level equivalent of D11 (unimplemented test case).
+
+**Severity guidance**: High when the flow is safety-critical or
+involves data that crosses trust boundaries. Medium for well-understood
+interfaces with stable contracts. Note: flows explicitly marked as
+"manual integration test" or "deferred" in the integration spec are
+excluded from D16 findings and reported only in the coverage summary.
+
 ## Ranking Criteria
 
 Within a given severity level, order findings by impact on specification
 integrity:
 
 1. **Highest risk**: D6 (constraint violation in design), D7 (illusory
-   test coverage), D10 (constraint violation in code), and D13
-   (assertion mismatch) — these indicate active conflicts between
-   artifacts.
+   test coverage), D10 (constraint violation in code), D13
+   (assertion mismatch), and D15 (interface contract mismatch) —
+   these indicate active conflicts between artifacts.
 2. **High risk**: D2 (untested requirement), D5 (assumption drift),
-   D8 (unimplemented requirement), and D12 (untested acceptance
-   criterion) — these indicate silent gaps that will surface late.
+   D8 (unimplemented requirement), D12 (untested acceptance
+   criterion), and D14 (unspecified integration flow) — these
+   indicate silent gaps that will surface late.
 3. **Medium risk**: D1 (untraced requirement), D3 (orphaned design),
-   D9 (undocumented behavior), and D11 (unimplemented test case) —
-   these indicate incomplete traceability that needs human resolution.
+   D9 (undocumented behavior), D11 (unimplemented test case), and
+   D16 (untested integration path) — these indicate incomplete
+   traceability that needs human resolution.
 4. **Lowest risk**: D4 (orphaned test case) — effort misdirection but
    no safety or correctness impact.
 
