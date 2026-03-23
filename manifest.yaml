@@ -190,6 +190,15 @@ protocols:
         state machines, cross-RFC dependencies, ABNF grammars, and
         IANA/security considerations.
 
+    - name: invariant-extraction
+      path: protocols/reasoning/invariant-extraction.md
+      description: >
+        Systematic protocol for extracting structured invariants
+        (constraints, state machines, timing assumptions, ordering
+        rules, error conditions) from specifications or source code.
+        Produces a dense, filtered subset of a full requirements
+        extraction.
+
     - name: requirements-reconciliation
       path: protocols/reasoning/requirements-reconciliation.md
       description: >
@@ -409,6 +418,17 @@ templates:
         Classifies requirements by cross-source compatibility.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, requirements-reconciliation]
+      format: requirements-doc
+
+    - name: extract-invariants
+      path: templates/extract-invariants.md
+      description: >
+        Extract structured invariants (constraints, state machines,
+        timing assumptions, error conditions) from a specification or
+        source code. Produces a dense, filtered subset of a full
+        requirements extraction.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, invariant-extraction]
       format: requirements-doc
 
   code-generation:
