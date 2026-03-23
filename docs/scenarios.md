@@ -172,8 +172,9 @@ the plan specifies (D13).
 
 You have a legacy codebase with sparse documentation. You need to know
 what constraints it enforces — state machines, timing bounds, ordering
-rules, validation logic — without reading every line. Or you have an
-RFC and want just the enforceable constraints, not the full prose.
+rules, validation logic — without reading every line. Or you have a
+specification and want just the enforceable constraints, not the full
+prose.
 
 **Template:** `extract-invariants` · **Persona:** `specification-analyst` ·
 **Protocol:** `invariant-extraction`
