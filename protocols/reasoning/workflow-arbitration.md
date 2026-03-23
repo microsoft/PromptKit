@@ -71,13 +71,21 @@ For each VALID finding:
 3. **Did the change introduce new issues?** A fix that resolves one
    finding but creates another is net-zero progress.
 
-4. **Classify each response**:
-   - **RESOLVED**: Finding adequately addressed (via code change or
-     valid rebuttal)
-   - **ADDRESSED**: Code changed and finding is resolved
+4. **Classify each response** (how the coder responded):
+   - **ADDRESSED**: Code changed and the specific issue is fixed
    - **PARTIALLY ADDRESSED**: Code changed but finding is only
      partially resolved — specify what remains
+   - **REBUTTED**: Coder provided a spec-grounded explanation that
+     the finding is not a real violation — reclassify the finding
+     as BIKESHEDDING if the rebuttal is valid
    - **NOT ADDRESSED**: No code change and no valid rebuttal
+   - **REGRESSED**: Code change introduced a new issue
+
+5. **Update finding status** based on response evaluation:
+   - Finding becomes **RESOLVED** if response is ADDRESSED or
+     validly REBUTTED
+   - Finding remains **OPEN** if response is NOT ADDRESSED,
+     PARTIALLY ADDRESSED, or REGRESSED
    - **REGRESSED**: Code change introduced a new issue
 
 ## Phase 3: Convergence Analysis
@@ -116,8 +124,8 @@ Issue a definitive verdict:
 - Progress is being made (issues are being resolved)
 
 ### DONE — if any of:
-- All VALID findings are ADDRESSED (clean pass)
-- Remaining findings are all strictly below the severity threshold
+- All VALID findings are RESOLVED (clean pass)
+- Remaining OPEN findings are all strictly below the severity threshold
   (severity ordering: Critical > High > Medium > Low > Informational)
 - The workflow is no longer converging (livelock detected)
 - The reviewer has no novel findings (only re-raising resolved issues)

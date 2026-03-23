@@ -87,7 +87,9 @@ changes, and the iteration history.
 
 ## Instructions
 
-Generate four self-contained prompt documents with these filenames:
+Generate four self-contained prompt documents with these filenames.
+Separate each artifact with a heading `## Artifact N: <filename>` so
+an external orchestrator can reliably extract them:
 
 - `coder-prompt.md` — implementation brief for the coder agent
 - `reviewer-prompt.md` — audit brief for the reviewer agent
@@ -140,16 +142,18 @@ Produce a structured arbitration brief for the validator agent:
    (finding validation, response evaluation, convergence analysis,
    verdict).
 2. **Include termination conditions**:
-   - DONE if all findings are ADDRESSED
-   - DONE if remaining findings are strictly below
+   - DONE if all VALID findings are RESOLVED
+   - DONE if remaining OPEN findings are strictly below
      {{severity_threshold}} (severity ordering: Critical > High >
      Medium > Low > Informational; e.g., threshold "Medium" means
      only Low and Informational findings may remain)
    - DONE if iteration count reaches {{max_iterations}}
    - DONE if livelock detected (repeated findings, no progress)
-3. **Include the classification scheme**: VALID, BIKESHEDDING,
-   REPEATED, RESOLVED for findings; ADDRESSED, PARTIALLY ADDRESSED,
-   NOT ADDRESSED, REGRESSED for responses.
+3. **Include the classification scheme**:
+   - Finding statuses: VALID, BIKESHEDDING, REPEATED (from Phase 1);
+     RESOLVED, OPEN (after Phase 2 evaluation)
+   - Response statuses: ADDRESSED, PARTIALLY ADDRESSED, REBUTTED,
+     NOT ADDRESSED, REGRESSED
 4. **Require a definitive verdict**: CONTINUE or DONE with reasoning.
 5. **If CONTINUE**: Specify what the coder should focus on next.
 6. **If DONE**: Summarize final status of all findings.
