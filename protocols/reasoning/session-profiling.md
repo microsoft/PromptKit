@@ -18,7 +18,7 @@ Apply this protocol when analyzing a completed LLM session to understand
 where tokens were spent, which PromptKit components contributed to
 inefficiency, and what concrete changes would reduce waste. The goal is
 observability — turning an opaque session transcript into an attributed
-breakdown of cost and quality.
+breakdown of cost drivers and efficiency tradeoffs.
 
 ## Phase 1: Segment the Session Log
 
@@ -28,13 +28,13 @@ Break the raw session log into discrete, analyzable units.
    begins, and where a response ends and a follow-up begins.
 2. For each turn, record:
    - Turn number (sequential)
-   - Direction: prompt → response, or follow-up → response
+   - Direction: prompt -> response, or follow-up -> response
    - Approximate token count (estimate from character count ÷ 4 for
      English text; note code and structured data may differ)
    - Whether the turn is a retry, correction, or continuation of a
      previous turn
 3. Identify **multi-turn patterns**: Does the session show a single
-   prompt → response, or iterative refinement with multiple rounds?
+   prompt -> response, or iterative refinement with multiple rounds?
 4. Flag any turns that appear to be **error recovery** — the LLM
    produced something incorrect and was redirected.
 
@@ -115,10 +115,11 @@ For each inefficiency detected in Phase 3:
 1. Estimate the **token cost** — how many tokens were wasted on this
    specific inefficiency.
 2. Estimate the **percentage of total session tokens** this represents.
-3. Assess **quality impact** — did this inefficiency also degrade the
-   output quality (not just cost)? A redundant derivation wastes tokens
-   but may not harm quality; a false start followed by an incorrect
-   restart harms both.
+3. Assess **efficiency-related impact** - beyond raw token count, did 
+   this inefficiency cause extra interaction steps (e.g., additional 
+   self-verification cycles, repeated clarifications, or re-running 
+   protocol phases) that increased latency or operational cost? Do not 
+   judge whether the final task output was correct.
 4. Rank inefficiencies by token cost (descending) to identify the
    highest-impact optimization targets.
 
@@ -128,6 +129,7 @@ For each inefficiency (or cluster of related inefficiencies), produce a
 concrete, actionable recommendation tied to a specific PromptKit component.
 
 Recommendations must follow this pattern:
+
 - **Component**: Which PromptKit file to change (persona, protocol,
   format, or template)
 - **Change**: What specifically to modify (e.g., "merge Phase 2 and
@@ -141,6 +143,7 @@ Recommendations must follow this pattern:
 
 Order recommendations by expected savings (descending). Distinguish
 between:
+
 - **Safe optimizations**: Changes that reduce tokens with no quality risk
 - **Tradeoff optimizations**: Changes that reduce tokens but may affect
   output quality — flag these clearly

@@ -50,25 +50,32 @@ inefficiently and which PromptKit components contributed.
 
 1. Execute the session-profiling protocol against the inputs above.
 2. For each finding, classify using the investigation-report format:
-   - Use finding IDs (F-001, F-002, …) with severity levels
+   - Use finding IDs (F-001, F-002, …) and explicitly state the severity (Critical/High/Medium/Low/Informational)
    - Attribute each finding to a specific PromptKit component
      (persona file, protocol file and phase, format rule, or
      template parameter)
    - Include estimated token cost of each inefficiency
 3. In the Remediation Plan, provide concrete changes to specific
    PromptKit component files — not abstract advice.
-4. In the Executive Summary, report:
-   - Total estimated session tokens
-   - Estimated wasteful tokens and percentage
-   - Top 3 optimization opportunities by token savings
+4. In the Executive Summary, write a concise 2-4 sentence narrative that includes the total estimated session tokens, the estimated wasteful tokens and percentage, and the top 3 optimization opportunities by token savings.
 
 ## Non-Goals
 
 - Do NOT evaluate whether the session's *output* was correct or
   high-quality. This is a cost/efficiency analysis, not a quality audit.
 - Do NOT suggest changes to the user's input parameters (session_log,
-  code_context, etc.) — only to PromptKit components (persona,
+  assembled_prompt, focus_areas, etc.) — only to PromptKit components (persona,
   protocols, format, template).
 - Do NOT recommend removing guardrail protocols (anti-hallucination,
   self-verification) unless they are demonstrably causing loops.
   Guardrails have a cost but exist for a reason.
+
+## Quality checklist
+
+Before finalizing your output, verify that:
+
+- [ ] You have executed the session-profiling protocol and followed all steps in the Instructions.
+- [ ] The investigation report includes all required sections from the `investigation-report` format; if any section has no content, it explicitly states "None identified".
+- [ ] Every finding has a unique ID (F-001, F-002, ...), a severity level, an estimated token cost, and is attributed to a specific PromptKit component (persona, protocol phase, format rule, or template parameter).
+- [ ] The Executive Summary reports total estimated session tokens, estimated wasteful tokens and percentage, and the top 3 optimization opportunities by token savings.
+- [ ] The Remediation Plan contains concrete, file-level changes to PromptKit components and does not suggest changes to user inputs or the removal of guardrail protocols without clear evidence of looping.
