@@ -7,6 +7,10 @@
   <img src="PromptKit-logo.png" alt="PromptKit logo — composable prompt toolkit" width="400">
 </p>
 
+<p align="center">
+  <a href="https://aka.ms/PromptKit">aka.ms/PromptKit</a> · <a href="LICENSE">MIT License</a>
+</p>
+
 **Agentic prompts are the most important code you're not engineering.**
 Every AI-assisted task — investigating bugs, writing requirements, reviewing code — lives or dies by the prompt that drives it.
 Yet most teams still write these prompts ad hoc: copy-pasted, untested, inconsistent, and impossible to improve systematically.
