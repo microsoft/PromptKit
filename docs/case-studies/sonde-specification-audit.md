@@ -517,8 +517,8 @@ With fixes merged, a third audit pass was run using the
 `audit-code-compliance` prompt — re-assembled against the updated
 specs as a **code→spec** audit (the reverse direction from Pass 2).
 The same one-prompt, parallel
-execution approach was used: four agents, one per component, each
-using a separate repo clone.
+execution approach was used: four agents for the four code-bearing
+components audited in Pass 3, each using a separate repo clone.
 
 ```bash
 npx @alan-jowett/promptkit assemble audit-code-compliance \
@@ -526,7 +526,7 @@ npx @alan-jowett/promptkit assemble audit-code-compliance \
   -p requirements_doc="$(cat docs/<component>-requirements.md)" \
   -p design_doc="$(cat docs/<component>-design.md)" \
   -p validation_plan="$(cat docs/<component>-validation.md)" \
-  -p source_code="<component source tree>" \
+  -p code_context="<component source tree>" \
   -p focus_areas="all" \
   -o <component>-code-compliance-audit.md
 ```
