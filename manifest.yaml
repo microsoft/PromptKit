@@ -222,6 +222,14 @@ protocols:
         Classifies each requirement by cross-source compatibility
         (Universal, Majority, Divergent, Extension).
 
+    - name: session-profiling
+      path: protocols/reasoning/session-profiling.md
+      description: >
+        Systematic analysis of LLM session logs to detect token
+        inefficiencies, redundant reasoning, and structural waste.
+        Maps execution back to PromptKit components and produces
+        actionable optimization recommendations.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -500,6 +508,16 @@ templates:
       persona: security-auditor
       protocols: [anti-hallucination, self-verification, operational-constraints, security-vulnerability]
       taxonomies: [stack-lifetime-hazards]
+      format: investigation-report
+
+    - name: profile-session
+      path: templates/profile-session.md
+      description: >
+        Analyze a completed LLM session log to identify token
+        inefficiencies and structural waste. Maps execution back to
+        PromptKit components and produces optimization recommendations.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, session-profiling]
       format: investigation-report
 
   code-analysis:
