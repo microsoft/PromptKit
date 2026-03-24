@@ -1,6 +1,6 @@
 # Case Study: Auditing a Real Project with PromptKit
 
-> **Two audit passes, 114 findings, 217 requirements, 5 components** —
+> **Three audit passes, 147 findings, 260 requirements, 5 components** —
 > using two reusable prompts across a production IoT runtime.
 
 ## The Project
@@ -268,9 +268,11 @@ The node firmware illustrates this perfectly: the trifecta audit found
 contradictions), but the code audit found **every requirement
 implemented** (zero D8s) with only minor issues — 7 undocumented
 defensive behaviors (D9) and 1 low-severity type mismatch (D10). The
-code was correct even though the design document was stale. Conversely, the gateway had moderate trifecta
-findings but the code audit revealed the admin API bypasses ELF
-verification entirely — a D8 that no document-level audit could catch.
+code was correct even though the design document was stale.
+
+Conversely, the gateway had moderate trifecta findings but the code
+audit revealed the admin API bypasses ELF verification entirely — a
+D8 that no document-level audit could catch.
 
 ### Systemic Pattern: BLE Is the Weak Link Everywhere
 
@@ -473,6 +475,111 @@ exhaustive but shallow (does a test *exist*?). The ad-hoc audit is
 deep but selective (is this test *good enough*?). Used together, they
 cover both dimensions.
 
+## Pass 3: Post-Fix Code→Spec Audit
+
+After the first two audit passes drove a wave of fixes — BLE design
+sections added, 100+ test gaps closed, 9 PRs merged — a natural
+question arose during hardware boot testing: **did the fixes introduce
+new spec drift?**
+
+### The Catalyst: Boot Testing Found Exactly What the Audits Predicted
+
+During the nightly-2026-03-23 hardware boot test, the BLE pairing
+subsystem — flagged by both prior audits as the weakest area — failed
+in multiple ways:
+
+1. **BLE scan filter (Windows)**: btleplug's WinRT backend didn't match
+   16-bit service UUIDs passed as 128-bit. The pairing tool found zero
+   devices despite both modem and node advertising correctly.
+
+2. **LESC pairing never triggered**: The modem configured LESC security
+   (`AuthReq::all()` + `DisplayYesNo`) but never called
+   `ble_gap_security_initiate()`. No spec — requirements, design, or
+   validation — specified who initiates pairing. Clients that don't call
+   `createBond()` (like btleplug on WinRT) connected without
+   authentication, and all GATT writes were silently rejected.
+
+3. **Pre-auth write race condition**: After adding server-initiated
+   pairing, the client's first GATT write arrived before the SMP
+   handshake and operator passkey confirmation completed. The modem
+   dropped it silently.
+
+4. **Same bugs in the node**: Identical LESC and write-buffering gaps.
+
+Each bug was fixed with spec-first methodology: update requirements →
+design → validation → code. The fixes touched 5 spec documents and 4
+source files across modem, node, and pairing tool crates, producing
+PRs #441 and #443.
+
+### Running the Third Audit
+
+With fixes merged, a third audit pass was run using the
+`audit-code-compliance` prompt — re-assembled against the updated
+specs as a **code→spec** audit (the reverse direction from Pass 2).
+The same one-prompt, parallel
+execution approach was used: four agents, one per component, each
+using a separate repo clone.
+
+```bash
+npx @alan-jowett/promptkit assemble audit-code-compliance \
+  -p project_name="Sonde <component>" \
+  -p requirements_doc="$(cat docs/<component>-requirements.md)" \
+  -p design_doc="$(cat docs/<component>-design.md)" \
+  -p validation_plan="$(cat docs/<component>-validation.md)" \
+  -p source_code="<component source tree>" \
+  -p focus_areas="all" \
+  -o <component>-code-compliance-audit.md
+```
+
+### Results
+
+| Component | Requirements | Coverage | D8 | D9 | D10 | Findings |
+|-----------|-------------|----------|----|----|-----|----------|
+| Modem | 28 | 96.4% | 0 | 4 | 3 | 7 |
+| Node | 55 | 92.5% | 2 | 7 | 1 | 10 |
+| Gateway | 69 | 91.3% | 4 | 2 | 0 | 6 |
+| BLE Tool | 51 | 92.0% | 1 | 6 | 3 | 10 |
+| **Total** | **203** | **~93%** | **7** | **19** | **7** | **33** |
+
+33 findings — down from 54 in Pass 2. The fixes resolved the Critical
+and High-severity BLE findings from the previous pass, but introduced
+new spec drift in the process:
+
+**Findings driven directly by the boot-test fixes:**
+
+- The `GW_INFO_RESPONSE` indication timeout was changed from 5s to 45s
+  in code to accommodate the operator passkey confirmation window, but
+  the pairing tool spec still said 5s (D10).
+- The GATT write retry loop (6 retries for WinRT auth errors) was added
+  to the btleplug transport with no spec coverage (D10).
+- The `pending_write` single-buffer limit on the modem was not
+  documented in requirements (D9).
+
+**The audit caught its own fixes creating new drift** — the exact
+scenario that spec-first development is designed to prevent, and the
+exact scenario that a code→spec audit detects.
+
+### The Three-Pass Picture
+
+| Pass | Direction | Prompt | Findings | What it caught |
+|------|-----------|--------|----------|----------------|
+| 1 | Spec ↔ Spec | `audit-traceability` | 60 | Document drift — BLE design gaps, assumption conflicts |
+| 2 | Spec → Code | `audit-code-compliance` | 54 | Implementation drift — missing features, undocumented behavior |
+| 3 | Code → Spec | `audit-code-compliance` | 33 | Post-fix drift — fixes that outran their spec updates |
+| **Total** | | **2 prompts** | **147** | **Three complementary views of the same system** |
+
+### Hardware Validation Closed the Loop
+
+The boot test session verified the fixes on real hardware:
+
+- ✅ Modem gateway pairing: LESC Numeric Comparison with passkey relay
+- ✅ Node provisioning: LESC Just Works with buffered pre-auth write
+- ✅ Full Phase 1 + Phase 2 end-to-end on Windows
+
+The audit→fix→test→re-audit cycle completed in a single session,
+demonstrating that structured specification audits can drive hardware
+bring-up — not just document quality.
+
 ## Takeaways
 
 - **Specification drift is real and systemic.** BLE pairing was added
@@ -498,15 +605,16 @@ cover both dimensions.
   can't see. Neither alone gives full coverage — the two are
   complementary by design, not competing.
 
-- **One prompt, five audits — twice.** The same reusable-prompt
-  approach worked for both the trifecta and code compliance audits.
-  Ten total audit runs from two assembled prompts.
+- **Two prompts, three passes, fourteen audits.** The same
+  reusable-prompt approach worked for the trifecta, code compliance,
+  and post-fix audits. Two assembled prompts covered all five
+  components across three audit passes.
 
 - **Taxonomy classification drives remediation.** D8 (implement the
   feature) requires different effort than D9 (document the behavior)
   or D10 (fix the constraint violation). The taxonomy makes
   prioritization mechanical rather than subjective.
 
-- **114 findings, one system.** The combined audit surface — documents,
+- **147 findings, one system.** The combined audit surface — documents,
   code, and the gaps between them — gives a complete picture of
   specification integrity that no single audit type can provide.
