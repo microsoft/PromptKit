@@ -499,6 +499,15 @@ formats:
       error handling, negotiation, interoperability scenarios, and
       validation tool requirements.
 
+  - name: architecture-spec
+    path: formats/architecture-spec.md
+    produces: architecture-spec
+    description: >
+      Architecture specification document with protocol/system description,
+      network and software architecture, programming interfaces, persisted
+      state, and cross-cutting implications (security, performance,
+      management, observability, testing).
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -558,6 +567,18 @@ templates:
       protocols: [anti-hallucination, self-verification, requirements-elicitation]
       format: requirements-doc
       pipeline_position: 1
+
+    - name: author-architecture-spec
+      path: templates/author-architecture-spec.md
+      description: >
+        Generate an architecture specification document describing the
+        structure, scope, and cross-cutting concerns of a software component
+        or system. Covers protocol/system description, network and software
+        architecture, interfaces, and architectural implications.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification]
+      format: architecture-spec
+      requires: requirements-document
 
     - name: interactive-design
       path: templates/interactive-design.md
