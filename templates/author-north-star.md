@@ -81,9 +81,9 @@ document", "based on the discussion in Phase 1").
 
 Use epistemic labels throughout:
 - Prefix or inline-tag claims derived from documents with their source.
-- Mark inferences with `[INFERRED: <reasoning>]`.
-- Mark assumptions with `[ASSUMPTION: <justification>]`.
-- Mark gaps with `[UNKNOWN: <what is needed>]`.
+- Mark inferences with `[INFERRED]` followed by a brief reasoning note.
+- Mark assumptions with `[ASSUMPTION]` followed by a brief justification.
+- Mark gaps with `[UNKNOWN]` followed by what information is needed.
 
 ### Rule 5 — Challenge Your Own Draft
 
