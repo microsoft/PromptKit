@@ -372,7 +372,7 @@ templates:
         document. Evidence-grounded, section-by-section drafting with
         user review. Use for strategic direction documents.
       persona: software-architect
-      protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
+      protocols: [anti-hallucination, self-verification]
       format: north-star-document
 
     - name: author-design-doc

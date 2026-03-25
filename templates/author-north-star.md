@@ -13,8 +13,6 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
-  - reasoning/requirements-elicitation
-  - reasoning/iterative-refinement
 format: north-star-document
 params:
   project_name: "Name of the project, system, or initiative"
@@ -51,8 +49,9 @@ direction of a system or initiative.
 ## Non-Goals
 
 The following are explicitly **out of scope** for this north-star document.
-Treat them as standing exclusions when interpreting requirements and
-drafting any section. Do **not** introduce content that contradicts or
+Treat them as standing exclusions when interpreting the inputs, scope,
+and overall vision for this document and when drafting any section.
+Do **not** introduce content that contradicts or
 expands beyond these non-goals.
 
 - {{non_goals}}
