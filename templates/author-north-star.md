@@ -48,7 +48,14 @@ direction of a system or initiative.
 
 **Audience**: {{audience}}
 
-**Non-Goals**: {{non_goals}}
+## Non-Goals
+
+The following are explicitly **out of scope** for this north-star document.
+Treat them as standing exclusions when interpreting requirements and
+drafting any section. Do **not** introduce content that contradicts or
+expands beyond these non-goals.
+
+- {{non_goals}}
 
 ## Mandatory Behavioral Rules
 
@@ -140,12 +147,17 @@ Follow this process strictly. Do NOT skip or compress phases.
 
 1. **Draft one section at a time**, showing each to the user for
    review before proceeding to the next.
-2. Apply Rules 1–7 to every section.
-3. After each section, ask the user:
+2. **Format the output according to the `north-star-document` format**:
+   use the exact required section headings, numbering, and ordering;
+   do **not** add, remove, or reorder top-level sections; if a
+   required section has no content yet, keep the heading and write
+   `None identified` rather than omitting it.
+3. Apply Rules 1–7 to every section.
+4. After each section, ask the user:
    - Is this accurate?
    - Is anything missing?
    - Should anything be reframed?
-4. Incorporate feedback before moving to the next section.
+5. Incorporate feedback before moving to the next section.
 
 ### Phase 5 — Self-Verify and Finalize
 

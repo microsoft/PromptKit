@@ -85,7 +85,13 @@ entry here. For each:
 - What would invalidate it
 - Impact if invalidated>
 
-## 9. Sources Consulted
+## 9. Non-Goals / Out of Scope
+<Explicit list of what the document deliberately does not address.
+For each non-goal:
+- What is excluded
+- Why it is excluded (e.g., covered elsewhere, premature, out of scope)>
+
+## 10. Sources Consulted
 <List of all documents, meeting notes, prior artifacts, and
 conversations referenced. For each source, note what information
 was drawn from it.>
@@ -107,5 +113,6 @@ was drawn from it.>
 - Prefer hedged language ("this is intended to enable", "the
   expectation is that") over assertive language ("this will enable",
   "this guarantees") unless backed by evidence.
-- Non-goals SHOULD be stated explicitly so the reader understands
-  what the document deliberately does not address.
+- The document MUST include a clearly labeled `Non-Goals / Out of Scope`
+  section that explicitly enumerates what the document deliberately
+  does not address.
