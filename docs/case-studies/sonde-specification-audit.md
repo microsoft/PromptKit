@@ -618,3 +618,147 @@ bring-up — not just document quality.
 - **147 findings, one system.** The combined audit surface — documents,
   code, and the gaps between them — gives a complete picture of
   specification integrity that no single audit type can provide.
+
+## Pass 4: Hardware Bring-Up and v0.1.0
+
+The ultimate test of specification quality is not an audit — it's
+hardware. After three audit passes and 147 findings, the project
+attempted its first end-to-end hardware boot test. The results
+revealed a class of specification defects that no document-level
+audit can detect: **specification silence**.
+
+### What the Audits Could Not Catch
+
+The audits verified that code matched spec and spec matched itself.
+But they could not verify that the spec was **sufficient**. Three
+categories of defect emerged only on hardware:
+
+**1. Implicit assumptions about protocol roles.**
+
+MD-0404 (BLE LESC pairing) specified *what* — Numeric Comparison
+pairing — but not *who initiates*. The code configured NimBLE for
+LESC security and registered callbacks, but nothing triggered the
+SMP exchange. The spec said "pairing completes successfully" and
+the code satisfied that — if the client initiated. When btleplug on
+Windows connected without initiating pairing, the modem's
+`authenticated` flag stayed false and all GATT writes were silently
+rejected.
+
+No audit could catch this because the spec did not contain a
+statement to violate. The requirement was correct but incomplete.
+
+**2. Missing operational observability.**
+
+The gateway successfully processed a `PEER_REQUEST` and registered
+a node, but the operator could not see this in the logs. No
+requirement in any component specified what operational events should
+be logged. The code had ad-hoc `info!()` calls, but critical events
+(PEER_REQUEST registration, APP_DATA receipt, session creation) were
+invisible.
+
+This made every subsequent debugging step harder. When ESP-NOW TX
+failed, there was no modem log showing the failure. When the node
+sent `GET_CHUNK`, there was no node log showing the request. When
+the gateway dropped a `GET_CHUNK` due to session state, there was
+no gateway log showing the drop.
+
+The fix was not a code change — it was a **specification change**.
+Adding logging requirements (ND-1000–ND-1011, GW-1300–GW-1302,
+MD-0500–MD-0504) across all four components, then implementing
+them, made every subsequent bug immediately visible.
+
+**3. Integration timing assumptions.**
+
+The node's WAKE response timeout was 50 ms — specified in
+`protocol.md §9.3` as appropriate for ESP-NOW. But the actual
+round-trip path was node → ESP-NOW → modem → USB-CDC → gateway
+(process frame, select command, encode response) → USB-CDC → modem
+→ ESP-NOW → node. The gateway alone took 70+ ms to process a WAKE.
+The node always timed out on the first attempt.
+
+This was correct per spec — the spec said 50 ms. But the spec was
+written for a direct ESP-NOW peer, not a USB-CDC bridge. The
+integration context changed the timing requirements, and no audit
+could detect this because both the spec and the code agreed on 50 ms.
+
+### The Bug Cascade
+
+Hardware bring-up uncovered a chain of 25+ issues across two
+sessions. Each fix exposed the next bug:
+
+1. **BLE scan filter** (WinRT doesn't match 16-bit UUIDs as 128-bit)
+   → fixed → devices visible
+2. **LESC not triggered** (no `ble_gap_security_initiate`) → fixed →
+   pairing works but GATT writes rejected
+3. **Pre-auth write dropped** (write arrives before LESC completes)
+   → fixed → pairing completes but node registration invisible
+4. **No logging** (PEER_REQUEST processed silently) → fixed →
+   registration visible but PEER_ACK not sent
+5. **WiFi in AP mode** (ESP-NOW TX requires STA mode) → fixed →
+   PEER_ACK sent but node never completes enrollment
+6. **Duplicate PEER_REQUEST dropped** (gateway returns None on
+   duplicate) → fixed → enrollment works but program transfer fails
+7. **Session destroyed by WAKE retry** (ChunkedTransfer state
+   overwritten) → fixed → chunked transfer works
+8. **50ms timeout too short** (USB-CDC bridge adds latency) → fixed
+   → reliable WAKE/COMMAND cycle
+9. **Handler not sharing pending commands** (separate HashMap
+   instances) → fixed → ephemeral programs delivered with handler
+
+Each bug was individually small. The cascade was the problem — and
+the cascade was invisible to any static analysis because each link
+depended on the runtime behavior of the previous link.
+
+### What This Means for Specification Audits
+
+The three audit passes were not wasted. They caught 147 real issues
+and drove the code to 90%+ specification coverage. But they operated
+on a fundamentally different axis than hardware testing:
+
+| What audits catch | What hardware catches |
+|-------------------|-----------------------|
+| Code that doesn't match spec | Spec that doesn't match reality |
+| Missing implementations (D8) | Missing specifications |
+| Undocumented behavior (D9) | Unspecified integration behavior |
+| Constraint violations (D10) | Timing/ordering assumptions |
+| Document drift | Protocol role ambiguity |
+
+The lesson is not that audits are insufficient — it's that they are
+**necessary but not sufficient**. A spec-first workflow needs three
+validation layers:
+
+1. **Trifecta audit** — are the documents consistent?
+2. **Code audit** — does the code match the documents?
+3. **Hardware validation** — do the documents describe reality?
+
+The Sonde project reached v0.1.0 — a node reading physical
+temperature data from a TMP102 sensor via a BPF program deployed
+over the air, logging to JSON every 15 minutes — only after all
+three layers were applied. The audits got the codebase to "should
+work." Hardware testing got it to "does work."
+
+### The Overnight Soak Test
+
+The final validation was unattended operation. After the last fix
+was merged, the system ran overnight:
+
+```json
+{"timestamp": "2026-03-25T03:28:50Z", "device": "node-01", "temperature_c": 27.625}
+{"timestamp": "2026-03-25T07:58:11Z", "device": "node-01", "temperature_c": 25.0}
+{"timestamp": "2026-03-25T14:57:11Z", "device": "node-01", "temperature_c": 24.687}
+```
+
+47 readings over 12 hours. Temperature dropped from 27.6°C to
+24.7°C as the room cooled overnight and stabilized. Zero missed
+readings. Zero crashes. The system that "didn't work" two days
+earlier was now a functioning sensor network.
+
+### Updated Numbers
+
+| Pass | Direction | Findings | What it caught |
+|------|-----------|----------|----------------|
+| 1 | Spec ↔ Spec | 60 | Document drift |
+| 2 | Spec → Code | 54 | Implementation drift |
+| 3 | Code → Spec | 33 | Post-fix drift |
+| 4 | Hardware → Spec | 25+ | Specification silence |
+| **Total** | | **172+** | **Four complementary views** |
