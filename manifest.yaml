@@ -315,6 +315,14 @@ formats:
       breakdown, dependency ordering, risk assessment, and verification
       strategy.
 
+  - name: north-star-document
+    path: formats/north-star-document.md
+    produces: north-star-document
+    description: >
+      Strategic north-star or architectural vision document. Describes
+      the desired end state, guiding principles, and transition
+      considerations — not the implementation plan.
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -356,6 +364,16 @@ templates:
       persona: configurable
       protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
       format: requirements-doc
+
+    - name: author-north-star
+      path: templates/author-north-star.md
+      description: >
+        Interactive authoring of a north-star or architectural vision
+        document. Evidence-grounded, section-by-section drafting with
+        user review. Use for strategic direction documents.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
+      format: north-star-document
 
     - name: author-design-doc
       path: templates/author-design-doc.md

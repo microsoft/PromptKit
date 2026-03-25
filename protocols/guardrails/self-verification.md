@@ -54,8 +54,11 @@ presenting it as final. Treat it as a pre-submission checklist.
     but not covered in the output?
   - If any areas were intentionally excluded, document why in a
     "Limitations" or "Coverage" section.
-- State explicitly: "The following areas were examined: [list].
-  The following were excluded: [list] because [reason]."
+- State explicitly:
+  - "The following **source documents were consulted**: [list each
+    document with a brief note of what was drawn from it]."
+  - "The following **areas were examined**: [list]."
+  - "The following **topics were excluded**: [list] because [reason]."
 
 ### 4. Internal Consistency Check
 
