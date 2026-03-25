@@ -100,9 +100,10 @@ If yes, add a citation, downgrade to `[ASSUMPTION]`, or remove it.
 
 ### Rule 6 — Collect Assumptions
 
-Maintain a running **Assumptions Log** at the end of the document.
+Maintain a running **Assumptions Log** in the dedicated
+`## 8. Assumptions Log` section of the north-star document.
 Every `[ASSUMPTION]` tag in the body must have a corresponding
-entry in this log.
+entry in that section.
 
 ### Rule 7 — Never Present Uncertainty as Confidence
 
@@ -111,9 +112,9 @@ are only permitted when backed by evidence. Prefer "this is intended
 to enable," "this aims to ensure," or "the expectation is that" when
 the claim is inferential.
 
-## Process
+## Instructions
 
-Follow this process strictly. Do NOT skip or compress phases.
+Follow these instructions strictly. Do NOT skip or compress phases.
 
 ### Phase 1 — Retrieve and Review
 
@@ -149,7 +150,8 @@ Follow this process strictly. Do NOT skip or compress phases.
    review before proceeding to the next.
 2. **Format the output according to the `north-star-document` format**:
    use the exact required section headings, numbering, and ordering;
-   do **not** add, remove, or reorder top-level sections; if a
+   do **not** remove or reorder any required top-level sections. You
+   may add subsections under the numbered sections if helpful. If a
    required section has no content yet, keep the heading and write
    `None identified` rather than omitting it.
 3. Apply Rules 1–7 to every section.

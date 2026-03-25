@@ -20,7 +20,9 @@ and cross-team leadership (who need accessible strategic framing).
 Use the following section structure as the **minimum required skeleton**.
 All numbered top-level sections MUST appear in this order; if a section has no
 substantive content, include the heading and write `None identified` rather
-than omitting it. You MAY add subsections or additional sections if helpful.
+than omitting it. You MAY add subsections under these numbered sections
+if helpful, but MUST NOT add additional top-level numbered sections;
+the top-level section list is fixed and MUST remain in the order shown.
 
 ## Document Structure
 
