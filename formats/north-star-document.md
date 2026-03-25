@@ -17,8 +17,10 @@ The output MUST be a free-form Markdown document aimed at a dual
 audience: engineering teams (who need substantive technical depth)
 and cross-team leadership (who need accessible strategic framing).
 
-The following sections are **suggested**, not mandatory. Adapt the
-structure to fit the content — every section should earn its place.
+Use the following section structure as the **minimum required skeleton**.
+All numbered top-level sections MUST appear in this order; if a section has no
+substantive content, include the heading and write `None identified` rather
+than omitting it. You MAY add subsections or additional sections if helpful.
 
 ## Document Structure
 
