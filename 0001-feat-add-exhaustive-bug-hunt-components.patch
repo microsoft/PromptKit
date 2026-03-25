@@ -1,0 +1,1037 @@
+From 7b9e2350b08a93bf87360ad3cded3ad8e847370f Mon Sep 17 00:00:00 2001
+From: Alan Jowett <alan.jowett@microsoft.com>
+Date: Wed, 25 Mar 2026 14:12:41 -0700
+Subject: [PATCH] feat: add exhaustive bug-hunt components
+
+Add 6 new PromptKit components decomposed from a proven kernel
+bug-hunting prompt:
+
+- protocols/guardrails/adversarial-falsification.md
+- protocols/reasoning/exhaustive-path-tracing.md
+- protocols/analysis/kernel-correctness.md
+- taxonomies/kernel-defect-categories.md (K1-K14)
+- formats/exhaustive-review-report.md
+- templates/exhaustive-bug-hunt.md
+
+Updated manifest.yaml with all new components.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ formats/exhaustive-review-report.md           | 115 ++++++++++++
+ manifest.yaml                                 |  53 ++++++
+ protocols/analysis/kernel-correctness.md      | 177 ++++++++++++++++++
+ .../guardrails/adversarial-falsification.md   | 102 ++++++++++
+ .../reasoning/exhaustive-path-tracing.md      | 126 +++++++++++++
+ taxonomies/kernel-defect-categories.md        | 169 +++++++++++++++++
+ templates/exhaustive-bug-hunt.md              | 176 +++++++++++++++++
+ 7 files changed, 918 insertions(+)
+ create mode 100644 formats/exhaustive-review-report.md
+ create mode 100644 protocols/analysis/kernel-correctness.md
+ create mode 100644 protocols/guardrails/adversarial-falsification.md
+ create mode 100644 protocols/reasoning/exhaustive-path-tracing.md
+ create mode 100644 taxonomies/kernel-defect-categories.md
+ create mode 100644 templates/exhaustive-bug-hunt.md
+
+diff --git a/formats/exhaustive-review-report.md b/formats/exhaustive-review-report.md
+new file mode 100644
+index 0000000..0536f3a
+--- /dev/null
++++ b/formats/exhaustive-review-report.md
+@@ -0,0 +1,115 @@
++<!-- SPDX-License-Identifier: MIT -->
++<!-- Copyright (c) PromptKit Contributors -->
++
++---
++name: exhaustive-review-report
++type: format
++description: >
++  Output format for exhaustive code review with per-file coverage ledgers,
++  adversarial finding templates requiring falsification proof, and
++  false-positive rejection logs.
++produces: exhaustive-review-report
++---
++
++# Format: Exhaustive Review Report
++
++The output MUST be a structured review report with per-file coverage
++ledgers and adversarial finding documentation. The format prioritizes
++**proof of coverage** and **proof that findings are not false positives**
++over narrative flow.
++
++## Document Structure
++
++```markdown
++# <Review Title> — Exhaustive Review Report
++
++## Per-File Analysis
++
++### FILE: <path>
++
++#### Coverage Ledger
++
++| Check                                 | Status         |
++|---------------------------------------|----------------|
++| Full file read                        | yes / no       |
++| High-risk functions reviewed          | <list>         |
++| Lock/refcount/goto cleanup traced     | yes / no       |
++| Arithmetic sites reviewed             | yes / no       |
++| User/kernel boundary paths reviewed   | yes / no / N/A |
++| Interlocked/concurrency paths reviewed| yes / no / N/A |
++
++#### Findings
++
++<If no findings>
++No concrete bug found after full path tracing.
++<Otherwise, for each finding use the template below.>
++
++#### Finding F-<NNN>: <Short Title>
++
++- **Confidence**: Confirmed | High-confidence | Needs-domain-check
++- **Category**: <defect category ID and name, e.g., K3: Cleanup omission>
++- **Lines**: <exact line numbers or ranges>
++
++**Why this is a real bug:**
++<Brief technical explanation of the defect.>
++
++**Trigger path:**
++<Step-by-step control flow from entry point through the failing path.
++Use numbered steps with line references.>
++
++**Why this is NOT a false positive:**
++<Disproof of the most likely counterargument. Explain why existing
++cleanup, retry logic, helper routines, or caller guarantees do NOT
++neutralize this issue. Reference specific code.>
++
++**Consequence:**
++<Concrete bad outcome — crash, data corruption, resource leak,
++privilege escalation, denial of service, etc.>
++
++**Minimal fix direction:**
++<Brief description of the fix approach. Not a full patch — just
++enough to indicate what needs to change.>
++
++#### False-Positive Candidates Rejected
++
++| Candidate | Reason Rejected |
++|-----------|-----------------|
++| <description> | <why this is NOT a bug — cite the mechanism that makes it safe> |
++
++<Repeat ### FILE block for each file in scope.>
++
++---
++
++## Executive Summary
++
++> **IMPORTANT**: Do not write this section until every file in the
++> assigned scope has a completed coverage ledger above.
++
++<2–4 sentences: total files reviewed, total findings by confidence
++level, highest-severity issue, and recommended action.>
++
++## Findings Summary
++
++| ID     | File   | Title  | Category | Confidence | Severity |
++|--------|--------|--------|----------|------------|----------|
++| F-001  | ...    | ...    | ...      | ...        | ...      |
++
++## Open Questions
++
++<Items that could not be resolved from the provided code alone.
++For each: what is unknown, why it matters, and what would resolve it.>
++```
++
++## Formatting Rules
++
++- Every file MUST have a coverage ledger, even if no findings are produced.
++- Findings MUST include the "Why this is NOT a false positive" field —
++  findings without falsification proof are incomplete.
++- The executive summary MUST NOT appear until all per-file sections are
++  complete.
++- Findings MUST be numbered sequentially across all files (F-001, F-002, …).
++- The false-positive candidates rejected table MUST be present for every
++  file, even if empty (write "None" in that case).
++- Findings are ordered by confidence (Confirmed first), then by severity.
++- Each finding MUST have a concrete consequence — "might be bad" is not
++  acceptable.
+diff --git a/manifest.yaml b/manifest.yaml
+index d7efbba..c672aec 100644
+--- a/manifest.yaml
++++ b/manifest.yaml
+@@ -97,6 +97,13 @@ protocols:
+         prefers deterministic analysis. Prevents over-ingestion and ensures
+         reproducibility.
+ 
++    - name: adversarial-falsification
++      path: protocols/guardrails/adversarial-falsification.md
++      description: >
++        Enforces adversarial self-falsification discipline. Requires the
++        reviewer to disprove every candidate finding before reporting it,
++        reject known-safe patterns, and resist premature summarization.
++
+   analysis:
+     - name: memory-safety-c
+       path: protocols/analysis/memory-safety-c.md
+@@ -124,6 +131,15 @@ protocols:
+         Security vulnerability analysis. Trust boundaries, input validation,
+         auth, crypto, and information disclosure. Language-agnostic.
+ 
++    - name: kernel-correctness
++      path: protocols/analysis/kernel-correctness.md
++      description: >
++        Correctness analysis for OS kernel and driver code. Lock/refcount
++        symmetry, cleanup path completeness, PFN/PTE state transitions,
++        interlocked sequences, charge/uncharge accounting, and known-safe
++        kernel pattern suppression.
++      language: C
++
+   reasoning:
+     - name: root-cause-analysis
+       path: protocols/reasoning/root-cause-analysis.md
+@@ -231,6 +247,14 @@ protocols:
+         Classifies each requirement by cross-source compatibility
+         (Universal, Majority, Divergent, Extension).
+ 
++    - name: exhaustive-path-tracing
++      path: protocols/reasoning/exhaustive-path-tracing.md
++      description: >
++        Systematic per-file deep review protocol. Full-file reading,
++        local structure mapping, high-risk function identification,
++        exhaustive path tracing with cleanup/lock/refcount symmetry
++        verification, and coverage ledger documentation.
++
+ formats:
+   - name: requirements-doc
+     path: formats/requirements-doc.md
+@@ -315,6 +339,14 @@ formats:
+       breakdown, dependency ordering, risk assessment, and verification
+       strategy.
+ 
++  - name: exhaustive-review-report
++    path: formats/exhaustive-review-report.md
++    produces: exhaustive-review-report
++    description: >
++      Exhaustive code review report with per-file coverage ledgers,
++      adversarial finding templates requiring falsification proof,
++      and false-positive rejection logs.
++
+ taxonomies:
+   - name: stack-lifetime-hazards
+     path: taxonomies/stack-lifetime-hazards.md
+@@ -334,6 +366,15 @@ taxonomies:
+       assumption drift, coverage failures, code/test compliance gaps,
+       and cross-component integration drift.
+ 
++  - name: kernel-defect-categories
++    path: taxonomies/kernel-defect-categories.md
++    domain: kernel-correctness
++    description: >
++      Classification scheme (K1-K14) for OS kernel and driver defects.
++      Covers lock leaks, refcount imbalances, cleanup omissions, lifetime
++      bugs, integer arithmetic errors, state machine races, accounting
++      mismatches, and security boundary mistakes.
++
+ templates:
+   document-authoring:
+     - name: author-requirements-doc
+@@ -536,6 +577,18 @@ templates:
+       taxonomies: [stack-lifetime-hazards]
+       format: investigation-report
+ 
++    - name: exhaustive-bug-hunt
++      path: templates/exhaustive-bug-hunt.md
++      description: >
++        Deep, adversarial, line-by-line code review optimized for defect
++        discovery. Exhaustive path tracing with coverage proof and
++        falsification discipline. Optionally applies kernel-specific
++        analysis for OS code.
++      persona: systems-engineer
++      protocols: [anti-hallucination, self-verification, adversarial-falsification, exhaustive-path-tracing]
++      taxonomies: [kernel-defect-categories]
++      format: exhaustive-review-report
++
+   planning:
+     - name: plan-implementation
+       path: templates/plan-implementation.md
+diff --git a/protocols/analysis/kernel-correctness.md b/protocols/analysis/kernel-correctness.md
+new file mode 100644
+index 0000000..2961823
+--- /dev/null
++++ b/protocols/analysis/kernel-correctness.md
+@@ -0,0 +1,177 @@
++<!-- SPDX-License-Identifier: MIT -->
++<!-- Copyright (c) PromptKit Contributors -->
++
++---
++name: kernel-correctness
++type: analysis
++description: >
++  Correctness analysis protocol for OS kernel and driver code. Covers
++  lock/refcount symmetry, cleanup path completeness, PFN/PTE state
++  transitions, interlocked sequences, and charge/uncharge accounting.
++  Includes known-safe kernel patterns to suppress false positives.
++language: C
++applicable_to:
++  - review-code
++  - investigate-bug
++  - exhaustive-bug-hunt
++---
++
++# Protocol: Kernel Correctness Analysis
++
++Apply this protocol when analyzing operating system kernel code, drivers,
++or similarly privileged system software. This protocol extends
++memory-safety-c and thread-safety with kernel-specific correctness checks
++and false-positive suppression rules.
++
++## Phase 1: Lock Symmetry Analysis
++
++For every lock acquisition site:
++
++1. Identify the lock type (spinlock, pushlock, ERESOURCE, mutex, fast mutex,
++   queued spinlock, etc.) and its acquisition semantics (exclusive, shared,
++   raise IRQL, disable APCs).
++2. Trace **all** code paths from acquisition to function exit.
++3. Verify the lock is released on **every** path — including error returns,
++   goto targets, and exception handlers.
++4. Check for **lock ordering**: if multiple locks are acquired, verify
++   consistent ordering across all call sites to prevent deadlock.
++5. Check for **IRQL correctness**: verify that locks requiring specific IRQL
++   are acquired at the correct level and that IRQL is restored on release.
++6. Check for **operations at elevated IRQL** that must not block, page-fault,
++   or call pageable code.
++
++## Phase 2: Reference Count Symmetry
++
++For every reference count operation (ObReferenceObject, ObDereferenceObject,
++InterlockedIncrement/Decrement on refcounts, IoAcquireRemoveLock, etc.):
++
++1. Pair every increment with its corresponding decrement.
++2. Trace all paths from increment to function exit — verify decrement on
++   every path.
++3. Check for **double dereference**: paths where decrement happens twice
++   (e.g., decrement in cleanup block + explicit decrement before goto).
++4. Check for **use-after-dereference**: code that accesses an object after
++   its reference count has been decremented (the object may be freed).
++5. Verify reference transfers: when a reference is "donated" to a callee or
++   stored in a data structure, confirm the caller does NOT also dereference.
++
++## Phase 3: Cleanup Path Completeness
++
++1. For every `goto` cleanup label, enumerate all jump sites and the set
++   of resources held at each jump.
++2. Verify the cleanup block correctly handles **each combination** — common
++   patterns include conditional cleanup (check if resource was acquired
++   before releasing) or ordered labels (goto CleanupPhase2 releases phases
++   2 and 1).
++3. Check for **missing cleanup on early returns** that bypass the goto chain.
++4. Verify that cleanup ordering is **reverse acquisition order** to prevent
++   use-after-free of inner resources.
++
++## Phase 4: PreviousMode and Probe/Capture
++
++For every system call handler or routine that processes user-mode requests:
++
++1. Verify that `PreviousMode` is checked before trusting user-supplied
++   pointers or parameters.
++2. Verify that user-mode buffers are **probed** (`ProbeForRead`,
++   `ProbeForWrite`) before access.
++3. Verify that user-mode data is **captured** (copied to kernel memory)
++   before validation — double-fetch vulnerabilities occur when user data
++   is validated and then re-read from user memory.
++4. Check for paths where `KernelMode` callers bypass probing correctly
++   (this is intentional) vs. paths where `UserMode` callers skip probing
++   (this is a bug).
++
++## Phase 5: PFN / PTE State Transitions
++
++For code that manipulates Page Frame Number (PFN) database entries or
++Page Table Entries (PTEs):
++
++1. Verify that PFN lock (or working set lock, or relevant PTE lock) is
++   held when reading or modifying PFN/PTE state.
++2. Check for **stale PTE reads**: reading a PTE, releasing the lock, then
++   acting on the stale value without re-validation.
++3. Verify state transition correctness: PFN state machine transitions must
++   follow valid arcs (e.g., Active → Modified → Standby → Free).
++4. Check for **torn reads** on architectures where PTE updates are not
++   atomic — verify appropriate interlocked operations are used.
++
++## Phase 6: Interlocked Sequence Correctness
++
++For every interlocked operation (InterlockedCompareExchange,
++InterlockedOr, cmpxchg, atomic CAS loops):
++
++1. Verify the **retry logic**: if CAS fails, does the code retry with the
++   updated value, or does it silently proceed with stale state?
++2. Check for **ABA problems**: a value changes from A → B → A, and the CAS
++   succeeds despite intervening state changes that invalidated the
++   operation's assumptions.
++3. Verify **memory ordering**: are acquire/release semantics correct for
++   the data being protected?
++4. Check for **lost updates**: two threads performing read-modify-write
++   where one thread's update overwrites the other's.
++
++## Phase 7: Integer Arithmetic in Size/Offset Calculations
++
++1. Identify every calculation involving page counts, byte counts, allocation
++   sizes, array indices, or memory offsets.
++2. Check for **integer overflow**: multiplication or addition that can
++   exceed the type's range (especially `ULONG` vs `SIZE_T` mismatches
++   on 64-bit systems).
++3. Check for **truncation**: implicit narrowing conversions (e.g., `SIZE_T`
++   assigned to `ULONG`) that silently discard high bits.
++4. Verify that size calculations used for pool allocations cannot be
++   manipulated to allocate a too-small buffer.
++
++## Phase 8: Charge / Uncharge Accounting
++
++For code that charges resource quotas (memory, handle count, etc.):
++
++1. Pair every charge operation with its corresponding uncharge.
++2. Verify that failure paths uncharge exactly what was charged — no
++   over-uncharge (corrupts accounting) or under-uncharge (resource leak).
++3. Check for charge-before-use vs. use-before-charge ordering.
++
++## Known-Safe Patterns (False-Positive Suppression)
++
++Do NOT report findings caused by these standard kernel patterns:
++
++1. **Optimistic / speculative reads later validated under lock** —
++   reading a field without a lock, then acquiring the lock and
++   re-reading or validating before acting on it.
++2. **ReadNoFence / ReadULongNoFence / ReadTorn fast paths** —
++   intentionally racy reads used as performance fast-path hints,
++   with a slow path that acquires proper synchronization.
++3. **Lock-free PTE reads that are atomic on x64** — single-word PTE
++   reads that are naturally atomic on the target architecture.
++4. **Interlocked CAS fast paths where caller retries or slow path
++   handles failure** — a CAS that may fail, but the caller either
++   retries or falls through to a locked slow path.
++5. **Cleanup performed in shared goto targets or helper routines** —
++   resource release that is not visible inline but is performed by a
++   cleanup label or helper function (verify by reading the helper).
++6. **Lock release performed indirectly by called functions** — a
++   function that releases a lock as a documented side effect.
++7. **Invariants documented by NT_ASSERT where caller guarantees hold** —
++   assertions that document preconditions guaranteed by all callers.
++   However, if the invariant is NOT guaranteed by all callers, this IS
++   a finding (retail assertion gap).
++
++When a known-safe pattern suppresses a candidate finding, record it in
++the false-positive-rejected section of the output.
++
++## Output Format
++
++For each finding, report:
++
++```
++[SEVERITY: Critical|High|Medium|Low]
++Category: <kernel-defect-categories ID, e.g., K1: Lock leak>
++Location: <file>:<line> or <function name>
++Issue: <concise description>
++Trigger path: <step-by-step control flow to trigger the bug>
++Why this is NOT a false positive: <disproof of likely counterargument>
++Consequence: <concrete bad outcome — BSOD, corruption, escalation, leak>
++Remediation: <specific fix recommendation>
++Confidence: Confirmed | High-confidence | Needs-domain-check
++```
+diff --git a/protocols/guardrails/adversarial-falsification.md b/protocols/guardrails/adversarial-falsification.md
+new file mode 100644
+index 0000000..732b71c
+--- /dev/null
++++ b/protocols/guardrails/adversarial-falsification.md
+@@ -0,0 +1,102 @@
++<!-- SPDX-License-Identifier: MIT -->
++<!-- Copyright (c) PromptKit Contributors -->
++
++---
++name: adversarial-falsification
++type: guardrail
++description: >
++  Cross-cutting protocol enforcing adversarial self-falsification discipline.
++  Requires the reviewer to attempt to disprove every candidate finding before
++  reporting it, reject known-safe patterns, and resist premature summarization.
++applicable_to:
++  - review-code
++  - investigate-bug
++  - investigate-security
++  - exhaustive-bug-hunt
++---
++
++# Protocol: Adversarial Falsification
++
++This protocol MUST be applied to any task that produces defect findings.
++It enforces intellectual rigor by requiring the reviewer to actively try
++to **disprove** each finding before reporting it, rather than merely
++accumulating plausible-looking issues.
++
++## Rules
++
++### 1. Assume More Bugs Exist
++
++- Do NOT conclude "code is exceptionally well-written" or "no bugs found"
++  unless you have exhausted the required review procedure and can
++  demonstrate coverage.
++- Do NOT stop at superficial scans or pattern matching. Pattern matches
++  are only starting points — follow through with path tracing.
++- Treat prior "all false positives" conclusions as untrusted until
++  re-verified.
++
++### 2. Disprove Before Reporting
++
++For every candidate finding:
++
++1. **Attempt to construct a counter-argument**: find the code path, helper,
++   retry logic, or cleanup mechanism that would make the issue safe.
++2. If you find such a mechanism, **verify it by reading the actual code** —
++   do not assume a helper "probably" cleans up.
++3. Only report the finding if disproof fails — i.e., you cannot find a
++   mechanism that neutralizes the issue.
++4. Document both the finding AND why your disproof attempt failed in the
++   output (the "Why this is NOT a false positive" field).
++
++### 3. No Vague Risk Claims
++
++- Do NOT report "possible race" or "could leak" without tracing the
++  **exact** lock, refcount, cleanup path, and caller contract involved.
++- Do NOT report "potential issue" without specifying the **concrete bad
++  outcome** (crash, data corruption, privilege escalation, resource leak).
++- Your standard: if you cannot point to the exact lines, state transition,
++  and failure path, do not claim a bug.
++
++### 4. Verify Helpers and Callers
++
++- If a helper function appears to perform cleanup, **read that helper** —
++  do not assume it handles the case you are analyzing.
++- If safety depends on a caller guarantee (e.g., caller holds a lock,
++  caller validates input), **verify the guarantee from the caller** or
++  mark the finding as `Needs-domain-check` rather than dismissing it.
++- If an invariant is documented only by an assertion (e.g., `assert`,
++  `NT_ASSERT`, `DCHECK`), verify whether that assertion is enforced in
++  release/retail builds. If not, the invariant is NOT guaranteed.
++
++### 5. Anti-Summarization Discipline
++
++- If you catch yourself writing a summary before completing analysis,
++  **stop and continue tracing**.
++- If you find yourself using phrases like "likely fine", "appears safe",
++  or "probably intentional", you MUST do one of:
++  - **Prove it** with exact code-path evidence, OR
++  - **Mark it unresolved** and continue analysis.
++- Do NOT produce an executive summary or overall assessment until every
++  file in the scope has a completed coverage record.
++
++### 6. False-Positive Awareness
++
++- Maintain a record of candidate findings that were investigated and
++  rejected. For each, document:
++  - What the candidate finding was
++  - Why it was rejected (what mechanism makes it safe)
++- This record serves two purposes:
++  - Demonstrates thoroughness to the reader
++  - Prevents re-investigating the same pattern in related code
++
++### 7. Confidence Classification
++
++Assign a confidence level to every reported finding:
++
++- **Confirmed**: You have traced the exact path to trigger the bug and
++  verified that no existing mechanism prevents it.
++- **High-confidence**: The analysis strongly indicates a bug, but you
++  cannot fully rule out an undiscovered mitigation without additional
++  context.
++- **Needs-domain-check**: The analysis depends on a domain-specific
++  invariant, caller contract, or runtime guarantee that you cannot
++  verify from the provided code alone. State what must be checked.
+diff --git a/protocols/reasoning/exhaustive-path-tracing.md b/protocols/reasoning/exhaustive-path-tracing.md
+new file mode 100644
+index 0000000..d57459a
+--- /dev/null
++++ b/protocols/reasoning/exhaustive-path-tracing.md
+@@ -0,0 +1,126 @@
++<!-- SPDX-License-Identifier: MIT -->
++<!-- Copyright (c) PromptKit Contributors -->
++
++---
++name: exhaustive-path-tracing
++type: reasoning
++description: >
++  Systematic per-file reasoning protocol for deep code review. Requires
++  full-file reading, local structure mapping, high-risk function identification,
++  and exhaustive path tracing with coverage ledger documentation.
++applicable_to:
++  - review-code
++  - investigate-bug
++  - exhaustive-bug-hunt
++---
++
++# Protocol: Exhaustive Path Tracing
++
++Apply this protocol when performing deep code review where completeness
++matters more than speed. This protocol is language-agnostic — adapt the
++specific constructs (goto, exceptions, early returns) to the target language.
++
++## Phase 1: Full-File Structural Map
++
++For each file under review:
++
++1. **Read the entire file**, not just search hits or snippets.
++2. Build a **local map** documenting:
++   - **Entry points**: exported functions, public methods, callbacks, ISRs
++   - **Major helpers**: internal functions called by entry points
++   - **Lock acquisition and release sites**: every lock/unlock, acquire/release
++   - **Reference count acquire/release pairs**: AddRef/Release, ObRef/ObDeref,
++     retain/release, or equivalent
++   - **Key flags and state variables**: mode flags, status fields, state
++     machine variables
++   - **Cleanup blocks**: goto labels, finally blocks, defer statements,
++     destructors, shared cleanup routines
++   - **Error propagation**: return codes, exceptions, error callbacks
++
++## Phase 2: High-Risk Function Identification
++
++Identify functions that warrant deep path tracing based on these risk signals:
++
++- Complex **goto structure** or deeply nested error handling
++- **Many unlock or release points** (risk of missing one on a path)
++- **Mixed success/error mutation** — function modifies state on the
++  success path and must undo it on failure
++- **User/kernel boundary handling** — functions that accept user-mode
++  inputs, probe buffers, or transition privilege levels
++- **Interlocked or lock-free state transitions** — CAS loops, atomic
++  flag updates, speculative reads
++- **Size, count, or offset arithmetic** — page counts, byte counts,
++  allocation sizes, array indices derived from external input
++- **Resource acquisition chains** — functions that acquire multiple
++  resources that must be released in reverse order
++
++Prioritize review effort on high-risk functions. Low-risk functions
++(simple getters, pure computations, thin wrappers) receive lighter review.
++
++## Phase 3: Per-Function Path Tracing
++
++For each high-risk function, systematically trace:
++
++### 3a. Success Path
++- Walk the happy path from entry to return.
++- Record every resource acquired, lock taken, state modified, and flag set.
++- Verify all resources are released and state is consistent at return.
++
++### 3b. Early-Return Paths
++- Identify every `return`, `break`, `continue`, or exception throw that
++  exits the function before the normal return point.
++- For each early return, verify:
++  - All locks acquired before this point are released.
++  - All reference counts incremented before this point are decremented.
++  - All state mutations before this point are rolled back or are
++    consistent with the early-return semantics.
++
++### 3c. Goto / Cleanup Targets
++- For each goto target (or equivalent cleanup block):
++  - Identify which entry points jump to it and what state they hold.
++  - Verify the cleanup block handles the **union** of all possible
++    acquired resources — not just the resources from one path.
++  - Check for cleanup ordering (resources released in reverse
++    acquisition order).
++
++### 3d. Cleanup Symmetry Verification
++- For every resource acquired (lock, refcount, allocation, handle):
++  - Enumerate **all** code paths from acquisition to function exit.
++  - Verify the resource is released on **every** path.
++  - If release is delegated to a helper, read the helper to confirm.
++
++### 3e. State Rollback on Partial Failure
++- If the function performs a **sequence of mutations** (e.g., insert into
++  list A, then update table B, then modify object C):
++  - Verify that failure at step N rolls back steps 1..N-1.
++  - Check for partial-mutation corruption: state left inconsistent if
++    an intermediate step fails.
++
++## Phase 4: Per-Finding Documentation
++
++For each candidate bug that survives falsification:
++
++1. **Cite exact line numbers** or ranges.
++2. **Show the path to trigger it** — step-by-step control flow from
++   entry point through the failing path.
++3. **Name the object, lock, refcount, or state variable** involved.
++4. **Explain why existing cleanup or retry logic does NOT make it safe.**
++5. **State the concrete consequence** — crash, corruption, leak, escalation.
++6. **Assign confidence**: Confirmed, High-confidence, or Needs-domain-check.
++
++## Phase 5: Coverage Ledger
++
++Before concluding review of a file, produce a coverage ledger:
++
++```
++Coverage ledger:
++  Full file read: yes/no
++  High-risk functions reviewed: <list>
++  Lock/refcount/goto cleanup traced: yes/no
++  Arithmetic sites reviewed: yes/no
++  User/kernel boundary paths reviewed: yes/no (or N/A)
++  Interlocked/concurrency paths reviewed: yes/no (or N/A)
++```
++
++If any item is "no", explain why and document it as a limitation.
++Do not claim "no bugs found" without a completed coverage ledger.
+diff --git a/taxonomies/kernel-defect-categories.md b/taxonomies/kernel-defect-categories.md
+new file mode 100644
+index 0000000..ace6517
+--- /dev/null
++++ b/taxonomies/kernel-defect-categories.md
+@@ -0,0 +1,169 @@
++<!-- SPDX-License-Identifier: MIT -->
++<!-- Copyright (c) PromptKit Contributors -->
++
++---
++name: kernel-defect-categories
++domain: kernel-correctness
++description: >
++  Classification scheme (K1–K14) for operating system kernel and driver
++  defects. Covers lock leaks, refcount imbalances, cleanup omissions,
++  lifetime bugs, integer arithmetic errors, state machine races,
++  accounting mismatches, and security boundary mistakes.
++---
++
++# Taxonomy: Kernel Defect Categories
++
++This taxonomy classifies defect types specific to operating system kernels,
++drivers, and similarly privileged system software. Each category has a
++unique identifier (K1–K14) for use in findings and traceability.
++
++## Categories
++
++### K1: Lock Leak
++
++A lock is acquired but not released on one or more code paths. Consequence:
++deadlock, hang, or IRQL-related bugcheck when a subsequent acquisition
++blocks indefinitely or when IRQL remains elevated past the point where
++lower-IRQL operations are expected.
++
++**Signals**: function has multiple return/goto paths; lock acquired early,
++released only at end; conditional paths skip release.
++
++### K2: Refcount Leak or Double Dereference
++
++A reference count is incremented but not decremented on all paths (leak),
++or is decremented more than once (double dereference leading to
++use-after-free or pool corruption).
++
++**Signals**: ObReferenceObject / ObDereferenceObject pairing; refcount
++increment in one branch, missing decrement in error branch; reference
++"donated" to callee but caller also dereferences.
++
++### K3: Cleanup Omission on Error / Goto / Early Return
++
++A resource (allocation, handle, mapping, MDL, etc.) acquired before an
++error check is not released when the error path is taken. Applies to
++goto-based cleanup, early returns, and exception paths.
++
++**Signals**: resource acquired, then a conditional check that gotos a
++label which does not free that resource; new error check added between
++acquisition and existing cleanup block.
++
++### K4: Use-After-Free from Object Lifetime Mismatch
++
++Code accesses an object after its backing memory may have been freed —
++typically because a reference was released or the object was removed from
++a list, but a local pointer still refers to it.
++
++**Signals**: dereference after ObDereferenceObject; access to list entry
++after removal without holding a stabilizing reference; pointer cached
++across a call that may free the target.
++
++### K5: Stale Pointer Use After Unlock
++
++A pointer to a protected data structure is obtained under lock, the lock
++is released, and the pointer is subsequently dereferenced. The data
++structure may have been modified or freed between unlock and use.
++
++**Signals**: pointer to pool allocation, list entry, or hash-table entry
++read under lock; lock released; pointer used after release without
++re-validation or a stabilizing reference.
++
++### K6: Integer Overflow or Truncation in Size / Offset Math
++
++An arithmetic operation on a page count, byte count, allocation size,
++array index, or memory offset can overflow or be truncated, leading to
++a too-small allocation, out-of-bounds access, or incorrect offset.
++
++**Signals**: multiplication of user-supplied values without overflow
++check; ULONG used for byte count that can exceed 4 GB on 64-bit;
++SIZE_T narrowed to ULONG before pool allocation; unchecked addition
++in offset calculation.
++
++### K7: Incorrect PreviousMode or Probe / Capture Assumptions
++
++A system call handler or kernel routine that processes user-mode requests
++fails to check PreviousMode, omits buffer probing, or validates user data
++without first capturing it to kernel memory (double-fetch vulnerability).
++
++**Signals**: direct access to user-mode pointer without ProbeForRead /
++ProbeForWrite; validation of user buffer followed by second read from
++user memory; missing PreviousMode check before skipping probe.
++
++### K8: PFN / PTE State Transition Race
++
++A PFN database entry or page table entry is read, modified, or
++transitioned between states without proper synchronization, or a stale
++PTE value is acted upon after the lock was released.
++
++**Signals**: PTE read without PFN lock or working-set lock; PFN state
++modified without holding the PFN lock; PTE value cached, lock released,
++then cached value used for subsequent decisions.
++
++### K9: ABA or Lost-Update in Interlocked Sequences
++
++An interlocked compare-and-swap (CAS) sequence is vulnerable to the ABA
++problem (value cycles A→B→A, CAS succeeds despite invalidated assumptions)
++or to lost updates (concurrent read-modify-write operations where one
++overwrites the other's changes).
++
++**Signals**: CAS loop that only compares the old value without versioning
++or tagging; non-interlocked read-modify-write on shared state; two threads
++updating the same field with separate CAS operations whose ranges overlap.
++
++### K10: Inconsistent Flag Tracking Across Success / Failure Paths
++
++A flag or status variable is set on the success path but not cleared (or
++vice versa) on the failure path, leaving the system in an inconsistent
++state. Alternatively, a flag is checked on one path but not on a parallel
++path that shares the same postcondition.
++
++**Signals**: boolean flag set to TRUE before an operation, not reset on
++failure; status field updated in one branch of a conditional but not the
++other; flag checked in most callers but skipped in one.
++
++### K11: Missing Rollback After Partial State Mutation
++
++A function performs a sequence of state mutations (e.g., insert into
++list A, update table B, modify object C). If an intermediate step fails,
++earlier mutations are not rolled back, leaving the system in a partially
++mutated and inconsistent state.
++
++**Signals**: multi-step mutation sequence with error checks between steps;
++early steps modify shared state, later steps can fail; goto target only
++undoes the last step, not earlier ones.
++
++### K12: Mismatched Charge / Uncharge Accounting
++
++A resource quota charge (memory, handle count, process quota) is not
++paired with an equal uncharge, or the uncharge amount does not match the
++charge amount. Leads to quota leaks (eventual resource exhaustion) or
++quota underflow (accounting corruption).
++
++**Signals**: PsChargeProcessPoolQuota / PsReturnProcessPoolQuota pairing;
++charge in one function, uncharge in a different function with different
++size; failure path skips uncharge; charge size computed differently from
++uncharge size.
++
++### K13: Retail Assertion Gap
++
++An invariant is enforced only by a debug-only assertion (NT_ASSERT,
++ASSERT, DCHECK) and is not checked in retail/release builds. If the
++invariant can be violated by external input or by a caller that does not
++guarantee it, the retail build has an unguarded code path.
++
++**Signals**: NT_ASSERT checking a precondition that is not guaranteed by
++all callers; assertion on user-supplied value that is validated only by
++the assert; assertion guarding a code path that leads to memory corruption
++or privilege escalation if the condition is false.
++
++### K14: Security Boundary Mistake
++
++A security-relevant check (privilege verification, access check, token
++validation, namespace isolation) is missing, bypassable, or applied
++incorrectly. Distinct from K7 (which covers probe/capture mechanics) —
++K14 covers higher-level authorization and isolation failures.
++
++**Signals**: missing SeAccessCheck or equivalent before granting access;
++handle opened with excessive permissions; cross-session or cross-container
++object accessible without isolation check; impersonation level not verified.
+diff --git a/templates/exhaustive-bug-hunt.md b/templates/exhaustive-bug-hunt.md
+new file mode 100644
+index 0000000..8432197
+--- /dev/null
++++ b/templates/exhaustive-bug-hunt.md
+@@ -0,0 +1,176 @@
++<!-- SPDX-License-Identifier: MIT -->
++<!-- Copyright (c) PromptKit Contributors -->
++
++---
++name: exhaustive-bug-hunt
++description: >
++  Deep, adversarial, line-by-line code review optimized for defect
++  discovery. Exhaustive path tracing with coverage proof and
++  falsification discipline. Optionally applies kernel-specific
++  analysis for OS code.
++persona: systems-engineer
++protocols:
++  - guardrails/anti-hallucination
++  - guardrails/self-verification
++  - guardrails/adversarial-falsification
++  - reasoning/exhaustive-path-tracing
++taxonomies:
++  - kernel-defect-categories
++format: exhaustive-review-report
++params:
++  code: "The code to review — one file or a small batch of related files"
++  language: "Programming language (e.g., C, C++, Rust)"
++  domain: "Optional — 'kernel' to enable kernel-correctness protocol and kernel-defect-categories taxonomy, or 'general' for language-agnostic review"
++  additional_protocols: "Optional — specific protocols to apply (e.g., kernel-correctness, memory-safety-c, thread-safety, security-vulnerability)"
++  context: "What this code does, where it fits in the system, any known concerns"
++input_contract: null
++output_contract:
++  type: exhaustive-review-report
++  description: >
++    Per-file coverage ledgers proving review completeness, adversarial
++    findings with falsification proof, and false-positive rejection logs.
++---
++
++# Task: Exhaustive Bug Hunt
++
++You are in **exhaustive bug-hunting mode**. Your task is to perform deep,
++adversarial, line-by-line review of the provided code and find **real bugs** —
++not stylistic issues, not vague risks, and not architectural opinions.
++
++**Optimize for defect discovery and falsification of your own hypotheses.**
++Do not optimize for speed, brevity, or token savings.
++
++## Inputs
++
++**Code**:
++```{{language}}
++{{code}}
++```
++
++**Language**: {{language}}
++
++**Domain**: {{domain}}
++
++**Context**: {{context}}
++
++**Additional Protocols to Apply**: {{additional_protocols}}
++
++## Instructions
++
++### 1. Apply the Adversarial Falsification Protocol
++
++- Assume more real bugs exist. Do not conclude "no bugs found" unless you
++  have exhausted the review procedure and can prove coverage.
++- For every candidate bug, attempt to disprove it before reporting.
++- If you catch yourself summarizing, stop and continue tracing.
++
++### 2. Apply the Exhaustive Path-Tracing Protocol
++
++For each file in scope:
++
++1. **Read the whole file**, not just search hits.
++2. **Build a local map** of entry points, helpers, lock sites, refcount
++   pairs, state variables, and cleanup blocks.
++3. **Identify high-risk functions** by complexity of goto structure,
++   number of unlock points, mixed success/error mutation, boundary
++   handling, interlocked transitions, and size arithmetic.
++4. **For each high-risk function**, trace:
++   - The success path
++   - Each early-return path
++   - Each goto / cleanup target
++   - Cleanup symmetry (every resource released on every path)
++   - Lock/refcount symmetry
++   - State rollback on partial failure
++5. **Produce a coverage ledger** for each file before concluding.
++
++### 3. Apply Domain-Specific Analysis (If Applicable)
++
++If `{{domain}}` is `kernel` or `{{additional_protocols}}` includes
++`kernel-correctness`:
++
++- Apply the **kernel-correctness** analysis protocol.
++- Use the **kernel-defect-categories** taxonomy (K1–K14) to classify findings.
++- Suppress false positives from known-safe kernel patterns (optimistic reads,
++  ReadNoFence fast paths, lock-free PTE reads, CAS retry patterns, cleanup
++  in helpers, lock release by callees, NT_ASSERT caller guarantees).
++
++If `{{additional_protocols}}` includes other protocols (e.g., `memory-safety-c`,
++`thread-safety`, `security-vulnerability`), apply them systematically.
++
++### 4. Format Each Finding
++
++Use the exhaustive-review-report format. Every finding MUST include:
++
++- **Exact line numbers**
++- **Trigger path** (step-by-step control flow)
++- **Why this is a real bug** (technical explanation)
++- **Why this is NOT a false positive** (disproof of counterargument)
++- **Concrete consequence** (crash, corruption, escalation, leak)
++- **Confidence level** (Confirmed / High-confidence / Needs-domain-check)
++- **Fix direction** (minimal fix approach)
++
++### 5. Document Rejected False Positives
++
++For each candidate finding that was investigated and rejected, record:
++- What the candidate was
++- Why it was rejected (cite the specific mechanism that makes it safe)
++
++### 6. Apply Quality Gates
++
++Before finalizing:
++
++- Verify every file has a completed coverage ledger.
++- Verify every finding has the falsification proof field.
++- Re-verify at least 3 findings against the source code.
++- Only then write the executive summary.
++
++## Scope and Priorities
++
++### Focus On
++
++- Lock leaks and lock ordering violations
++- Refcount leaks or double dereferences
++- Cleanup omissions on goto / early-return / error paths
++- Use-after-free from object lifetime mismatches
++- Stale pointer use after unlock
++- Integer overflow or truncation in size, count, offset, and allocation math
++- Missing rollback after partial state mutation
++- Inconsistent flag tracking across success/failure paths
++- Security boundary mistakes
++
++If kernel domain:
++- Incorrect PreviousMode or probe/capture assumptions
++- PFN/PTE state transition races
++- ABA or lost-update bugs in interlocked sequences
++- Mismatched charge/uncharge accounting
++- Invalid assumptions hidden behind NT_ASSERT-only checks in retail builds
++
++### Do NOT Spend Time On
++
++- Style, naming, or comment quality
++- Speculative "design review" observations
++- Issues without a concrete bad outcome
++- Findings already neutralized by later validation, helper cleanup,
++  or lock-validated retry logic
++
++## Non-Goals
++
++- Do NOT refactor or redesign the code.
++- Do NOT report issues outside the provided scope unless directly
++  called by the reviewed code.
++- Do NOT provide design commentary unless it masks a concrete bug.
++- Do NOT give architectural opinions.
++
++## Quality Checklist
++
++Before finalizing, verify:
++
++- [ ] Every file has a completed coverage ledger
++- [ ] Every finding cites exact line numbers
++- [ ] Every finding has a trigger path
++- [ ] Every finding has a "Why NOT a false positive" field
++- [ ] Every finding has a concrete consequence
++- [ ] At least 3 findings re-verified against the source
++- [ ] False-positive candidates rejected table is present per file
++- [ ] Executive summary written ONLY after all files are covered
++- [ ] No vague claims — "possible race" or "could leak" with full trace or not at all
+-- 
+2.53.0.vfs.0.0
+

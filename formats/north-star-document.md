@@ -96,8 +96,8 @@ was drawn from it.>
 - The document describes **vision and architectural direction**, not
   implementation plans, API designs, or code-level details.
 - Every substantive paragraph MUST be traceable to a source document
-  or an explicit epistemic label (`[ASSUMPTION]`, `[INFERRED]`,
-  `[UNKNOWN]`).
+  or an explicit epistemic label — `[ASSUMPTION]`, `[INFERRED]`, or
+  `[UNKNOWN]` — consistent with the anti-hallucination protocol.
 - Use headings, bullet points, and diagrams as needed. Write for
   clarity, not length.
 - Diagrams SHOULD use text-based formats (Mermaid, PlantUML, ASCII)
