@@ -1,0 +1,37 @@
+{
+  "executiveSummary": {
+    "narrative": "The session consumed a high volume of tokens due to significant redundant reasoning loops in the verification phase. Approximately 18% of the total tokens were spent re-deriving context that was already explicitly provided. Implementing the recommended guardrail adjustments will dramatically reduce latency and API costs.",
+    "totalTokens": 14500,
+    "wastefulTokens": 2610,
+    "wastePercentage": 18,
+    "topOptimizations": [
+      { "description": "Remove overlapping self-verification loop", "savings": 1200 },
+      { "description": "Prune unused log context", "savings": 800 },
+      { "description": "Condense persona constraints", "savings": 610 }
+    ]
+  },
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "High",
+      "description": "The LLM abandoned its analysis mid-paragraph and restarted completely.",
+      "component": "protocols/guardrails/self-verification",
+      "tokenCost": 1200
+    },
+    {
+      "id": "F-002",
+      "severity": "Medium",
+      "description": "Context block for 'application_logs' was passed but never referenced.",
+      "component": "templates/investigate-bug.md (session_log param)",
+      "tokenCost": 800
+    }
+  ],
+  "remediationPlan": [
+    {
+      "component": "protocols/guardrails/self-verification",
+      "change": "Add explicit instruction: 'Do not restart analysis unless a critical contradiction is found.'",
+      "expectedSavings": 1200,
+      "risk": "May slightly increase the chance of minor logical inconsistencies slipping through."
+    }
+  ]
+}
