@@ -97,6 +97,13 @@ protocols:
         prefers deterministic analysis. Prevents over-ingestion and ensures
         reproducibility.
 
+    - name: adversarial-falsification
+      path: protocols/guardrails/adversarial-falsification.md
+      description: >
+        Enforces adversarial self-falsification discipline. Requires the
+        reviewer to disprove every candidate finding before reporting it,
+        reject known-safe patterns, and resist premature summarization.
+
   analysis:
     - name: memory-safety-c
       path: protocols/analysis/memory-safety-c.md
@@ -123,6 +130,15 @@ protocols:
       description: >
         Security vulnerability analysis. Trust boundaries, input validation,
         auth, crypto, and information disclosure. Language-agnostic.
+
+    - name: kernel-correctness
+      path: protocols/analysis/kernel-correctness.md
+      description: >
+        Correctness analysis for OS kernel and driver code. Lock/refcount
+        symmetry, cleanup path completeness, PFN/PTE state transitions,
+        interlocked sequences, charge/uncharge accounting, and known-safe
+        kernel pattern suppression.
+      language: C
 
   reasoning:
     - name: root-cause-analysis
@@ -231,6 +247,14 @@ protocols:
         Classifies each requirement by cross-source compatibility
         (Universal, Majority, Divergent, Extension).
 
+    - name: exhaustive-path-tracing
+      path: protocols/reasoning/exhaustive-path-tracing.md
+      description: >
+        Systematic per-file deep review protocol. Full-file reading,
+        local structure mapping, high-risk function identification,
+        exhaustive path tracing with cleanup/lock/refcount symmetry
+        verification, and coverage ledger documentation.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -315,6 +339,14 @@ formats:
       breakdown, dependency ordering, risk assessment, and verification
       strategy.
 
+  - name: exhaustive-review-report
+    path: formats/exhaustive-review-report.md
+    produces: exhaustive-review-report
+    description: >
+      Exhaustive code review report with per-file coverage ledgers,
+      adversarial finding templates requiring falsification proof,
+      and false-positive rejection logs.
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -333,6 +365,15 @@ taxonomies:
       artifacts. Covers untraced requirements, orphaned design decisions,
       assumption drift, coverage failures, code/test compliance gaps,
       and cross-component integration drift.
+
+  - name: kernel-defect-categories
+    path: taxonomies/kernel-defect-categories.md
+    domain: kernel-correctness
+    description: >
+      Classification scheme (K1-K14) for OS kernel and driver defects.
+      Covers lock leaks, refcount imbalances, cleanup omissions, lifetime
+      bugs, integer arithmetic errors, state machine races, accounting
+      mismatches, and security boundary mistakes.
 
 templates:
   document-authoring:
@@ -535,6 +576,18 @@ templates:
       protocols: [anti-hallucination, self-verification, operational-constraints]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
+
+    - name: exhaustive-bug-hunt
+      path: templates/exhaustive-bug-hunt.md
+      description: >
+        Deep, adversarial, line-by-line code review optimized for defect
+        discovery. Exhaustive path tracing with coverage proof and
+        falsification discipline. Optionally applies kernel-specific
+        analysis for OS code.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, adversarial-falsification, exhaustive-path-tracing]
+      taxonomies: [kernel-defect-categories]
+      format: exhaustive-review-report
 
   planning:
     - name: plan-implementation
