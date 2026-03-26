@@ -156,6 +156,24 @@ protocols:
         surface, and specific error codes.
       language: C
 
+    - name: winrt-design-patterns
+      path: protocols/analysis/winrt-design-patterns.md
+      description: >
+        Analysis protocol for reviewing Windows Runtime API code against
+        established WinRT design patterns. Covers activation contracts,
+        deferrals, data store separation, device enumeration, Get/Find
+        semantics, strongly-typed identifiers, and Try pattern.
+      language: C++
+
+    - name: compiler-diagnostics-cpp
+      path: protocols/analysis/compiler-diagnostics-cpp.md
+      description: >
+        Systematic protocol for analyzing and remediating C++ compiler
+        diagnostics. Covers variable shadowing, implicit conversions,
+        unused variables, deprecated features, and pragma suppression
+        handling with specific resolution strategies.
+      language: C++
+
   reasoning:
     - name: root-cause-analysis
       path: protocols/reasoning/root-cause-analysis.md
@@ -390,6 +408,15 @@ taxonomies:
       artifacts. Covers untraced requirements, orphaned design decisions,
       assumption drift, coverage failures, code/test compliance gaps,
       and cross-component integration drift.
+
+  - name: cpp-review-patterns
+    path: taxonomies/cpp-review-patterns.md
+    domain: cpp-code-review
+    description: >
+      Classification scheme for C++ code review findings. Categorizes
+      findings by pattern family (memory safety, concurrency, API design,
+      performance, error handling, code clarity) with 19 labels and
+      cross-references to analysis protocols.
 
 templates:
   document-authoring:
@@ -634,6 +661,16 @@ templates:
       protocols: [anti-hallucination, self-verification, operational-constraints]
       format: triage-report
 
+    - name: scaffold-test-project
+      path: templates/scaffold-test-project.md
+      description: >
+        Scaffold a complete test project with build configuration, test
+        class boilerplate, and test runner setup for a given framework
+        and language.
+      persona: test-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: implementation-plan
+
   planning:
     - name: plan-implementation
       path: templates/plan-implementation.md
@@ -728,6 +765,16 @@ templates:
         CloudFormation) for correctness, security, and best practices.
       persona: devops-engineer
       protocols: [anti-hallucination, self-verification, security-vulnerability]
+      format: investigation-report
+
+    - name: generate-commit-message
+      path: templates/generate-commit-message.md
+      description: >
+        Generate a structured commit message from staged git changes.
+        Analyzes diffs to produce a Problem/Solution or Conventional
+        Commits format message with file change summaries.
+      persona: software-architect
+      protocols: [anti-hallucination, self-verification]
       format: investigation-report
 
 pipelines:

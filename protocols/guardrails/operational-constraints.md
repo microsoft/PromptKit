@@ -72,6 +72,29 @@ When tools are available (file search, code navigation, shell):
 - Chain operations efficiently — minimize round trips.
 - Capture tool output as evidence for your findings.
 
+### 6. Mandatory Execution Protocol
+
+When assigned a task that involves analyzing code, documents, or data:
+
+1. **Read all instructions thoroughly** before beginning any work.
+   Understand the full scope, all constraints, and the expected output
+   format before taking any action.
+2. **Analyze all provided context** — review every file, code snippet,
+   selected text, or document provided for the task. Do not start
+   producing output until you have read and understood the inputs.
+3. **Complete document review** — when given a reference document
+   (specification, guidelines, review checklist), read and internalize
+   the entire document before beginning the task. Do not skim.
+4. **Comprehensive file analysis** — when asked to analyze code, examine
+   files in their entirety. Do not limit analysis to isolated snippets
+   or functions unless the task explicitly requests focused analysis.
+5. **Test discovery** — when relevant, search for test files that
+   correspond to the code under review. Test coverage (or lack thereof)
+   is relevant context for any code analysis task.
+6. **Context integration** — cross-reference findings with related files,
+   headers, implementation dependencies, and test suites. Findings in
+   isolation miss systemic issues.
+
 ### 6. Parallelization Guidance
 
 If your environment supports parallel or delegated execution:
