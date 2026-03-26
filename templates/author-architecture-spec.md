@@ -22,13 +22,7 @@ params:
   requirements_doc: "(Optional) A requirements document to trace architectural decisions back to"
   audience: "Who will read the output — e.g., 'peer architects', 'development team', 'architecture review board'"
 input_contract:
-  type: requirements-document
-  required: false
-  description: >
-    Optionally consumes a requirements document. When provided,
-    architectural decisions should trace back to requirement IDs.
-    When absent, the template operates from the project description
-    and technical context alone.
+input_contract: null
 output_contract:
   type: architecture-spec
   description: >

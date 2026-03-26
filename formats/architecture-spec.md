@@ -10,15 +10,14 @@ description: >
   network architecture, programming interfaces, architectural
   implications, and cross-cutting concerns.
 produces: architecture-spec
-consumes: requirements-document
 ---
 
 # Format: Architecture Specification
 
 The output MUST be a structured architecture specification with the
 following sections in this exact order. Do not omit sections — if a
-section has no content, state "None identified" with a brief
-justification.
+section has no content, state "None identified" or "Not applicable"
+with a brief justification.
 
 ## Document Structure
 

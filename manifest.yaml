@@ -578,7 +578,6 @@ templates:
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
       format: architecture-spec
-      requires: requirements-document
 
     - name: interactive-design
       path: templates/interactive-design.md
