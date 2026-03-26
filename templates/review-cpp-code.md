@@ -129,7 +129,7 @@ language-specific analysis protocols validated by research.
 Before finalizing, verify:
 
 - [ ] Every finding cites a specific code location
-- [ ] Every finding references the relevant pattern ID (CPP-*, MSC-Phase*)
+- [ ] Every finding references the relevant pattern ID (CPP-*, memory-safety-c/Phase-*)
 - [ ] All 7 CPP patterns were checked (even if no issues found)
 - [ ] Memory safety protocol was applied (all 4 phases)
 - [ ] Findings are ordered by severity (Critical first)

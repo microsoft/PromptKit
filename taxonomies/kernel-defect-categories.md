@@ -3,6 +3,7 @@
 
 ---
 name: kernel-defect-categories
+type: taxonomy
 domain: kernel-correctness
 description: >
   Classification scheme (K1–K14) for operating system kernel and driver

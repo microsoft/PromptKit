@@ -95,7 +95,7 @@ When assigned a task that involves analyzing code, documents, or data:
    headers, implementation dependencies, and test suites. Findings in
    isolation miss systemic issues.
 
-### 6. Parallelization Guidance
+### 7. Parallelization Guidance
 
 If your environment supports parallel or delegated execution:
 
