@@ -11,16 +11,18 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
-format: investigation-report
+format: null
 params:
   staged_changes: "Output of git diff --staged or description of changes"
   commit_convention: "(Optional) Commit message convention — e.g., 'Conventional Commits', 'Problem/Solution', 'type(scope): description'. Default: Problem/Solution."
   scope_hint: "(Optional) Component or area these changes belong to"
 input_contract: null
 output_contract:
-  type: investigation-report
+  type: commit-message
   description: >
     A structured commit message ready for use with git commit.
+    Output format is defined inline by this template, not by a
+    separate format component.
 ---
 
 # Task: Generate Commit Message

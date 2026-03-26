@@ -47,6 +47,7 @@ No concrete bug found after full path tracing.
 #### Finding F-<NNN>: <Short Title>
 
 - **Confidence**: Confirmed | High-confidence | Needs-domain-check
+- **Severity**: Critical | High | Medium | Low
 - **Category**: <defect category ID and name, e.g., K3: Cleanup omission>
 - **Lines**: <exact line numbers or ranges>
 

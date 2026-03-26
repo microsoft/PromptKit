@@ -91,7 +91,7 @@ and note which occurrences it covers.>
 <Cross-references to other findings that share the same root cause,
 affect the same component, or would be addressed by the same fix.
 Use Finding IDs (e.g., "See F-003, F-007").
-Omit this section if no related findings exist.>
+If no related findings exist, state "None identified".>
 
 ## 3. Findings Summary
 

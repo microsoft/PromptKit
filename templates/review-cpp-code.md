@@ -102,7 +102,7 @@ language-specific analysis protocols validated by research.
 
    ```
    [SEVERITY: Critical|High|Medium|Low|Nit]
-   Pattern: <pattern ID — e.g., CPP-1, CPP-3, WG-005, MSC-Phase2>
+   Pattern: <pattern ID — e.g., CPP-1, CPP-3, WG-005, memory-safety-c/Phase-2>
    Location: <file>:<line> or <function>
    Issue: <concise description>
    Evidence: <code snippet or reasoning>
@@ -112,7 +112,7 @@ language-specific analysis protocols validated by research.
 6. **Summarize** at the end:
    - Total findings by severity
    - Findings broken down by pattern (e.g., "CPP-1: 3 findings,
-     CPP-5: 1 finding, MSC-Phase3: 2 findings")
+     CPP-5: 1 finding, memory-safety-c/Phase-3: 2 findings")
    - Overall assessment (approve / approve with changes / request changes)
    - Top 3 most important things to fix
 

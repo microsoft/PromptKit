@@ -848,7 +848,6 @@ templates:
         Commits format message with file change summaries.
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
-      format: investigation-report
 
 pipelines:
   document-lifecycle:

@@ -63,9 +63,17 @@ output_contract:
       instructions
    c. Classify each instance: fixable (matches known pattern), skip (needs
       manual review), or new pattern
-   d. **Handle pragma suppressions**: If
-      `#pragma warning(suppress:{{warning_id}})` exists before a violation,
-      REMOVE the pragma and apply the proper fix. Suppressions are not fixes.
+   d. **Handle pragma suppressions** (toolchain-specific):
+      - For MSVC warning codes (e.g., `C4456`): if
+        `#pragma warning(suppress:NNNN)` exists before a violation,
+        REMOVE the pragma and apply the proper fix.
+      - For Clang/GCC flags (e.g., `-Wenum-conversion`): look for
+        `#pragma clang diagnostic ignored` or `#pragma GCC diagnostic
+        ignored` that suppress this warning at the violation site.
+        Where safe and unambiguous, REMOVE the suppression and apply
+        the proper fix instead.
+      - Do NOT introduce new warning-suppression pragmas as part of
+        the remediation. Suppressions are not fixes.
    e. Apply fixes following the minimal-edit-discipline protocol
    f. Build and verify:
       - Run {{build_command}} for the affected directory
@@ -86,31 +94,18 @@ output_contract:
      - Proposed fix pattern (description, before/after, rationale)
    - Add discovered patterns to the fix instructions for future runs
 
-6. **Generate summary report**:
-
-   ```
-   ## Summary of {{warning_id}} Fixes — {{source_directories}}
-
-   ### Patterns Found and Fixed:
-   - **Pattern X** (Description):
-     - filename line#: code snippet → Fixed
-
-   ### Already Correct:
-   - filename lines: reason
-
-   ### Skipped/Deferred:
-   - filename (N instances): reason
-
-   ### Fixes Reverted (build failure):
-   - filename: error message
-
-   ### Statistics:
-   - Total instances: X fixed + Y deferred + Z reverted = N total
-   - Pattern breakdown by type
-
-   ### New Patterns Discovered:
-   - Description and proposed fix (or "None — all matched existing patterns")
-   ```
+6. **Populate the structured findings report** (using the `structured-findings`
+   format sections: Analysis Context / Findings / Findings Summary / References):
+   - **Analysis Context**: compiler/tool, version, build configuration,
+     warning ID {{warning_id}}, and {{source_directories}} in scope.
+   - **Findings**: for each instance, record file/line/snippet, the fix
+     pattern applied (or "already correct", "skipped/deferred", "reverted
+     due to build failure"). Group by pattern where helpful.
+   - **Findings Summary**: aggregate statistics — total instances, counts
+     per status (fixed / correct / deferred / reverted), pattern breakdown,
+     and any newly discovered patterns.
+   - **References**: diagnostics source (SARIF file or compiler log),
+     fix instructions consulted, and relevant documentation.
 
 ## Non-Goals
 
