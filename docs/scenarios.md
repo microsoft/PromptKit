@@ -185,25 +185,80 @@ timing deadlines, resource limits — plus a state machine appendix if
 state-driven behavior is found. Each invariant has an acceptance
 criterion and traces to a specific source location.
 
+### "Review this C++ for memory safety AND portability"
+
+You're porting a C++ library from MSVC to also build with Clang. You
+need a review that catches both real bugs and MSVC-isms that will fail
+on a standards-conforming compiler.
+
+**Template:** `review-cpp-code` · **Persona:** `systems-engineer` ·
+**Protocols:** `cpp-best-practices` + `memory-safety-c` +
+`msvc-clang-portability`
+
+**What you get:** A single review that checks 7 research-validated C++
+patterns (CPP-1 through CPP-7), 4 memory safety phases, AND 21 MSVC→Clang
+portability patterns — with every finding tagged by pattern ID, severity,
+and a specific fix. See [examples](examples.md) for a detailed walkthrough.
+
+### "Fix all the C4456 warnings in this directory"
+
+You have 200 instances of C4456 (variable shadowing) across 40 files.
+Fixing them by hand is tedious and error-prone.
+
+**Template:** `fix-compiler-warnings` · **Persona:** `systems-engineer` ·
+**Protocols:** `minimal-edit-discipline` + `compiler-diagnostics-cpp`
+
+**What you get:** Systematic, build-verified remediation where each
+fix follows specific resolution rules (rename outer variable, append
+`Outer`), every fix is validated by a build, pragma suppressions are
+removed and replaced with real fixes, and a structured findings report
+tracks what was fixed, skipped, and discovered.
+
+### "What tests should I run for my changes?"
+
+You changed three files across two components. You have no idea what
+tests exist or which ones are relevant.
+
+**Template:** `discover-tests-for-changes` · **Persona:** `test-engineer`
+
+**What you get:** A prioritized test map: which tests cover your changes,
+which gaps exist (changed code with no tests), and exact copy-pasteable
+commands — quick validation first, comprehensive second.
+
+### "Find every real bug in this kernel driver"
+
+You need a deep, adversarial review that proves coverage and survives
+challenge — not a list of surface observations with false positives.
+
+**Template:** `exhaustive-bug-hunt` · **Persona:** `systems-engineer` ·
+**Protocols:** `adversarial-falsification` + `exhaustive-path-tracing` ·
+**Taxonomy:** `kernel-defect-categories` (K1–K14)
+
+**What you get:** A forensic review where every finding includes a
+falsification proof ("why this is NOT a false positive"), every file
+has a coverage ledger proving it was fully analyzed, and rejected
+false-positive candidates are documented with their rejection reasoning.
+
+### "Extract the requirements from this RFC"
+
+You're implementing RFC 9110 (HTTP Semantics). You need every MUST,
+SHOULD, and MAY — plus the state transitions, error conditions, and
+timing constraints — as structured, testable requirements.
+
+**Template:** `extract-rfc-requirements` · **Persona:** `specification-analyst` ·
+**Protocol:** `rfc-extraction`
+
+**What you get:** A structured requirements document derived from the
+RFC, with each normative statement extracted, classified by keyword
+(MUST/SHOULD/MAY), state machines documented, ABNF grammars captured,
+and cross-RFC dependencies traced.
+
 ---
 
 ## Future Scenarios (Roadmap)
 
 These scenarios describe capabilities that are planned but not yet
 implemented. See the [roadmap](roadmap.md) for details.
-
-### "Extract the invariants from this RFC"
-
-You're implementing RFC 9110 (HTTP Semantics). You need to know every
-MUST, SHOULD, and MAY — plus the state transitions, error conditions,
-and timing constraints — as structured, testable requirements.
-
-**Planned template:** Invariant extraction ·
-**Planned persona:** `standards-analyst`
-
-**What you'd get:** A structured requirements document derived from the
-RFC, with each normative statement extracted, classified by keyword
-(MUST/SHOULD/MAY), and linked to the originating RFC section.
 
 ### "Does our implementation match the RFC?"
 

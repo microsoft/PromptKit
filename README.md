@@ -106,6 +106,10 @@ What would you like to accomplish?
 Describe your task and the LLM selects the right persona, protocols, and
 format, then assembles a complete prompt you can use in a fresh session.
 
+> **See it in action:** [Examples — From One-Liner to Engineered Prompt](docs/examples.md)
+> shows what PromptKit actually assembles for tasks like C++ code review,
+> compiler warning remediation, and adversarial bug hunting.
+
 ### Using with Claude Code
 
 ```bash
