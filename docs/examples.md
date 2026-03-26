@@ -131,7 +131,9 @@ build-verified remediation with a structured report and zero regressions.
 ### What PromptKit assembles
 
 **Template:** `review-cpp-code` · **Persona:** `systems-engineer` ·
-**Protocols:** `cpp-best-practices` + `msvc-clang-portability` ·
+**Protocols:** `anti-hallucination` + `self-verification` +
+`operational-constraints` + `cpp-best-practices` + `memory-safety-c` +
+`msvc-clang-portability` ·
 **Format:** `investigation-report`
 
 The portability protocol alone adds 21 specific patterns the LLM must
@@ -274,5 +276,6 @@ npx @alan-jowett/promptkit assemble review-cpp-code \
   -p review_focus="memory safety and portability" \
   -p context="Network buffer parser" \
   -p additional_protocols="msvc-clang-portability, thread-safety" \
+  -p audience="the code author" \
   -o review-prompt.md
 ```
