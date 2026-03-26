@@ -97,6 +97,13 @@ protocols:
         prefers deterministic analysis. Prevents over-ingestion and ensures
         reproducibility.
 
+    - name: minimal-edit-discipline
+      path: protocols/guardrails/minimal-edit-discipline.md
+      description: >
+        Constrains code modifications to be minimal, type-preserving,
+        encoding-safe, and verifiable. Prevents collateral damage from
+        automated fixes, refactoring, and code generation.
+
   analysis:
     - name: memory-safety-c
       path: protocols/analysis/memory-safety-c.md
@@ -104,6 +111,14 @@ protocols:
         Memory safety analysis for C. Covers allocation/deallocation pairing,
         pointer lifecycle, buffer boundaries, and undefined behavior.
       language: C
+
+    - name: cpp-best-practices
+      path: protocols/analysis/cpp-best-practices.md
+      description: >
+        Research-validated C++ code review patterns based on academic
+        literature and industry standards. Covers memory safety, concurrency,
+        API design, performance, error handling, code clarity, and testing.
+      language: C++
 
     - name: memory-safety-rust
       path: protocols/analysis/memory-safety-rust.md
@@ -123,6 +138,23 @@ protocols:
       description: >
         Security vulnerability analysis. Trust boundaries, input validation,
         auth, crypto, and information disclosure. Language-agnostic.
+
+    - name: win32-api-conventions
+      path: protocols/analysis/win32-api-conventions.md
+      description: >
+        Win32 API conventions analysis. Covers function naming, struct and
+        enum typedefs, parameter ordering, modern data types, const-correctness,
+        Hungarian notation avoidance, and C compatibility of SDK headers.
+      language: C
+
+    - name: performance-critical-c-api
+      path: protocols/analysis/performance-critical-c-api.md
+      description: >
+        Code review patterns for performance-critical C API design. Covers
+        flat C API enforcement, caller-controlled memory, strongly-typed
+        handles, standard portable types, UTF-8 string handling, minimal API
+        surface, and specific error codes.
+      language: C
 
   reasoning:
     - name: root-cause-analysis
@@ -230,6 +262,14 @@ protocols:
         documents from different sources into a unified specification.
         Classifies each requirement by cross-source compatibility
         (Universal, Majority, Divergent, Extension).
+
+    - name: finding-classification
+      path: protocols/reasoning/finding-classification.md
+      description: >
+        Systematic protocol for classifying findings (bugs, warnings,
+        review comments, audit results) against a known taxonomy or
+        pattern catalog. Performs three-way classification with
+        justification, confidence analysis, and catalog update proposals.
 
 formats:
   - name: requirements-doc
