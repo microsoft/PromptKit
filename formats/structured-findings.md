@@ -191,3 +191,29 @@ Omit this section if no related findings exist.>
   references F-003, then F-003 must also reference F-001.
 - The Findings Summary tables MUST be computed from the actual
   findings; do not estimate or approximate counts.
+
+### Source Fidelity
+
+Document whether source code was directly available or context was
+reconstructed from diagnostic output alone:
+
+- `Source Fidelity: Direct` — source files were directly accessed for
+  analysis. Code context is verbatim from the source.
+- `Source Fidelity: Reconstructed` — context inferred from diagnostic
+  output only (e.g., build logs without source access). Code snippets
+  may be incomplete.
+
+Include this marker in the Analysis Context section (Section 1).
+
+### Established Patterns
+
+When recommending a fix, search the codebase for existing instances of
+the same diagnostic that have already been resolved. If established
+fix patterns exist:
+
+- Include an **Established Pattern in Codebase** subsection within
+  the Recommended Fix, citing the file path and line where the pattern
+  was previously applied.
+- Align new fixes with established precedent to maintain consistency.
+- If no established pattern exists, state "No prior instances found
+  in the codebase" and document the fix as a new pattern candidate.

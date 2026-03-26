@@ -181,6 +181,16 @@ protocols:
         handling with specific resolution strategies.
       language: C++
 
+    - name: msvc-clang-portability
+      path: protocols/analysis/msvc-clang-portability.md
+      description: >
+        C++ cross-compiler portability analysis between MSVC and
+        Clang/GCC. Identifies MSVC extensions and non-standard patterns
+        that fail on standards-conforming compilers. Covers template
+        rules, const correctness, exception specs, dependent types,
+        implicit conversions, and deprecated features.
+      language: C++
+
     - name: kernel-correctness
       path: protocols/analysis/kernel-correctness.md
       description: >
@@ -659,6 +669,16 @@ templates:
       persona: systems-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints, minimal-edit-discipline]
       format: investigation-report
+
+    - name: fix-compiler-warnings
+      path: templates/fix-compiler-warnings.md
+      description: >
+        Systematic batch remediation of compiler warnings. Process
+        warnings from SARIF or compiler output, apply rule-specific
+        fix patterns, build-verify each fix, and discover new patterns.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, minimal-edit-discipline, compiler-diagnostics-cpp]
+      format: structured-findings
 
     - name: investigate-security
       path: templates/investigate-security.md
