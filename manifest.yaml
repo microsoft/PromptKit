@@ -363,6 +363,15 @@ formats:
       the desired end state, guiding principles, and transition
       considerations — not the implementation plan.
 
+  - name: structured-findings
+    path: formats/structured-findings.md
+    produces: structured-findings
+    description: >
+      Output format for structured findings documents. Transforms raw
+      diagnostic output (compiler warnings, linter results, security
+      scans) into consolidated, classified findings with root cause
+      analysis, severity assessment, and remediation guidance.
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -573,6 +582,16 @@ templates:
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
+    - name: find-and-fix-bugs
+      path: templates/find-and-fix-bugs.md
+      description: >
+        Autonomous bug-finding workflow. Scan code for a specific class
+        of bugs, apply fixes, build to verify, iterate on errors, and
+        produce a findings report.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, minimal-edit-discipline]
+      format: investigation-report
+
     - name: investigate-security
       path: templates/investigate-security.md
       description: >
@@ -593,6 +612,27 @@ templates:
       protocols: [anti-hallucination, self-verification, operational-constraints]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
+
+    - name: review-cpp-code
+      path: templates/review-cpp-code.md
+      description: >
+        C/C++ specialized code review combining general review with
+        research-validated best practices and memory safety analysis.
+        Optionally applies Win32 API or performance-critical C patterns.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, cpp-best-practices, memory-safety-c]
+      format: investigation-report
+
+  testing:
+    - name: discover-tests-for-changes
+      path: templates/discover-tests-for-changes.md
+      description: >
+        Analyze local code changes to identify affected components and
+        discover relevant tests. Finds test files near changed code,
+        checks test configuration, and recommends execution strategy.
+      persona: test-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints]
+      format: triage-report
 
   planning:
     - name: plan-implementation
