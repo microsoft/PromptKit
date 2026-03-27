@@ -76,6 +76,14 @@ personas:
       that verify every requirement and acceptance criterion. Prioritizes
       coverage breadth, negative cases, and boundary conditions.
 
+  - name: protocol-architect
+    path: personas/protocol-architect.md
+    description: >
+      Senior protocol architect. Deep expertise in protocol design,
+      evolution, and formal specification. Reasons about state machines,
+      message formats, backward compatibility, and interoperability
+      across protocol layers.
+
 protocols:
   guardrails:
     - name: anti-hallucination
@@ -323,6 +331,28 @@ protocols:
         exhaustive path tracing with cleanup/lock/refcount symmetry
         verification, and coverage ledger documentation.
 
+    - name: protocol-evolution
+      path: protocols/reasoning/protocol-evolution.md
+      description: >
+        Systematic protocol for modifying or extending existing protocol
+        specifications. Specification ingestion, change request analysis,
+        impact tracing, consistency verification, and delta generation.
+
+    - name: protocol-conflict-analysis
+      path: protocols/reasoning/protocol-conflict-analysis.md
+      description: >
+        Systematic protocol for comparing two protocol specifications.
+        Protocol decomposition, semantic overlap detection, contradiction
+        analysis, interoperability assessment, and resolution
+        recommendations.
+
+    - name: protocol-validation-design
+      path: protocols/reasoning/protocol-validation-design.md
+      description: >
+        Systematic protocol for deriving a validation specification from
+        a protocol specification. Testable property identification, test
+        case design, validation oracle definition, and coverage analysis.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -432,6 +462,27 @@ formats:
       adversarial finding templates requiring falsification proof,
       and false-positive rejection logs.
 
+  - name: protocol-delta
+    path: formats/protocol-delta.md
+    produces: protocol-delta
+    consumes: requirements-document
+    description: >
+      Protocol specification amendment format. Supports amendment
+      (section-by-section changes), redline (tracked changes), and
+      standalone (revised specification) presentation styles. Tracks
+      normative language changes, backward compatibility, and
+      cross-reference updates.
+
+  - name: protocol-validation-spec
+    path: formats/protocol-validation-spec.md
+    produces: protocol-validation-spec
+    consumes: requirements-document
+    description: >
+      Protocol validation specification format. Structures conformance
+      tests around state machine coverage, message format verification,
+      error handling, negotiation, interoperability scenarios, and
+      validation tool requirements.
+
 taxonomies:
   - name: stack-lifetime-hazards
     path: taxonomies/stack-lifetime-hazards.md
@@ -468,6 +519,16 @@ taxonomies:
       Covers lock leaks, refcount imbalances, cleanup omissions, lifetime
       bugs, integer arithmetic errors, state machine races, accounting
       mismatches, and security boundary mistakes.
+
+  - name: protocol-change-categories
+    path: taxonomies/protocol-change-categories.md
+    domain: protocol-engineering
+    description: >
+      Classification scheme (PC1-PC8) for protocol specification changes.
+      Categorizes changes by impact on existing implementations and
+      interoperability: editorial, clarification, backward-compatible
+      extension, optional behavior change, state machine modification,
+      message format change, security-impacting, and deprecation/removal.
 
 templates:
   document-authoring:
@@ -849,6 +910,38 @@ templates:
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
 
+  protocol-engineering:
+    - name: evolve-protocol
+      path: templates/evolve-protocol.md
+      description: >
+        Interactive protocol evolution session. Ingests an existing protocol
+        specification, works with the user to design modifications, traces
+        impact, verifies consistency, and produces a protocol delta document.
+      persona: protocol-architect
+      protocols: [anti-hallucination, self-verification, protocol-evolution]
+      taxonomies: [protocol-change-categories]
+      format: protocol-delta
+
+    - name: analyze-protocol-conflicts
+      path: templates/analyze-protocol-conflicts.md
+      description: >
+        Compare two protocol specifications to identify semantic conflicts,
+        incompatible assumptions, and interoperability hazards. Produces
+        an investigation report with resolution recommendations.
+      persona: protocol-architect
+      protocols: [anti-hallucination, self-verification, protocol-conflict-analysis]
+      format: investigation-report
+
+    - name: author-protocol-validation
+      path: templates/author-protocol-validation.md
+      description: >
+        Derive a protocol validation specification from a protocol spec.
+        Produces a test blueprint covering state machine coverage, message
+        format conformance, error handling, and interoperability scenarios.
+      persona: protocol-architect
+      protocols: [anti-hallucination, self-verification, protocol-validation-design]
+      format: protocol-validation-spec
+
 pipelines:
   document-lifecycle:
     description: >
@@ -865,4 +958,22 @@ pipelines:
         produces: validation-plan
       - template: audit-traceability
         consumes: [requirements-document, validation-plan]
+        produces: investigation-report
+
+  protocol-engineering:
+    description: >
+      Protocol specification lifecycle from requirements extraction
+      through evolution and validation. Each stage produces an artifact
+      that can be consumed by subsequent stages.
+    stages:
+      - template: extract-rfc-requirements
+        produces: requirements-document
+      - template: evolve-protocol
+        consumes: requirements-document
+        produces: protocol-delta
+      - template: author-protocol-validation
+        consumes: requirements-document
+        produces: protocol-validation-spec
+      - template: analyze-protocol-conflicts
+        consumes: requirements-document
         produces: investigation-report
