@@ -202,9 +202,13 @@ performance testing.>
 
 ## Formatting Rules
 
-- Every test MUST reference at least one requirement (REQ-ID).
-- Every MUST requirement MUST have at least one test. SHOULD and MAY
-  requirements SHOULD have tests but may be deferred with justification.
+- When a requirements document with REQ-IDs is provided, every test MUST
+  reference at least one requirement (REQ-ID). When no such document is
+  provided, every test MUST instead cite the relevant protocol specification
+  section(s) and the normative statement being validated.
+- When requirements with REQ-IDs exist, every MUST requirement MUST have at
+  least one test. SHOULD and MAY requirements SHOULD have tests but may be
+  deferred with justification.
 - Tests MUST include both positive (valid input → correct behavior) and
   negative (invalid input → correct rejection/error) cases.
 - The state coverage matrix MUST have no empty cells — every

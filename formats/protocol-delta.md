@@ -47,16 +47,17 @@ in this delta.>
 
 <Table summarizing all changes:
 
-| Change ID | Section | Category | Summary | Severity |
-|-----------|---------|----------|---------|----------|
-| CHG-001   | 3.4     | PC5      | Add CLOSING state | High |
-| CHG-002   | 4.1     | PC2      | Clarify idle timeout measurement | Low |>
+| Change ID | Section | Category                       | Summary                          | Severity |
+|-----------|---------|--------------------------------|----------------------------------|----------|
+| CHG-001   | 3.4     | PC5_STATE_MACHINE_MODIFICATION | Add CLOSING state                | High     |
+| CHG-002   | 4.1     | PC2_CLARIFICATION              | Clarify idle timeout measurement | Low      |>
 
 ## 4. Detailed Changes
 
 ### CHG-<NNN>: <Short Title>
 - **Section**: <section number(s) in the base specification>
-- **Category**: <PC1–PC8 from protocol-change-categories taxonomy>
+- **Category**: <full label from protocol-change-categories taxonomy,
+  e.g., PC5_STATE_MACHINE_MODIFICATION>
 - **Normative keyword changes**: <e.g., SHOULD → MUST, new MUST added,
   none>
 - **Rationale**: <why this change is needed — reference to errata, bug
