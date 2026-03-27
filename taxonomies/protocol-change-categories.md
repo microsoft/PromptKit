@@ -135,10 +135,11 @@ interoperability.
 
 A change that affects the protocol's security properties — adding or
 removing authentication, changing cryptographic algorithms, modifying
-trust boundaries, or altering the threat model. This label may co-occur
-with other categories (e.g., a security-impacting state machine change
-would be labeled PC5 for its structural impact and flagged as PC7 for
-its security implications).
+trust boundaries, or altering the threat model. When a change has both
+structural and security impact (for example, a security-impacting state
+machine change), choose the single label that best reflects its primary
+impact and document the security implications explicitly in the
+description.
 
 **Examples**: Deprecating a cipher suite, requiring authentication
 where it was previously optional, adding a new security consideration,

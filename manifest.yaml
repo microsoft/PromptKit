@@ -963,17 +963,14 @@ pipelines:
   protocol-engineering:
     description: >
       Protocol specification lifecycle from requirements extraction
-      through evolution and validation. Each stage produces an artifact
-      that can be consumed by subsequent stages.
+      through evolution and validation. Stages after extraction can
+      be used independently or sequentially.
     stages:
       - template: extract-rfc-requirements
         produces: requirements-document
       - template: evolve-protocol
-        consumes: requirements-document
         produces: protocol-delta
       - template: author-protocol-validation
-        consumes: requirements-document
         produces: protocol-validation-spec
       - template: analyze-protocol-conflicts
-        consumes: requirements-document
         produces: investigation-report

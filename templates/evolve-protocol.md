@@ -15,6 +15,7 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - reasoning/protocol-evolution
+taxonomies: [protocol-change-categories]
 format: protocol-delta
 params:
   protocol_name: "Name of the protocol being modified — e.g., 'TCP', 'QUIC', 'CoAP'"
@@ -23,13 +24,7 @@ params:
   change_goals: "High-level description of what the user wants to change and why"
   requirements_doc: "Optional — a structured requirements document (from extract-rfc-requirements) for the base spec"
   output_style: "Presentation style for the delta: 'amendment' (section-by-section changes), 'redline' (tracked changes), or 'standalone' (revised specification). Default: amendment"
-input_contract:
-  type: requirements-document
-  description: >
-    Optionally accepts a structured requirements document extracted from
-    the base specification (e.g., from extract-rfc-requirements). When
-    provided, enables precise tracking of which requirements are affected
-    by each change.
+input_contract: null
 output_contract:
   type: protocol-delta
   description: >

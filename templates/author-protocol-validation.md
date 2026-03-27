@@ -23,12 +23,7 @@ params:
   validation_scope: "Optional narrowing — e.g., 'connection establishment only', 'error handling', 'full protocol' (default: full protocol)"
   validation_objective: "What the validation spec will be used for — e.g., 'building an automated conformance test tool', 'manual test plan for interop testing', 'LLM-driven test generation'"
   audience: "Who will read the output — e.g., 'test engineers building a conformance tool', 'protocol implementers', 'LLM generating test code'"
-input_contract:
-  type: requirements-document
-  description: >
-    Optionally accepts a structured requirements document extracted from
-    the protocol specification (from extract-rfc-requirements). When
-    provided, enables precise requirement-to-test traceability.
+input_contract: null
 output_contract:
   type: protocol-validation-spec
   description: >

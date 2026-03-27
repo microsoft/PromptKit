@@ -22,12 +22,7 @@ params:
   comparison_focus: "Optional narrowing — e.g., 'congestion control only', 'security model', 'connection establishment' (default: full comparison)"
   context: "Why these protocols are being compared — e.g., 'evaluating migration from A to B', 'designing a gateway', 'co-deploying on the same network'"
   audience: "Who will read the output — e.g., 'protocol implementers', 'standards body working group', 'engineering leadership'"
-input_contract:
-  type: requirements-document
-  description: >
-    Optionally accepts requirements documents for one or both protocols
-    (from extract-rfc-requirements). When provided, enables
-    requirement-level conflict tracing.
+input_contract: null
 output_contract:
   type: investigation-report
   description: >
@@ -77,8 +72,8 @@ interoperability hazards.
    excluded.
 
 4. **Classify every overlap** (Phase 2) as COMPATIBLE,
-   CONDITIONALLY_COMPATIBLE, CONFLICTING, or AMBIGUOUS. Do NOT under-
-   report conflicts — it is better to flag a potential conflict for
+   CONDITIONALLY_COMPATIBLE, CONFLICTING, or AMBIGUOUS. Do NOT underreport
+   conflicts — it is better to flag a potential conflict for
    human review than to silently dismiss it.
 
 5. **For CONFLICTING and AMBIGUOUS overlaps**, perform deep
