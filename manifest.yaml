@@ -76,6 +76,14 @@ personas:
       that verify every requirement and acceptance criterion. Prioritizes
       coverage breadth, negative cases, and boundary conditions.
 
+  - name: embedded-firmware-engineer
+    path: personas/embedded-firmware-engineer.md
+    description: >
+      Senior embedded firmware engineer. Deep expertise in boot sequences,
+      flash memory management, OTA updates, power-fail-safe operations,
+      watchdog timers, and device recovery mechanisms. Reasons about every
+      failure mode at every execution point.
+
   - name: protocol-architect
     path: personas/protocol-architect.md
     description: >
@@ -352,6 +360,14 @@ protocols:
         Systematic protocol for deriving a validation specification from
         a protocol specification. Testable property identification, test
         case design, validation oracle definition, and coverage analysis.
+
+    - name: spec-invariant-audit
+      path: protocols/reasoning/spec-invariant-audit.md
+      description: >
+        Systematic adversarial analysis of a specification against
+        user-supplied invariants. Constructs compliant-but-violating
+        interpretations to find spec gaps, ambiguities, contradictions,
+        and missing recovery paths.
 
 formats:
   - name: requirements-doc
@@ -642,6 +658,17 @@ templates:
       taxonomies: [specification-drift]
       format: investigation-report
       requires: requirements-document
+
+    - name: audit-spec-invariants
+      path: templates/audit-spec-invariants.md
+      description: >
+        Adversarial analysis of a specification against user-supplied
+        invariants. Finds spec gaps, ambiguities, and contradictions
+        that could lead to invariant violations in any conforming
+        implementation.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, spec-invariant-audit]
+      format: investigation-report
 
   standards:
     - name: extract-rfc-requirements
