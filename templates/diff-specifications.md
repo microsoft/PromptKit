@@ -63,8 +63,10 @@ change by its type and impact on existing implementations.
 
 2. **Phase 1 is the foundation.** Extract invariants from both versions
    thoroughly. The quality of the diff depends entirely on the quality
-   of the extraction. Use the invariant-extraction methodology for each
-   version.
+   of the extraction. For each version, systematically identify all
+   normative requirements, state machines and transitions, constraints,
+   error-handling behaviors, and guarantees that must hold across all
+   compliant implementations.
 
 3. **Be precise about keyword strength changes.** A change from SHOULD
    to MUST is a tightening that may break existing implementations. A
@@ -81,26 +83,32 @@ change by its type and impact on existing implementations.
      [ASSUMED] (depends on unstated context)
 
 5. **Format the output** according to the investigation-report format
-   with these diff-specific additions:
+   and its required per-finding fields (Severity, Category, Location,
+   Evidence, Root Cause, Remediation, Confidence). The items below are
+   **additional diff-specific details** and must not replace or remove
+   any of the required investigation-report fields:
    - In the **Executive Summary**, state the total number of changes
      by type (N added, N removed, N tightened, N relaxed, N modified,
      N clarified) and the number of backward-incompatible changes
    - In the primary **Findings** section, maintain severity ordering
      (Critical first) as required by the investigation-report format.
      Each finding represents one change between versions.
-   - For each finding, include:
+   - For each finding, in addition to the required investigation-report
+     per-finding fields, capture these diff-specific details (as
+     sub-bullets under the corresponding required fields):
      - **Change type**: Added / Removed / Tightened / Relaxed /
-       Modified / Clarified
+       Modified / Clarified (under **Category**)
      - **Old text**: The invariant from the old version (or "N/A —
-       new requirement" for ADDED)
+       new requirement" for ADDED) (under **Evidence**)
      - **New text**: The invariant from the new version (or "N/A —
-       removed" for REMOVED)
+       removed" for REMOVED) (under **Evidence**)
      - **Compatibility verdict**: Backward-compatible / Conditionally
-       compatible / Backward-incompatible
+       compatible / Backward-incompatible (under **Impact**)
      - **Migration action**: What implementors must do (if any)
-   - Include an **Invariant Alignment Appendix** after the main
-     sections: a table mapping old invariants to new invariants
-     showing the change type for each pair
+       (under **Remediation**)
+   - Within **4. Findings**, add a subsection `### Invariant Alignment
+     Appendix` after the findings list: a table mapping old invariants
+     to new invariants showing the change type for each pair
    - In the **Remediation Plan**, present migration items ordered by
      risk, not by spec section order
 

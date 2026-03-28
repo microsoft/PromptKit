@@ -24,8 +24,8 @@ every change by its impact on existing implementations and tests.
 
 Extract the invariant set from each specification version.
 
-1. **For each version** (old and new), apply the invariant-extraction
-   methodology (Phases 1–5 from the `invariant-extraction` protocol):
+1. **For each version** (old and new), systematically extract all
+   enforceable invariants by scanning every normative section:
    - Value constraints (bounds, ranges, sizes)
    - Behavioral constraints (required/prohibited behaviors)
    - Ordering constraints (sequencing requirements)
