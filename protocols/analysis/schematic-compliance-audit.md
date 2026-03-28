@@ -109,11 +109,15 @@ verify electrical correctness.
    - Flow control lines (RTS/CTS) connected if required
 
 4. **USB**:
-   - D+ and D- routed as a differential pair
+   - D+ and D- nets correctly connected end-to-end between USB
+     connector, any protection/series components, and the USB
+     transceiver (no unintended stubs)
    - ESD protection present at the connector
    - Termination/pull-up per USB specification for the target speed
    - VBUS detection circuit if required
    - Shield/ground connection at connector
+   - **Layout carry-forward**: differential routing and impedance
+     control for D+/D- must be verified during PCB layout review
 
 5. **Other buses** (CAN, 1-Wire, Ethernet, etc.):
    - Bus-specific termination present
@@ -128,7 +132,11 @@ Verify that protection circuits are present where required.
    antenna, sensor headers, debug ports). Verify:
    - TVS or ESD protection IC present
    - Clamping voltage below the protected IC's absolute maximum rating
-   - Placement close to the connector (before any series components)
+   - Connected directly on the connector signal nets in the schematic
+     topology (no unintended series components between connector and
+     ESD device)
+   - **Layout carry-forward**: place ESD devices physically close to
+     the connector; verify during PCB layout review
 
 2. **Reverse polarity protection**: Required on battery input and
    any external DC power input. Verify:

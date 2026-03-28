@@ -112,7 +112,10 @@ datasheets.
 
 ## Non-Goals
 
-- Do NOT review PCB layout — this is schematic-level analysis only
+- Do NOT perform a full PCB layout review — this is schematic-level
+  analysis. However, note layout-critical constraints (differential
+  routing, ESD placement, decoupling proximity) as carry-forward
+  items for layout review.
 - Do NOT evaluate component sourcing or cost — this is electrical
   correctness only
 - Do NOT perform circuit simulation — this is static analysis of
