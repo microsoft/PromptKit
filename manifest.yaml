@@ -517,6 +517,15 @@ formats:
       xml2rfc toolchain. Covers front matter, normative sections, ABNF,
       state machines, security/IANA considerations, and references.
 
+  - name: behavioral-model
+    path: formats/behavioral-model.md
+    produces: behavioral-model
+    description: >
+      Output format for reconstructed behavioral models. State machines
+      with diagrams and transition tables, control/signal flow graphs,
+      implicit invariants, and undefined behavior catalogs. Supports
+      code, schematics, configurations, and protocol captures.
+
   - name: architecture-spec
     path: formats/architecture-spec.md
     produces: architecture-spec
@@ -869,6 +878,17 @@ templates:
       protocols: [anti-hallucination, self-verification, adversarial-falsification, exhaustive-path-tracing]
       taxonomies: [kernel-defect-categories]
       format: exhaustive-review-report
+
+    - name: reconstruct-behavior
+      path: templates/reconstruct-behavior.md
+      description: >
+        Reconstruct a behavioral model from an existing engineering
+        artifact. Extracts state machines, control/signal flow, and
+        implicit invariants from code, schematics, configurations, or
+        protocol captures.
+      persona: reverse-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, invariant-extraction]
+      format: behavioral-model
 
   testing:
     - name: discover-tests-for-changes
