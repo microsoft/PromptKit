@@ -18,7 +18,7 @@ protocols:
 format: behavioral-model
 params:
   system_name: "Name of the system or component being analyzed"
-  artifact_type: "Type of artifact: 'code', 'schematic', 'netlist', 'configuration', 'protocol-capture', 'firmware-image', or 'mixed'"
+  artifact_type: "Type of artifact: 'code', 'schematic', 'netlist', 'configuration', 'protocol capture', 'firmware image', or 'mixed'"
   artifact_content: "The artifact to analyze — source code, netlist text, configuration file, capture log, etc."
   context: "Additional context — what the system does, known operating modes, related documentation"
   focus_areas: "Optional narrowing — e.g., 'power state machine only', 'I2C bus interactions', 'error handling flow' (default: extract all)"

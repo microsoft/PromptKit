@@ -11,6 +11,7 @@ description: >
   of what a full requirements extraction would produce.
 applicable_to:
   - extract-invariants
+  - reconstruct-behavior
 ---
 
 # Protocol: Invariant Extraction

@@ -20,7 +20,7 @@ no content, state "None identified" with a brief justification.
 
 ## Document Structure
 
-```markdown
+````markdown
 # <System/Component Name> — Behavioral Model
 
 ## 1. Overview
@@ -144,7 +144,7 @@ Map extracted model elements back to source artifact locations.
 
 ## 9. Revision History
 <Table: | Version | Date | Author | Changes |>
-```
+````
 
 ## Formatting Rules
 
