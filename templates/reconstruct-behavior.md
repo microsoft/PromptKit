@@ -84,9 +84,11 @@ implements but does not explicitly document.
      compose the results.
 
 2. **Apply the invariant-extraction protocol** to systematically
-   extract constraints, state machines, and error conditions. The
-   protocol provides the core extraction methodology — follow all
-   its phases.
+   extract constraints, state machines, and error conditions. Use its
+   extraction phases (Phases 1–4) for the core methodology, but
+   **ignore** its output structuring phase (Phase 5) — this template's
+   behavioral-model format and its SM/INV/UB IDs take precedence for
+   structuring the final output, not REQ-IDs.
 
 3. **Go beyond invariant extraction** to reconstruct the full
    behavioral model:

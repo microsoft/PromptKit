@@ -524,7 +524,8 @@ formats:
       Output format for reconstructed behavioral models. State machines
       with diagrams and transition tables, control/signal flow graphs,
       implicit invariants, and undefined behavior catalogs. Supports
-      code, schematics, configurations, and protocol captures.
+      code, schematics, netlists, firmware images, configurations,
+      and protocol captures.
 
   - name: architecture-spec
     path: formats/architecture-spec.md
@@ -884,8 +885,8 @@ templates:
       description: >
         Reconstruct a behavioral model from an existing engineering
         artifact. Extracts state machines, control/signal flow, and
-        implicit invariants from code, schematics, configurations, or
-        protocol captures.
+        implicit invariants from code, schematics, netlists,
+        configurations, firmware images, or protocol captures.
       persona: reverse-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints, invariant-extraction]
       format: behavioral-model
