@@ -34,8 +34,8 @@ The output MUST be a complete XML document with this skeleton:
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
      ipr="trust200902"
-     docName="draft-<author>-<topic>-<version>"
-     category="<std|info|exp|bcp>"
+     docName="draft-{author}-{topic}-{version}"
+     category="{std|info|exp|bcp}"
      submissionType="IETF"
      version="3">
 
@@ -58,31 +58,31 @@ The output MUST be a complete XML document with this skeleton:
 
 ```xml
 <front>
-  <title abbrev="<Short Title>"><Full Document Title></title>
+  <title abbrev="{Short Title}">{Full Document Title}</title>
 
   <seriesInfo name="Internet-Draft"
-              value="draft-<author>-<topic>-<version>"/>
+              value="draft-{author}-{topic}-{version}"/>
 
-  <author initials="<X.>" surname="<Surname>"
-          fullname="<Full Name>">
-    <organization><Org Name></organization>
+  <author initials="{X.}" surname="{Surname}"
+          fullname="{Full Name}">
+    <organization>{Org Name}</organization>
     <address>
-      <email><email@example.com></email>
+      <email>{email@example.com}</email>
     </address>
   </author>
 
-  <date year="<YYYY>" month="<Month>" day="<DD>"/>
+  <date year="{YYYY}" month="{Month}" day="{DD}"/>
 
-  <area><IETF Area></area>
-  <workgroup><Working Group></workgroup>
+  <area>{IETF Area}</area>
+  <workgroup>{Working Group}</workgroup>
 
-  <keyword><keyword1></keyword>
-  <keyword><keyword2></keyword>
+  <keyword>{keyword1}</keyword>
+  <keyword>{keyword2}</keyword>
 
   <abstract>
     <t>
-      <Abstract text — 1-3 paragraphs summarizing the document's
-       purpose, scope, and key contributions.>
+      {Abstract text — 1-3 paragraphs summarizing the document's
+       purpose, scope, and key contributions.}
     </t>
   </abstract>
 </front>
@@ -116,20 +116,20 @@ Sections MUST be numbered and use nested `<section>` elements:
   </section>
 
   <section anchor="<topic>">
-    <name><Section Title></name>
-    <t><Body text...></t>
+    <name>{Section Title}</name>
+    <t>{Body text...}</t>
   </section>
 
   <!-- Additional sections as needed -->
 
   <section anchor="security">
     <name>Security Considerations</name>
-    <t><Security analysis — MUST NOT be empty.></t>
+    <t>{Security analysis — MUST NOT be empty.}</t>
   </section>
 
   <section anchor="iana">
     <name>IANA Considerations</name>
-    <t><IANA registry actions, or "This document has no IANA actions."</t>
+    <t>{IANA registry actions, or "This document has no IANA actions."}</t>
   </section>
 </middle>
 ```
@@ -159,7 +159,7 @@ Sections MUST be numbered and use nested `<section>` elements:
   <!-- Appendices (if any) -->
   <section anchor="appendix-a">
     <name>Appendix Title</name>
-    <t><Appendix content></t>
+    <t>{Appendix content}</t>
   </section>
 </back>
 ```
