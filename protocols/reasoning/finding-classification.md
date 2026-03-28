@@ -9,8 +9,7 @@ description: >
   review comments, audit results) against a known taxonomy or
   pattern catalog. Performs three-way classification with
   justification, confidence analysis, and catalog update proposals.
-applicable_to:
-  - classify-findings
+applicable_to: []
 ---
 
 # Protocol: Finding Classification
