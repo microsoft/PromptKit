@@ -704,7 +704,7 @@ templates:
         Compare two versions of a specification at the invariant level.
         Classify each change by type (Added, Removed, Tightened, Relaxed,
         Modified, Clarified) and backward-compatibility impact. Produce
-        migration guidance for implementors.
+        migration guidance for implementers.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, spec-evolution-diff]
       format: investigation-report

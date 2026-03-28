@@ -7,7 +7,7 @@ description: >
   Compare two versions of a specification at the invariant level.
   Extract invariants from both, classify each change by type and
   backward-compatibility impact, and produce migration guidance
-  for implementors and test authors.
+  for implementers and test authors.
 persona: specification-analyst
 protocols:
   - guardrails/anti-hallucination
@@ -22,7 +22,7 @@ params:
   new_version_id: "Identifier for the new version — e.g., 'v2.1', 'RFC 1234bis', 'draft-04'"
   context: "Additional context — what the specification governs, known implementation landscape, migration constraints"
   focus_areas: "Optional — specific areas to prioritize (e.g., 'state machine changes', 'security requirements', 'error handling'). Default: all"
-  audience: "Who will read the output — e.g., 'implementors planning migration', 'spec authors reviewing a draft', 'test engineers updating test suites'"
+  audience: "Who will read the output — e.g., 'implementers planning migration', 'spec authors reviewing a draft', 'test engineers updating test suites'"
 input_contract: null
 output_contract:
   type: investigation-report
@@ -30,7 +30,7 @@ output_contract:
     An investigation report where each finding is a semantic change
     between specification versions, classified by type (Added, Removed,
     Tightened, Relaxed, Modified, Clarified) and backward-compatibility
-    impact, with migration guidance for implementors.
+    impact, with migration guidance for implementers.
 ---
 
 # Task: Diff Specification Versions
@@ -83,10 +83,11 @@ change by its type and impact on existing implementations.
      [ASSUMED] (depends on unstated context)
 
 5. **Format the output** according to the investigation-report format
-   and its required per-finding fields (Severity, Category, Location,
-   Evidence, Root Cause, Remediation, Confidence). The items below are
-   **additional diff-specific details** and must not replace or remove
-   any of the required investigation-report fields:
+   and its required per-finding fields (Description, Impact, Severity,
+   Category, Location, Evidence, Root Cause, Remediation, Confidence)
+   as defined by the investigation-report format schema. The items
+   below are **additional diff-specific details** and must not replace
+   or remove any of the required investigation-report fields:
    - In the **Executive Summary**, state the total number of changes
      by type (N added, N removed, N tightened, N relaxed, N modified,
      N clarified) and the number of backward-incompatible changes
@@ -104,10 +105,9 @@ change by its type and impact on existing implementations.
        removed" for REMOVED) (under **Evidence**)
      - **Compatibility verdict**: Backward-compatible / Conditionally
        compatible / Backward-incompatible (under **Impact**)
-     - **Migration action**: What implementors must do (if any)
+     - **Migration action**: What implementers must do (if any)
        (under **Remediation**)
-   - Within **4. Findings**, add a subsection `### Invariant Alignment
-     Appendix` after the findings list: a table mapping old invariants
+   - Within **4. Findings**, add a subsection `### Invariant Alignment Appendix` after the findings list: a table mapping old invariants
      to new invariants showing the change type for each pair
    - In the **Remediation Plan**, present migration items ordered by
      risk, not by spec section order
