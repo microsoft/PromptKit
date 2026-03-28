@@ -507,6 +507,16 @@ formats:
       error handling, negotiation, interoperability scenarios, and
       validation tool requirements.
 
+  - name: rfc-document
+    path: formats/rfc-document.md
+    produces: rfc-document
+    consumes: requirements-document
+    description: >
+      RFC and internet-draft output format using the xml2rfc Version 3
+      vocabulary (RFC 7991). Produces structurally valid XML for the
+      xml2rfc toolchain. Covers front matter, normative sections, ABNF,
+      state machines, security/IANA considerations, and references.
+
   - name: architecture-spec
     path: formats/architecture-spec.md
     produces: architecture-spec
@@ -740,6 +750,16 @@ templates:
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, invariant-extraction]
       format: requirements-doc
+
+    - name: author-rfc
+      path: templates/author-rfc.md
+      description: >
+        Author an RFC or internet-draft using the xml2rfc Version 3
+        vocabulary. Produces structurally valid xml2rfc XML from a
+        project description, protocol design, or requirements document.
+      persona: protocol-architect
+      protocols: [anti-hallucination, self-verification]
+      format: rfc-document
 
   code-generation:
     - name: author-implementation-prompt
