@@ -25,7 +25,7 @@ no content, state "None identified" with a brief justification.
 
 ## 1. Overview
 <2–4 sentences: what artifact was analyzed, what type of artifact it is
-(code, schematic, configuration, protocol capture, firmware image),
+(code, schematic, netlist, configuration, protocol capture, firmware image, mixed),
 and the scope of the reconstructed model.>
 
 ## 2. Artifact Summary

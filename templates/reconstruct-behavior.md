@@ -84,11 +84,17 @@ implements but does not explicitly document.
      compose the results.
 
 2. **Apply the invariant-extraction protocol** to systematically
-   extract constraints, state machines, and error conditions. Use its
-   extraction phases (Phases 1–4) for the core methodology, but
-   **ignore** its output structuring phase (Phase 5) — this template's
-   behavioral-model format and its SM/INV/UB IDs take precedence for
-   structuring the final output, not REQ-IDs.
+   extract constraints, state machines, and error conditions.
+   - Use its extraction phases (Phases 1–4) for the core methodology.
+   - Use its Phase 6 coverage checks to inform the behavioral model's
+     completeness analysis and confidence ratings.
+   - **Ignore** its output-structuring guidance in Phases 5 and 6
+     (REQ-IDs, requirements sections, summary format) — this
+     template's behavioral-model format and its SM/INV/UB IDs take
+     precedence for structuring the final output.
+   - The protocol's Phase 1 classifies artifacts as "spec" or "code".
+     For other artifact types (schematics, configs, captures), the
+     classification in instruction 1 above takes precedence.
 
 3. **Go beyond invariant extraction** to reconstruct the full
    behavioral model:
