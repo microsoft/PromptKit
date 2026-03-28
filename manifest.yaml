@@ -84,6 +84,14 @@ personas:
       watchdog timers, and device recovery mechanisms. Reasons about every
       failure mode at every execution point.
 
+  - name: electrical-engineer
+    path: personas/electrical-engineer.md
+    description: >
+      Senior electrical engineer. Deep expertise in power delivery,
+      signal integrity, PCB design, component selection, and schematic
+      review. Thinks in voltage domains and current paths. Conservative
+      about datasheet margins.
+
   - name: protocol-architect
     path: personas/protocol-architect.md
     description: >
@@ -215,6 +223,15 @@ protocols:
         interlocked sequences, charge/uncharge accounting, and known-safe
         kernel pattern suppression.
       language: C
+
+    - name: schematic-compliance-audit
+      path: protocols/analysis/schematic-compliance-audit.md
+      description: >
+        Systematic schematic review protocol. Audits a netlist or
+        schematic against requirements and datasheet specifications.
+        Covers power architecture, pin-level verification, bus
+        integrity, protection circuits, power sequencing, passive
+        components, and completeness.
 
   reasoning:
     - name: root-cause-analysis
@@ -890,6 +907,17 @@ templates:
       persona: reverse-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints, invariant-extraction]
       format: behavioral-model
+
+    - name: review-schematic
+      path: templates/review-schematic.md
+      description: >
+        Audit a schematic or netlist against requirements and component
+        datasheets. Checks power architecture, pin-level correctness,
+        bus integrity, protection circuits, power sequencing, passive
+        components, and completeness.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, schematic-compliance-audit]
+      format: investigation-report
 
   testing:
     - name: discover-tests-for-changes
