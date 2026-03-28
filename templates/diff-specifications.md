@@ -74,7 +74,9 @@ change by its type and impact on existing implementations.
    compliance expectations. Track these meticulously.
 
 4. **Apply the anti-hallucination protocol** throughout:
-   - Every change must cite specific text from both spec versions
+   - Every change must cite specific text from the spec version(s)
+     that contain the invariant. For ADDED changes, cite the new
+     version only. For REMOVED changes, cite the old version only.
    - Do NOT invent spec text or requirements that are not present
    - If you cannot determine whether a change is tightening or
      relaxing, classify it as MODIFIED and explain the ambiguity
@@ -98,7 +100,9 @@ change by its type and impact on existing implementations.
      per-finding fields, capture these diff-specific details (as
      sub-bullets under the corresponding required fields):
      - **Change type**: Added / Removed / Tightened / Relaxed /
-       Modified / Clarified (under **Category**)
+       Modified / Clarified (under **Category**). Use subtypes from
+       the protocol (e.g., ADDED_MUST, REMOVED_WITHOUT_REPLACEMENT)
+       when the distinction is clear.
      - **Old text**: The invariant from the old version (or "N/A —
        new requirement" for ADDED) (under **Evidence**)
      - **New text**: The invariant from the new version (or "N/A —
