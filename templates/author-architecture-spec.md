@@ -21,7 +21,6 @@ params:
   technical_context: "Existing architecture, platform targets, tech stack, team conventions, and known constraints"
   requirements_doc: "(Optional) A requirements document to trace architectural decisions back to"
   audience: "Who will read the output — e.g., 'peer architects', 'development team', 'architecture review board'"
-input_contract:
 input_contract: null
 output_contract:
   type: architecture-spec
@@ -60,8 +59,8 @@ component or system described below.
 2. **Apply the anti-hallucination protocol.** Do NOT invent technical
    constraints, platform capabilities, or protocol features that are
    not stated or directly inferable from the inputs. If information
-   is missing, state it as an assumption in Section 4 or as an open
-   question — do not fabricate.
+   is missing, state it as an assumption in Section 4 and/or mark it
+   as [UNKNOWN] — do not fabricate.
 
 3. **Format the output** according to the architecture-spec format
    specification.

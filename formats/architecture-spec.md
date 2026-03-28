@@ -150,7 +150,7 @@ key security properties.>
 #### 6.2.3 Offloads
 - Hardware or software offload opportunities
 - What is offloaded vs. handled in software
-- Rationale for offload decisions>
+- Rationale for offload decisions
 
 ### 6.3 Management
 <Operational management:
