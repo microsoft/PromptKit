@@ -213,7 +213,7 @@ Classify and present each finding.
      interpretation
    - **Disproof attempt**: What you checked to try to disprove this
      finding, and why disproof failed
-   - **Confidence**: Confirmed / High-confidence / Needs-domain-check
+   - **Confidence**: High / Medium / Low (per investigation-report format)
    - **Suggested remediation**: How the spec could be amended to close
      the gap
 

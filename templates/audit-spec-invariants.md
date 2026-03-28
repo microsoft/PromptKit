@@ -80,12 +80,19 @@ build it that way.
 
 5. **Format the output** according to the investigation-report format
    with these audit-specific additions:
-   - Group findings by invariant violated
+   - In the primary **Findings** section, maintain severity ordering as
+     required by the investigation-report format (Critical first, then
+     High, Medium, Low). Within each severity bucket, clearly label
+     which invariant each finding violates.
    - For each finding, include the **violating interpretation** — a
      step-by-step description of a compliant implementation that
      triggers the violation
    - Include a **coverage matrix**: invariants × spec sections, showing
      which combinations were analyzed and which produced findings
+   - You may add an appendix that regroups the same findings by invariant
+     violated for cross-reference. Do not introduce new findings in the
+     appendix; it must only re-present findings already listed in the
+     severity-ordered Findings section.
 
 6. **Prioritize findings** by severity:
    - **Critical**: A straightforward reading of the spec permits an
