@@ -369,6 +369,14 @@ protocols:
         interpretations to find spec gaps, ambiguities, contradictions,
         and missing recovery paths.
 
+    - name: spec-evolution-diff
+      path: protocols/reasoning/spec-evolution-diff.md
+      description: >
+        Systematic methodology for comparing two versions of a
+        specification at the invariant level. Extracts invariants
+        from both versions, classifies each delta by type and
+        backward-compatibility impact, and produces migration guidance.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -688,6 +696,17 @@ templates:
         implementation.
       persona: configurable
       protocols: [anti-hallucination, self-verification, spec-invariant-audit]
+      format: investigation-report
+
+    - name: diff-specifications
+      path: templates/diff-specifications.md
+      description: >
+        Compare two versions of a specification at the invariant level.
+        Classify each change by type (Added, Removed, Tightened, Relaxed,
+        Modified, Clarified) and backward-compatibility impact. Produce
+        migration guidance for implementors.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, spec-evolution-diff]
       format: investigation-report
 
   standards:
