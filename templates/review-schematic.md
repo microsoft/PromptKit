@@ -74,14 +74,16 @@ datasheets.
    - If a datasheet excerpt is missing for a component, flag it as
      a limitation — do not fabricate datasheet values
    - Distinguish between [KNOWN] (stated in schematic or datasheet),
-     [INFERRED] (derived from standard practice), and [ASSUMED]
+     [INFERRED] (derived from standard practice), and [ASSUMPTION]
      (depends on information not provided)
 
 4. **Format the output** according to the investigation-report format:
-   - Group findings by the protocol phase that discovered them
+   - List all findings in a single **Findings** section ordered strictly
+     by severity across the entire report (Critical, then High, Medium,
+     Low, Informational)
+   - For each finding, indicate the protocol phase that discovered it
      (under **Category**: Power Architecture / Pin-Level / Bus
      Integrity / Protection / Sequencing / Passives / Completeness)
-   - Maintain severity ordering within each category (Critical first)
    - For each finding, include the affected component reference
      designators (U1, R3, C5, etc.) under **Location**
 
@@ -111,11 +113,10 @@ datasheets.
 ## Non-Goals
 
 - Do NOT review PCB layout — this is schematic-level analysis only
-  (use `review-layout` for layout review)
 - Do NOT evaluate component sourcing or cost — this is electrical
-  correctness only (use `review-bom` for BOM analysis)
+  correctness only
 - Do NOT perform circuit simulation — this is static analysis of
-  the netlist (use `validate-simulation` for simulation review)
+  the netlist
 - Do NOT redesign the circuit — report findings with remediation
   suggestions, but do not produce a revised schematic
 
