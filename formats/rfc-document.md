@@ -115,7 +115,7 @@ Sections MUST be numbered and use nested `<section>` elements:
     </section>
   </section>
 
-  <section anchor="<topic>">
+  <section anchor="{topic}">
     <name>{Section Title}</name>
     <t>{Body text...}</t>
   </section>
