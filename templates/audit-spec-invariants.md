@@ -81,9 +81,9 @@ build it that way.
 5. **Format the output** according to the investigation-report format
    with these audit-specific additions:
    - In the primary **Findings** section, maintain severity ordering as
-     required by the investigation-report format (Critical first, then
-     High, Medium, Low). Within each severity bucket, clearly label
-     which invariant each finding violates.
+     required by the investigation-report format, from highest to lowest
+     severity (Critical, High, Medium, Low, Informational). Within each
+     severity bucket, clearly label which invariant each finding violates.
    - For each finding, include the **violating interpretation** — a
      step-by-step description of a compliant implementation that
      triggers the violation
