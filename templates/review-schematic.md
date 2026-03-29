@@ -57,8 +57,9 @@ datasheets.
 ## Instructions
 
 1. **Apply the schematic-compliance-audit protocol** systematically.
-   Execute all seven phases in order. Do not skip phases — even if a
-   phase produces no findings, document that it was checked.
+   Execute all seven phases in order. Do not skip phases — document
+   phase coverage in the **Investigation Scope** section (e.g., a
+   table listing each phase and whether findings were produced).
 
 2. **Cross-reference findings to requirements.** When a finding
    relates to a specific requirement (e.g., "HW-0102: Voltage
@@ -81,9 +82,9 @@ datasheets.
    - List all findings in a single **Findings** section ordered strictly
      by severity across the entire report (Critical, then High, Medium,
      Low, Informational)
-   - For each finding, indicate the protocol phase that discovered it
-     (under **Category**: Power Architecture / Pin-Level / Bus
-     Integrity / Protection / Sequencing / Passives / Completeness)
+   - For each finding, indicate the protocol phase under **Category**
+     using phase number and title (e.g., "Phase 1 — Power Architecture
+     Review", "Phase 3 — Bus Integrity")
    - For each finding, include the affected component reference
      designators (U1, R3, C5, etc.) under **Location**
 
