@@ -771,6 +771,7 @@ templates:
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, interface-contract-audit]
       format: investigation-report
+      requires: interface-contract
 
   standards:
     - name: extract-rfc-requirements

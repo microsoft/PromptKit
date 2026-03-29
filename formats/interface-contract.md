@@ -214,6 +214,7 @@ breached. One entry per failure mode, not per resource.
 - Numeric values MUST include units.
 - Every invariant MUST be falsifiable — if you cannot describe a
   concrete violation, the invariant is too vague.
-- The contract MUST NOT contain prose-only guidance. Every guarantee
-  and obligation must be expressible as a checkable predicate or a
-  numeric bound.
+- Cells in the guarantee and obligation matrices MUST NOT contain
+  prose-only guidance. Each entry MUST be expressible as a checkable
+  predicate or a numeric bound. Other sections of the contract (e.g.,
+  metadata, definitions, revision history) MAY use explanatory prose.

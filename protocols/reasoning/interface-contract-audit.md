@@ -55,7 +55,8 @@ Check that the contract covers every combination of resource and state.
    - Cell has an explicit, non-placeholder value → OK
    - Cell is blank → finding: `INCOMPLETE_MATRIX_CELL`
    - Cell contains a disallowed placeholder ("Not specified", "TBD",
-     "TBA", "To be determined") → finding: `INCOMPLETE_MATRIX_CELL`
+     "TBA", "To be determined") or an unresolved marker
+     ("[UNKNOWN: ...]") → finding: `INCOMPLETE_MATRIX_CELL`
    - Cell in the **guarantee** matrix is vague prose without a numeric
      bound or checkable predicate → finding: `VAGUE_GUARANTEE`
    - Cell in the **obligation** matrix is vague prose without a numeric
