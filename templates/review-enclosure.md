@@ -100,6 +100,9 @@ for an electronic assembly.
    - **Informational**: Observation or suggestion
 
 6. **Apply the self-verification protocol** before finalizing:
+   - Re-read at least 3 findings and verify that cited dimensions,
+     materials, or features match the provided enclosure design and
+     PCB specs
    - Verify PCB dimensions match enclosure cavity
    - Verify antenna keepout assessment (if applicable)
    - Verify material is appropriate for deployment environment
@@ -126,6 +129,8 @@ Before finalizing, verify:
 - [ ] Environmental protection assessed for deployment conditions
 - [ ] Thermal path from hot components to ambient evaluated
 - [ ] Antenna compatibility verified (material, keepout, orientation)
+- [ ] Sensor access verified — ventilation, probe pass-throughs, and
+      conflicting requirements assessed (if applicable)
 - [ ] Manufacturing feasibility checked for target process
 - [ ] Mounting provisions assessed for deployment scenario
 - [ ] Every finding cites specific dimensions, features, or materials
