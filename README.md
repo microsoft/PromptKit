@@ -262,7 +262,7 @@ npx @alan-jowett/promptkit assemble audit-traceability \
   -o audit-report.md
 ```
 
-The audit uses the `specification-drift` taxonomy (D1–D7) to classify
+The audit uses the `specification-drift` taxonomy (D1–D16) to classify
 findings — untraced requirements, orphaned design decisions, assumption
 drift, constraint violations, and illusory test coverage. Each finding
 includes specific document locations, evidence, severity, and remediation
