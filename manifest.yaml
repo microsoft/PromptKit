@@ -1045,6 +1045,17 @@ templates:
       protocols: [anti-hallucination, self-verification, promptkit-design]
       format: promptkit-pull-request
 
+    - name: audit-library-consistency
+      path: templates/audit-library-consistency.md
+      description: >
+        Audit the PromptKit component library for overlap, redundancy,
+        inconsistency, and consolidation opportunities. Finds protocol
+        duplication, template near-duplicates, terminology drift, and
+        stale cross-references.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification]
+      format: investigation-report
+
   devops:
     - name: author-pipeline
       path: templates/author-pipeline.md
