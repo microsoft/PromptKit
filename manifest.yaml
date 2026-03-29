@@ -233,6 +233,14 @@ protocols:
         integrity, protection circuits, power sequencing, passive
         components, and completeness.
 
+    - name: simulation-validation
+      path: protocols/analysis/simulation-validation.md
+      description: >
+        Systematic review of circuit simulation output (SPICE, power
+        budget, thermal analysis) against specification constraints.
+        Covers setup verification, result interpretation, constraint
+        compliance, corner-case coverage, and model validity.
+
   reasoning:
     - name: root-cause-analysis
       path: protocols/reasoning/root-cause-analysis.md
@@ -981,6 +989,17 @@ templates:
         components, and completeness.
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, schematic-compliance-audit]
+      format: investigation-report
+
+    - name: validate-simulation
+      path: templates/validate-simulation.md
+      description: >
+        Review circuit simulation output (SPICE, power budget, thermal
+        analysis) against specification constraints. Verifies setup,
+        extracts results, checks compliance, assesses corner-case
+        coverage, and evaluates model validity.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, simulation-validation]
       format: investigation-report
 
   testing:
