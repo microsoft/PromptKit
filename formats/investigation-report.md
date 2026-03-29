@@ -81,3 +81,23 @@ For each: what is unknown, why it matters, and what would resolve it.>
 - Every finding MUST have a remediation recommendation.
 - Evidence MUST be concrete — code snippets, not vague descriptions.
 - The executive summary MUST be understandable without reading the rest.
+
+## Confidence Framework
+
+This format uses a **three-level confidence scale**: High / Medium / Low.
+
+| Level | Meaning |
+|-------|---------|
+| **High** | Finding is verified through code inspection, reproduction, or direct evidence. The root cause is confirmed. |
+| **Medium** | Finding has reasonable supporting evidence but some uncertainty remains — e.g., partial reproduction, indirect evidence, or an untested code path. |
+| **Low** | Finding is plausible but evidence is weak or circumstantial. Expert review or additional investigation is needed before acting. |
+
+This scale is calibrated for general bug investigation and security audit
+reports where the primary question is "how certain are we this is a real
+defect?" If not High, the Confidence field MUST include an explanation of
+what additional investigation would increase confidence.
+
+*Template authors: do not substitute the confidence scales from
+`exhaustive-review-report` (Confirmed / High-confidence / Needs-domain-check)
+or `structured-findings` (Confirmed / Likely / Suspicious / Needs
+Investigation) — each scale is calibrated for its specific use case.*

@@ -114,3 +114,25 @@ For each: what is unknown, why it matters, and what would resolve it.>
 - Findings are ordered by confidence (Confirmed first), then by severity.
 - Each finding MUST have a concrete consequence — "might be bad" is not
   acceptable.
+
+## Confidence Framework
+
+This format uses a **three-level confidence scale** tuned for adversarial
+code review where every finding must survive attempted falsification:
+
+| Level | Meaning |
+|-------|---------|
+| **Confirmed** | The trigger path is fully traced, the "NOT a false positive" argument is complete, and the consequence is concrete. No additional evidence is needed. |
+| **High-confidence** | The trigger path is clear and the finding is almost certainly real, but one aspect (e.g., caller contract, platform behavior) would benefit from domain-expert confirmation before filing. |
+| **Needs-domain-check** | The finding is plausible and the path is traceable, but a domain-specific rule, driver contract, or undocumented invariant could render it safe. Do not ship without a domain-expert review. |
+
+This scale is calibrated for exhaustive, adversarial code review where the
+primary question is "has this finding survived our best attempt to disprove
+it?" It deliberately omits lower-confidence tiers: if a finding cannot reach
+at least Needs-domain-check, it should be recorded in the False-Positive
+Candidates Rejected table instead.
+
+*Template authors: do not substitute the confidence scales from
+`investigation-report` (High / Medium / Low) or `structured-findings`
+(Confirmed / Likely / Suspicious / Needs Investigation) — each scale is
+calibrated for its specific use case.*

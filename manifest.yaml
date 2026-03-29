@@ -970,6 +970,16 @@ templates:
       protocols: [anti-hallucination, self-verification, session-profiling]
       format: investigation-report
 
+    - name: classify-findings
+      path: templates/classify-findings.md
+      description: >
+        Classify a set of findings against a reference catalog or taxonomy.
+        Three-way classification (Exact Match / Variant / New Pattern) with
+        justification, confidence analysis, and catalog update proposals.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, finding-classification]
+      format: structured-findings
+
   code-analysis:
     - name: review-code
       path: templates/review-code.md

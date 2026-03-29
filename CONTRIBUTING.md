@@ -93,6 +93,23 @@ The body should include:
   `memory-safety-rust.md`), not conditional blocks
 - Guardrail protocols apply to all tasks; analysis protocols are selective
 
+#### `applicable_to` semantics
+
+`applicable_to` means **"required by"** — it lists templates whose
+`protocols:` frontmatter field **always** includes this protocol. It does
+NOT mean "can optionally be added to". Use the following values:
+
+| Value | Meaning |
+|-------|---------|
+| `all` | Every template should apply this protocol (reserved for cross-cutting guardrails such as `anti-hallucination`). |
+| `[]` *(empty list)* | This protocol is intended for standalone / manual composition and is not automatically included by any template. Document this in the protocol file itself. |
+| `[template-a, template-b]` | These specific templates always include this protocol in their `protocols:` frontmatter. The CI check (`tests/validate-manifest.py`) validates bidirectional consistency — every name listed here MUST appear in the template's frontmatter, and every protocol in a template's frontmatter MUST list that template here. |
+
+**Optional protocols** — protocols a template can optionally include via
+`additional_protocols` in an assembled prompt — should NOT be listed in
+`applicable_to` for the base template. Document them in the template's
+body instead (e.g., in a "Recommended Additional Protocols" note).
+
 ### Adding a Format
 
 Create a file in `formats/<name>.md`:

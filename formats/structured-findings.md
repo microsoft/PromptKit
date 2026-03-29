@@ -177,6 +177,16 @@ If no related findings exist, state "None identified".>
 | **Suspicious** | Unclear intent — code may be correct but warrants review |
 | **Needs Investigation** | Insufficient context to determine impact; requires further analysis |
 
+This format uses a **four-level confidence scale** calibrated for
+structured diagnostic output (compiler warnings, linter results, security
+scans) where the primary question is "how certain are we this is a genuine
+defect vs. a false positive or intentional pattern?"
+
+*Template authors: do not substitute the confidence scales from
+`investigation-report` (High / Medium / Low) or `exhaustive-review-report`
+(Confirmed / High-confidence / Needs-domain-check) — each scale is
+calibrated for its specific use case.*
+
 ### General
 
 - Do not omit sections; if a section has no content, state

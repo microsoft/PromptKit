@@ -29,6 +29,15 @@ output_contract:
 
 # Task: Triage Pull Requests
 
+<!--
+  NOTE: This template is intentionally parallel to triage-issues.
+  Both share the same persona, protocols, and format. They differ only in
+  artifact-type vocabulary (pull requests vs. issues) and in the specific
+  metadata fields, health signals, and workflow recommendations appropriate
+  for each item type. The duplication is deliberate — merging them would
+  require conditional logic that reduces prompt clarity.
+-->
+
 You are tasked with triaging open pull requests for the following
 repository to prioritize review effort and identify blockers.
 
