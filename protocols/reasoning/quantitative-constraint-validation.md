@@ -157,23 +157,28 @@ For each constraint↔claim pair, compute and classify the margin.
    - **Lower limit**: margin = (claimed − limit) / limit × 100%
    - **Tolerance band**: margin = (tolerance − |deviation|) /
      tolerance × 100%
-   - **Logarithmic quantities** (dB): margin = claimed_dB −
-     required_dB (do not convert to linear for margin computation)
+   - **Logarithmic quantities** (dB): margin_dB = claimed_dB −
+     limit_dB (headroom-to-limit; do not convert to linear)
 
-2. **Classify each margin:**
+2. **Classify each margin** based on the margin delta (headroom to
+   limit), not the raw constraint value:
 
    | Classification | Condition |
    |----------------|-----------|
-   | **Violated** | margin < 0% |
-   | **Marginal** | 0% ≤ margin < spec threshold, or < 10% if spec is silent |
-   | **Adequate** | margin ≥ threshold |
-   | **Excessive** | margin > 50% and resource could be reclaimed (informational) |
+   | **Violated** | margin < 0 (negative headroom) |
+   | **Marginal** | 0 ≤ margin < spec-defined adequacy threshold |
+   | **Adequate** | margin ≥ adequacy threshold |
+   | **Excessive** | margin well above threshold and resource could be reclaimed (informational) |
 
-3. **Use spec-defined thresholds when available.** If the specification
-   defines required margins (e.g., "link budget must have ≥ 6 dB
-   margin"), use that as the marginal/adequate boundary. If the spec
-   is silent, default to 10% but flag that the threshold is
-   `[ASSUMED]`.
+3. **Use spec-defined thresholds when available.**
+   - For **percentage-based margins** (upper/lower limit, tolerance):
+     if the spec defines a required margin percentage, use that. If
+     the spec is silent, default to 10% but flag as `[ASSUMED]`.
+   - For **non-percentage margins** (dB, volts, seconds): treat
+     margin = 0 as the Violated/Marginal boundary. If the spec
+     defines a minimum margin in native units (e.g., "link budget
+     must have ≥ 6 dB margin"), use that as the Marginal/Adequate
+     boundary. Do NOT apply the 10% default to non-percentage margins.
 
 4. **Present a margin summary table:**
 

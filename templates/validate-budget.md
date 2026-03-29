@@ -91,9 +91,11 @@ and assess sensitivity.
 
 5. **Format the output** according to the investigation-report format
    with these budget-specific additions:
-   - In the **Executive Summary**, include the margin summary table
-     from Phase 5 (constraint ID, constraint, claimed, margin,
-     classification)
+   - In the **Executive Summary**, provide the required 2–4 sentence
+     narrative summary. Place the margin summary table from Phase 5
+     (constraint ID, constraint, claimed, margin, classification)
+     immediately after the summary within Section 1, and reference
+     it from the narrative.
    - Each finding represents a constraint verification result. Use
      the investigation-report's required per-finding fields
      (Description, Impact, Severity, Category, Location, Evidence,
@@ -108,11 +110,12 @@ and assess sensitivity.
      is more urgent than one with a comfortable delta
 
 6. **Prioritize findings** by quantitative impact:
-   - **Critical**: Constraint violated (margin < 0%) with no plausible
-     mitigation within current architecture
+   - **Critical**: Constraint violated (negative margin) with no
+     plausible mitigation within current architecture
    - **High**: Constraint violated but recoverable with component
-     changes; OR marginal (< 5%) with high sensitivity
-   - **Medium**: Marginal (5–10%) with moderate sensitivity; OR
+     changes; OR marginal result near the adequacy threshold with
+     high sensitivity to plausible input variation
+   - **Medium**: Marginal result with moderate sensitivity; OR
      arithmetic error that doesn't change pass/fail
    - **Low**: Adequate margin with noted concern (stale data, missing
      worst-case analysis)
@@ -120,8 +123,8 @@ and assess sensitivity.
      conservative assumptions noted
 
 7. **Apply the self-verification protocol** before finalizing:
-   - Re-check at least 3 margin computations by re-deriving from
-     the source values
+   - Re-check up to 3 margin computations (or all, if fewer) by
+     re-deriving from the source values
    - Verify the margin summary table is complete (every constraint
      has a row)
    - Verify unit consistency in all comparisons
