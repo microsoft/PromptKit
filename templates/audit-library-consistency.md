@@ -139,8 +139,9 @@ Compare format document structures for overlap.
 Scan all components for inconsistent terminology.
 
 1. **Epistemic labels**: Check that all templates use the same
-   labels for uncertainty ([KNOWN]/[INFERRED]/[ASSUMPTION] vs.
-   [ASSUMPTION] vs. other variants).
+   labels for uncertainty (the canonical labels are
+   [KNOWN]/[INFERRED]/[ASSUMPTION] per the anti-hallucination
+   protocol — flag any deviations).
 
 2. **Audience terms**: Check for "implementors" vs. "implementers",
    "findings" vs. "issues" vs. "defects", and similar variations.
