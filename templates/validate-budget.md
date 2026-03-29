@@ -129,7 +129,8 @@ and assess sensitivity.
      has a row)
    - Verify unit consistency in all comparisons
    - Confirm sensitivity analysis was performed for all Violated
-     and Marginal findings
+     and Marginal findings, and for Adequate findings with margin
+     < 20% (per protocol Phase 6)
 
 ## Non-Goals
 

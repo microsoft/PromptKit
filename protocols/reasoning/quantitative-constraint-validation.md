@@ -152,13 +152,31 @@ Re-derive key calculations independently.
 
 For each constraint↔claim pair, compute and classify the margin.
 
-1. **Compute margin** using the formula appropriate to the bound type:
-   - **Upper limit**: margin = (limit − claimed) / limit × 100%
-   - **Lower limit**: margin = (claimed − limit) / limit × 100%
-   - **Tolerance band**: margin = (tolerance − |deviation|) /
-     tolerance × 100%
-   - **Logarithmic quantities** (dB): margin_dB = claimed_dB −
-     limit_dB (headroom-to-limit; do not convert to linear)
+1. **Compute margin** using the formula appropriate to the bound type.
+   The invariant **"margin < 0 means violated"** must always hold.
+   When dividing by the limit, use the absolute value to avoid sign
+   inversion for negative limits; if the limit is zero, report the
+   margin as the absolute headroom in native units instead of a
+   percentage.
+
+   - **Upper limit** (claimed ≤ limit):
+     margin = (limit − claimed) / |limit| × 100%
+   - **Lower limit** (claimed ≥ limit):
+     margin = (claimed − limit) / |limit| × 100%
+   - **Tolerance band** (|deviation| ≤ tolerance):
+     margin = (tolerance − |deviation|) / tolerance × 100%
+   - **Range** (low ≤ claimed ≤ high): compute margin to the nearer
+     bound and report that. State which bound is limiting.
+   - **Ratio** (claimed ≤ X% of reference): normalize to the
+     reference value, then treat as an upper limit on the ratio.
+   - **Margin requirement** (headroom ≥ required margin): the margin
+     *is* the headroom itself — report in native units (e.g., dB).
+   - **Logarithmic quantities** (dB):
+     - Upper limit (e.g., EIRP ≤ limit_dBm): margin_dB = limit_dB −
+       claimed_dB
+     - Lower limit (e.g., SNR ≥ limit_dB): margin_dB = claimed_dB −
+       limit_dB
+     - Do not convert dB to linear for margin computation.
 
 2. **Classify each margin** based on the margin delta (headroom to
    limit), not the raw constraint value:
