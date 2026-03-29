@@ -60,7 +60,7 @@ For high-speed or impedance-sensitive signals, verify routing.
 1. **USB differential pairs**: D+ and D- should be:
    - Routed as a tightly coupled differential pair
    - Length-matched within the spec's tolerance
-   - Target impedance documented (90Ω for USB 2.0 full-speed)
+   - Target impedance documented (typically ~90Ω differential for USB 2.0 high-speed; verify mode-specific requirements and stackup)
    - Reference plane continuous under the pair
 
 2. **Other controlled-impedance traces**: If the design requires
