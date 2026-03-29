@@ -5,9 +5,10 @@
 name: author-interface-contract
 description: >
   Generate an interface contract between two components from a
-  requirements document, design document, or specification. Produces a
-  structured contract with resources, operating states, per-state
-  guarantees, consumer obligations, invariants, and failure modes.
+  requirements document or specification, optionally informed by a
+  design document. Produces a structured contract with resources,
+  operating states, per-state guarantees, consumer obligations,
+  invariants, and failure modes.
 persona: systems-engineer
 protocols:
   - guardrails/anti-hallucination
@@ -101,8 +102,8 @@ defines the boundary between a provider and consumer component.
    - Every guarantee must trace to a specific requirement, datasheet
      value, or design decision
    - Do NOT invent guarantees that are not stated in the inputs
-   - If information is missing, state "UNKNOWN — requires
-     <specification/measurement/decision>" rather than guessing
+   - If information is missing, state "[UNKNOWN: <what is needed>]"
+     rather than guessing
    - Distinguish between [KNOWN], [INFERRED], and [ASSUMPTION]
 
 8. **Format the output** according to the interface-contract format

@@ -55,7 +55,8 @@ Check that the contract covers every combination of resource and state.
    - Cell has an explicit value → OK
    - Cell is blank → finding: `INCOMPLETE_MATRIX_CELL`
    - Cell is vague prose without a numeric bound or checkable
-     predicate → finding: `VAGUE_GUARANTEE`
+     predicate → finding: `VAGUE_GUARANTEE` (guarantee matrix) or
+     `VAGUE_OBLIGATION` (obligation matrix)
 
 2. **Resource coverage**: Does every resource from the inventory
    (Section 4) appear in both the guarantee matrix (Section 5) AND
@@ -154,7 +155,8 @@ For each invariant in Section 7:
 
 2. **Recovery specification** — does every failure mode with severity
    Medium or higher specify a recovery action?
-   - "Unspecified" recovery at Medium+ severity → finding
+   - "Unspecified" recovery at Medium+ severity → finding:
+     `UNSPECIFIED_RECOVERY`
 
 3. **Cascade analysis** — do failure modes with cascading effects
    reference valid failure mode IDs? Can a cascade lead to a state
@@ -168,6 +170,7 @@ For each invariant in Section 7:
    |-------|-------------|
    | INCOMPLETE_MATRIX_CELL | Resource × state cell has no value |
    | VAGUE_GUARANTEE | Guarantee is prose-only, not checkable |
+   | VAGUE_OBLIGATION | Obligation is prose-only, not checkable |
    | UNCONTRACTED_RESOURCE | Resource crosses boundary but has no contract entry |
    | UNCONTRACTED_STATE | Operating state has no guarantee/obligation column |
    | UNLINKED_INVARIANT | Invariant references no contract matrix entry |
@@ -179,6 +182,7 @@ For each invariant in Section 7:
    | INVARIANT_VIOLATION_POSSIBLE | Compliant parties can still violate invariant |
    | INVARIANT_WITHOUT_FAILURE_MODE | No failure mode covers this invariant's violation |
    | UNHANDLED_VIOLATION | Guarantee/obligation breach has no failure mode |
+   | UNSPECIFIED_RECOVERY | Failure mode at Medium+ severity has no recovery action |
 
 2. **Produce a coverage summary**:
    - Resources audited / total
