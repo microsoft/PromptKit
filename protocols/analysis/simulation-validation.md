@@ -163,8 +163,9 @@ Assess whether the simulation models are trustworthy.
 Compile findings from all phases.
 
 1. **For each finding**, document:
-   - Phase that discovered it (Setup / Result / Compliance /
-     Corner-Case / Model)
+   - Phase that discovered it (use the exact phase label, e.g.,
+     "Phase 1 — Simulation Setup Review", "Phase 4 — Corner-Case
+     and Worst-Case Assessment")
    - Affected component(s) and net(s)
    - The specification constraint involved (if applicable)
    - Severity (Critical / High / Medium / Low / Informational)
