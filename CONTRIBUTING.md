@@ -103,7 +103,7 @@ NOT mean "can optionally be added to". Use the following values:
 |-------|---------|
 | `all` | Every template should apply this protocol (reserved for cross-cutting guardrails such as `anti-hallucination`). |
 | `[]` *(empty list)* | This protocol is intended for standalone / manual composition and is not automatically included by any template. Document this in the protocol file itself. |
-| `[template-a, template-b]` | These specific templates always include this protocol in their `protocols:` frontmatter. The CI check (`tests/validate-manifest.py`) validates bidirectional consistency — every name listed here MUST appear in the template's frontmatter, and every protocol in a template's frontmatter MUST list that template here. |
+| `[template-a, template-b]` | These specific templates always include this protocol in their `protocols:` frontmatter. Keep this list in sync with the template definitions and their `protocols` entries in `manifest.yaml`. The CI check (`tests/validate-manifest.py`) currently validates only that `manifest.yaml` and template `protocols:` frontmatter match; it does not enforce `applicable_to` bidirectionally. |
 
 **Optional protocols** — protocols a template can optionally include via
 `additional_protocols` in an assembled prompt — should NOT be listed in

@@ -29,15 +29,6 @@ output_contract:
 
 # Task: Triage Issues
 
-<!--
-  NOTE: This template is intentionally parallel to triage-pull-requests.
-  Both share the same persona, protocols, and format. They differ only in
-  artifact-type vocabulary (issues vs. pull requests) and in the specific
-  metadata fields, health signals, and workflow recommendations appropriate
-  for each item type. The duplication is deliberate — merging them would
-  require conditional logic that reduces prompt clarity.
--->
-
 You are tasked with triaging and prioritizing the open issues or work items
 for the following repository or project.
 

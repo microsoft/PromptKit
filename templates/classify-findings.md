@@ -68,11 +68,14 @@ reference catalog or taxonomy.
 4. **Provide confidence analysis** for each classification using the
    protocol's five-point scale (Very High / High / Medium / Low / Very Low)
    with supporting evidence, potential weaknesses, and disconfirming
-   conditions. Map to the format's Confidence field as follows:
-   - Very High / High → **Confirmed**
-   - Medium → **Likely**
-   - Low → **Suspicious**
-   - Very Low → **Needs Investigation**
+   conditions. Record the catalog-match confidence in the **Analysis**
+   section's Root Cause field (not in the format's Confidence field,
+   which measures defect vs. false-positive certainty). Map to the
+   format's Confidence field based on defect certainty as follows:
+   - Finding clearly matches a known defect pattern → **Confirmed**
+   - Finding likely represents a defect but context is limited → **Likely**
+   - Finding may be intentional or context-dependent → **Suspicious**
+   - Insufficient information to assess → **Needs Investigation**
 
 5. **Propose catalog updates** for every Variant and New Pattern:
    - Variant: propose a specific annotation or example addition to the
@@ -101,7 +104,11 @@ reference catalog or taxonomy.
 
 ## Non-Goals
 
-- Do NOT fix the findings — only classify them.
+- Do NOT fix the findings — only classify them. For the format's
+  required "Recommended Fix" and "Verification" sections, populate
+  them with the catalog's documented fix (for Exact Match/Variant)
+  or "N/A — classification only; no fix recommendation available"
+  (for New Pattern).
 - Do NOT modify the reference catalog directly — only propose updates.
 - Do NOT skip catalog patterns when checking for matches — exhaustive
   comparison is required before classifying anything as New Pattern.
