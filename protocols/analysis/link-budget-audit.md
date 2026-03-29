@@ -158,14 +158,22 @@ Compute and assess the link margin.
 
 Verify the link budget complies with applicable regulations.
 
-1. **EIRP limit**: Compare calculated EIRP to the regulatory limit
-   for the band and region:
-   - FCC Part 15.247 (915 MHz ISM): 1W conducted + 6 dBi antenna
-     = 36 dBm EIRP
-   - FCC Part 15.249 (2.4 GHz ISM): varies by modulation type
+1. **EIRP / ERP limit**: Compare calculated EIRP to the regulatory
+   limit for the band and region. Note that some regulations specify
+   limits as EIRP (referenced to isotropic) while others use ERP
+   (referenced to half-wave dipole); EIRP = ERP + 2.15 dB. Always
+   convert to the same reference before comparing.
+   - FCC Part 15.247 (915 MHz ISM): 1W (30 dBm) conducted + 6 dBi
+     antenna = 36 dBm EIRP
+   - FCC Part 15.249 (2.4 GHz ISM): field strength limits apply —
+     consult the specific frequency sub-band table
    - ETSI EN 300 220 (868 MHz): 25 mW (14 dBm) ERP for most
-     sub-bands
-   - Flag the specific regulation and sub-band
+     sub-bands — convert to EIRP (+2.15 dB) when comparing to an
+     EIRP-based link budget
+   - ETSI EN 300 328 (2.4 GHz ISM): 100 mW (20 dBm) EIRP for
+     wideband; reduced limits for narrowband
+   - Flag the specific regulation, sub-band, and whether the limit
+     is EIRP or ERP
 
 2. **Occupied bandwidth**: Verify the signal bandwidth is within
    the regulatory limit for the channel.
