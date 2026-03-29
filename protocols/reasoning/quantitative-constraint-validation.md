@@ -157,20 +157,26 @@ For each constraint↔claim pair, compute and classify the margin.
    When dividing by the limit, use the absolute value to avoid sign
    inversion for negative limits; if the limit is zero, report the
    margin as the absolute headroom in native units instead of a
-   percentage.
+   percentage. If the tolerance is zero, any non-zero deviation is a
+   violation — report headroom in native units and state that
+   percentage margin is undefined.
 
    - **Upper limit** (claimed ≤ limit):
      margin = (limit − claimed) / |limit| × 100%
    - **Lower limit** (claimed ≥ limit):
      margin = (claimed − limit) / |limit| × 100%
    - **Tolerance band** (|deviation| ≤ tolerance):
-     margin = (tolerance − |deviation|) / tolerance × 100%
+     - If tolerance ≠ 0: margin = (tolerance − |deviation|) /
+       tolerance × 100%
+     - If tolerance = 0: any |deviation| > 0 is a violation. Report
+       headroom = −|deviation| in native units.
    - **Range** (low ≤ claimed ≤ high): compute margin to the nearer
      bound and report that. State which bound is limiting.
    - **Ratio** (claimed ≤ X% of reference): normalize to the
      reference value, then treat as an upper limit on the ratio.
-   - **Margin requirement** (headroom ≥ required margin): the margin
-     *is* the headroom itself — report in native units (e.g., dB).
+   - **Margin requirement** (headroom ≥ required margin): margin =
+     headroom − required_margin (in native units, e.g., dB) so that
+     negative margin correctly indicates a violated requirement.
    - **Logarithmic quantities** (dB):
      - Upper limit (e.g., EIRP ≤ limit_dBm): margin_dB = limit_dB −
        claimed_dB

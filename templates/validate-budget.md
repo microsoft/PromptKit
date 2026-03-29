@@ -129,8 +129,10 @@ and assess sensitivity.
      has a row)
    - Verify unit consistency in all comparisons
    - Confirm sensitivity analysis was performed for all Violated
-     and Marginal findings, and for Adequate findings with margin
-     < 20% (per protocol Phase 6)
+     and Marginal findings (required). For Adequate findings with
+     margin < 20%, sensitivity analysis is recommended — perform it
+     when the spec or engineering judgment calls for additional
+     scrutiny
 
 ## Non-Goals
 
