@@ -43,7 +43,7 @@ Extract every quantitative constraint from the specification.
    - **Keyword strength**: MUST / SHOULD / MAY
    - **Source location**: section, paragraph, requirement ID
 
-3. **Classify each constraint by budget type:**
+3. **Classify each constraint by bound kind:**
    - **Absolute limit**: a single ceiling or floor (e.g., ≤ 20 µA)
    - **Rollup budget**: a summation that must not exceed a total
      (e.g., BOM cost ≤ $5)
@@ -216,7 +216,9 @@ For each constraint↔claim pair, compute and classify the margin.
 Identify which input assumptions most threaten constraint compliance.
 
 1. **For each Violated or Marginal result** (REQUIRED), and for each
-   Adequate result with margin < 20% (RECOMMENDED):
+   Adequate result with thin margin (RECOMMENDED — use engineering
+   judgment; for percentage margins, < 20% is a reasonable threshold;
+   for native-unit margins, compare to the spec's adequacy threshold):
    - Identify the input parameters that contribute most to the
      claimed value
    - Compute: "If input parameter X increases by Y%, does the claim
@@ -238,8 +240,8 @@ Identify which input assumptions most threaten constraint compliance.
    uncertainty, or ±20% estimate error) would flip the result, that
    is a finding regardless of current margin classification.
 
-4. **For Adequate findings with margin > 20%**, sensitivity analysis
-   is optional. Note that it was skipped and why.
+4. **For Adequate findings with comfortable margin**, sensitivity
+   analysis is optional. Note that it was skipped and why.
 
 ## Phase 7: Completeness Check
 

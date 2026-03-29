@@ -130,7 +130,7 @@ and assess sensitivity.
    - Verify unit consistency in all comparisons
    - Confirm sensitivity analysis was performed for all Violated
      and Marginal findings (required). For Adequate findings with
-     margin < 20%, sensitivity analysis is recommended — perform it
+     thin margin, sensitivity analysis is recommended — perform it
      when the spec or engineering judgment calls for additional
      scrutiny
 
@@ -141,9 +141,10 @@ and assess sensitivity.
 - Do NOT run simulations or measurements — this is analytical
   verification of an existing artifact
 - Do NOT reconcile multiple budget artifacts against each other —
-  this validates one artifact against one spec. Phase 7 step 4
-  flags inconsistencies noticed within the artifact, but systematic
-  cross-artifact reconciliation is a separate task
+  this validates one artifact against one spec. The protocol's
+  completeness check (Phase 7) flags inconsistencies noticed within
+  the artifact, but systematic cross-artifact reconciliation is a
+  separate task
 - Do NOT validate qualitative spec requirements — this is
   quantitative analysis only. Use `audit-spec-invariants` for
   qualitative invariant checking
