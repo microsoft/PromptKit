@@ -25,12 +25,8 @@ output_contract:
   type: investigation-report
   description: >
     A consolidation report with findings classified using the
-    canonical finding types defined in this template's phases
-    (Duplicated Phase, Implicit Dependency, Subset Relationship,
-    Near-Duplicate Template, Composition Candidate, Superset Format,
-    Shared Structure, Terminology Drift, Stale Reference, and
-    Parameterization Opportunity), with proposed merges and
-    refactoring actions.
+    finding types defined in this template's phases, with proposed
+    merges and refactoring actions.
 ---
 
 # Task: Audit Library Consistency
