@@ -136,9 +136,13 @@ Scan all components for inconsistent terminology.
 
 Verify all inter-component references are valid and bidirectional.
 
-1. **Protocol `applicable_to`**: Does every template listed in a
-   protocol's `applicable_to` actually use that protocol? Does
-   every template that uses a protocol appear in its `applicable_to`?
+1. **Protocol `applicable_to`**: For protocols that list specific
+   templates, does every template named in `applicable_to` actually
+   use that protocol, and does every template that uses a protocol
+   appear in its `applicable_to` list? For protocols with
+   `applicable_to: all` or `applicable_to: []`, skip bidirectional
+   enforcement — `all` covers every template, and `[]` indicates no
+   specific templates are listed yet.
 
 2. **Template references to non-existent components**: Do any
    template instructions reference templates, protocols, or formats
@@ -171,22 +175,21 @@ with a parameter.
 
 ## Output Format
 
-Format the output as an investigation report:
+Format the output using the `investigation-report` format specification
+defined in `formats/investigation-report.md`. Follow that format
+verbatim, including all required sections 1–9 in exact order. Use
+severity values: **Critical / High / Medium / Low / Informational**.
 
-- **Executive Summary**: Total components analyzed, total findings by
-  type, top 3 consolidation opportunities by impact.
-- **Findings**: One finding per overlap/redundancy/inconsistency,
-  ordered by severity.
-- **Severity levels**:
-  - **High**: Active conflict or duplication that causes confusing or
-    contradictory assembled prompts
-  - **Medium**: Redundancy that wastes tokens or maintenance effort
-    but doesn't cause conflicts
-  - **Low**: Inconsistency that could confuse users but doesn't
-    affect assembled prompt quality
-  - **Informational**: Observation or opportunity, no current problem
-- **Remediation Plan**: Prioritized list of proposed changes (merges,
-  parameter additions, terminology standardization, reference fixes).
+Severity guidance for this audit:
+
+- **Critical**: Active conflict or duplication that causes contradictory
+  assembled prompts
+- **High**: Redundancy that wastes significant tokens or maintenance
+  effort
+- **Medium**: Inconsistency that could confuse users but doesn't
+  affect assembled prompt quality
+- **Low**: Minor terminology drift or stale reference
+- **Informational**: Observation or opportunity, no current problem
 
 ## Non-Goals
 
