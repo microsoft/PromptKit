@@ -52,11 +52,14 @@ Check that the contract covers every combination of resource and state.
 
 1. **Matrix cell coverage**: For every (resource × state) cell in
    both the guarantee and obligation matrices:
-   - Cell has an explicit value → OK
+   - Cell has an explicit, non-placeholder value → OK
    - Cell is blank → finding: `INCOMPLETE_MATRIX_CELL`
-   - Cell is vague prose without a numeric bound or checkable
-     predicate → finding: `VAGUE_GUARANTEE` (guarantee matrix) or
-     `VAGUE_OBLIGATION` (obligation matrix)
+   - Cell contains a disallowed placeholder ("Not specified", "TBD",
+     "TBA", "To be determined") → finding: `INCOMPLETE_MATRIX_CELL`
+   - Cell in the **guarantee** matrix is vague prose without a numeric
+     bound or checkable predicate → finding: `VAGUE_GUARANTEE`
+   - Cell in the **obligation** matrix is vague prose without a numeric
+     bound or checkable predicate → finding: `VAGUE_OBLIGATION`
 
 2. **Resource coverage**: Does every resource from the inventory
    (Section 4) appear in both the guarantee matrix (Section 5) AND

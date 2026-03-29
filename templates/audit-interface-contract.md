@@ -113,7 +113,9 @@ its governing specifications.
   guidance, but do not produce a revised contract document
 - Do NOT audit the implementation — this checks the contract
   document itself, not whether the provider or consumer actually
-  delivers on its promises (use `audit-code-compliance` for that)
+  delivers on its promises. To audit implementation against this
+  contract, use `audit-code-compliance` and provide this interface
+  contract as the governing specification input.
 - Do NOT audit across multiple contracts — this checks one contract.
   Use `audit-integration-compliance` for cross-contract boundary
   checks.

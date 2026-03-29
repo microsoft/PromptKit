@@ -753,7 +753,7 @@ templates:
       path: templates/author-interface-contract.md
       description: >
         Generate an interface contract between two components from a
-        requirements document, design document, or specification.
+        requirements document, optionally referencing a design document.
         Produces per-resource-per-state guarantee and obligation
         matrices with invariants and failure modes.
       persona: systems-engineer

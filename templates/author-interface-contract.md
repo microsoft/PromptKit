@@ -126,8 +126,11 @@ Before finalizing, verify:
 
 - [ ] Every resource that crosses the boundary is in the inventory
 - [ ] Every operating state from the requirements is enumerated
-- [ ] Every guarantee matrix cell has an explicit value (no blanks)
-- [ ] Every obligation matrix cell has an explicit value (no blanks)
+- [ ] Every guarantee matrix cell has an explicit value — use
+      "N/A — resource inactive in this state" or "NOT AVAILABLE:
+      <reason>" for empty cells, never blank or "Not specified"
+- [ ] Every obligation matrix cell has an explicit value (same
+      conventions as guarantees)
 - [ ] Every numeric value includes units
 - [ ] Every guarantee traces to a requirement or specification
 - [ ] Every invariant is falsifiable with a concrete violation condition

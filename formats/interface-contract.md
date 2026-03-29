@@ -96,7 +96,7 @@ the group).
 
 | Property | S-001: <State> | S-002: <State> | … |
 |----------|---------------|---------------|---|
-| <domain-specific property> | <guaranteed value/range/behavior> | … | |
+| <domain-specific property> | <guaranteed value/range/behavior> | <guaranteed value/range/behavior> | … |
 
 #### Domain-Specific Property Examples
 
@@ -133,7 +133,7 @@ NOT do, **per operating state**. Same matrix structure as Section 5.
 
 | Obligation | S-001: <State> | S-002: <State> | … |
 |------------|---------------|---------------|---|
-| <what the consumer must do/not do> | <per-state requirement> | … | |
+| <what the consumer must do/not do> | <per-state requirement> | <per-state requirement> | … |
 
 #### Typical Obligation Categories
 - **Preconditions before use**: e.g., "MUST NOT read pin until rail
