@@ -83,6 +83,8 @@ link budget against system requirements and regulatory constraints.
    - For each finding, indicate the protocol phase under **Category**
      using phase number and title (e.g., "Phase 3: Path Loss Model
      Assessment", "Phase 6: Regulatory Compliance Check")
+   - Under **Location**, identify the specific link budget parameter,
+     calculation step, or regulatory constraint involved
    - Under **Evidence**, include the specific calculation or
      parameter value in question
 
