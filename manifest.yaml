@@ -241,6 +241,23 @@ protocols:
         Covers setup verification, result interpretation, constraint
         compliance, corner-case coverage, and model validity.
 
+    - name: bom-consistency
+      path: protocols/analysis/bom-consistency.md
+      description: >
+        Systematic BOM review protocol. Audits a bill of materials
+        against the schematic and requirements for part number
+        correctness, voltage and temperature ratings, package matches,
+        cost compliance, sourcing risks, and completeness.
+
+    - name: layout-design-review
+      path: protocols/analysis/layout-design-review.md
+      description: >
+        Systematic PCB layout review protocol. Audits layout decisions
+        and DRC output against schematic intent and requirements.
+        Covers trace widths, impedance control, ground plane integrity,
+        component placement, thermal design, and manufacturing
+        constraints.
+
   reasoning:
     - name: root-cause-analysis
       path: protocols/reasoning/root-cause-analysis.md
@@ -1019,6 +1036,28 @@ templates:
       protocols: [anti-hallucination, self-verification, simulation-validation]
       format: investigation-report
 
+    - name: review-bom
+      path: templates/review-bom.md
+      description: >
+        Audit a bill of materials against the schematic and requirements.
+        Checks part number correctness, voltage and temperature ratings,
+        package matches, cost compliance, sourcing risks, and
+        completeness.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, bom-consistency]
+      format: investigation-report
+
+    - name: review-layout
+      path: templates/review-layout.md
+      description: >
+        Audit a PCB layout against schematic intent and requirements.
+        Reviews DRC output, trace widths, impedance control, ground
+        plane integrity, component placement, thermal design, and
+        manufacturing constraints.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, layout-design-review]
+      format: investigation-report
+
   testing:
     - name: discover-tests-for-changes
       path: templates/discover-tests-for-changes.md
@@ -1219,4 +1258,27 @@ pipelines:
       - template: author-protocol-validation
         produces: protocol-validation-spec
       - template: analyze-protocol-conflicts
+        produces: investigation-report
+
+  hardware-lifecycle:
+    description: >
+      Spec-first hardware design lifecycle from requirements through
+      manufacturing review. Each stage audits a hardware artifact
+      against the requirements document. Stages can be used
+      independently or sequentially as design artifacts become
+      available.
+    stages:
+      - template: author-requirements-doc
+        produces: requirements-document
+      - template: review-schematic
+        consumes: requirements-document
+        produces: investigation-report
+      - template: validate-simulation
+        consumes: requirements-document
+        produces: investigation-report
+      - template: review-bom
+        consumes: requirements-document
+        produces: investigation-report
+      - template: review-layout
+        consumes: requirements-document
         produces: investigation-report
