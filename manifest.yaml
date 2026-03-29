@@ -99,6 +99,14 @@ personas:
       antenna characterization, propagation modeling, transceiver design,
       regulatory compliance, and RF test and measurement.
 
+  - name: mechanical-engineer
+    path: personas/mechanical-engineer.md
+    description: >
+      Senior mechanical engineer. Deep expertise in enclosure design
+      for electronics, 3D printing design-for-manufacturing, material
+      selection, thermal management, environmental protection, and
+      physical integration of PCB assemblies.
+
   - name: protocol-architect
     path: personas/protocol-architect.md
     description: >
@@ -272,6 +280,14 @@ protocols:
         budget for transmitter chain, path loss model selection,
         receiver chain, margin adequacy, regulatory compliance, and
         sensitivity to environmental assumptions.
+
+    - name: enclosure-design-review
+      path: protocols/analysis/enclosure-design-review.md
+      description: >
+        Systematic enclosure design review protocol for electronic
+        assemblies. Audits for PCB fit, thermal management,
+        environmental protection, antenna compatibility, sensor
+        access, manufacturing feasibility, and mounting provisions.
 
   reasoning:
     - name: root-cause-analysis
@@ -1092,6 +1108,17 @@ templates:
         compliance, and sensitivity to environmental assumptions.
       persona: rf-engineer
       protocols: [anti-hallucination, self-verification, link-budget-audit]
+      format: investigation-report
+
+    - name: review-enclosure
+      path: templates/review-enclosure.md
+      description: >
+        Audit an enclosure design for an electronic assembly. Reviews
+        PCB fit, environmental protection, thermal management, antenna
+        compatibility, sensor access, manufacturing feasibility, and
+        mounting provisions.
+      persona: mechanical-engineer
+      protocols: [anti-hallucination, self-verification, enclosure-design-review]
       format: investigation-report
 
   testing:
