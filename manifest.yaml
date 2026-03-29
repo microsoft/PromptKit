@@ -395,6 +395,14 @@ protocols:
         interpretations to find spec gaps, ambiguities, contradictions,
         and missing recovery paths.
 
+    - name: quantitative-constraint-validation
+      path: protocols/reasoning/quantitative-constraint-validation.md
+      description: >
+        Systematic validation of quantitative claims (budgets, rollups,
+        margins) against specification constraints. Covers constraint
+        extraction, arithmetic verification, unit checking, margin
+        analysis, sensitivity analysis, and completeness.
+
     - name: spec-evolution-diff
       path: protocols/reasoning/spec-evolution-diff.md
       description: >
@@ -789,6 +797,18 @@ templates:
       protocols: [anti-hallucination, self-verification, interface-contract-audit]
       format: investigation-report
       requires: interface-contract
+
+    - name: validate-budget
+      path: templates/validate-budget.md
+      description: >
+        Validate a quantitative analysis (power budget, link budget,
+        cost rollup, timing analysis, memory budget) against
+        specification constraints. Extracts constraints and claims,
+        verifies arithmetic, computes margins, and performs sensitivity
+        analysis.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, quantitative-constraint-validation]
+      format: investigation-report
 
   standards:
     - name: extract-rfc-requirements
