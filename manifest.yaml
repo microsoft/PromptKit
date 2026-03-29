@@ -6,7 +6,7 @@
 # The bootstrap prompt reads this manifest to discover available
 # personas, protocols, formats, and task templates.
 
-version: "0.3.0"
+version: "0.4.0"
 
 personas:
   - name: systems-engineer
