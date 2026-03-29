@@ -21,8 +21,11 @@ templates — that snap together into reliable, repeatable prompts. The same
 engineering rigor you apply to your software (modularity, reuse, testing,
 code review) now applies to the prompts that build it.
 
-A composable, versioned library of prompt templates for software engineering tasks.
-Designed for software engineers who design, develop, and debug software.
+A composable, versioned library of prompt templates for engineering tasks —
+software, hardware, firmware, and protocol domains. Designed for engineers
+who design, build, verify, and ship.
+
+**136 components** — 13 personas · 44 protocols · 20 formats · 5 taxonomies · 54 templates across 3 pipelines
 
 ## Prerequisites
 
@@ -80,25 +83,34 @@ and presents the available templates:
 
 I've loaded the PromptKit manifest. I'm ready to help you build a task-specific prompt.
 
-Available templates:
+Available templates (54):
 
-┌────────────────────────┬──────────────────────────────────────────────────────────────┐
-│ Category               │ Templates                                                    │
-├────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ Document Authoring     │ author-requirements-doc, interactive-design,                 │
-│                        │ author-design-doc, author-validation-plan                    │
-├────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ Investigation          │ investigate-bug, investigate-security                        │
-├────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ Code Analysis          │ review-code                                                  │
-├────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ Planning               │ plan-implementation, plan-refactoring                        │
-├────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ DevOps                 │ author-pipeline, triage-issues, triage-pull-requests,        │
-│                        │ root-cause-ci-failure, author-release, review-infrastructure │
-└────────────────────────┴──────────────────────────────────────────────────────────────┘
+┌────────────────────────┬───────┬──────────────────────────────────────────────────────┐
+│ Category               │ Count │ Examples                                             │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Document Authoring     │   16  │ author-requirements-doc, interactive-design,         │
+│                        │       │ audit-traceability, validate-budget, ...             │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Code Analysis          │    8  │ review-code, review-cpp-code, exhaustive-bug-hunt,  │
+│                        │       │ review-schematic, review-bom, review-layout, ...    │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ DevOps                 │    7  │ author-pipeline, triage-issues, author-release, ...  │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Investigation          │    6  │ investigate-bug, investigate-security,               │
+│                        │       │ find-and-fix-bugs, fix-compiler-warnings, ...        │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Standards              │    4  │ extract-rfc-requirements, author-rfc, ...            │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Protocol Engineering   │    3  │ evolve-protocol, analyze-protocol-conflicts, ...     │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Code Generation        │    3  │ author-implementation-prompt, author-test-prompt, ...|
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Testing · Planning ·   │    7  │ discover-tests-for-changes, plan-implementation,     │
+│ Agent · Contribution   │       │ author-agent-instructions, extend-library, ...       │
+└────────────────────────┴───────┴──────────────────────────────────────────────────────┘
 
-Personas: systems-engineer · security-auditor · software-architect · ...
+Personas: systems-engineer · electrical-engineer · protocol-architect ·
+          embedded-firmware-engineer · security-auditor · ... (13 total)
 
 What would you like to accomplish?
 ```
@@ -203,13 +215,32 @@ prompt based on the user's needs.
 
 ### Chaining / Pipelines
 
-Templates declare **input and output contracts** so they can be chained:
+Templates declare **input and output contracts** so they can be chained.
+Three pipelines are included:
+
+**Document Lifecycle**
 
 ```
 author-requirements-doc  →  author-design-doc  →  author-validation-plan  →  audit-traceability
   (produces: requirements)    (consumes: requirements,   (consumes: requirements,    (consumes: requirements +
                                produces: design)          produces: validation)        validation; design optional,
                                                                                       produces: drift report)
+```
+
+**Hardware Lifecycle**
+
+```
+author-requirements-doc  →  review-schematic  →  validate-simulation  →  review-bom  →  review-layout
+  (produces: requirements)    (consumes: req,      (consumes: req,         (consumes: req,  (consumes: req,
+                               audits netlist)      audits sim output)      audits BOM)      audits PCB)
+```
+
+**Protocol Engineering**
+
+```
+extract-rfc-requirements  →  evolve-protocol  →  author-protocol-validation  →  analyze-protocol-conflicts
+  (produces: requirements)    (produces:           (produces: protocol             (produces: investigation
+                               protocol delta)      validation spec)                report)
 ```
 
 The output of one template becomes the input parameter of the next.
@@ -231,7 +262,7 @@ npx @alan-jowett/promptkit assemble audit-traceability \
   -o audit-report.md
 ```
 
-The audit uses the `specification-drift` taxonomy (D1–D7) to classify
+The audit uses the `specification-drift` taxonomy (D1–D16) to classify
 findings — untraced requirements, orphaned design decisions, assumption
 drift, constraint violations, and illusory test coverage. Each finding
 includes specific document locations, evidence, severity, and remediation
@@ -239,6 +270,20 @@ guidance.
 
 The design document is optional — omit it for a focused
 requirements ↔ validation plan audit.
+
+## Domains
+
+PromptKit covers multiple engineering domains. Each domain has dedicated
+personas, analysis protocols, and task templates.
+
+| Domain | Keywords |
+|--------|----------|
+| **Software Engineering** | Code review, bug investigation, design docs, requirements, testing, refactoring, implementation |
+| **Hardware / Electrical Engineering** | Schematic review, BOM audit, PCB layout review, simulation validation, power budgets, component selection |
+| **Embedded Firmware** | Boot sequences, OTA updates, flash memory management, power-fail-safe, watchdog timers, device recovery |
+| **Protocol Engineering** | RFC authoring, protocol evolution, conflict analysis, protocol validation, state machines, interoperability |
+| **Specification Analysis** | Invariant extraction, traceability audits, interface contracts, behavioral models, spec diffing, budget validation |
+| **DevOps & CI/CD** | Pipelines, issue triage, PR triage, releases, commit messages, infrastructure review, CI failure analysis |
 
 ## Components
 
@@ -249,34 +294,77 @@ requirements ↔ validation plan audit.
 | `systems-engineer` | Memory management, concurrency, performance, debugging |
 | `security-auditor` | Vulnerability discovery, threat modeling, secure design |
 | `software-architect` | System design, API contracts, tradeoff analysis |
+| `promptkit-contributor` | PromptKit architecture, conventions, contribution guidance |
+| `devops-engineer` | CI/CD pipelines, release engineering, infrastructure-as-code |
+| `reverse-engineer` | Specification extraction, behavioral requirements from code |
 | `specification-analyst` | Cross-document traceability, coverage analysis, specification drift |
+| `workflow-arbiter` | Multi-agent workflow evaluation, livelock detection, termination decisions |
+| `implementation-engineer` | Spec-compliant code generation, requirement tracing |
+| `test-engineer` | Specification-driven test authoring, coverage analysis |
+| `embedded-firmware-engineer` | Boot sequences, OTA updates, flash management, power-fail-safe, watchdogs |
+| `electrical-engineer` | Power delivery, signal integrity, PCB design, schematic review, component selection |
+| `protocol-architect` | Protocol design, evolution, formal specification, state machines, interoperability |
 
 ### Protocols
 
-**Guardrails:**
+**Guardrails** (cross-cutting, apply to all tasks):
 
 | Name | Description |
 |------|-------------|
 | `anti-hallucination` | Prevents fabrication, enforces epistemic labeling |
 | `self-verification` | Quality gate — LLM verifies its own output before finalizing |
 | `operational-constraints` | Scoping, tool usage, deterministic analysis, reproducibility |
+| `minimal-edit-discipline` | Minimal, type-preserving, encoding-safe code modifications |
+| `adversarial-falsification` | Self-falsification discipline — disprove findings before reporting |
 
-**Analysis:**
+**Analysis** (domain/language-specific checks):
 
 | Name | Description |
 |------|-------------|
 | `memory-safety-c` | Memory safety analysis for C codebases |
+| `cpp-best-practices` | Research-validated C++ code review patterns |
 | `memory-safety-rust` | Memory safety analysis for Rust codebases |
 | `thread-safety` | Concurrency and thread safety analysis |
 | `security-vulnerability` | Security vulnerability analysis |
+| `win32-api-conventions` | Win32 API naming, typedefs, parameter ordering |
+| `performance-critical-c-api` | Performance-critical C API design patterns |
+| `winrt-design-patterns` | Windows Runtime API design patterns |
+| `compiler-diagnostics-cpp` | C++ compiler diagnostic analysis and remediation |
+| `msvc-clang-portability` | MSVC ↔ Clang/GCC cross-compiler portability |
+| `kernel-correctness` | OS kernel/driver correctness (locks, refcounts, cleanup paths) |
+| `schematic-compliance-audit` | Schematic review against requirements and datasheets |
+| `simulation-validation` | Circuit simulation output vs. specification constraints |
+| `bom-consistency` | BOM audit against schematic, ratings, sourcing |
+| `layout-design-review` | PCB layout review (traces, impedance, thermal, DRC) |
 
-**Reasoning:**
+**Reasoning** (systematic reasoning approaches):
 
 | Name | Description |
 |------|-------------|
 | `root-cause-analysis` | Systematic root cause analysis |
 | `requirements-elicitation` | Requirements extraction from natural language |
+| `iterative-refinement` | Document revision through feedback cycles |
+| `promptkit-design` | PromptKit component design reasoning |
+| `devops-platform-analysis` | DevOps platform reasoning (pipelines, triggers, secrets) |
+| `requirements-from-implementation` | Deriving requirements from existing source code |
 | `traceability-audit` | Cross-document specification drift detection |
+| `code-compliance-audit` | Source code audit against requirements/design docs |
+| `test-compliance-audit` | Test code audit against validation plan |
+| `integration-audit` | Cross-component integration point audit |
+| `rfc-extraction` | Structured requirements extraction from RFCs |
+| `invariant-extraction` | Invariant extraction from specifications or source code |
+| `workflow-arbitration` | Multi-agent workflow progress evaluation |
+| `requirements-reconciliation` | Multi-source requirements reconciliation |
+| `finding-classification` | Finding classification against taxonomy/catalog |
+| `interface-contract-audit` | Interface contract completeness and consistency audit |
+| `exhaustive-path-tracing` | Per-file deep review with coverage ledger |
+| `protocol-evolution` | Protocol specification modification and extension |
+| `protocol-conflict-analysis` | Protocol specification comparison and conflict detection |
+| `protocol-validation-design` | Validation specification derivation from protocol spec |
+| `spec-invariant-audit` | Adversarial specification analysis against invariants |
+| `quantitative-constraint-validation` | Budget/rollup/margin validation against spec constraints |
+| `spec-evolution-diff` | Specification version comparison at invariant level |
+| `session-profiling` | LLM session log analysis for token inefficiencies |
 
 ### Formats
 
@@ -287,27 +375,142 @@ requirements ↔ validation plan audit.
 | `validation-plan` | Validation plan | Test cases, traceability matrix |
 | `investigation-report` | Investigation report | Findings, root cause, remediation |
 | `multi-artifact` | Multiple deliverable files | JSONL, reports, coverage logs |
+| `promptkit-pull-request` | PromptKit contribution | PR-ready component files and manifest update |
+| `pipeline-spec` | Pipeline specification | CI/CD YAML, rationale, deployment notes |
+| `triage-report` | Triage report | Prioritized items by priority and effort |
+| `release-notes` | Release notes | Changelog, breaking changes, upgrade instructions |
+| `agent-instructions` | Agent instruction file | Copilot skill files, CLAUDE.md, .cursorrules |
+| `implementation-plan` | Implementation plan | Task breakdown, dependencies, risk assessment |
+| `north-star-document` | North-star document | Vision, guiding principles, transition considerations |
+| `structured-findings` | Structured findings | Classified diagnostics with remediation guidance |
+| `exhaustive-review-report` | Exhaustive review report | Per-file coverage ledgers, falsification proof |
+| `protocol-delta` | Protocol delta | Specification amendments, tracked changes, redlines |
+| `protocol-validation-spec` | Protocol validation spec | Conformance tests, state machine coverage |
+| `rfc-document` | RFC document | xml2rfc v3 XML for internet-drafts |
+| `behavioral-model` | Behavioral model | State machines, flow graphs, invariant catalogs |
+| `interface-contract` | Interface contract | Per-resource guarantees, obligations, failure modes |
+| `architecture-spec` | Architecture specification | System description, interfaces, cross-cutting concerns |
 
 ### Taxonomies
 
 | Name | Domain | Description |
 |------|--------|-------------|
 | `stack-lifetime-hazards` | Memory safety | H1–H5 labels for stack escape and lifetime violations |
-| `specification-drift` | Specification traceability | D1–D7 labels for cross-document drift and divergence |
+| `specification-drift` | Specification traceability | D1–D16 labels for cross-document drift and divergence |
+| `cpp-review-patterns` | C++ code review | 19 pattern labels across memory, concurrency, API, performance |
+| `kernel-defect-categories` | Kernel correctness | K1–K14 labels for OS kernel and driver defects |
+| `protocol-change-categories` | Protocol engineering | PC1–PC8 labels for protocol specification changes |
 
 ### Templates
 
-| Name | Category | Description |
-|------|----------|-------------|
-| `author-requirements-doc` | Document authoring | Generate requirements from description |
-| `author-design-doc` | Document authoring | Generate design from requirements |
-| `author-validation-plan` | Document authoring | Generate test plan from requirements |
-| `investigate-bug` | Investigation | Root cause analysis of defects |
-| `investigate-security` | Investigation | Security audit of code |
-| `review-code` | Code analysis | Code review for correctness and safety |
-| `plan-implementation` | Planning | Implementation task breakdown |
-| `plan-refactoring` | Planning | Safe, incremental refactoring plan |
-| `audit-traceability` | Document auditing | Cross-document specification drift audit |
+**Document Authoring** (16 templates):
+
+| Name | Description |
+|------|-------------|
+| `author-requirements-doc` | Generate requirements from a description |
+| `author-architecture-spec` | Generate architecture specification for a system |
+| `interactive-design` | Multi-phase interactive design session |
+| `author-north-star` | Interactive north-star / vision document authoring |
+| `author-design-doc` | Generate design doc from requirements |
+| `author-validation-plan` | Generate test plan from requirements |
+| `reverse-engineer-requirements` | Extract requirements from existing source code |
+| `audit-traceability` | Cross-document specification drift audit |
+| `audit-code-compliance` | Audit source code against requirements/design |
+| `audit-test-compliance` | Audit test code against validation plan |
+| `audit-integration-compliance` | Audit cross-component integration points |
+| `audit-spec-invariants` | Adversarial spec analysis against invariants |
+| `diff-specifications` | Compare two specification versions at invariant level |
+| `author-interface-contract` | Generate interface contract between components |
+| `audit-interface-contract` | Audit interface contract completeness |
+| `validate-budget` | Validate quantitative analysis against spec constraints |
+
+**Standards** (4 templates):
+
+| Name | Description |
+|------|-------------|
+| `extract-rfc-requirements` | Extract structured requirements from RFCs |
+| `reconcile-requirements` | Reconcile multiple requirements sources into unified spec |
+| `extract-invariants` | Extract invariants from specifications or source code |
+| `author-rfc` | Author RFC / internet-draft in xml2rfc v3 format |
+
+**Code Generation** (3 templates):
+
+| Name | Description |
+|------|-------------|
+| `author-implementation-prompt` | Produce prompt for spec-compliant code generation |
+| `author-test-prompt` | Produce prompt for spec-compliant test generation |
+| `author-workflow-prompts` | Generate multi-agent workflow prompt assets |
+
+**Investigation** (6 templates):
+
+| Name | Description |
+|------|-------------|
+| `investigate-bug` | Root cause analysis of defects |
+| `find-and-fix-bugs` | Autonomous bug-finding and fixing workflow |
+| `fix-compiler-warnings` | Systematic batch remediation of compiler warnings |
+| `investigate-security` | Security audit of code or system component |
+| `profile-session` | Analyze LLM session log for token inefficiencies |
+| `classify-findings` | Classify findings against a reference catalog |
+
+**Code Analysis** (8 templates):
+
+| Name | Description |
+|------|-------------|
+| `review-code` | Code review for correctness, safety, security |
+| `review-cpp-code` | C/C++ specialized review with best practices |
+| `exhaustive-bug-hunt` | Deep adversarial line-by-line code review |
+| `reconstruct-behavior` | Extract behavioral model from engineering artifacts |
+| `review-schematic` | Audit schematic/netlist against requirements and datasheets |
+| `validate-simulation` | Review simulation output against spec constraints |
+| `review-bom` | Audit BOM against schematic, ratings, sourcing |
+| `review-layout` | Audit PCB layout against schematic intent |
+
+**Testing** (2 templates):
+
+| Name | Description |
+|------|-------------|
+| `discover-tests-for-changes` | Find relevant tests for local code changes |
+| `scaffold-test-project` | Scaffold test project with build and runner setup |
+
+**Planning** (2 templates):
+
+| Name | Description |
+|------|-------------|
+| `plan-implementation` | Implementation task breakdown with dependencies |
+| `plan-refactoring` | Safe, incremental refactoring plan |
+
+**Agent Authoring** (1 template):
+
+| Name | Description |
+|------|-------------|
+| `author-agent-instructions` | Assemble PromptKit components into agent skill files |
+
+**Contribution** (2 templates):
+
+| Name | Description |
+|------|-------------|
+| `extend-library` | Guide contributor through building new components |
+| `audit-library-consistency` | Audit PromptKit library for overlap and inconsistency |
+
+**DevOps** (7 templates):
+
+| Name | Description |
+|------|-------------|
+| `author-pipeline` | Generate production-ready CI/CD pipeline |
+| `triage-issues` | Triage and prioritize open issues |
+| `triage-pull-requests` | Triage open pull requests for review |
+| `root-cause-ci-failure` | Investigate failing CI/CD pipeline run |
+| `author-release` | Generate structured release notes |
+| `review-infrastructure` | Review infrastructure-as-code |
+| `generate-commit-message` | Generate structured commit message from staged changes |
+
+**Protocol Engineering** (3 templates):
+
+| Name | Description |
+|------|-------------|
+| `evolve-protocol` | Interactive protocol evolution session |
+| `analyze-protocol-conflicts` | Compare protocol specs for conflicts |
+| `author-protocol-validation` | Derive validation spec from protocol spec |
 
 ## Directory Structure
 
