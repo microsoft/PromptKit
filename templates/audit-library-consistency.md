@@ -140,7 +140,7 @@ Scan all components for inconsistent terminology.
 
 1. **Epistemic labels**: Check that all templates use the same
    labels for uncertainty ([KNOWN]/[INFERRED]/[ASSUMPTION] vs.
-   [ASSUMED] vs. other variants).
+   [ASSUMPTION] vs. other variants).
 
 2. **Audience terms**: Check for "implementors" vs. "implementers",
    "findings" vs. "issues" vs. "defects", and similar variations.

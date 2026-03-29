@@ -989,6 +989,7 @@ templates:
         Optionally applies Win32 API or performance-critical C patterns.
       persona: systems-engineer
       protocols: [anti-hallucination, self-verification, operational-constraints, cpp-best-practices, memory-safety-c]
+      taxonomies: [cpp-review-patterns]
       format: investigation-report
 
     - name: exhaustive-bug-hunt

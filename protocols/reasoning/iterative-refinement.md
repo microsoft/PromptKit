@@ -10,9 +10,6 @@ description: >
   and internal consistency.
 applicable_to:
   - interactive-design
-  - author-requirements-doc
-  - author-design-doc
-  - author-validation-plan
 ---
 
 # Protocol: Iterative Refinement

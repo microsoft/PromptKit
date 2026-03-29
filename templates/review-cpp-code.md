@@ -15,6 +15,8 @@ protocols:
   - guardrails/operational-constraints
   - analysis/cpp-best-practices
   - analysis/memory-safety-c
+taxonomies:
+  - cpp-review-patterns
 format: investigation-report
 params:
   code: "The C/C++ code to review"

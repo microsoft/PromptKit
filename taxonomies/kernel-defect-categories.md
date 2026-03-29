@@ -10,6 +10,8 @@ description: >
   defects. Covers lock leaks, refcount imbalances, cleanup omissions,
   lifetime bugs, integer arithmetic errors, state machine races,
   accounting mismatches, and security boundary mistakes.
+applicable_to:
+  - exhaustive-bug-hunt
 ---
 
 # Taxonomy: Kernel Defect Categories

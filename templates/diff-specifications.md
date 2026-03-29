@@ -82,7 +82,7 @@ change by its type and impact on existing implementations.
      relaxing, classify it as MODIFIED and explain the ambiguity
    - Distinguish between [KNOWN] (spec explicitly states),
      [INFERRED] (derived from spec patterns), and
-     [ASSUMED] (depends on unstated context)
+     [ASSUMPTION] (depends on unstated context)
 
 5. **Format the output** according to the investigation-report format
    and its required per-finding fields (Description, Impact, Severity,

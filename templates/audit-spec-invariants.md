@@ -76,7 +76,7 @@ build it that way.
      not addressed, that *is* the finding (the spec is silent)
    - Distinguish between [KNOWN] (spec explicitly states),
      [INFERRED] (derived from spec patterns), and
-     [ASSUMED] (depends on unstated context)
+     [ASSUMPTION] (depends on unstated context)
 
 5. **Format the output** according to the investigation-report format
    with these audit-specific additions:

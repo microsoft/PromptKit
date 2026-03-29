@@ -197,7 +197,7 @@ For each constraint↔claim pair, compute and classify the margin.
 3. **Use spec-defined thresholds when available.**
    - For **percentage-based margins** (upper/lower limit, tolerance):
      if the spec defines a required margin percentage, use that. If
-     the spec is silent, default to 10% but flag as `[ASSUMED]`.
+     the spec is silent, default to 10% but flag as `[ASSUMPTION]`.
    - For **non-percentage margins** (dB, volts, seconds): treat
      margin = 0 as the Violated/Marginal boundary. If the spec
      defines a minimum margin in native units (e.g., "link budget

@@ -10,7 +10,7 @@ description: >
   and elimination. Language-agnostic.
 applicable_to:
   - investigate-bug
-  - investigate-security
+  - root-cause-ci-failure
 ---
 
 # Protocol: Root Cause Analysis

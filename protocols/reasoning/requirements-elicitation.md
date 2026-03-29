@@ -10,6 +10,7 @@ description: >
   unambiguous requirements with stable identifiers.
 applicable_to:
   - author-requirements-doc
+  - interactive-design
 ---
 
 # Protocol: Requirements Elicitation

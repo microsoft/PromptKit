@@ -115,7 +115,7 @@ implements but does not explicitly document.
      flag gaps as undefined behavior entries instead
    - Distinguish between [KNOWN] (artifact explicitly implements),
      [INFERRED] (derived from patterns in the artifact), and
-     [ASSUMED] (depends on context not present in the artifact)
+     [ASSUMPTION] (depends on context not present in the artifact)
 
 5. **Format the output** according to the behavioral-model format
    specification. Every section must be populated.
