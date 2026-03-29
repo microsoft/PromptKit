@@ -44,9 +44,25 @@ consolidation actions.
 **Component Files**:
 {{component_files}}
 
-**Focus Areas**: {{focus_areas}}
+**Focus Areas**: {{focus_areas}} (if blank or not provided, analyze all areas)
 
 ## Instructions
+
+### Preliminary: Completeness Check
+
+Before beginning the analysis phases, verify the provided input is
+complete enough for a meaningful audit:
+
+1. Compare the list of components in the manifest against the
+   component files provided. Flag any components listed in the
+   manifest but missing from the provided files.
+2. If the provided library is incomplete (due to context limits or
+   partial input), state which components are missing and restrict
+   the audit to the components actually provided. Do NOT fabricate
+   content for missing files.
+3. If the library is too large to analyze exhaustively, prioritize:
+   cluster components by persona and format first, then drill into
+   suspicious overlaps rather than comparing every pair.
 
 ### Phase 1: Protocol Overlap Detection
 
@@ -175,10 +191,9 @@ with a parameter.
 
 ## Output Format
 
-Format the output using the `investigation-report` format specification
-defined in `formats/investigation-report.md`. Follow that format
-verbatim, including all required sections 1–9 in exact order. Use
-severity values: **Critical / High / Medium / Low / Informational**.
+Format the output using the `investigation-report` format. Follow that
+format verbatim, including all required sections 1–9 in exact order.
+Use severity values: **Critical / High / Medium / Low / Informational**.
 
 Severity guidance for this audit:
 
