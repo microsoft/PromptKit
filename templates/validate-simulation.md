@@ -85,8 +85,8 @@ simulation output against specification constraints.
    - List all findings in a single **Findings** section ordered
      strictly by severity (Critical first)
    - For each finding, indicate the protocol phase under **Category**
-     using phase number and title (e.g., "Phase 1 — Simulation Setup
-     Review", "Phase 4 — Corner-Case Assessment")
+     using phase number and title (e.g., "Phase 1: Simulation Setup
+     Review", "Phase 4: Corner-Case and Worst-Case Assessment")
    - Under **Location**, identify the specific component, net, or
      measurement point
    - Under **Evidence**, include the specific simulation values and
@@ -105,8 +105,8 @@ simulation output against specification constraints.
      suggestion for additional analysis
 
 7. **Apply the self-verification protocol** before finalizing:
-   - Re-check at least 2 constraint compliance assessments against
-     the provided simulation values
+   - Randomly re-check at least 3 constraint compliance assessments
+     against the provided simulation values
    - Verify the corner-case coverage assessment is complete
    - Confirm every phase is documented in the coverage summary
 
