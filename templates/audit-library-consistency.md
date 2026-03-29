@@ -24,9 +24,13 @@ input_contract: null
 output_contract:
   type: investigation-report
   description: >
-    A consolidation report with findings classified by type (overlap,
-    near-duplicate, terminology drift, stale reference, parameterization
-    opportunity) with proposed merges and refactoring actions.
+    A consolidation report with findings classified using the
+    canonical finding types defined in this template's phases
+    (Duplicated Phase, Implicit Dependency, Subset Relationship,
+    Near-Duplicate Template, Composition Candidate, Superset Format,
+    Shared Structure, Terminology Drift, Stale Reference, and
+    Parameterization Opportunity), with proposed merges and
+    refactoring actions.
 ---
 
 # Task: Audit Library Consistency
@@ -66,12 +70,16 @@ complete enough for a meaningful audit:
 
 ### Phase 1: Protocol Overlap Detection
 
-Compare every pair of protocols for shared methodology.
+Within the scope determined in the Preliminary step (entire library if
+complete, otherwise within prioritized clusters), compare protocols for
+shared methodology.
 
-1. **Extract phase summaries**: For each protocol, list its phases
-   with a one-sentence description of what each phase does.
+1. **Extract phase summaries**: For each protocol in scope, list its
+   phases with a one-sentence description of what each phase does.
 
-2. **Pairwise comparison**: For each pair of protocols, check:
+2. **Pairwise comparison**: For each pair of in-scope protocols (all
+   pairs if feasible, otherwise the most similar pairs within each
+   cluster), check:
    - Do any phases perform the same analysis with different wording?
    - Does one protocol's phase reference another protocol's
      methodology (e.g., "apply the invariant-extraction methodology")?
@@ -220,7 +228,8 @@ Severity guidance for this audit:
 
 Before finalizing, verify:
 
-- [ ] Every protocol was compared pairwise (Phase 1)
+- [ ] Protocols in scope were compared pairwise or by cluster, with
+      coverage documented (Phase 1)
 - [ ] Every template's frontmatter was analyzed (Phase 2)
 - [ ] Every format's section structure was compared (Phase 3)
 - [ ] Terminology was scanned across all components (Phase 4)
