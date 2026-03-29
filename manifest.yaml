@@ -331,6 +331,15 @@ protocols:
         pattern catalog. Performs three-way classification with
         justification, confidence analysis, and catalog update proposals.
 
+    - name: interface-contract-audit
+      path: protocols/reasoning/interface-contract-audit.md
+      description: >
+        Systematic audit of an interface contract for completeness,
+        internal consistency, and alignment with governing specifications.
+        Checks matrix coverage, guarantee traceability, obligation
+        enforceability, invariant consistency, and failure mode
+        completeness.
+
     - name: exhaustive-path-tracing
       path: protocols/reasoning/exhaustive-path-tracing.md
       description: >
@@ -526,6 +535,17 @@ formats:
       implicit invariants, and undefined behavior catalogs. Supports
       code, schematics, netlists, firmware images, configurations,
       and protocol captures.
+
+  - name: interface-contract
+    path: formats/interface-contract.md
+    produces: interface-contract
+    consumes: requirements-document
+    description: >
+      Output format for interface contracts between two parties. Defines
+      boundary resources, operating states, per-resource-per-state
+      guarantees, consumer obligations, testable invariants, and failure
+      modes. Domain-agnostic — works for hardware/firmware, service/service,
+      library/consumer, and OS/driver boundaries.
 
   - name: architecture-spec
     path: formats/architecture-spec.md
@@ -727,6 +747,29 @@ templates:
         migration guidance for implementers.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, spec-evolution-diff]
+      format: investigation-report
+
+    - name: author-interface-contract
+      path: templates/author-interface-contract.md
+      description: >
+        Generate an interface contract between two components from a
+        requirements document, design document, or specification.
+        Produces per-resource-per-state guarantee and obligation
+        matrices with invariants and failure modes.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: interface-contract
+      requires: requirements-document
+
+    - name: audit-interface-contract
+      path: templates/audit-interface-contract.md
+      description: >
+        Audit an interface contract for completeness, internal
+        consistency, and alignment with governing specifications.
+        Checks matrix coverage, traceability, enforceability, and
+        failure mode completeness.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, interface-contract-audit]
       format: investigation-report
 
   standards:
