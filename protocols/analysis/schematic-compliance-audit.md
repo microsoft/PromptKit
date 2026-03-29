@@ -187,7 +187,7 @@ Verify passive component values and ratings.
 2. **Capacitors**: Verify value, voltage rating, and type:
    - Voltage rating ≥ 1.5× the rail voltage (derating)
    - Ceramic capacitors: DC bias derating considered for high-voltage
-     MLCCs (a 10µF 0402 at 3.3V may only provide 6µF effective)
+     MLCCs (a 10µF 0402 at 3.3V may only provide 6µF effective capacitance)
    - Electrolytic/tantalum: ESR appropriate for the application
 
 3. **Inductors** (if present): Verify saturation current rating
