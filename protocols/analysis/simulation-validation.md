@@ -103,10 +103,12 @@ constraint.
 Verify the simulation covers the corners that matter.
 
 1. **Input voltage corners**: Was the simulation run at minimum and
-   maximum input voltage, not just nominal?
-   - Battery: fully charged (4.2V) AND near-cutoff (3.0V)
-   - USB: minimum (4.5V) AND maximum (5.5V)
-   - Flag if only nominal (3.7V, 5.0V) was simulated
+   maximum input voltage, not just nominal? Use the actual voltage
+   ranges from the project's requirements/specification:
+   - Example: for a single-cell Li-ion battery, fully charged
+     (~4.2V) AND near-cutoff (~3.0V)
+   - Example: for USB 5V, minimum (~4.5V) AND maximum (~5.5V)
+   - Flag if only nominal values were simulated
 
 2. **Load corners**: Was the simulation run at minimum and maximum
    load?
