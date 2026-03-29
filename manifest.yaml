@@ -92,6 +92,13 @@ personas:
       review. Thinks in voltage domains and current paths. Conservative
       about datasheet margins.
 
+  - name: rf-engineer
+    path: personas/rf-engineer.md
+    description: >
+      Senior RF systems engineer. Deep expertise in link budget analysis,
+      antenna characterization, propagation modeling, transceiver design,
+      regulatory compliance, and RF test and measurement.
+
   - name: protocol-architect
     path: personas/protocol-architect.md
     description: >
@@ -257,6 +264,14 @@ protocols:
         Covers trace widths, impedance control, ground plane integrity,
         component placement, thermal design, and manufacturing
         constraints.
+
+    - name: link-budget-audit
+      path: protocols/analysis/link-budget-audit.md
+      description: >
+        Systematic link budget review protocol. Audits a wireless link
+        budget for transmitter chain, path loss model selection,
+        receiver chain, margin adequacy, regulatory compliance, and
+        sensitivity to environmental assumptions.
 
   reasoning:
     - name: root-cause-analysis
@@ -1067,6 +1082,16 @@ templates:
         manufacturing constraints.
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, layout-design-review]
+      format: investigation-report
+
+    - name: audit-link-budget
+      path: templates/audit-link-budget.md
+      description: >
+        Audit a wireless link budget for transmitter chain, path loss
+        model validity, receiver chain, margin adequacy, regulatory
+        compliance, and sensitivity to environmental assumptions.
+      persona: rf-engineer
+      protocols: [anti-hallucination, self-verification, link-budget-audit]
       format: investigation-report
 
   testing:
