@@ -6,8 +6,6 @@ date: "2025-07-17"
 status: draft
 source_files:
   - cli/bin/cli.js
-  - cli/lib/assemble.js
-  - cli/lib/manifest.js
   - cli/lib/launch.js
   - cli/scripts/copy-content.js
   - cli/package.json
@@ -20,6 +18,7 @@ source_files:
 | Rev | Date | Author | Description |
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
+| 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired assemble command (REQ-CLI-030–037), assembly engine (REQ-CLI-040–051), manifest resolution module (REQ-CLI-060–069). Kept list command with inline manifest parsing. Modified REQ-CLI-002, 004, 011, 012, 020–023, 080, 091, 094. Retired REQ-CLI-092, CON-005, ASSUMPTION-002, ASSUMPTION-006. Added REQ-CLI-100, 101, 103. |
 
 ---
 
@@ -28,15 +27,12 @@ source_files:
 ### 1.1 What the CLI Is
 
 The PromptKit CLI is a Node.js command-line tool (`@alan-jowett/promptkit`)
-that provides three capabilities:
+that provides two capabilities:
 
 1. **Interactive launch** — detect an LLM CLI on PATH, stage PromptKit
    content, and spawn the LLM with the bootstrap prompt.
 2. **Template listing** — enumerate available prompt templates from
    `manifest.yaml` for discovery.
-3. **Programmatic assembly** — compose a complete prompt from PromptKit
-   components (persona, protocols, taxonomies, format, template) with
-   parameter substitution, producing a Markdown file.
 
 The CLI also includes a **build-time content bundling** script that copies
 PromptKit library content from the repository root into the npm package.
@@ -44,15 +40,10 @@ PromptKit library content from the repository root into the npm package.
 ### 1.2 What the CLI Is NOT
 
 - The CLI is NOT an LLM or AI tool — it launches external LLM CLIs.
-- The CLI does NOT interpret or execute prompts — it assembles them.
-- The CLI does NOT handle interactive-mode templates (`mode: interactive`)
-  or agent instruction file output — those features exist only in the
-  LLM-driven bootstrap.md workflow. [KNOWN GAP]
-- The CLI does NOT support dynamic protocol addition, parameterized personas,
-  or context-driven template selection — those are LLM-only capabilities.
-  [KNOWN GAP]
-- The CLI does NOT include a Non-Goals section in assembled output, unlike
-  bootstrap.md's assembly process. [KNOWN GAP]
+- The CLI does NOT interpret or execute prompts — it stages content and
+  delegates prompt assembly to the LLM via `bootstrap.md`.
+- The CLI does NOT assemble prompts programmatically — all prompt assembly
+  is performed by the LLM when following `bootstrap.md`.
 
 ---
 
@@ -65,11 +56,11 @@ PromptKit library content from the repository root into the npm package.
 - *Source*: `package.json` line 12.
 - *Acceptance*: Running `npx @alan-jowett/promptkit --help` displays help text.
 
-**REQ-CLI-002**: The CLI MUST provide three commands: `interactive`
-(default), `list`, and `assemble`.
-- *Source*: `cli.js` lines 36–129.
-- *Acceptance*: `promptkit --help` lists all three commands; invoking
-  `promptkit` with no arguments runs the `interactive` command.
+**REQ-CLI-002**: The CLI MUST provide two commands: `interactive` (default)
+and `list`.
+- *Source*: `cli.js`.
+- *Acceptance*: `promptkit --help` lists `interactive` and `list` commands;
+  invoking `promptkit` with no arguments runs the `interactive` command.
 
 **REQ-CLI-003**: The CLI MUST display its version from `package.json` when
 invoked with `--version` or `-V`.
@@ -78,10 +69,10 @@ invoked with `--version` or `-V`.
 
 **REQ-CLI-004**: The CLI MUST validate that bundled content exists before
 executing any command, and exit with code 1 and an error message if
-`manifest.yaml` is not found in the content directory.
-- *Source*: `cli.js` lines 15–23 (`ensureContent()`).
-- *Acceptance*: Deleting `content/manifest.yaml` causes any command to
-  print a content-not-found error and exit 1.
+`bootstrap.md` or `manifest.yaml` is not found in the content directory.
+- *Source*: `cli.js` (`ensureContent()`).
+- *Acceptance*: Deleting `content/bootstrap.md` or `content/manifest.yaml`
+  causes any command to print a content-not-found error and exit 1.
 
 ### 2.2 Interactive Command
 
@@ -92,17 +83,20 @@ on the system PATH using the detection order: `copilot` → `gh copilot` →
 - *Acceptance*: With only `claude` on PATH, `detectCli()` returns `"claude"`.
 
 **REQ-CLI-011**: The `interactive` command MUST accept an optional `--cli
-<name>` flag to override auto-detection.
-- *Source*: `cli.js` line 39.
+<name>` flag to override auto-detection. Valid values (`copilot`,
+`gh-copilot`, `claude`) SHOULD be documented in `--help` output.
+- *Source*: `cli.js`.
 - *Acceptance*: `promptkit --cli claude` uses `claude` regardless of what
-  is detected.
+  is detected. `promptkit interactive --help` lists valid `--cli` values.
 
 **REQ-CLI-012**: If no LLM CLI is detected and no `--cli` flag is provided,
 the CLI MUST print an error listing installation instructions for supported
-CLIs and exit with code 1.
-- *Source*: `launch.js` lines 60–69.
+CLIs and exit with code 1. The error message MUST NOT reference a
+`promptkit assemble` fallback. It SHOULD suggest copying the content
+directory and loading `bootstrap.md` manually as an alternative.
+- *Source*: `launch.js`.
 - *Acceptance*: On a system with no supported CLI, `promptkit` prints
-  install guidance and exits 1.
+  install guidance (no `assemble` reference) and exits 1.
 
 **REQ-CLI-013**: If auto-detection selects a CLI other than `copilot` or
 `gh-copilot`, and the user did not pass `--cli`, the CLI SHOULD print a
@@ -155,213 +149,151 @@ exit with code 1.
 
 **REQ-CLI-020**: The `list` command MUST load `manifest.yaml` and display
 all templates grouped by category, with name and first-line description.
-- *Source*: `cli.js` lines 50–80.
+The manifest parsing MUST be implemented inline in `cli.js` (no separate
+`manifest.js` module).
+- *Source*: `cli.js` (inline manifest parsing with `js-yaml`).
 - *Acceptance*: Output shows category headers and template names with
   descriptions.
 
 **REQ-CLI-021**: The `list` command MUST support a `--json` flag that
 outputs the template list as a JSON array.
-- *Source*: `cli.js` lines 55–58.
+- *Source*: `cli.js`.
 - *Acceptance*: `promptkit list --json` produces valid JSON parseable by
   `JSON.parse()`.
 
 **REQ-CLI-022**: The JSON output MUST include each template's `name`,
 `description`, and `category` fields (plus any other fields from the
 manifest entry).
-- *Source*: `manifest.js` lines 16–24 (`getTemplates()` spreads the item
-  and adds `category`).
+- *Source*: `cli.js` (inline template flattening logic).
 - *Acceptance*: JSON output contains objects with at least `name`,
   `description`, `category`.
 
 **REQ-CLI-023**: The human-readable list output MUST end with a usage hint
-directing users to the `assemble` command.
-- *Source*: `cli.js` lines 77–79.
-- *Acceptance*: Output contains `"Use: promptkit assemble <template>"`.
+directing users to the `interactive` command.
+- *Source*: `cli.js`.
+- *Acceptance*: Output contains a usage hint referencing
+  `promptkit interactive` (or equivalent).
 
-### 2.4 Assemble Command
+### 2.4 Assemble Command [RETIRED]
 
-**REQ-CLI-030**: The `assemble` command MUST accept a required positional
-argument `<template>` specifying the template name.
-- *Source*: `cli.js` line 84.
-- *Acceptance*: `promptkit assemble` with no template name produces a
-  Commander error.
+*This entire section is retired. The `assemble` command has been removed.
+Prompt assembly is now performed exclusively by the LLM via `bootstrap.md`.
+See REQ-CLI-100.*
 
-**REQ-CLI-031**: The `assemble` command MUST accept an `-o, --output <file>`
-option with a default value of `"assembled-prompt.md"`.
-- *Source*: `cli.js` line 87.
-- *Acceptance*: Omitting `--output` writes to `assembled-prompt.md` in CWD.
+**[RETIRED] REQ-CLI-030**: ~~The `assemble` command MUST accept a required
+positional argument `<template>` specifying the template name.~~
 
-**REQ-CLI-032**: The `assemble` command MUST accept repeatable `-p, --param
-<key=value>` options to supply template parameters.
-- *Source*: `cli.js` lines 88–92, 131–135 (`collectParams()`).
-- *Acceptance*: `-p foo=bar -p baz=qux` results in `{foo: "bar", baz: "qux"}`.
+**[RETIRED] REQ-CLI-031**: ~~The `assemble` command MUST accept an `-o,
+--output <file>` option with a default value of `"assembled-prompt.md"`.~~
 
-**REQ-CLI-033**: Parameter values containing `=` signs MUST be handled
-correctly by splitting only on the first `=`.
-- *Source*: `cli.js` lines 132–134 (splits on first `=`, joins rest).
-- *Acceptance*: `-p equation=a=b+c` results in `{equation: "a=b+c"}`.
+**[RETIRED] REQ-CLI-032**: ~~The `assemble` command MUST accept repeatable
+`-p, --param <key=value>` options to supply template parameters.~~
 
-**REQ-CLI-034**: If the specified template name does not match any template
-in the manifest, the CLI MUST print an error listing all available template
-names and exit with code 1.
-- *Source*: `cli.js` lines 99–106.
-- *Acceptance*: `promptkit assemble nonexistent` prints available templates
-  and exits 1.
+**[RETIRED] REQ-CLI-033**: ~~Parameter values containing `=` signs MUST be
+handled correctly by splitting only on the first `=`.~~
 
-**REQ-CLI-035**: The `assemble` command MUST resolve the output path
-relative to the current working directory using `path.resolve()`.
-- *Source*: `cli.js` line 110.
-- *Acceptance*: `--output ./out/prompt.md` resolves to an absolute path
-  under CWD.
+**[RETIRED] REQ-CLI-034**: ~~If the specified template name does not match
+any template in the manifest, the CLI MUST print an error listing all
+available template names and exit with code 1.~~
 
-**REQ-CLI-036**: After successful assembly, the CLI MUST print a summary
-including: output path, template name, persona name, protocol list, and
-format name (if present).
-- *Source*: `cli.js` lines 112–118.
-- *Acceptance*: Output includes all five metadata fields.
+**[RETIRED] REQ-CLI-035**: ~~The `assemble` command MUST resolve the output
+path relative to the current working directory using `path.resolve()`.~~
 
-**REQ-CLI-037**: After successful assembly, the CLI MUST scan the output for
-unfilled `{{param}}` placeholders, report the count and names of unique
-unfilled parameters, and suggest using `--param` to fill them.
-- *Source*: `cli.js` lines 121–128.
-- *Acceptance*: Assembling a template without providing required params
-  shows the unfilled-param warning.
+**[RETIRED] REQ-CLI-036**: ~~After successful assembly, the CLI MUST print a
+summary including: output path, template name, persona name, protocol list,
+and format name (if present).~~
 
-### 2.5 Assembly Engine
+**[RETIRED] REQ-CLI-037**: ~~After successful assembly, the CLI MUST scan the
+output for unfilled `{{param}}` placeholders, report the count and names of
+unique unfilled parameters, and suggest using `--param` to fill them.~~
 
-**REQ-CLI-040**: The assembly engine MUST strip YAML frontmatter
-(delimited by `---` lines) from component files before inclusion.
-- *Source*: `assemble.js` lines 9–15 (`stripFrontmatter()`).
-- *Acceptance*: A component with `---\nname: foo\n---\nBody` yields `"Body"`.
+### 2.5 Assembly Engine [RETIRED]
 
-**REQ-CLI-041**: The assembly engine MUST strip leading HTML comments
-(e.g., SPDX license headers) from component files before inclusion.
-- *Source*: `assemble.js` lines 24–28.
-- *Acceptance*: A component starting with `<!-- SPDX -->` has the comment
-  removed.
+*This entire section is retired. The assembly engine (`assemble.js`) has been
+removed. The LLM performs assembly by following the Assembly Process defined
+in `bootstrap.md`. See REQ-CLI-101.*
 
-**REQ-CLI-042**: The assembly engine MUST strip ALL leading HTML comments,
-not just the first one, handling consecutive comment blocks.
-- *Source*: `assemble.js` lines 26–28 (`while` loop).
-- *Acceptance*: A component with two consecutive HTML comments has both
-  removed.
+**[RETIRED] REQ-CLI-040**: ~~The assembly engine MUST strip YAML frontmatter
+(delimited by `---` lines) from component files before inclusion.~~
 
-**REQ-CLI-043**: The assembly engine MUST concatenate components in a
-fixed section order:
-1. `# Identity` (persona)
-2. `# Reasoning Protocols` (protocols, separated by `---`)
-3. `# Classification Taxonomy` (taxonomies, separated by `---`)
-4. `# Output Format` (format)
-5. `# Task` (template body)
-- *Source*: `assemble.js` lines 52–96.
-- *Acceptance*: The assembled output contains sections in this exact order.
+**[RETIRED] REQ-CLI-041**: ~~The assembly engine MUST strip leading HTML
+comments (e.g., SPDX license headers) from component files before
+inclusion.~~
 
-**REQ-CLI-044**: Sections MUST be separated by `\n\n---\n\n` (horizontal
-rule with blank lines).
-- *Source*: `assemble.js` line 98.
-- *Acceptance*: Section separators match this exact string.
+**[RETIRED] REQ-CLI-042**: ~~The assembly engine MUST strip ALL leading HTML
+comments, not just the first one, handling consecutive comment blocks.~~
 
-**REQ-CLI-045**: Multiple protocols within the Reasoning Protocols section
-MUST be separated by `\n\n---\n\n`.
-- *Source*: `assemble.js` line 66.
-- *Acceptance*: Two protocols have a `---` separator between them.
+**[RETIRED] REQ-CLI-043**: ~~The assembly engine MUST concatenate components
+in a fixed section order: Identity → Reasoning Protocols → Classification
+Taxonomy → Output Format → Task.~~
 
-**REQ-CLI-046**: Multiple taxonomies within the Classification Taxonomy
-section MUST be separated by `\n\n---\n\n`.
-- *Source*: `assemble.js` line 79.
-- *Acceptance*: Two taxonomies have a `---` separator between them.
+**[RETIRED] REQ-CLI-044**: ~~Sections MUST be separated by `\n\n---\n\n`
+(horizontal rule with blank lines).~~
 
-**REQ-CLI-047**: If a component file does not exist, the assembly engine
-MUST print a warning and skip that component (not crash).
-- *Source*: `assemble.js` lines 19–21.
-- *Acceptance*: A missing persona file produces a warning but assembly
-  completes.
+**[RETIRED] REQ-CLI-045**: ~~Multiple protocols within the Reasoning Protocols
+section MUST be separated by `\n\n---\n\n`.~~
 
-**REQ-CLI-048**: Sections for which no component is resolved (e.g., no
-taxonomies) MUST be omitted from the output entirely.
-- *Source*: `assemble.js` lines 53, 61, 72, 85, 93 (conditional pushes).
-- *Acceptance*: A template with no taxonomies has no "Classification
-  Taxonomy" section.
+**[RETIRED] REQ-CLI-046**: ~~Multiple taxonomies within the Classification
+Taxonomy section MUST be separated by `\n\n---\n\n`.~~
 
-**REQ-CLI-049**: Parameter substitution MUST replace ALL occurrences of
-`{{key}}` with the provided value for each key in the params object.
-- *Source*: `assemble.js` lines 34–39 (`substituteParams()`).
-- *Acceptance*: `{{key}}` appearing twice is replaced in both locations.
+**[RETIRED] REQ-CLI-047**: ~~If a component file does not exist, the assembly
+engine MUST print a warning and skip that component (not crash).~~
 
-**REQ-CLI-050**: Parameter substitution MUST be applied after all component
-concatenation (i.e., params can appear in any component, not just the
-template body).
-- *Source*: `assemble.js` lines 100–103 (substitution after join).
-- *Acceptance*: A `{{param}}` in a persona file is substituted.
+**[RETIRED] REQ-CLI-048**: ~~Sections for which no component is resolved
+(e.g., no taxonomies) MUST be omitted from the output entirely.~~
 
-**REQ-CLI-051**: The assembly engine MUST NOT add a `# Non-Goals` section.
-[KNOWN GAP — bootstrap.md includes Non-Goals but the CLI does not]
-- *Source*: `assemble.js` — no non-goals logic present.
-- *Acceptance*: Assembled output does not contain a Non-Goals section.
+**[RETIRED] REQ-CLI-049**: ~~Parameter substitution MUST replace ALL
+occurrences of `{{key}}` with the provided value for each key in the params
+object.~~
 
-### 2.6 Manifest Resolution
+**[RETIRED] REQ-CLI-050**: ~~Parameter substitution MUST be applied after all
+component concatenation (i.e., params can appear in any component, not just
+the template body).~~
 
-**REQ-CLI-060**: The manifest loader MUST parse `manifest.yaml` using
-`js-yaml` and return the parsed object.
-- *Source*: `manifest.js` lines 10–14.
-- *Acceptance*: `loadManifest()` returns an object matching the YAML
-  structure.
+**[RETIRED] REQ-CLI-051**: ~~The assembly engine MUST NOT add a `# Non-Goals`
+section.~~
 
-**REQ-CLI-061**: `getTemplates()` MUST flatten the manifest's nested
-`templates` structure (keyed by category) into a flat array, attaching
-the `category` field to each template entry.
-- *Source*: `manifest.js` lines 16–24.
-- *Acceptance*: Returned array contains objects with `category` and all
-  original fields.
+### 2.6 Manifest Resolution [RETIRED]
 
-**REQ-CLI-062**: `getPersona()` MUST look up a persona by `name` field in
-the `personas` array.
-- *Source*: `manifest.js` lines 26–28.
-- *Acceptance*: `getPersona(manifest, "systems-engineer")` returns the
-  matching entry.
+*This entire section is retired. The manifest resolution module
+(`manifest.js`) has been removed. The LLM reads `manifest.yaml` directly
+when following `bootstrap.md`. The `list` command uses inline manifest
+parsing (see REQ-CLI-103). See REQ-CLI-101.*
 
-**REQ-CLI-063**: `getProtocol()` MUST look up a protocol by short name
-across all protocol categories (guardrails, analysis, reasoning).
-- *Source*: `manifest.js` lines 30–36.
-- *Acceptance*: `getProtocol(manifest, "anti-hallucination")` finds the
-  protocol regardless of its category.
+**[RETIRED] REQ-CLI-060**: ~~The manifest loader MUST parse `manifest.yaml`
+using `js-yaml` and return the parsed object.~~
 
-**REQ-CLI-064**: `getFormat()` MUST look up a format by `name` field in the
-`formats` array.
-- *Source*: `manifest.js` lines 38–40.
-- *Acceptance*: `getFormat(manifest, "investigation-report")` returns the
-  matching entry.
+**[RETIRED] REQ-CLI-061**: ~~`getTemplates()` MUST flatten the manifest's
+nested `templates` structure (keyed by category) into a flat array,
+attaching the `category` field to each template entry.~~
 
-**REQ-CLI-065**: `getTaxonomy()` MUST look up a taxonomy by `name` field in
-the `taxonomies` array.
-- *Source*: `manifest.js` lines 42–44.
-- *Acceptance*: `getTaxonomy(manifest, "stack-lifetime-hazards")` returns
-  the matching entry.
+**[RETIRED] REQ-CLI-062**: ~~`getPersona()` MUST look up a persona by `name`
+field in the `personas` array.~~
 
-**REQ-CLI-066**: `resolveTemplateDeps()` MUST resolve all four dependency
-types (persona, protocols, format, taxonomies) for a given template entry,
-returning an object `{ persona, protocols, taxonomies, format }`.
-- *Source*: `manifest.js` lines 46–69.
-- *Acceptance*: A template with all four dependency types gets all resolved.
+**[RETIRED] REQ-CLI-063**: ~~`getProtocol()` MUST look up a protocol by short
+name across all protocol categories (guardrails, analysis, reasoning).~~
 
-**REQ-CLI-067**: If a protocol referenced by a template is not found in the
-manifest, `resolveTemplateDeps()` MUST print a warning and exclude it from
-the returned protocols array.
-- *Source*: `manifest.js` lines 53–57.
-- *Acceptance*: A template referencing a non-existent protocol produces a
-  warning but does not crash.
+**[RETIRED] REQ-CLI-064**: ~~`getFormat()` MUST look up a format by `name`
+field in the `formats` array.~~
 
-**REQ-CLI-068**: If a taxonomy referenced by a template is not found in the
-manifest, `resolveTemplateDeps()` MUST print a warning and exclude it from
-the returned taxonomies array.
-- *Source*: `manifest.js` lines 62–65.
-- *Acceptance*: A template referencing a non-existent taxonomy produces a
-  warning.
+**[RETIRED] REQ-CLI-065**: ~~`getTaxonomy()` MUST look up a taxonomy by
+`name` field in the `taxonomies` array.~~
 
-**REQ-CLI-069**: Template matching in the `assemble` command MUST use exact
-string matching on the `name` field (case-sensitive). [UNDOCUMENTED]
-- *Source*: `cli.js` line 97 (`.find((t) => t.name === templateName)`).
-- *Acceptance*: `Investigate-Bug` does not match `investigate-bug`.
+**[RETIRED] REQ-CLI-066**: ~~`resolveTemplateDeps()` MUST resolve all four
+dependency types (persona, protocols, format, taxonomies) for a given
+template entry, returning an object
+`{ persona, protocols, taxonomies, format }`.~~
+
+**[RETIRED] REQ-CLI-067**: ~~If a protocol referenced by a template is not
+found in the manifest, `resolveTemplateDeps()` MUST print a warning and
+exclude it from the returned protocols array.~~
+
+**[RETIRED] REQ-CLI-068**: ~~If a taxonomy referenced by a template is not
+found in the manifest, `resolveTemplateDeps()` MUST print a warning and
+exclude it from the returned taxonomies array.~~
+
+**[RETIRED] REQ-CLI-069**: ~~Template matching in the `assemble` command MUST
+use exact string matching on the `name` field (case-sensitive).~~
 
 ### 2.7 Content Bundling
 
@@ -408,10 +340,11 @@ copied upon completion.
 ### 2.8 Distribution
 
 **REQ-CLI-080**: The npm package MUST include only `bin/`, `lib/`, and
-`content/` directories (plus package.json).
+`content/` directories (plus package.json). The `lib/` directory MUST
+contain only `launch.js`.
 - *Source*: `package.json` lines 14–18 (`files` field).
 - *Acceptance*: `npm pack --dry-run` lists only files under those
-  directories.
+  directories. `lib/` contains only `launch.js`.
 
 **REQ-CLI-081**: The `content/` directory MUST be gitignored since it is
 generated at build time.
@@ -434,20 +367,21 @@ generated at build time.
 - *Acceptance*: Running on Node 16 produces an engine-mismatch warning.
 
 **REQ-CLI-091**: The CLI MUST work on Windows, macOS, and Linux.
-- *Source*: `launch.js` line 13 (platform-aware `where` vs `which`);
-  `assemble.js` line 10 (handles `\r\n` in frontmatter regex).
+- *Source*: `launch.js` line 13 (platform-aware `where` vs `which`).
 - *Acceptance*: CLI runs successfully on all three platforms.
 
 ### 3.2 Error Handling
 
-**REQ-CLI-092**: The CLI MUST NOT crash with an unhandled exception when a
-referenced component file is missing; it MUST print a warning and continue.
-- *Source*: `assemble.js` lines 19–21; `manifest.js` lines 53–57, 62–65.
-- *Acceptance*: Missing component produces a warning, not a stack trace.
+**[RETIRED] REQ-CLI-092**: ~~The CLI MUST NOT crash with an unhandled
+exception when a referenced component file is missing; it MUST print a
+warning and continue.~~
+
+*Retired: The CLI no longer loads component files. The LLM handles missing
+components when following `bootstrap.md`.*
 
 **REQ-CLI-093**: The CLI MUST exit with a non-zero code on all error paths
-(missing content, missing template, missing CLI, spawn failure).
-- *Source*: `cli.js` lines 21, 105; `launch.js` lines 69, 104, 119.
+(missing content, missing CLI, spawn failure).
+- *Source*: `cli.js`; `launch.js` lines 69, 104, 119.
 - *Acceptance*: All error paths produce exit code 1.
 
 ### 3.3 Dependencies
@@ -474,9 +408,12 @@ any secrets. LLM authentication is handled by the external CLI.
 **CON-004**: The CLI MUST NOT persist state between invocations. Each run
 is stateless.
 
-**CON-005**: The assembly engine MUST NOT summarize, abbreviate, or
-condense component content — it includes body text verbatim (minus
-frontmatter/comments).
+**[RETIRED] CON-005**: ~~The assembly engine MUST NOT summarize, abbreviate,
+or condense component content — it includes body text verbatim (minus
+frontmatter/comments).~~
+
+*Retired: Assembly engine removed. The equivalent rule exists in
+`bootstrap.md`'s Verbatim Inclusion Rule.*
 
 ---
 
@@ -487,15 +424,18 @@ frontmatter/comments).
 flat arrays for `personas`, `formats`, and `taxonomies`. This structure is
 assumed stable.
 
-**[ASSUMPTION-002]**: Template entries in the manifest contain at minimum
-`name`, `description`, `path`, `persona`, and optionally `protocols`,
-`format`, and `taxonomies` fields. The exact schema is not validated by
-the CLI. [UNDOCUMENTED]
+**[RETIRED] [ASSUMPTION-002]**: ~~Template entries in the manifest contain at
+minimum `name`, `description`, `path`, `persona`, and optionally
+`protocols`, `format`, and `taxonomies` fields. The exact schema is not
+validated by the CLI. [UNDOCUMENTED]~~
+
+*Retired: The CLI no longer resolves template dependencies. The LLM reads
+template entries directly.*
 
 **[ASSUMPTION-003]**: The `--cli` flag for the `interactive` command
 accepts values matching the switch cases in `launch.js`: `"copilot"`,
-`"gh-copilot"`, `"claude"`. Other values cause exit with code 1. The set
-of valid values is not documented in help text. [UNDOCUMENTED]
+`"gh-copilot"`, `"claude"`. Other values cause exit with code 1. These
+valid values SHOULD be documented in help text (see REQ-CLI-011).
 
 **[ASSUMPTION-004]**: The `copyContentToTemp` function copies the entire
 content directory recursively, including all file types — unlike
@@ -508,29 +448,55 @@ run from a development environment. [INFERRED]
 installing from the npm registry (where `content/` is already packed).
 This relies on standard npm lifecycle behavior.
 
-**[ASSUMPTION-006]**: The frontmatter stripping regex
+**[RETIRED] [ASSUMPTION-006]**: ~~The frontmatter stripping regex
 (`/^---\r?\n[\s\S]*?\r?\n---\r?\n/`) assumes frontmatter starts at the
 very beginning of the file (after HTML comment stripping). Content files
-with frontmatter not at the start will not be stripped. [INFERRED]
+with frontmatter not at the start will not be stripped. [INFERRED]~~
+
+*Retired: Assembly engine removed — frontmatter stripping no longer
+applies to CLI code.*
 
 ---
 
-## 6. Acceptance Criteria Summary
+## 6. New Requirements (v0.2)
+
+**REQ-CLI-100**: The CLI MUST NOT expose an `assemble` command. Running
+`promptkit assemble` MUST produce a Commander help/error message, not
+invoke any assembly logic.
+- *Acceptance*: `promptkit assemble anything` produces an error or help
+  message; no assembly output is generated.
+
+**REQ-CLI-101**: The published npm package MUST NOT contain `assemble.js`
+or `manifest.js` in the `lib/` directory.
+- *Acceptance*: `npm pack --dry-run` does not list `lib/assemble.js` or
+  `lib/manifest.js`.
+
+**REQ-CLI-103**: The `list` command MUST use inline manifest parsing within
+`cli.js` (reading and parsing `manifest.yaml` with `js-yaml` directly). It
+MUST NOT depend on a separate `manifest.js` module.
+- *Acceptance*: `cli.js` does not `require` or `import` any `manifest`
+  module. The `list` command functions correctly with only `cli.js`,
+  `launch.js`, `commander`, and `js-yaml`.
+
+---
+
+## 7. Acceptance Criteria Summary
 
 Each REQ-CLI-NNN includes inline acceptance criteria. The following are
 cross-cutting acceptance criteria:
 
-**AC-001**: All three commands (`interactive`, `list`, `assemble`) are
-reachable and documented in `--help` output.
+**AC-001**: Both commands (`interactive` and `list`) are reachable and
+documented in `--help` output.
 
-**AC-002**: The `assemble` command produces output identical to what the
-assembly process described in `bootstrap.md` specifies (section order,
-separators, frontmatter stripping, verbatim inclusion).
+**[RETIRED] AC-002**: ~~The `assemble` command produces output identical to
+what the assembly process described in `bootstrap.md` specifies (section
+order, separators, frontmatter stripping, verbatim inclusion).~~
 
 **AC-003**: The CLI exits cleanly (no orphan processes, no leftover temp
 dirs) in all normal and error scenarios.
 
 **AC-004**: `npm pack` produces a tarball containing `bin/cli.js`,
-`lib/*.js`, and `content/` with all prompt components.
+`lib/launch.js`, and `content/` with all prompt components. The tarball
+MUST NOT contain `lib/assemble.js` or `lib/manifest.js`.
 
 **AC-005**: The CLI runs without errors on Node.js 18, 20, and 22.

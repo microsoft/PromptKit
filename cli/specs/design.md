@@ -16,6 +16,7 @@ related:
 | Rev | Date | Author | Description |
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
+| 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Removed assemble.js module design (§2.2), manifest.js module design (§2.3), assembly pipeline data flow (§3.1). Updated cli.js design for two commands with inline manifest parsing. Updated module structure, dependency graph, command flow, interface contracts, dependencies. Resolved GAP-001 through GAP-007, GAP-009, GAP-011. |
 
 ---
 
@@ -23,15 +24,13 @@ related:
 
 ### 1.1 Module Structure
 
-The CLI consists of four runtime modules and one build-time script:
+The CLI consists of two runtime modules and one build-time script:
 
 ```
 cli/
 ├── bin/
 │   └── cli.js            # Entry point — command routing (Commander.js)
 ├── lib/
-│   ├── assemble.js       # Assembly engine — component loading & composition
-│   ├── manifest.js       # Manifest parsing & dependency resolution
 │   └── launch.js         # LLM CLI detection & interactive session launch
 ├── scripts/
 │   └── copy-content.js   # Build-time content bundler (npm lifecycle)
@@ -51,10 +50,7 @@ cli/
 ```
 cli.js
 ├── commander           (external: CLI framework)
-├── lib/manifest.js
-│   └── js-yaml         (external: YAML parsing)
-├── lib/assemble.js
-│   └── lib/manifest.js (resolveTemplateDeps)
+├── js-yaml             (external: YAML parsing for list command)
 └── lib/launch.js
     └── child_process   (Node built-in)
 ```
@@ -70,26 +66,16 @@ User invokes `promptkit [command]`
           ▼
    ┌─────────────┐
    │   cli.js     │──── ensureContent() ──── Content missing? → exit(1)
-   │  (Commander) │
+   │  (Commander) │     (checks bootstrap.md AND manifest.yaml)
    └──────┬───────┘
           │
-    ┌─────┼─────────────────┐
-    ▼     ▼                 ▼
-interactive  list         assemble <template>
-    │        │                │
-    │        │         loadManifest()
-    │        │         getTemplates()
-    │    loadManifest() find template
-    │    getTemplates() assemble()
-    │    display         │
-    │                    ├── resolveTemplateDeps()
-    │                    ├── loadComponent() × N
-    │                    ├── concatenate sections
-    │                    ├── substituteParams()
-    │                    └── return assembled string
-    │                         │
-    │                    writeFileSync()
-    │                    report summary
+    ┌─────┴─────┐
+    ▼           ▼
+interactive   list
+    │           │
+    │      read manifest.yaml (js-yaml)
+    │      flatten templates by category
+    │      display (human or --json)
     │
     ├── detectCli()
     ├── copyContentToTemp()
@@ -115,138 +101,40 @@ validate content availability.
   `promptkit` invocations launch interactive mode.
 - `ensureContent()` is called in every command's action handler (not
   globally) to ensure the check runs after Commander has parsed arguments.
-  [INFERRED — the function is called inside each action, not at top level]
+  The check validates both `bootstrap.md` and `manifest.yaml` exist.
+- The `list` command performs inline manifest parsing using `js-yaml` —
+  it reads `manifest.yaml`, flattens the nested `templates` structure
+  by category, and displays the result. No separate `manifest.js` module
+  is used (see REQ-CLI-103).
+- The `--cli` flag documents valid values (`copilot`, `gh-copilot`,
+  `claude`) in its help text (see REQ-CLI-011).
 
 **Key function**:
 
 ```
 ensureContent() → void | process.exit(1)
 ```
-Checks for `manifest.yaml` in the content directory. Guards all commands.
+Checks for both `bootstrap.md` and `manifest.yaml` in the content
+directory. Guards all commands.
 
-**Parameter collection**:
+**Implements**: REQ-CLI-001 through REQ-CLI-004, REQ-CLI-020 through
+REQ-CLI-023, REQ-CLI-100, REQ-CLI-103.
 
-```
-collectParams(value: string, previous: object) → object
-```
-Accumulates `-p key=value` flags into an object. Splits on the first `=`
-to allow values containing `=`. Commander calls this reducer for each
-`--param` occurrence.
+### 2.2 assemble.js — Assembly Engine [RETIRED]
 
-**Implements**: REQ-CLI-001 through REQ-CLI-004, REQ-CLI-030 through
-REQ-CLI-037.
+*This module has been removed. The assembly engine was redundant with
+the Assembly Process defined in `bootstrap.md`. The LLM performs all
+prompt assembly. See REQ-CLI-101.*
 
-### 2.2 assemble.js — Assembly Engine
+*Previously implemented*: REQ-CLI-040 through REQ-CLI-051 (all retired).
 
-**Responsibility**: Load PromptKit components from disk, strip metadata,
-concatenate into an assembled prompt, and substitute parameters.
+### 2.3 manifest.js — Manifest Parsing & Dependency Resolution [RETIRED]
 
-**Design decisions**:
-- Frontmatter stripping uses a regex (`/^---\r?\n[\s\S]*?\r?\n---\r?\n/`)
-  that handles both Unix (`\n`) and Windows (`\r\n`) line endings.
-- HTML comment stripping uses a `while` loop to handle multiple consecutive
-  comments (e.g., SPDX header + another comment).
-- The section ordering (Identity → Protocols → Taxonomy → Format → Task)
-  mirrors the Assembly Process defined in `bootstrap.md`, ensuring CLI
-  output matches LLM-generated output.
-- Parameter substitution uses string splitting (`split(placeholder).join(value)`)
-  rather than regex replacement to avoid special regex character issues in
-  parameter values.
-- `resolveTemplateDeps()` is imported lazily inside `assemble()` to avoid
-  circular dependency issues. [INFERRED — the `require("./manifest")` is
-  inside the function body, not at module scope]
+*This module has been removed. The LLM reads `manifest.yaml` directly
+when following `bootstrap.md`. The `list` command's manifest parsing
+is inlined in `cli.js`. See REQ-CLI-101, REQ-CLI-103.*
 
-**Key functions**:
-
-```
-stripFrontmatter(content: string) → string
-```
-Removes YAML frontmatter block from the start of content. Returns trimmed
-body.
-
-```
-loadComponent(contentDir: string, componentPath: string) → string | null
-```
-Reads a component file, strips HTML comments and frontmatter. Returns the
-body text or `null` if the file does not exist. The `componentPath` is
-relative to `contentDir` and comes from the manifest's `path` field.
-
-```
-substituteParams(content: string, params: object) → string
-```
-Replaces all `{{key}}` placeholders with corresponding values.
-
-```
-assemble(contentDir: string, manifest: object, templateEntry: object,
-         params?: object) → string
-```
-Main assembly pipeline:
-1. Call `resolveTemplateDeps()` to get persona, protocols, taxonomies, format
-2. Load each component via `loadComponent()`
-3. Build sections array with headers (`# Identity`, etc.)
-4. Join sections with `\n\n---\n\n`
-5. Apply parameter substitution
-6. Return assembled string
-
-**Implements**: REQ-CLI-040 through REQ-CLI-051.
-
-### 2.3 manifest.js — Manifest Parsing & Dependency Resolution
-
-**Responsibility**: Parse `manifest.yaml` and provide lookup functions for
-each component type.
-
-**Design decisions**:
-- Uses `js-yaml` (^4.1.0) for YAML parsing — it is the most widely used
-  YAML parser for Node.js, supports YAML 1.2, and has no native
-  dependencies.
-- The manifest has different structures for different component types:
-  - `personas`, `formats`, `taxonomies`: flat arrays of objects
-  - `protocols`: object keyed by category (`guardrails`, `analysis`,
-    `reasoning`), each containing an array
-  - `templates`: object keyed by category, each containing an array
-- `getProtocol()` searches across all protocol categories, flattening
-  the category hierarchy. This aligns with the convention that manifest
-  entries use short names while template frontmatter uses category-prefixed
-  paths.
-- `resolveTemplateDeps()` uses the template entry's short-name protocol
-  list (from the manifest), NOT the category-prefixed list from template
-  frontmatter. This is intentional and aligns with the manifest-as-source-
-  of-truth principle.
-- Missing dependencies produce `console.warn()` and are filtered out, not
-  thrown as errors. This makes the system resilient to partial manifests
-  but can hide configuration bugs silently. [INFERRED — this is a
-  deliberate tolerance vs. strictness tradeoff]
-
-**Key functions**:
-
-```
-loadManifest(contentDir: string) → object
-```
-Reads and parses `manifest.yaml`. Throws on malformed YAML.
-
-```
-getTemplates(manifest: object) → Array<{name, description, category, ...}>
-```
-Flattens nested template structure into a flat array with `category`
-attached.
-
-```
-getPersona(manifest: object, name: string) → object | undefined
-getProtocol(manifest: object, shortName: string) → object | null
-getFormat(manifest: object, name: string) → object | undefined
-getTaxonomy(manifest: object, name: string) → object | undefined
-```
-Lookup functions. Note inconsistency: `getProtocol` returns `null` on
-miss while others return `undefined`. [UNDOCUMENTED]
-
-```
-resolveTemplateDeps(manifest: object, template: object)
-  → { persona, protocols: Array, taxonomies: Array, format }
-```
-Resolves all component dependencies for a template. Missing items produce
-warnings and are excluded.
-
-**Implements**: REQ-CLI-060 through REQ-CLI-069.
+*Previously implemented*: REQ-CLI-060 through REQ-CLI-069 (all retired).
 
 ### 2.4 launch.js — LLM CLI Detection & Interactive Launch
 
@@ -274,6 +162,9 @@ interactive session.
 - Temp directory cleanup is wrapped in try/catch for best-effort cleanup —
   if deletion fails (e.g., file locks on Windows), the OS temp cleaner
   will eventually remove it.
+- The "no CLI found" error message lists LLM CLI installation
+  instructions and suggests manual loading of `bootstrap.md`. It does
+  NOT reference a `promptkit assemble` fallback (see REQ-CLI-012).
 
 **Key functions**:
 
@@ -332,48 +223,11 @@ root into `cli/content/` for npm packaging.
 
 ## 3. Data Flow
 
-### 3.1 Assembly Pipeline (assemble command)
+### 3.1 Assembly Pipeline [RETIRED]
 
-```
-                          manifest.yaml
-                              │
-                     loadManifest() ──── parse YAML
-                              │
-                     getTemplates() ──── flatten by category
-                              │
-                     find template by name
-                              │
-              resolveTemplateDeps(manifest, template)
-                    │         │          │        │
-             getPersona  getProtocol  getFormat getTaxonomy
-                    │     (× N)        │       (× N)
-                    ▼         ▼          ▼        ▼
-              { persona, protocols[], format, taxonomies[] }
-                    │         │          │        │
-              loadComponent() for each dependency
-                    │         │          │        │
-              strip HTML comments
-              strip YAML frontmatter
-              trim whitespace
-                    │         │          │        │
-                    ▼         ▼          ▼        ▼
-              Build sections array:
-              ┌─────────────────────────────────────┐
-              │ "# Identity\n\n" + persona body     │
-              │ "# Reasoning Protocols\n\n" + ...   │
-              │ "# Classification Taxonomy\n\n" + . │
-              │ "# Output Format\n\n" + format body │
-              │ "# Task\n\n" + template body        │
-              └─────────────────────────────────────┘
-                              │
-                    join with "\n\n---\n\n"
-                              │
-                    substituteParams(assembled, params)
-                              │
-                    ▼ final assembled string
-                              │
-                    writeFileSync(outputPath)
-```
+*This data flow has been removed. The assembly pipeline was implemented
+by `assemble.js` and `manifest.js`, both of which have been deleted.
+The LLM performs prompt assembly when following `bootstrap.md`.*
 
 ### 3.2 Interactive Launch Pipeline
 
@@ -381,6 +235,7 @@ root into `cli/content/` for npm packaging.
      User runs `promptkit` or `promptkit interactive`
                          │
                    ensureContent()
+                   (check bootstrap.md + manifest.yaml)
                          │
                    detectCli() ──── probe PATH
                          │
@@ -403,7 +258,31 @@ root into `cli/content/` for npm packaging.
                  exit(1)     re-signal(child.signal)
 ```
 
-### 3.3 Content Bundling Pipeline (build-time)
+### 3.3 List Pipeline
+
+```
+     User runs `promptkit list [--json]`
+                         │
+                   ensureContent()
+                   (check bootstrap.md + manifest.yaml)
+                         │
+                   read manifest.yaml (fs.readFileSync)
+                   parse with js-yaml
+                         │
+                   flatten templates by category
+                   (iterate manifest.templates keys,
+                    spread each item + add category field)
+                         │
+                    ┌─────┴─────┐
+                    │           │
+                 --json?     human-readable
+                    │           │
+                 JSON.stringify  group by category
+                 → stdout       print headers + names
+                                print usage hint
+```
+
+### 3.4 Content Bundling Pipeline (build-time)
 
 ```
      npm publish / npm install (from git)
@@ -437,18 +316,18 @@ root into `cli/content/` for npm packaging.
 **Decision**: Use Commander.js (^12.0.0) for argument parsing.
 **Rationale**: Industry standard for Node.js CLIs. Provides automatic help
 generation, version flags, subcommand support, and repeatable options out
-of the box. Zero-config for the CLI's three-command structure.
+of the box. Zero-config for the CLI's two-command structure.
 **Alternatives considered**: yargs, meow, manual `process.argv` parsing.
 Commander was chosen for its simplicity and convention-over-configuration
 approach. [INFERRED]
 
 ### 4.2 js-yaml for YAML Parsing
 
-**Decision**: Use js-yaml (^4.1.0) for parsing `manifest.yaml`.
+**Decision**: Use js-yaml (^4.1.0) for parsing `manifest.yaml` in the
+`list` command.
 **Rationale**: Pure JavaScript, no native dependencies, YAML 1.2 compliant.
-The manifest is the only YAML the CLI parses at runtime (frontmatter is
-stripped by regex, not parsed). [INFERRED — frontmatter regex vs YAML
-parsing are separate paths]
+The manifest is the only YAML the CLI parses at runtime — it is read
+inline by the `list` command in `cli.js` (no separate module).
 
 ### 4.3 Temp Directory for Interactive Launch
 
@@ -457,30 +336,24 @@ parsing are separate paths]
 installs content in an unpredictable location (`node_modules/`). Copying
 to a temp directory gives the LLM a clean, predictable file layout.
 **Tradeoff**: Adds startup latency (recursive copy) and creates cleanup
-obligations. The redundancy analysis identifies this as an "awkward
-workaround." [KNOWN GAP — see Section 7]
+obligations.
 
-### 4.4 Verbatim Inclusion (No Summarization)
+### 4.4 Inline Manifest Parsing for List Command
 
-**Decision**: Include component body text exactly as written, removing only
-frontmatter and SPDX comments.
-**Rationale**: Matches the Verbatim Inclusion Rule in `bootstrap.md`.
-Summarization loses operational detail that LLMs need (checklists, phase
-sub-steps, known-safe patterns).
-**Implication**: Assembled prompts can be large. No truncation or
-condensation is applied.
+**Decision**: Parse `manifest.yaml` directly in `cli.js` rather than using
+a separate `manifest.js` module.
+**Rationale**: The `list` command only needs to read and flatten the
+templates section of the manifest. This is ~10 lines of code (read file,
+parse YAML, iterate categories, flatten). A separate module introduced
+unnecessary abstraction and coupling — `manifest.js` also contained
+dependency resolution functions (`getPersona`, `getProtocol`, etc.) that
+are no longer needed since `assemble.js` has been removed. Inlining keeps
+the code minimal and eliminates the module dependency.
+**Tradeoff**: If manifest parsing logic grows in the future, it may need
+to be extracted into a module. Currently, the inline approach is
+proportionate to the complexity.
 
-### 4.5 Warn-and-Continue for Missing Dependencies
-
-**Decision**: Print `console.warn()` and skip missing components rather
-than throwing errors.
-**Rationale**: Makes the CLI resilient to partial manifests and incremental
-development. A template can reference a not-yet-created protocol without
-breaking the entire assembly.
-**Tradeoff**: Can silently produce incomplete prompts if a manifest has
-typos.
-
-### 4.6 Build-Time Content Bundling
+### 4.5 Build-Time Content Bundling
 
 **Decision**: Use npm lifecycle scripts to bundle content rather than
 referencing the repo root at runtime.
@@ -488,6 +361,21 @@ referencing the repo root at runtime.
 directory. Content must be physically included in the package. The
 `prepare` hook ensures this works for both `npm publish` and
 `npm install` from git.
+
+### 4.6 LLM as Single Source of Truth for Assembly
+
+**Decision**: Remove the CLI's assembly engine and delegate all prompt
+assembly to the LLM via `bootstrap.md`.
+**Rationale**: The CLI's `assemble.js` reimplemented the Assembly Process
+from `bootstrap.md`, creating two implementations of the same logic that
+had already diverged (bug #137). The CLI assembly could not handle
+interactive templates, parameterized personas, dynamic protocols, or
+Non-Goals sections — features the LLM handles naturally. Removing the
+redundant implementation eliminates an entire class of maintenance burden
+and divergence risk. The LLM is the single source of truth for assembly.
+**Tradeoff**: Loss of deterministic, offline, no-LLM assembly for
+CI/scripting use cases. Users without an LLM CLI can manually read and
+assemble from the Markdown files.
 
 ---
 
@@ -501,36 +389,17 @@ promptkit [command] [options]
 Commands:
   interactive [--cli <name>]           Launch interactive LLM session (default)
   list [--json]                        List available templates
-  assemble <template> [-o file] [-p k=v ...]  Assemble a prompt
 
 Global options:
   -V, --version                        Output version number
   -h, --help                           Display help
+
+Interactive options:
+  --cli <name>      Override LLM CLI auto-detection
+                    Valid values: copilot, gh-copilot, claude
 ```
 
 ### 5.2 Module Exports
-
-**manifest.js**:
-```javascript
-module.exports = {
-  loadManifest,       // (contentDir: string) → object
-  getTemplates,       // (manifest: object) → Array<object>
-  getPersona,         // (manifest: object, name: string) → object | undefined
-  getProtocol,        // (manifest: object, shortName: string) → object | null
-  getFormat,          // (manifest: object, name: string) → object | undefined
-  getTaxonomy,        // (manifest: object, name: string) → object | undefined
-  resolveTemplateDeps // (manifest: object, template: object) → {persona, protocols, taxonomies, format}
-}
-```
-
-**assemble.js**:
-```javascript
-module.exports = {
-  assemble,           // (contentDir, manifest, templateEntry, params?) → string
-  loadComponent,      // (contentDir, componentPath) → string | null
-  stripFrontmatter    // (content: string) → string
-}
-```
 
 **launch.js**:
 ```javascript
@@ -543,84 +412,31 @@ module.exports = {
 
 ### 5.3 Manifest Schema (Expected Input)
 
-The CLI expects `manifest.yaml` to conform to this structure:
+The CLI expects `manifest.yaml` to conform to this structure (used by the
+`list` command for template enumeration):
 
 ```yaml
 version: string
 
-personas:
-  - name: string
-    path: string        # relative to content dir
-    description: string
-
-protocols:
-  <category>:           # e.g., guardrails, analysis, reasoning
-    - name: string      # short name (no category prefix)
-      path: string
-      description: string
-
-formats:
-  - name: string
-    path: string
-    description: string
-
-taxonomies:
-  - name: string
-    path: string
-    description: string
-
 templates:
   <category>:           # e.g., engineering, investigation
     - name: string
-      path: string
       description: string
-      persona: string   # references personas[].name
-      protocols: [string]  # references protocols[*][].name (short names)
-      format: string    # references formats[].name (optional)
-      taxonomies: [string] # references taxonomies[].name (optional)
+      # ... other fields (ignored by list command)
 ```
+
+The full manifest schema (including `personas`, `protocols`, `formats`,
+`taxonomies`) is consumed by the LLM via `bootstrap.md`, not by the CLI.
 
 [ASSUMPTION — this schema is inferred from code behavior; no formal
 schema definition exists in the codebase]
 
-### 5.4 Assembled Output Format
+### 5.4 Assembled Output Format [RETIRED]
 
-```markdown
-# Identity
-
-<persona body — verbatim>
-
----
-
-# Reasoning Protocols
-
-<protocol 1 body — verbatim>
-
----
-
-<protocol 2 body — verbatim>
-
----
-
-# Classification Taxonomy
-
-<taxonomy body — verbatim>
-
----
-
-# Output Format
-
-<format body — verbatim>
-
----
-
-# Task
-
-<template body — params substituted>
-```
-
-Sections are omitted if their component is absent (e.g., no taxonomy
-referenced → no `# Classification Taxonomy` section).
+*This section is retired. The CLI no longer produces assembled output.
+Prompt assembly is performed by the LLM when following `bootstrap.md`.
+See the Assembly Process section of `bootstrap.md` for the output format
+specification.*
 
 ---
 
@@ -631,14 +447,14 @@ referenced → no `# Classification Taxonomy` section).
 | Package | Version | Purpose | License |
 |---------|---------|---------|---------|
 | commander | ^12.0.0 | CLI argument parsing, subcommands, help | MIT |
-| js-yaml | ^4.1.0 | YAML parsing for manifest.yaml | MIT |
+| js-yaml | ^4.1.0 | YAML parsing for list command's manifest reading | MIT |
 
 ### 6.2 Node.js Built-in Dependencies
 
 | Module | Used By | Purpose |
 |--------|---------|---------|
-| `fs` | all modules | File system operations |
-| `path` | all modules | Path resolution and joining |
+| `fs` | cli.js, launch.js | File system operations |
+| `path` | cli.js, launch.js | Path resolution and joining |
 | `os` | launch.js | `os.tmpdir()` for temp directory |
 | `child_process` | launch.js | `execFileSync` (CLI detection), `spawn` (launch) |
 
@@ -646,13 +462,13 @@ referenced → no `# Classification Taxonomy` section).
 
 | File/Directory | Required By | Purpose |
 |----------------|-------------|---------|
-| `manifest.yaml` | manifest.js, cli.js (ensureContent) | Component index, source of truth |
-| `bootstrap.md` | launch.js (indirectly) | Bootstrap prompt sent to LLM |
-| `personas/*.md` | assemble.js | Persona component files |
-| `protocols/**/*.md` | assemble.js | Protocol component files |
-| `formats/*.md` | assemble.js | Format component files |
-| `templates/**/*.md` | assemble.js | Template component files |
-| `taxonomies/*.md` | assemble.js | Taxonomy component files |
+| `manifest.yaml` | cli.js (ensureContent, list command) | Component index for template listing |
+| `bootstrap.md` | cli.js (ensureContent), launch.js (indirectly) | Bootstrap prompt sent to LLM |
+| `personas/*.md` | LLM (via bootstrap.md) | Persona component files |
+| `protocols/**/*.md` | LLM (via bootstrap.md) | Protocol component files |
+| `formats/*.md` | LLM (via bootstrap.md) | Format component files |
+| `templates/**/*.md` | LLM (via bootstrap.md) | Template component files |
+| `taxonomies/*.md` | LLM (via bootstrap.md) | Taxonomy component files |
 
 ### 6.4 External Tool Dependencies (Runtime, Optional)
 
@@ -666,57 +482,37 @@ referenced → no `# Classification Taxonomy` section).
 
 ## 7. Known Gaps
 
-These gaps are identified from the redundancy analysis (`cli_analysis.md`)
-and source code review.
+### 7.1 Redundancy with bootstrap.md [RESOLVED]
 
-### 7.1 Redundancy with bootstrap.md
+**[RESOLVED] GAP-001: Manifest resolution logic is duplicated.**
+*Resolved in v0.2: `manifest.js` has been removed. The LLM reads
+`manifest.yaml` directly. The `list` command uses inline parsing.*
 
-**GAP-001: Manifest resolution logic is duplicated.**
-`manifest.js` reimplements the dependency resolution that `bootstrap.md`
-instructs the LLM to perform. Two implementations of the same logic
-create divergence risk. If a new component type is added to the manifest,
-both `manifest.js` AND `bootstrap.md` must be updated.
-- *Affects*: REQ-CLI-060 through REQ-CLI-068.
-- *Recommendation*: The CLI should remain a thin launcher; manifest
-  resolution for `assemble` is its unique value for CI/scripting use.
+**[RESOLVED] GAP-002: Assembly engine is mostly redundant.**
+*Resolved in v0.2: `assemble.js` has been removed. The LLM performs all
+prompt assembly via `bootstrap.md`.*
 
-**GAP-002: Assembly engine is mostly redundant.**
-`assemble.js` implements the same assembly pipeline described in
-`bootstrap.md`'s Assembly Process section. The CLI's assembly is
-deterministic and offline (its advantage), but cannot handle dynamic
-protocols, parameterized personas, or interactive templates.
-- *Affects*: REQ-CLI-040 through REQ-CLI-051.
-- *Recommendation*: Keep for CI/scripting; document limitations.
+### 7.2 Feature Gaps [RESOLVED or N/A]
 
-### 7.2 Feature Gaps
+**[RESOLVED] GAP-003: No Non-Goals section.**
+*Resolved: The CLI no longer produces assembled output. The LLM includes
+Non-Goals when following `bootstrap.md`.*
 
-**GAP-003: No Non-Goals section.**
-`bootstrap.md` specifies a `# Non-Goals` section in assembled output.
-The CLI's assembly engine does not produce this section.
-- *Affects*: REQ-CLI-051, REQ-CLI-043.
+**[RESOLVED] GAP-004: No interactive template mode support.**
+*Resolved: The CLI no longer assembles prompts. The LLM handles
+interactive templates natively.*
 
-**GAP-004: No interactive template mode support.**
-Templates with `mode: interactive` in frontmatter are not handled
-specially by the CLI's `assemble` command. They are assembled like any
-other template.
-- *Affects*: REQ-CLI-030.
+**[RESOLVED] GAP-005: No agent instruction file output mode.**
+*Resolved: The CLI no longer assembles prompts. The LLM handles all
+output modes.*
 
-**GAP-005: No agent instruction file output mode.**
-`bootstrap.md` supports an "agent instruction file" output mode that
-produces platform-specific instruction files. The CLI only produces raw
-prompt output.
-- *Affects*: REQ-CLI-030 (scope limitation).
+**[RESOLVED] GAP-006: No manifest schema validation.**
+*Resolved: The CLI no longer validates manifest structure beyond
+existence checking. The LLM validates the manifest when reading it.*
 
-**GAP-006: No manifest schema validation.**
-The CLI does not validate the structure of `manifest.yaml` beyond
-checking for its existence. Malformed manifests may produce confusing
-runtime errors.
-- *Affects*: REQ-CLI-060.
-
-**GAP-007: No pipeline support.**
-`bootstrap.md` supports pipelines where template outputs chain as
-inputs. The CLI's `assemble` command treats each template independently.
-- *Affects*: REQ-CLI-030 (scope limitation).
+**[RESOLVED] GAP-007: No pipeline support.**
+*Resolved: The CLI no longer assembles prompts. The LLM handles
+pipelines natively via `bootstrap.md`.*
 
 ### 7.3 Implementation Concerns
 
@@ -727,20 +523,16 @@ somehow contains non-prompt files, they would be copied to temp.
 [INFERRED — in practice, the content directory is populated by
 `copy-content.js` which already filters, so this is low risk]
 
-**GAP-009: Inconsistent return types for lookup functions.**
-`getProtocol()` returns `null` on miss, while `getPersona()`,
-`getFormat()`, and `getTaxonomy()` return `undefined` (via
-`Array.find()`). This is a minor consistency issue.
-- *Affects*: REQ-CLI-062 through REQ-CLI-065.
+**[RESOLVED] GAP-009: Inconsistent return types for lookup functions.**
+*Resolved: `manifest.js` has been removed. No lookup functions remain.*
 
 **GAP-010: The `--cli` flag accepts undocumented values.**
-Valid values for `--cli` (`copilot`, `gh-copilot`, `claude`) are not
-listed in help text. Passing an invalid value triggers the `default`
-case with exit(1), but the error message is minimal.
+Valid values for `--cli` (`copilot`, `gh-copilot`, `claude`) should be
+listed in help text. This is addressed by the updated REQ-CLI-011 which
+requires documenting valid values.
 - *Affects*: REQ-CLI-011, ASSUMPTION-003.
+- *Status*: To be resolved in implementation.
 
-**GAP-011: Template name matching is case-sensitive and undocumented.**
-The `assemble` command uses exact string matching (`===`) for template
-names. There is no fuzzy matching, suggestion, or case-insensitive
-fallback.
-- *Affects*: REQ-CLI-069.
+**[RESOLVED] GAP-011: Template name matching is case-sensitive and undocumented.**
+*Resolved: The `assemble` command has been removed. Template name matching
+is no longer a CLI concern.*

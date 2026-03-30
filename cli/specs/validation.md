@@ -16,6 +16,7 @@ related:
 | Rev | Date | Author | Description |
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
+| 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired test cases for assembly engine (TC-CLI-010–024), manifest resolution (TC-CLI-030–042), assemble command (TC-CLI-060–067), Windows frontmatter (TC-CLI-113). Updated TC-CLI-001, TC-CLI-003, TC-CLI-053. Added TC-CLI-120–122 for new requirements. Updated traceability matrix. |
 
 ---
 
@@ -25,8 +26,8 @@ related:
 
 | Level | Scope | Tooling | Automation |
 |-------|-------|---------|------------|
-| **Unit** | Individual functions in `assemble.js`, `manifest.js` | Node.js test runner or Jest | Fully automated |
-| **Integration** | Command-level behavior (`list`, `assemble`) | CLI invocation via `child_process` | Fully automated |
+| **Unit** | Individual functions in `launch.js` | Node.js test runner or Jest | Fully automated |
+| **Integration** | Command-level behavior (`interactive`, `list`) | CLI invocation via `child_process` | Fully automated |
 | **System** | End-to-end `interactive` command | Manual or semi-automated | Manual (requires LLM CLI) |
 | **Build** | Content bundling (`copy-content.js`) | Script execution + file verification | Automated |
 
@@ -40,11 +41,12 @@ requirements. Tests should be implemented using Node.js built-in test runner
 ### 1.3 Test Data
 
 Tests require a minimal PromptKit content fixture with:
-- A `manifest.yaml` with at least one persona, one protocol (each category),
-  one format, one taxonomy, and two templates (different categories).
-- Corresponding `.md` component files with known content, frontmatter, and
-  SPDX headers.
-- One template with all dependency types, one with minimal dependencies.
+- A `manifest.yaml` with at least two templates in different categories.
+- A `bootstrap.md` stub file.
+- Corresponding `.md` component files are NOT required for the `list`
+  command tests (only `manifest.yaml` is parsed).
+- For `interactive` command tests, the full content directory structure
+  is needed (copied to a temp directory).
 
 ---
 
@@ -56,8 +58,8 @@ Tests require a minimal PromptKit content fixture with:
 - *Requirement*: REQ-CLI-002
 - *Type*: Integration
 - *Steps*: Run `promptkit --help`.
-- *Expected*: Output contains `interactive`, `list`, `assemble` command
-  descriptions.
+- *Expected*: Output contains `interactive` and `list` command
+  descriptions. Output does NOT contain `assemble`.
 
 **TC-CLI-002**: Version flag outputs package version.
 - *Requirement*: REQ-CLI-003
@@ -68,8 +70,15 @@ Tests require a minimal PromptKit content fixture with:
 **TC-CLI-003**: Missing content directory exits with error.
 - *Requirement*: REQ-CLI-004
 - *Type*: Integration
-- *Steps*: Run any command with `content/manifest.yaml` absent.
-- *Expected*: Stderr contains `"PromptKit content not found"`, exit code 1.
+- *Steps*: Run any command with `content/bootstrap.md` absent.
+- *Expected*: Stderr contains content-not-found error, exit code 1.
+
+**TC-CLI-003a**: Missing manifest.yaml exits with error.
+- *Requirement*: REQ-CLI-004
+- *Type*: Integration
+- *Steps*: Run any command with `content/manifest.yaml` absent (but
+  `content/bootstrap.md` present).
+- *Expected*: Stderr contains content-not-found error, exit code 1.
 
 **TC-CLI-004**: Default command is `interactive`.
 - *Requirement*: REQ-CLI-002
@@ -77,196 +86,71 @@ Tests require a minimal PromptKit content fixture with:
 - *Steps*: Run `promptkit` with no arguments (with a mock CLI on PATH).
 - *Expected*: Behaves identically to `promptkit interactive`.
 
-### 2.2 Assembly Engine (assemble.js)
+### 2.2 Assembly Engine [RETIRED]
 
-**TC-CLI-010**: Strip YAML frontmatter from component.
-- *Requirement*: REQ-CLI-040
-- *Type*: Unit
-- *Input*: `"---\nname: test\n---\nBody content"`
-- *Expected*: `stripFrontmatter()` returns `"Body content"`.
+*This entire section is retired. The assembly engine (`assemble.js`) has
+been removed. See REQ-CLI-101.*
 
-**TC-CLI-011**: Strip frontmatter with Windows line endings.
-- *Requirement*: REQ-CLI-040, REQ-CLI-091
-- *Type*: Unit
-- *Input*: `"---\r\nname: test\r\n---\r\nBody content"`
-- *Expected*: `stripFrontmatter()` returns `"Body content"`.
+**[RETIRED] TC-CLI-010**: ~~Strip YAML frontmatter from component.~~
 
-**TC-CLI-012**: No frontmatter — content returned as-is (trimmed).
-- *Requirement*: REQ-CLI-040
-- *Type*: Unit
-- *Input*: `"  Body content  "`
-- *Expected*: `stripFrontmatter()` returns `"Body content"`.
+**[RETIRED] TC-CLI-011**: ~~Strip frontmatter with Windows line endings.~~
 
-**TC-CLI-013**: Strip single HTML comment (SPDX header).
-- *Requirement*: REQ-CLI-041
-- *Type*: Unit
-- *Input*: Component file starting with `<!-- SPDX -->\n---\nname: x\n---\nBody`
-- *Expected*: `loadComponent()` returns `"Body"`.
+**[RETIRED] TC-CLI-012**: ~~No frontmatter — content returned as-is.~~
 
-**TC-CLI-014**: Strip multiple consecutive HTML comments.
-- *Requirement*: REQ-CLI-042
-- *Type*: Unit
-- *Input*: Component file starting with `<!-- A -->\n<!-- B -->\nBody`
-- *Expected*: `loadComponent()` returns `"Body"`.
+**[RETIRED] TC-CLI-013**: ~~Strip single HTML comment (SPDX header).~~
 
-**TC-CLI-015**: Missing component file returns null with warning.
-- *Requirement*: REQ-CLI-047
-- *Type*: Unit
-- *Steps*: Call `loadComponent(contentDir, "nonexistent.md")`.
-- *Expected*: Returns `null`; `console.warn` called with path.
+**[RETIRED] TC-CLI-014**: ~~Strip multiple consecutive HTML comments.~~
 
-**TC-CLI-016**: Section ordering in assembled output.
-- *Requirement*: REQ-CLI-043
-- *Type*: Unit
-- *Steps*: Call `assemble()` with a template that has persona, 2 protocols,
-  1 taxonomy, format.
-- *Expected*: Output sections appear in order: Identity → Reasoning
-  Protocols → Classification Taxonomy → Output Format → Task.
+**[RETIRED] TC-CLI-015**: ~~Missing component file returns null with warning.~~
 
-**TC-CLI-017**: Section separators are `\n\n---\n\n`.
-- *Requirement*: REQ-CLI-044
-- *Type*: Unit
-- *Steps*: Call `assemble()` with a template that has persona and format.
-- *Expected*: The string `"\n\n---\n\n"` separates the Identity and
-  Output Format sections (assuming no protocols/taxonomies).
+**[RETIRED] TC-CLI-016**: ~~Section ordering in assembled output.~~
 
-**TC-CLI-018**: Multiple protocols separated by `---`.
-- *Requirement*: REQ-CLI-045
-- *Type*: Unit
-- *Steps*: Call `assemble()` with a template referencing 2 protocols.
-- *Expected*: Both protocol bodies appear in the Reasoning Protocols
-  section, separated by `\n\n---\n\n`.
+**[RETIRED] TC-CLI-017**: ~~Section separators are `\n\n---\n\n`.~~
 
-**TC-CLI-019**: Multiple taxonomies separated by `---`.
-- *Requirement*: REQ-CLI-046
-- *Type*: Unit
-- *Steps*: Call `assemble()` with a template referencing 2 taxonomies.
-- *Expected*: Both taxonomy bodies appear in the Classification Taxonomy
-  section, separated by `\n\n---\n\n`.
+**[RETIRED] TC-CLI-018**: ~~Multiple protocols separated by `---`.~~
 
-**TC-CLI-020**: Omit sections for absent components.
-- *Requirement*: REQ-CLI-048
-- *Type*: Unit
-- *Steps*: Call `assemble()` with a template that has no taxonomies and
-  no format.
-- *Expected*: Output does not contain `"# Classification Taxonomy"` or
-  `"# Output Format"`.
+**[RETIRED] TC-CLI-019**: ~~Multiple taxonomies separated by `---`.~~
 
-**TC-CLI-021**: Parameter substitution replaces all occurrences.
-- *Requirement*: REQ-CLI-049
-- *Type*: Unit
-- *Input*: Content with `"{{name}} and {{name}}"`, params `{name: "Alice"}`.
-- *Expected*: `substituteParams()` returns `"Alice and Alice"`.
+**[RETIRED] TC-CLI-020**: ~~Omit sections for absent components.~~
 
-**TC-CLI-022**: Parameter substitution applies to all components.
-- *Requirement*: REQ-CLI-050
-- *Type*: Unit
-- *Steps*: Create a persona file containing `{{project}}`. Call
-  `assemble()` with `{project: "MyApp"}`.
-- *Expected*: The persona section in output contains `"MyApp"`, not
-  `"{{project}}"`.
+**[RETIRED] TC-CLI-021**: ~~Parameter substitution replaces all occurrences.~~
 
-**TC-CLI-023**: Assembly with no params leaves placeholders intact.
-- *Requirement*: REQ-CLI-049
-- *Type*: Unit
-- *Steps*: Call `assemble()` with empty params on a template containing
-  `{{unfilled}}`.
-- *Expected*: Output contains `"{{unfilled}}"` literally.
+**[RETIRED] TC-CLI-022**: ~~Parameter substitution applies to all components.~~
 
-**TC-CLI-024**: No Non-Goals section in assembled output.
-- *Requirement*: REQ-CLI-051
-- *Type*: Unit
-- *Steps*: Call `assemble()` with any template.
-- *Expected*: Output does not contain `"# Non-Goals"`.
+**[RETIRED] TC-CLI-023**: ~~Assembly with no params leaves placeholders intact.~~
 
-### 2.3 Manifest Resolution (manifest.js)
+**[RETIRED] TC-CLI-024**: ~~No Non-Goals section in assembled output.~~
 
-**TC-CLI-030**: Load and parse manifest.yaml.
-- *Requirement*: REQ-CLI-060
-- *Type*: Unit
-- *Steps*: Call `loadManifest()` with a valid content directory.
-- *Expected*: Returns an object with `personas`, `protocols`, `formats`,
-  `templates` keys.
+### 2.3 Manifest Resolution [RETIRED]
 
-**TC-CLI-031**: Malformed YAML throws error.
-- *Requirement*: REQ-CLI-060
-- *Type*: Unit (error path)
-- *Steps*: Call `loadManifest()` with a file containing invalid YAML.
-- *Expected*: Throws a `js-yaml` exception.
+*This entire section is retired. The manifest resolution module
+(`manifest.js`) has been removed. See REQ-CLI-101.*
 
-**TC-CLI-032**: getTemplates flattens nested structure.
-- *Requirement*: REQ-CLI-061
-- *Type*: Unit
-- *Steps*: Call `getTemplates()` with a manifest containing templates
-  under two categories.
-- *Expected*: Returns a flat array; each item has `category` field set.
+**[RETIRED] TC-CLI-030**: ~~Load and parse manifest.yaml.~~
 
-**TC-CLI-033**: getPersona finds by name.
-- *Requirement*: REQ-CLI-062
-- *Type*: Unit
-- *Steps*: Call `getPersona(manifest, "systems-engineer")`.
-- *Expected*: Returns the matching persona object.
+**[RETIRED] TC-CLI-031**: ~~Malformed YAML throws error.~~
 
-**TC-CLI-034**: getPersona returns undefined for unknown name.
-- *Requirement*: REQ-CLI-062
-- *Type*: Unit (error path)
-- *Steps*: Call `getPersona(manifest, "nonexistent")`.
-- *Expected*: Returns `undefined`.
+**[RETIRED] TC-CLI-032**: ~~getTemplates flattens nested structure.~~
 
-**TC-CLI-035**: getProtocol finds across categories.
-- *Requirement*: REQ-CLI-063
-- *Type*: Unit
-- *Steps*: Call `getProtocol()` with a protocol name from `guardrails/`,
-  then one from `analysis/`, then one from `reasoning/`.
-- *Expected*: All three return the matching protocol object.
+**[RETIRED] TC-CLI-033**: ~~getPersona finds by name.~~
 
-**TC-CLI-036**: getProtocol returns null for unknown name.
-- *Requirement*: REQ-CLI-063
-- *Type*: Unit (error path)
-- *Steps*: Call `getProtocol(manifest, "nonexistent")`.
-- *Expected*: Returns `null`.
+**[RETIRED] TC-CLI-034**: ~~getPersona returns undefined for unknown name.~~
 
-**TC-CLI-037**: getFormat finds by name.
-- *Requirement*: REQ-CLI-064
-- *Type*: Unit
-- *Steps*: Call `getFormat(manifest, "investigation-report")`.
-- *Expected*: Returns the matching format object.
+**[RETIRED] TC-CLI-035**: ~~getProtocol finds across categories.~~
 
-**TC-CLI-038**: getTaxonomy finds by name.
-- *Requirement*: REQ-CLI-065
-- *Type*: Unit
-- *Steps*: Call `getTaxonomy(manifest, "stack-lifetime-hazards")`.
-- *Expected*: Returns the matching taxonomy object.
+**[RETIRED] TC-CLI-036**: ~~getProtocol returns null for unknown name.~~
 
-**TC-CLI-039**: resolveTemplateDeps resolves all dependency types.
-- *Requirement*: REQ-CLI-066
-- *Type*: Unit
-- *Steps*: Call `resolveTemplateDeps()` with a template that has persona,
-  2 protocols, 1 taxonomy, 1 format.
-- *Expected*: Returns `{ persona: {...}, protocols: [{...}, {...}],
-  taxonomies: [{...}], format: {...} }`.
+**[RETIRED] TC-CLI-037**: ~~getFormat finds by name.~~
 
-**TC-CLI-040**: resolveTemplateDeps warns on missing protocol.
-- *Requirement*: REQ-CLI-067
-- *Type*: Unit (error path)
-- *Steps*: Call `resolveTemplateDeps()` with a template referencing a
-  non-existent protocol.
-- *Expected*: `console.warn` called; missing protocol excluded from array.
+**[RETIRED] TC-CLI-038**: ~~getTaxonomy finds by name.~~
 
-**TC-CLI-041**: resolveTemplateDeps warns on missing taxonomy.
-- *Requirement*: REQ-CLI-068
-- *Type*: Unit (error path)
-- *Steps*: Call `resolveTemplateDeps()` with a template referencing a
-  non-existent taxonomy.
-- *Expected*: `console.warn` called; missing taxonomy excluded from array.
+**[RETIRED] TC-CLI-039**: ~~resolveTemplateDeps resolves all dependency types.~~
 
-**TC-CLI-042**: Template name matching is case-sensitive.
-- *Requirement*: REQ-CLI-069
-- *Type*: Unit
-- *Steps*: Call `getTemplates()` and search for a template using different
-  casing.
-- *Expected*: `templates.find(t => t.name === "Investigate-Bug")` returns
-  `undefined` when the actual name is `"investigate-bug"`.
+**[RETIRED] TC-CLI-040**: ~~resolveTemplateDeps warns on missing protocol.~~
+
+**[RETIRED] TC-CLI-041**: ~~resolveTemplateDeps warns on missing taxonomy.~~
+
+**[RETIRED] TC-CLI-042**: ~~Template name matching is case-sensitive.~~
 
 ### 2.4 List Command (cli.js)
 
@@ -293,61 +177,29 @@ Tests require a minimal PromptKit content fixture with:
 - *Requirement*: REQ-CLI-023
 - *Type*: Integration
 - *Steps*: Run `promptkit list`.
-- *Expected*: Last line contains `"promptkit assemble"`.
+- *Expected*: Output contains a usage hint referencing `promptkit interactive`
+  (or equivalent). Output does NOT reference `promptkit assemble`.
 
-### 2.5 Assemble Command (cli.js)
+### 2.5 Assemble Command [RETIRED]
 
-**TC-CLI-060**: Assemble with valid template writes output file.
-- *Requirement*: REQ-CLI-030, REQ-CLI-031
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <valid-template> -o test-output.md`.
-- *Expected*: `test-output.md` is created with assembled content.
+*This entire section is retired. The `assemble` command has been removed.
+See REQ-CLI-100.*
 
-**TC-CLI-061**: Default output filename is assembled-prompt.md.
-- *Requirement*: REQ-CLI-031
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <valid-template>` without `-o`.
-- *Expected*: `assembled-prompt.md` is created in CWD.
+**[RETIRED] TC-CLI-060**: ~~Assemble with valid template writes output file.~~
 
-**TC-CLI-062**: Parameter passing with -p flag.
-- *Requirement*: REQ-CLI-032
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <template> -p key1=val1 -p key2=val2`.
-- *Expected*: Output file has `{{key1}}` replaced with `val1` and
-  `{{key2}}` replaced with `val2`.
+**[RETIRED] TC-CLI-061**: ~~Default output filename is assembled-prompt.md.~~
 
-**TC-CLI-063**: Parameter value containing equals sign.
-- *Requirement*: REQ-CLI-033
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <template> -p "equation=a=b+c"`.
-- *Expected*: The parameter value is `"a=b+c"`, not `"a"`.
+**[RETIRED] TC-CLI-062**: ~~Parameter passing with -p flag.~~
 
-**TC-CLI-064**: Unknown template name exits with error.
-- *Requirement*: REQ-CLI-034
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble nonexistent-template`.
-- *Expected*: Stderr contains `"not found"` and lists available templates.
-  Exit code is 1.
+**[RETIRED] TC-CLI-063**: ~~Parameter value containing equals sign.~~
 
-**TC-CLI-065**: Summary output after successful assembly.
-- *Requirement*: REQ-CLI-036
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <valid-template>`.
-- *Expected*: Stdout contains template name, persona, protocols, format.
+**[RETIRED] TC-CLI-064**: ~~Unknown template name exits with error.~~
 
-**TC-CLI-066**: Unfilled parameter warning.
-- *Requirement*: REQ-CLI-037
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <template-with-params>` without -p flags.
-- *Expected*: Stdout contains `"unfilled parameter(s)"` and lists the
-  placeholder names.
+**[RETIRED] TC-CLI-065**: ~~Summary output after successful assembly.~~
 
-**TC-CLI-067**: Output path resolved relative to CWD.
-- *Requirement*: REQ-CLI-035
-- *Type*: Integration
-- *Steps*: Run `promptkit assemble <template> -o ./subdir/out.md` from a
-  known directory.
-- *Expected*: File is created at `<CWD>/subdir/out.md`.
+**[RETIRED] TC-CLI-066**: ~~Unfilled parameter warning.~~
+
+**[RETIRED] TC-CLI-067**: ~~Output path resolved relative to CWD.~~
 
 ### 2.6 Interactive Command (launch.js)
 
@@ -392,6 +244,7 @@ Tests require a minimal PromptKit content fixture with:
 - *Type*: Integration
 - *Steps*: Run `promptkit` with no supported CLI on PATH.
 - *Expected*: Stderr contains installation instructions; exit code 1.
+  Output does NOT contain `promptkit assemble`.
 
 **TC-CLI-077**: Fallback warning when auto-detecting non-copilot CLI.
 - *Requirement*: REQ-CLI-013
@@ -404,7 +257,7 @@ Tests require a minimal PromptKit content fixture with:
 - *Type*: Unit
 - *Steps*: Call `copyContentToTemp(contentDir)`.
 - *Expected*: Returns a path under `os.tmpdir()`; the directory contains
-  `manifest.yaml` and component subdirectories.
+  `manifest.yaml`, `bootstrap.md`, and component subdirectories.
 
 **TC-CLI-079**: Temp directory cleaned up on child exit.
 - *Requirement*: REQ-CLI-018
@@ -473,7 +326,7 @@ Tests require a minimal PromptKit content fixture with:
 - *Type*: Build
 - *Steps*: Run `npm pack --dry-run` in `cli/`.
 - *Expected*: Listed files are under `bin/`, `lib/`, `content/`, and
-  `package.json`.
+  `package.json`. The `lib/` directory contains only `launch.js`.
 
 **TC-CLI-101**: content/ is gitignored.
 - *Requirement*: REQ-CLI-081
@@ -501,81 +354,107 @@ Tests require a minimal PromptKit content fixture with:
 - *Steps*: Install Node.js 22, run `promptkit list`.
 - *Expected*: Command succeeds without errors.
 
-**TC-CLI-113**: Windows line endings handled in frontmatter.
-- *Requirement*: REQ-CLI-091
+**[RETIRED] TC-CLI-113**: ~~Windows line endings handled in frontmatter.~~
+
+*Retired: The assembly engine (`assemble.js`) and its `loadComponent()`
+function have been removed. Frontmatter stripping is no longer a CLI
+concern.*
+
+### 2.10 New Requirements (v0.2)
+
+**TC-CLI-120**: No assemble command exists.
+- *Requirement*: REQ-CLI-100
+- *Type*: Integration
+- *Steps*: Run `promptkit assemble investigate-bug`.
+- *Expected*: Commander produces a help/error message. No assembly output
+  is generated. No file is written.
+
+**TC-CLI-121**: No assembly code in package.
+- *Requirement*: REQ-CLI-101
+- *Type*: Build
+- *Steps*: Run `npm pack --dry-run` in `cli/`.
+- *Expected*: Output does not list `lib/assemble.js` or `lib/manifest.js`.
+
+**TC-CLI-122**: List command uses inline manifest parsing.
+- *Requirement*: REQ-CLI-103
 - *Type*: Unit
-- *Steps*: Create a component file with `\r\n` line endings and
-  frontmatter. Call `loadComponent()`.
-- *Expected*: Frontmatter stripped; body returned cleanly.
+- *Steps*: Inspect `cli.js` for `require` or `import` statements.
+- *Expected*: `cli.js` does not require or import any `manifest` module.
+  The `list` command parses `manifest.yaml` using `js-yaml` directly
+  within `cli.js`.
 
 ---
 
 ## 3. Traceability Matrix
 
-| Requirement | Test Case(s) | Priority |
-|-------------|-------------|----------|
-| REQ-CLI-001 | TC-CLI-001 | High |
-| REQ-CLI-002 | TC-CLI-001, TC-CLI-004 | High |
-| REQ-CLI-003 | TC-CLI-002 | Medium |
-| REQ-CLI-004 | TC-CLI-003 | High |
-| REQ-CLI-010 | TC-CLI-070 through TC-CLI-074 | High |
-| REQ-CLI-011 | TC-CLI-075 | Medium |
-| REQ-CLI-012 | TC-CLI-076 | High |
-| REQ-CLI-013 | TC-CLI-077 | Low |
-| REQ-CLI-014 | TC-CLI-078 | High |
-| REQ-CLI-015 | TC-CLI-078, TC-CLI-081 | High |
-| REQ-CLI-016 | TC-CLI-080 | High |
-| REQ-CLI-017 | TC-CLI-081 | High |
-| REQ-CLI-018 | TC-CLI-079 | High |
-| REQ-CLI-019 | TC-CLI-076 | Medium |
-| REQ-CLI-020 | TC-CLI-050 | Medium |
-| REQ-CLI-021 | TC-CLI-051 | Medium |
-| REQ-CLI-022 | TC-CLI-052 | Medium |
-| REQ-CLI-023 | TC-CLI-053 | Low |
-| REQ-CLI-030 | TC-CLI-060 | High |
-| REQ-CLI-031 | TC-CLI-060, TC-CLI-061 | Medium |
-| REQ-CLI-032 | TC-CLI-062 | High |
-| REQ-CLI-033 | TC-CLI-063 | Medium |
-| REQ-CLI-034 | TC-CLI-064 | High |
-| REQ-CLI-035 | TC-CLI-067 | Medium |
-| REQ-CLI-036 | TC-CLI-065 | Low |
-| REQ-CLI-037 | TC-CLI-066 | Medium |
-| REQ-CLI-040 | TC-CLI-010, TC-CLI-011, TC-CLI-012 | High |
-| REQ-CLI-041 | TC-CLI-013 | Medium |
-| REQ-CLI-042 | TC-CLI-014 | Medium |
-| REQ-CLI-043 | TC-CLI-016 | High |
-| REQ-CLI-044 | TC-CLI-017 | High |
-| REQ-CLI-045 | TC-CLI-018 | Medium |
-| REQ-CLI-046 | TC-CLI-019 | Medium |
-| REQ-CLI-047 | TC-CLI-015 | High |
-| REQ-CLI-048 | TC-CLI-020 | High |
-| REQ-CLI-049 | TC-CLI-021, TC-CLI-023 | High |
-| REQ-CLI-050 | TC-CLI-022 | Medium |
-| REQ-CLI-051 | TC-CLI-024 | Low |
-| REQ-CLI-060 | TC-CLI-030, TC-CLI-031 | High |
-| REQ-CLI-061 | TC-CLI-032 | High |
-| REQ-CLI-062 | TC-CLI-033, TC-CLI-034 | Medium |
-| REQ-CLI-063 | TC-CLI-035, TC-CLI-036 | Medium |
-| REQ-CLI-064 | TC-CLI-037 | Medium |
-| REQ-CLI-065 | TC-CLI-038 | Medium |
-| REQ-CLI-066 | TC-CLI-039 | High |
-| REQ-CLI-067 | TC-CLI-040 | Medium |
-| REQ-CLI-068 | TC-CLI-041 | Medium |
-| REQ-CLI-069 | TC-CLI-042 | Low |
-| REQ-CLI-070 | TC-CLI-090 | High |
-| REQ-CLI-071 | TC-CLI-091 | High |
-| REQ-CLI-072 | TC-CLI-092 | Medium |
-| REQ-CLI-073 | TC-CLI-093 | Medium |
-| REQ-CLI-074 | TC-CLI-094 | High |
-| REQ-CLI-075 | TC-CLI-095 | Low |
-| REQ-CLI-076 | TC-CLI-100 | High |
-| REQ-CLI-080 | TC-CLI-100 | High |
-| REQ-CLI-081 | TC-CLI-101 | Medium |
-| REQ-CLI-090 | TC-CLI-110, TC-CLI-111, TC-CLI-112 | High |
-| REQ-CLI-091 | TC-CLI-011, TC-CLI-113 | High |
-| REQ-CLI-092 | TC-CLI-015, TC-CLI-040, TC-CLI-041 | High |
-| REQ-CLI-093 | TC-CLI-003, TC-CLI-064, TC-CLI-076 | High |
-| REQ-CLI-094 | (verified by package.json inspection) | Low |
+| Requirement | Test Case(s) | Priority | Status |
+|-------------|-------------|----------|--------|
+| REQ-CLI-001 | TC-CLI-001 | High | Active |
+| REQ-CLI-002 | TC-CLI-001, TC-CLI-004 | High | Active |
+| REQ-CLI-003 | TC-CLI-002 | Medium | Active |
+| REQ-CLI-004 | TC-CLI-003, TC-CLI-003a | High | Active |
+| REQ-CLI-010 | TC-CLI-070 through TC-CLI-074 | High | Active |
+| REQ-CLI-011 | TC-CLI-075 | Medium | Active |
+| REQ-CLI-012 | TC-CLI-076 | High | Active |
+| REQ-CLI-013 | TC-CLI-077 | Low | Active |
+| REQ-CLI-014 | TC-CLI-078 | High | Active |
+| REQ-CLI-015 | TC-CLI-078, TC-CLI-081 | High | Active |
+| REQ-CLI-016 | TC-CLI-080 | High | Active |
+| REQ-CLI-017 | TC-CLI-081 | High | Active |
+| REQ-CLI-018 | TC-CLI-079 | High | Active |
+| REQ-CLI-019 | TC-CLI-076 | Medium | Active |
+| REQ-CLI-020 | TC-CLI-050 | Medium | Active |
+| REQ-CLI-021 | TC-CLI-051 | Medium | Active |
+| REQ-CLI-022 | TC-CLI-052 | Medium | Active |
+| REQ-CLI-023 | TC-CLI-053 | Low | Active |
+| REQ-CLI-030 | ~~TC-CLI-060~~ | — | RETIRED |
+| REQ-CLI-031 | ~~TC-CLI-060, TC-CLI-061~~ | — | RETIRED |
+| REQ-CLI-032 | ~~TC-CLI-062~~ | — | RETIRED |
+| REQ-CLI-033 | ~~TC-CLI-063~~ | — | RETIRED |
+| REQ-CLI-034 | ~~TC-CLI-064~~ | — | RETIRED |
+| REQ-CLI-035 | ~~TC-CLI-067~~ | — | RETIRED |
+| REQ-CLI-036 | ~~TC-CLI-065~~ | — | RETIRED |
+| REQ-CLI-037 | ~~TC-CLI-066~~ | — | RETIRED |
+| REQ-CLI-040 | ~~TC-CLI-010, TC-CLI-011, TC-CLI-012~~ | — | RETIRED |
+| REQ-CLI-041 | ~~TC-CLI-013~~ | — | RETIRED |
+| REQ-CLI-042 | ~~TC-CLI-014~~ | — | RETIRED |
+| REQ-CLI-043 | ~~TC-CLI-016~~ | — | RETIRED |
+| REQ-CLI-044 | ~~TC-CLI-017~~ | — | RETIRED |
+| REQ-CLI-045 | ~~TC-CLI-018~~ | — | RETIRED |
+| REQ-CLI-046 | ~~TC-CLI-019~~ | — | RETIRED |
+| REQ-CLI-047 | ~~TC-CLI-015~~ | — | RETIRED |
+| REQ-CLI-048 | ~~TC-CLI-020~~ | — | RETIRED |
+| REQ-CLI-049 | ~~TC-CLI-021, TC-CLI-023~~ | — | RETIRED |
+| REQ-CLI-050 | ~~TC-CLI-022~~ | — | RETIRED |
+| REQ-CLI-051 | ~~TC-CLI-024~~ | — | RETIRED |
+| REQ-CLI-060 | ~~TC-CLI-030, TC-CLI-031~~ | — | RETIRED |
+| REQ-CLI-061 | ~~TC-CLI-032~~ | — | RETIRED |
+| REQ-CLI-062 | ~~TC-CLI-033, TC-CLI-034~~ | — | RETIRED |
+| REQ-CLI-063 | ~~TC-CLI-035, TC-CLI-036~~ | — | RETIRED |
+| REQ-CLI-064 | ~~TC-CLI-037~~ | — | RETIRED |
+| REQ-CLI-065 | ~~TC-CLI-038~~ | — | RETIRED |
+| REQ-CLI-066 | ~~TC-CLI-039~~ | — | RETIRED |
+| REQ-CLI-067 | ~~TC-CLI-040~~ | — | RETIRED |
+| REQ-CLI-068 | ~~TC-CLI-041~~ | — | RETIRED |
+| REQ-CLI-069 | ~~TC-CLI-042~~ | — | RETIRED |
+| REQ-CLI-070 | TC-CLI-090 | High | Active |
+| REQ-CLI-071 | TC-CLI-091 | High | Active |
+| REQ-CLI-072 | TC-CLI-092 | Medium | Active |
+| REQ-CLI-073 | TC-CLI-093 | Medium | Active |
+| REQ-CLI-074 | TC-CLI-094 | High | Active |
+| REQ-CLI-075 | TC-CLI-095 | Low | Active |
+| REQ-CLI-076 | TC-CLI-100 | High | Active |
+| REQ-CLI-080 | TC-CLI-100, TC-CLI-121 | High | Active |
+| REQ-CLI-081 | TC-CLI-101 | Medium | Active |
+| REQ-CLI-082 | (verified by package.json inspection) | Medium | Active |
+| REQ-CLI-090 | TC-CLI-110, TC-CLI-111, TC-CLI-112 | High | Active |
+| REQ-CLI-091 | (platform-specific testing) | High | Active |
+| REQ-CLI-092 | — | — | RETIRED |
+| REQ-CLI-093 | TC-CLI-003, TC-CLI-076 | High | Active |
+| REQ-CLI-094 | (verified by package.json inspection) | Low | Active |
+| REQ-CLI-100 | TC-CLI-120 | High | Active |
+| REQ-CLI-101 | TC-CLI-121 | High | Active |
+| REQ-CLI-103 | TC-CLI-122 | Medium | Active |
 
 ---
 
@@ -585,27 +464,29 @@ Tests require a minimal PromptKit content fixture with:
 
 | AC | Criterion | Verification Method |
 |----|-----------|-------------------|
-| AC-001 | All three commands reachable and documented | TC-CLI-001 (help output) |
-| AC-002 | Assembled output matches bootstrap.md spec | TC-CLI-016 (section order), TC-CLI-017 (separators), TC-CLI-021 (substitution), TC-CLI-020 (omission), manual comparison with bootstrap.md Assembly Process |
+| AC-001 | Both commands reachable and documented | TC-CLI-001 (help output) |
+| AC-002 | [RETIRED] ~~Assembled output matches bootstrap.md spec~~ | N/A — assembly removed |
 | AC-003 | Clean exit — no orphan processes or leftover temp dirs | TC-CLI-079 (temp cleanup), TC-CLI-076 (error exit) |
-| AC-004 | npm pack includes correct files | TC-CLI-100 |
+| AC-004 | npm pack includes correct files (no assemble.js/manifest.js) | TC-CLI-100, TC-CLI-121 |
 | AC-005 | Runs on Node.js 18, 20, 22 | TC-CLI-110, TC-CLI-111, TC-CLI-112 |
 
 ### 4.2 Gap Coverage
 
-The following known gaps (from design.md Section 7) are NOT covered by
-test cases because they describe absent features, not bugs:
+The following known gaps (from design.md Section 7) are tracked:
 
 | Gap | Description | Status |
 |-----|-------------|--------|
-| GAP-003 | No Non-Goals section | TC-CLI-024 verifies current behavior |
-| GAP-004 | No interactive template mode | Out of scope (documented limitation) |
-| GAP-005 | No agent instruction output | Out of scope (documented limitation) |
-| GAP-006 | No manifest schema validation | Future work |
-| GAP-007 | No pipeline support | Out of scope (documented limitation) |
-| GAP-009 | Inconsistent null/undefined returns | TC-CLI-034, TC-CLI-036 verify current behavior |
-| GAP-010 | Undocumented --cli values | Future work (help text improvement) |
-| GAP-011 | Case-sensitive template matching | TC-CLI-042 verifies current behavior |
+| GAP-001 | Manifest resolution duplicated | RESOLVED — manifest.js removed |
+| GAP-002 | Assembly engine redundant | RESOLVED — assemble.js removed |
+| GAP-003 | No Non-Goals section | RESOLVED — LLM handles this |
+| GAP-004 | No interactive template mode | RESOLVED — LLM handles this |
+| GAP-005 | No agent instruction output | RESOLVED — LLM handles this |
+| GAP-006 | No manifest schema validation | RESOLVED — LLM validates manifest |
+| GAP-007 | No pipeline support | RESOLVED — LLM handles pipelines |
+| GAP-008 | copyContentToTemp copies all file types | Open (low risk) |
+| GAP-009 | Inconsistent null/undefined returns | RESOLVED — manifest.js removed |
+| GAP-010 | Undocumented --cli values | To be resolved (REQ-CLI-011) |
+| GAP-011 | Case-sensitive template matching | RESOLVED — assemble command removed |
 
 ---
 
@@ -626,28 +507,23 @@ containing:
 
 ```
 fixtures/
-├── manifest.yaml          # Minimal manifest with known components
+├── manifest.yaml          # Minimal manifest with known templates
 ├── bootstrap.md           # Stub bootstrap
 ├── personas/
-│   └── test-persona.md    # Known content with frontmatter + SPDX
+│   └── test-persona.md    # Stub persona file
 ├── protocols/
-│   ├── guardrails/
-│   │   └── test-guardrail.md
-│   └── reasoning/
-│       └── test-reasoning.md
+│   └── guardrails/
+│       └── test-guardrail.md
 ├── formats/
 │   └── test-format.md
 ├── taxonomies/
 │   └── test-taxonomy.md
 └── templates/
     ├── category-a/
-    │   └── test-full.md   # Template with all dependency types + params
+    │   └── test-full.md   # Template with all dependency types
     └── category-b/
         └── test-minimal.md  # Template with persona only
 ```
 
-Each fixture file should have:
-- An SPDX HTML comment header
-- YAML frontmatter
-- A deterministic body containing the component name (for verification)
-- At least one `{{param}}` placeholder (in template files)
+The fixture `manifest.yaml` must have at least two templates in different
+categories to verify the `list` command's grouping behavior.
