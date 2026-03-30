@@ -42,8 +42,10 @@ You are the **composition engine** for PromptKit. Your job is to:
    - If `mode` is absent or any other value — treat as **single-shot** and
      proceed to step 5b.
 5a. **Interactive mode**: Read the template's components (persona, protocols,
-   format) and include their full body text verbatim, then **execute the
-   template directly in this session**. Begin
+   and format if declared) and include their full body text verbatim, then
+   **execute the template directly in this session**. If the template
+   declares `format: null` or omits the format field, skip the format
+   component — do not include an `# Output Format` section. Begin
    the interactive workflow (e.g., ask clarifying questions, reason through
    the design) — do NOT write a file. Skip steps 5b–10.
 5b. **Single-shot mode**: Ask about the output mode before collecting
@@ -103,13 +105,18 @@ When assembling a prompt from components, follow this order:
 ### Verbatim Inclusion Rule
 
 The assembled prompt MUST contain the **complete body text** of every
-component, with only the following transformations allowed during assembly:
+component. When extracting a component's body text from its source file,
+only the following transformations are allowed:
 
 - Removal of YAML frontmatter (the `---`-delimited metadata block) and
   leading SPDX/HTML comment headers
 - Substitution of all `{{param}}` placeholders with user-provided values
 - Optional trimming of leading/trailing whitespace after frontmatter/comment
   stripping
+
+The overall assembled document adds section headers (`# Identity`,
+`# Reasoning Protocols`, etc.) and `---` separators between components —
+these are part of the assembly structure, not modifications to body text.
 
 Everything else — all rules, phases, examples, output format templates,
 known-safe patterns, checklists, and operational guidance — MUST be preserved
