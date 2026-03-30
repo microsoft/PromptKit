@@ -482,6 +482,15 @@ protocols:
         analysis, change derivation, invariant checking, completeness
         verification, and conflict detection. Domain-agnostic.
 
+    - name: step-retrospective
+      path: protocols/reasoning/step-retrospective.md
+      description: >
+        Protocol for learning from execution experience in iterative
+        workflows. After completing a step, systematically analyze
+        variances (tooling gaps, process gaps, knowledge gaps), trace
+        root causes, and feed concrete improvements back into the
+        tooling and process for the next iteration.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
