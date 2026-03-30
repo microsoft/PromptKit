@@ -97,8 +97,13 @@ Phase 6: Create Deliverable
 
 **Goal**: Detect all drift across the full artifact stack.
 
-Use tools to read all existing artifacts, then apply three audit
-protocols systematically:
+Use tools to read the existing spec documents (requirements, design,
+validation) in full.  For implementation and verification artifacts,
+apply **operational-constraints** — enumerate files via search first,
+then selectively deep-read based on relevance to the spec baseline.
+Do not attempt to read the entire codebase at once.
+
+Apply three audit protocols systematically:
 
 ### 1a. Document-Level Audit (D1–D7)
 
@@ -178,11 +183,11 @@ Walk through the findings from Phase 1, focusing on:
    - "Should this design decision be updated to match reality?"
 
 2. **Classify each finding** into one of:
-   - **Fix-spec** — the spec is wrong; update specs to match reality
-   - **Fix-impl** — the implementation is wrong; update code to match spec
-   - **Fix-both** — both need updating to a new agreed-upon state
-   - **Accept** — intentional drift; document as a known deviation
-   - **Defer** — needs more investigation; document for later
+   - **fix-spec** — the spec is wrong; update specs to match reality
+   - **fix-impl** — the implementation is wrong; update code to match spec
+   - **fix-both** — both need updating to a new agreed-upon state
+   - **accept** — intentional drift; document as a known deviation
+   - **defer** — needs more investigation; document for later
 
 3. **Update the drift report** with the user's classification and
    rationale for each finding.
@@ -200,16 +205,16 @@ findings are classified** (e.g., "READY", "all classified",
 **Goal**: Generate patches to restore alignment based on the
 classified findings.
 
-For each finding NOT classified as Accept or Defer:
+For each finding NOT classified as `accept` or `defer`:
 
-### Fix-spec findings
+### `fix-spec` findings
 
 Apply the **iterative-refinement protocol**:
 - Surgical changes to requirements, design, and/or validation docs
 - Preserve REQ-IDs, TC-IDs, and cross-references
 - Justify every change with reference to the finding ID
 
-### Fix-impl findings
+### `fix-impl` findings
 
 Apply the **change-propagation protocol**:
 1. Impact analysis — which implementation/verification artifacts
@@ -219,7 +224,7 @@ Apply the **change-propagation protocol**:
 4. Completeness check — every finding has a corresponding fix
 5. Conflict detection — no contradictions in the change set
 
-### Fix-both findings
+### `fix-both` findings
 
 Generate both spec patches and implementation patches, ensuring
 the new agreed-upon state is consistent across all layers.
@@ -230,16 +235,17 @@ Produce structured patches using the **structured-patch format**.
 Because this template uses the `multi-artifact` format, you MUST
 follow these key structured-patch constraints:
 
-Use six **numbered section headings** in this exact order:
+Use six numbered section headings with the **exact heading text**
+from the structured-patch format, in this order:
 
-1. **Change Context** — reference the drift report and finding IDs
-2. **Change Manifest** — all corrective changes in one table
-3. **Detailed Changes** — Before/After for every change, with
+1. `## 1. Change Context` — reference the drift report and finding IDs
+2. `## 2. Change Manifest` — all corrective changes in one table
+3. `## 3. Detailed Changes` — Before/After for every change, with
    upstream refs pointing to finding IDs (F-NNN)
-4. **Traceability Matrix** — every classified finding mapped to
+4. `## 4. Traceability Matrix` — every classified finding mapped to
    its corrective changes
-5. **Invariant Impact** — which invariants are affected
-6. **Application Notes** — how to apply, verify, and rollback
+5. `## 5. Invariant Impact` — which invariants are affected
+6. `## 6. Application Notes` — how to apply, verify, and rollback
 
 Additional constraints:
 - **Do not omit any section.** If a section has no content, include
