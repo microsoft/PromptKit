@@ -63,8 +63,8 @@ function launchInteractive(contentDir, cliName) {
         "Install one of:\n" +
         "  - GitHub Copilot CLI: gh extension install github/gh-copilot\n" +
         "  - Claude Code: https://docs.anthropic.com/en/docs/claude-code\n\n" +
-        "Or use: promptkit assemble <template> --output prompt.md\n" +
-        "to generate a prompt file you can paste into any LLM."
+        "Alternatively, copy the PromptKit content directory and load\n" +
+        "bootstrap.md in your LLM manually."
     );
     process.exit(1);
   }
