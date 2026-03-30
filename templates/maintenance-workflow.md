@@ -10,7 +10,7 @@ description: >
   implementation for drift, collaborates with the user to classify
   findings, generates corrective patches, and produces a PR restoring
   alignment.  Domain-agnostic — completes the engineering lifecycle
-  triad (spec-extraction → engineering-workflow → maintenance-workflow).
+  triad (spec-extraction-workflow → engineering-workflow → maintenance-workflow).
 persona: "{{persona}}"
 protocols:
   - guardrails/anti-hallucination
@@ -146,8 +146,13 @@ Produce a comprehensive drift report following the
 1. **Executive Summary** — overall health assessment with key metrics
 2. **Problem Statement** — periodic maintenance audit scope
 3. **Investigation Scope** — artifacts examined, tools used
-4. **Findings** — each with F-NNN ID, D1–D13 classification,
-   severity, evidence, and initial remediation recommendation
+4. **Findings** — structured exactly as in the investigation-report
+   format.  For each finding F-NNN, include: **Severity**,
+   **Category** (use the D1–D13 drift classification, e.g.,
+   "D2\_UNTESTED\_REQUIREMENT"), **Location** (artifact and
+   section/file), **Description**, **Evidence** (specific
+   references), **Root Cause**, **Impact**, **Confidence**
+   (High/Medium/Low), and initial **Remediation** recommendation
 5. **Root Cause Analysis** — systemic patterns across findings
 6. **Remediation Plan** — prioritized by severity
 7. **Prevention** — process recommendations to prevent recurrence
@@ -221,8 +226,11 @@ the new agreed-upon state is consistent across all layers.
 
 ### Output
 
-Produce structured patches using the **structured-patch format**
-with the required 6-section structure:
+Produce structured patches using the **structured-patch format**.
+Because this template uses the `multi-artifact` format, you MUST
+follow these key structured-patch constraints:
+
+Use six **numbered section headings** in this exact order:
 
 1. **Change Context** — reference the drift report and finding IDs
 2. **Change Manifest** — all corrective changes in one table
@@ -232,6 +240,15 @@ with the required 6-section structure:
    its corrective changes
 5. **Invariant Impact** — which invariants are affected
 6. **Application Notes** — how to apply, verify, and rollback
+
+Additional constraints:
+- **Do not omit any section.** If a section has no content, include
+  the heading and write "None identified."
+- Every change MUST have a unique `CHG-<NNN>` identifier (e.g.,
+  CHG-001, CHG-002), used consistently across Change Manifest,
+  Detailed Changes, and Traceability Matrix.
+- Every change's upstream ref MUST reference the finding ID (F-NNN)
+  that motivated it.
 
 Present the patches to the user before proceeding.
 
