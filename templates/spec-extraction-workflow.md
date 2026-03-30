@@ -30,6 +30,7 @@ params:
   output_requirements: "Output file path for requirements spec (e.g., requirements.md)"
   output_design: "Output file path for design spec (e.g., design.md)"
   output_validation: "Output file path for validation spec (e.g., validation.md)"
+  output_audit: "Output file path for audit report (e.g., audit-report.md)"
   focus_areas: "(Optional) Specific areas to focus on — e.g., 'authentication module', 'power delivery subsystem'. Default: analyze entire repo."
   context: "Additional context — known documentation, architecture notes, domain conventions"
 input_contract: null
@@ -155,6 +156,17 @@ Apply the **anti-hallucination protocol** throughout:
 - Do NOT invent behaviors not demonstrated by the code
 
 Format the output according to the **requirements-doc** format.
+The assembled prompt includes only the multi-artifact format, so
+use this section skeleton for the requirements document:
+
+1. **Overview** — purpose and scope of the system
+2. **Scope** — boundaries, in-scope and out-of-scope
+3. **Definitions** — domain terminology extracted from code
+4. **Requirements** — atomic items with REQ-IDs, RFC 2119 keywords,
+   and acceptance criteria (AC-1, AC-2, ...)
+5. **Dependencies** (DEP-NNN), **Assumptions** (ASM-NNN),
+   **Risks** — extracted from code and documentation
+6. **Revision History** — initial extraction metadata
 
 ### 2b. Design Extraction
 
@@ -169,6 +181,14 @@ design specification covering:
 - Cross-cutting concerns (error handling, logging, security, etc.)
 
 Format the output according to the **design-doc** format.
+Use this section skeleton:
+
+1. **Overview** — system purpose and design philosophy
+2. **Architecture** — components, layers, boundaries, diagrams
+3. **Component Design** — per-component descriptions and responsibilities
+4. **API Contracts** — interface definitions between components
+5. **Data Models** — structures, state management, persistence
+6. **Tradeoff Analysis** — key design decisions and alternatives considered
 
 ### 2c. Validation Extraction
 
@@ -181,13 +201,21 @@ From the requirements and existing tests, produce a validation plan:
 - Cross-component consistency rules
 
 Format the output according to the **validation-plan** format.
+Use this section skeleton:
+
+1. **Overview** — validation strategy and scope
+2. **Test Cases** — TC-NNN entries linked to REQ-IDs, with pass/fail
+   criteria and test levels (unit, integration, system)
+3. **Traceability Matrix** — REQ-ID → TC-NNN mapping
+4. **Coverage Assessment** — what is tested vs. gaps
+5. **Environmental Assumptions** — test environment requirements
 
 ### Critical Rule
 
 Mark EVERY extracted item with a **confidence level**:
-- **HIGH** — directly evidenced by code, docs, or tests
-- **MEDIUM** — inferred from patterns but not explicitly documented
-- **LOW** — speculative, needs user confirmation
+- **High** — directly evidenced by code, docs, or tests
+- **Medium** — inferred from patterns but not explicitly documented
+- **Low** — speculative, needs user confirmation
 
 Present all three draft documents to the user before proceeding.
 
@@ -255,7 +283,21 @@ Apply the **adversarial-falsification protocol**:
 ### Output
 
 Produce an investigation report following the **investigation-report
-format's required 9-section structure**.  Include a verdict:
+format's required 9-section structure**:
+
+1. **Executive Summary** — overall consistency assessment
+2. **Problem Statement** — what was audited and why
+3. **Investigation Scope** — documents and artifacts examined
+4. **Findings** — each with F-NNN ID, D1–D7 classification,
+   severity, evidence, and remediation
+5. **Root Cause Analysis** — systemic issues underlying findings
+6. **Remediation Plan** — prioritized fixes
+7. **Prevention** — process recommendations
+8. **Open Questions** — unresolved items; include **Verdict**:
+   `Verdict: PASS | REVISE | RESTART`
+9. **Revision History**
+
+Verdict meanings:
 
 - **PASS** — specs are internally consistent, proceed to approval
 - **REVISE** — specific issues found, loop back to Phase 3 with
@@ -292,6 +334,7 @@ Ask the user to respond with:
    - {{output_requirements}}
    - {{output_design}}
    - {{output_validation}}
+   - {{output_audit}} (audit report from Phase 4)
 2. Stage the files and generate a commit message summarizing:
    - What was extracted and from where
    - Key decisions made during clarification
@@ -301,7 +344,7 @@ Ask the user to respond with:
    - Description explaining the semantic baseline
    - Summary of extraction methodology
    - List of unresolved ambiguities or future work
-   - Link to the audit report
+   - Summary of audit results
 
 Ask the user which deliverable format they prefer if not obvious
 from context.
@@ -317,3 +360,20 @@ from context.
   every requirement must trace to THIS repository's code or docs.
 - Do NOT attempt to read the entire repository at once — scope and
   prioritize systematically.
+
+## Quality Checklist
+
+Before presenting deliverables at each phase, verify:
+
+- [ ] Repository scan produced a structured analysis summary
+- [ ] Every extracted requirement cites source code or documentation evidence
+- [ ] Every requirement has a unique REQ-ID and acceptance criteria
+- [ ] Every design element traces to at least one requirement
+- [ ] Every test case traces to at least one requirement
+- [ ] Confidence tags (High/Medium/Low) are present on all extracted items
+- [ ] All Low-confidence items were presented for user clarification
+- [ ] User explicitly approved before proceeding past each gate phase
+- [ ] Audit report follows investigation-report 9-section structure
+- [ ] Audit verdict is clearly stated (PASS/REVISE/RESTART)
+- [ ] All four output files are written to user-specified paths
+- [ ] No fabricated requirements — all unknowns marked with [UNKNOWN: <what is missing>]
