@@ -1394,6 +1394,19 @@ templates:
       taxonomies: [specification-drift]
       format: multi-artifact
 
+    - name: maintenance-workflow
+      path: templates/maintenance-workflow.md
+      description: >
+        Periodic health check workflow. Re-audits requirements, design,
+        validation, and implementation for drift, collaborates with the
+        user to classify findings, generates corrective patches, and
+        restores alignment. Domain-agnostic — completes the engineering
+        lifecycle triad.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, adversarial-falsification, operational-constraints, traceability-audit, code-compliance-audit, test-compliance-audit, change-propagation, iterative-refinement]
+      taxonomies: [specification-drift]
+      format: multi-artifact
+
 pipelines:
   document-lifecycle:
     description: >
