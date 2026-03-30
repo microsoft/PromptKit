@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) PromptKit Contributors -->
+
 # Case Study: Spec Extraction for the eBPF Epoch Module
 
 ## Context
