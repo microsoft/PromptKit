@@ -2,7 +2,7 @@
 <!-- Copyright (c) PromptKit Contributors -->
 
 ---
-name: dev-workflow
+name: engineering-workflow
 mode: interactive
 description: >
   Full incremental development workflow with human-in-the-loop review.

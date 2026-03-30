@@ -13,7 +13,7 @@ description: >
 applicable_to:
   - generate-spec-changes
   - generate-implementation-changes
-  - dev-workflow
+  - engineering-workflow
 ---
 
 # Protocol: Change Propagation

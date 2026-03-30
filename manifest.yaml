@@ -1307,11 +1307,11 @@ templates:
       protocols: [anti-hallucination, self-verification, protocol-validation-design]
       format: protocol-validation-spec
 
-  dev-workflow:
-    - name: dev-workflow
-      path: templates/dev-workflow.md
+  engineering-workflow:
+    - name: engineering-workflow
+      path: templates/engineering-workflow.md
       description: >
-        Full incremental development workflow with human-in-the-loop
+        Full incremental engineering workflow with human-in-the-loop
         review. Guides an agent through requirements discovery,
         specification changes, implementation changes, adversarial
         audits, and deliverable creation. Domain-agnostic.
@@ -1428,9 +1428,9 @@ pipelines:
         consumes: requirements-document
         produces: investigation-report
 
-  dev-workflow:
+  engineering-workflow:
     description: >
-      Domain-agnostic incremental development workflow with
+      Domain-agnostic incremental engineering workflow with
       human-in-the-loop review. Propagates changes through
       requirements, specifications, and implementation with
       adversarial audits at each transition. Phases can loop
