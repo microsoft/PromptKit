@@ -290,9 +290,6 @@ if (!fs.existsSync(path.join(repoRoot, "manifest.yaml"))) {
       fs.writeFileSync(scriptPath, script);
 
       try {
-        const result = runCopyContentExpectFail(tmpCliDir, {
-          env: { ...process.env },
-        });
         // Run the temp script directly
         try {
           execFileSync(process.execPath, [scriptPath], {

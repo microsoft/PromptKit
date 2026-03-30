@@ -19,6 +19,7 @@
   "scripts": {
     "prepublishOnly": "node scripts/copy-content.js",
     "prepare": "node scripts/copy-content.js",
+    "pretest": "node scripts/copy-content.js",
     "test": "node --test --test-concurrency=1 tests/*.test.js"
   },
   "dependencies": {
