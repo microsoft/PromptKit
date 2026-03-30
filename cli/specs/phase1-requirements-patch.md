@@ -31,11 +31,13 @@ simplified. `launch.js` keeps its core launcher responsibilities.
    itself must go.
 5. The LLM should be the **single source of truth** for assembly logic.
 
-**Understanding confirmed**: The end state is a CLI with one command
-(`interactive`, the default), no `list` command, no `assemble` command,
-no `assemble.js` module, no `manifest.js` module. `launch.js` is kept
-and simplified. `copy-content.js` is kept. `cli.js` is simplified to
-route only the `interactive` command.
+**Initial understanding (Phase 1, superseded by Phase 2/3)**: The end
+state proposed here is a CLI with one command (`interactive`, the
+default), no `list` command, no `assemble` command, no `assemble.js`
+module, no `manifest.js` module. `launch.js` is kept and simplified.
+`copy-content.js` is kept. `cli.js` is simplified to route only the
+`interactive` command. The user later decided to **keep the `list`
+command** — see Phase 2/3 documents for the authoritative outcome.
 
 ---
 
@@ -45,13 +47,13 @@ route only the `interactive` command.
 |---|-------------|-----------|---------|
 | CHG-01 | Remove | `assemble.js` | Delete assembly engine module |
 | CHG-02 | Remove | `manifest.js` | Delete manifest resolution module |
-| CHG-03 | Remove | `list` command | Remove from `cli.js` |
+| CHG-03 | ~~Remove~~ **Keep** | `list` command | ~~Remove from `cli.js`~~ Kept per user decision; reimplemented with inline manifest parsing |
 | CHG-04 | Remove | `assemble` command | Remove from `cli.js`, incl. `collectParams()` |
-| CHG-05 | Modify | `cli.js` | Simplify to one command (`interactive`), remove imports of assemble/manifest |
+| CHG-05 | Modify | `cli.js` | Simplify to two commands (`interactive` + `list`), remove imports of assemble/manifest |
 | CHG-06 | Modify | `launch.js` | Keep as-is (already the thin-launcher) |
 | CHG-07 | Keep | `copy-content.js` | No changes |
-| CHG-08 | Modify | `package.json` | Remove `js-yaml` dependency (no longer used at runtime) |
-| CHG-09 | Modify | Docs/README | Update CLI documentation to reflect single-command interface |
+| CHG-08 | ~~Modify~~ **Keep** | `package.json` | ~~Remove `js-yaml`~~ Kept — still needed for `list` command's inline manifest parsing |
+| CHG-09 | Modify | Docs/README | Update CLI documentation to reflect two-command interface |
 
 ---
 

@@ -377,11 +377,12 @@ concern.*
 
 **TC-CLI-122**: List command uses inline manifest parsing.
 - *Requirement*: REQ-CLI-103
-- *Type*: Unit
-- *Steps*: Inspect `cli.js` for `require` or `import` statements.
-- *Expected*: `cli.js` does not require or import any `manifest` module.
-  The `list` command parses `manifest.yaml` using `js-yaml` directly
-  within `cli.js`.
+- *Type*: Behavioral
+- *Steps*: In a test environment where no separate `manifest` module
+  (e.g., `lib/manifest.js`) exists, run `promptkit list`.
+- *Expected*: `promptkit list` completes successfully and lists available
+  templates, confirming that `manifest.yaml` is parsed directly via
+  `js-yaml` within `cli.js` rather than through a separate module.
 
 ---
 

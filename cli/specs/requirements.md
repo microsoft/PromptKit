@@ -86,7 +86,7 @@ on the system PATH using the detection order: `copilot` → `gh copilot` →
 <name>` flag to override auto-detection. Valid values (`copilot`,
 `gh-copilot`, `claude`) SHOULD be documented in `--help` output.
 - *Source*: `cli.js`.
-- *Acceptance*: `promptkit --cli claude` uses `claude` regardless of what
+- *Acceptance*: `promptkit interactive --cli claude` uses `claude` regardless of what
   is detected. `promptkit interactive --help` lists valid `--cli` values.
 
 **REQ-CLI-012**: If no LLM CLI is detected and no `--cli` flag is provided,
