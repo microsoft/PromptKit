@@ -63,6 +63,7 @@ scan the repository rather than asking the user to paste content.
 - Requirements: {{output_requirements}}
 - Design: {{output_design}}
 - Validation: {{output_validation}}
+- Audit: {{output_audit}}
 
 **Focus Areas**: {{focus_areas}}
 
@@ -151,8 +152,8 @@ Apply the **requirements-from-implementation protocol**:
 Apply the **anti-hallucination protocol** throughout:
 - Every requirement MUST be traceable to specific code or documentation
 - Cite file paths, function names, and line numbers
-- Flag uncertain items with `[UNCERTAIN: <reason>]`
-- Flag ambiguous items with `[AMBIGUOUS: <two interpretations>]`
+- When evidence is missing or incomplete, mark the item as `[UNKNOWN: <what is missing>]`
+- When you must rely on a non-traceable interpretation, mark it as `[ASSUMPTION]` and describe the rationale and any plausible alternative interpretations
 - Do NOT invent behaviors not demonstrated by the code
 
 Format the output according to the **requirements-doc** format.
@@ -164,9 +165,12 @@ use this section skeleton for the requirements document:
 3. **Definitions** — domain terminology extracted from code
 4. **Requirements** — atomic items with REQ-IDs, RFC 2119 keywords,
    and acceptance criteria (AC-1, AC-2, ...)
-5. **Dependencies** (DEP-NNN), **Assumptions** (ASM-NNN),
-   **Risks** — extracted from code and documentation
-6. **Revision History** — initial extraction metadata
+5. **Constraints** — technical, legal, operational, or organizational limits
+6. **Dependencies** (DEP-NNN) — external systems, libraries, or services
+7. **Assumptions** (ASM-NNN) — conditions presumed true but not enforced
+8. **Risks** (RISK-NNN) — potential failures, uncertainties, or impact areas
+
+For any section with no content, explicitly state **"None identified."** — never omit sections.
 
 ### 2b. Design Extraction
 
@@ -183,12 +187,15 @@ design specification covering:
 Format the output according to the **design-doc** format.
 Use this section skeleton:
 
-1. **Overview** — system purpose and design philosophy
-2. **Architecture** — components, layers, boundaries, diagrams
-3. **Component Design** — per-component descriptions and responsibilities
-4. **API Contracts** — interface definitions between components
-5. **Data Models** — structures, state management, persistence
-6. **Tradeoff Analysis** — key design decisions and alternatives considered
+1. **Context & Goals** — problem statement, objectives, and success criteria
+2. **Non-Goals** — what is explicitly out of scope for this design
+3. **Requirements Summary** — key functional and non-functional requirements
+4. **Architecture Overview** — high-level architecture, components, and boundaries
+5. **Detailed Design** — component behavior, data flows, and key algorithms
+6. **Security/Operational Considerations** — security model, observability, deployment, and ops
+7. **Tradeoffs and Alternatives** — major decisions, options considered, and rationale
+8. **Open Questions** — unresolved issues, risks, and follow-up investigations
+9. **Revision History** — significant changes to the design over time
 
 ### 2c. Validation Extraction
 
@@ -203,12 +210,17 @@ From the requirements and existing tests, produce a validation plan:
 Format the output according to the **validation-plan** format.
 Use this section skeleton:
 
-1. **Overview** — validation strategy and scope
-2. **Test Cases** — TC-NNN entries linked to REQ-IDs, with pass/fail
-   criteria and test levels (unit, integration, system)
-3. **Traceability Matrix** — REQ-ID → TC-NNN mapping
-4. **Coverage Assessment** — what is tested vs. gaps
-5. **Environmental Assumptions** — test environment requirements
+1. **Overview** — objectives, system under test, and validation approach
+2. **Scope of Validation** — in-scope vs. out-of-scope features and constraints
+3. **Test Strategy** — test levels, techniques, and types (unit, integration, system, regression)
+4. **Risk-Based Prioritization** — risk categories, impact/likelihood, and prioritization rationale
+5. **Test Cases** — TC-NNN entries linked to REQ-IDs, with pass/fail
+   criteria and test levels
+6. **Traceability Matrix** — REQ-ID → TC-NNN mapping
+7. **Pass/Fail Criteria** — overall entry/exit criteria and acceptance thresholds
+8. **Coverage Assessment** — what is tested vs. gaps
+9. **Environmental Assumptions** — test environment, data, and tooling requirements
+10. **Revision History** — date, author, and summary of changes
 
 ### Critical Rule
 
