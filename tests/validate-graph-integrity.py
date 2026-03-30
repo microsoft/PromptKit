@@ -13,7 +13,7 @@ Checks performed:
   2. Broken references — template persona/protocol/format/taxonomy refs
                          resolve to entries in the manifest
   3. Orphaned files    — component files on disk not listed in the manifest
-  4. Missing companions — templates lacking required persona/protocol/format
+  4. Missing companions — templates lacking required persona and/or protocols
   5. Pipeline integrity — pipeline stage templates exist in the manifest
 
 Exit code 0 = all checks pass.
@@ -86,10 +86,10 @@ def _parse_entries(
                 "name": stripped.split(":", 1)[1].strip().strip("'\""),
                 "path": "",
             }
-            # Initialise list-valued fields so callers can iterate safely
+            # Initialise extra fields with appropriate default types
             for f in extra_fields:
                 if f not in entry:
-                    entry[f] = ""
+                    entry[f] = [] if f in ("protocols", "taxonomies") else ""
 
             j = i + 1
             while j < len(lines):
