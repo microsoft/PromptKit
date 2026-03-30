@@ -1381,6 +1381,19 @@ templates:
       taxonomies: [specification-drift]
       format: investigation-report
 
+    - name: spec-extraction-workflow
+      path: templates/spec-extraction-workflow.md
+      description: >
+        Bootstrap any repository with a clean semantic baseline. Scans
+        existing code, docs, tests, and issues, extracts draft specs,
+        collaborates with the user to clarify intent, audits for
+        consistency, and produces PR-ready spec files. Domain-agnostic
+        complement to engineering-workflow.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, operational-constraints, adversarial-falsification, requirements-from-implementation, requirements-elicitation, iterative-refinement, traceability-audit]
+      taxonomies: [specification-drift]
+      format: multi-artifact
+
 pipelines:
   document-lifecycle:
     description: >
