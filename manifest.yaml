@@ -1327,7 +1327,6 @@ templates:
       persona: configurable
       protocols: [anti-hallucination, self-verification, adversarial-falsification, operational-constraints, requirements-elicitation, iterative-refinement, change-propagation, traceability-audit, code-compliance-audit, test-compliance-audit]
       taxonomies: [specification-drift]
-      format: multi-artifact
 
     - name: collaborate-requirements-change
       path: templates/collaborate-requirements-change.md
@@ -1392,7 +1391,6 @@ templates:
       persona: configurable
       protocols: [anti-hallucination, self-verification, operational-constraints, adversarial-falsification, requirements-from-implementation, requirements-elicitation, iterative-refinement, traceability-audit]
       taxonomies: [specification-drift]
-      format: multi-artifact
 
     - name: maintenance-workflow
       path: templates/maintenance-workflow.md
@@ -1405,7 +1403,6 @@ templates:
       persona: configurable
       protocols: [anti-hallucination, self-verification, adversarial-falsification, operational-constraints, traceability-audit, code-compliance-audit, test-compliance-audit, change-propagation, iterative-refinement]
       taxonomies: [specification-drift]
-      format: multi-artifact
 
 pipelines:
   document-lifecycle:

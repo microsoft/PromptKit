@@ -94,7 +94,39 @@ For each impacted validation entry:
 4. Verify every requirement in the patch has at least one linked
    test case after changes are applied.
 
-### Step 4 — Assemble Patch
+### Step 4 — Invariant Check
+
+For every existing invariant, constraint, and assumption in the
+design and validation artifacts:
+
+1. Verify it is **preserved** by the combined downstream changes.
+2. If an invariant is **modified**, flag it explicitly and verify
+   the modification is justified by the upstream requirement change.
+3. If an invariant is **violated**, STOP and report the conflict.
+
+### Step 5 — Completeness Check
+
+Verify every upstream requirement change has at least one downstream
+change (or an explicit "no downstream impact" justification):
+
+1. Walk the input requirement patch manifest entry by entry.
+2. Confirm each appears in the traceability matrix as Complete,
+   Partial (with explanation), or No-Impact (with rationale).
+3. Flag any requirement change with no downstream entry as
+   **DROPPED** — this must be resolved before finalizing.
+
+### Step 6 — Conflict Detection
+
+Check for conflicts within the downstream change set:
+
+1. **Internal conflicts** — two changes that modify the same
+   location in contradictory ways.
+2. **Cross-artifact conflicts** — a design change that contradicts
+   a validation change.
+3. **Upstream-downstream conflicts** — a downstream change that
+   contradicts the intent of its upstream requirement change.
+
+### Step 7 — Assemble Patch
 
 Produce a single structured-patch document containing:
 

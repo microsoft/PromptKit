@@ -22,7 +22,7 @@ protocols:
   - reasoning/traceability-audit
 taxonomies:
   - specification-drift
-format: multi-artifact
+format: null
 params:
   persona: "Persona to use — select from library (e.g., software-architect, electrical-engineer, reverse-engineer)"
   project_name: "Name of the project, product, or system to bootstrap"
