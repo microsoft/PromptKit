@@ -27,7 +27,7 @@ input_contract:
   type: requirements-patch
   description: >
     A structured requirements patch as the primary input, plus the
-    user's original intent description and an optional specification
+    user's original intent description and the specification
     patch for cross-referencing.
 output_contract:
   type: investigation-report
