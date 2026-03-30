@@ -86,13 +86,13 @@ Once the user declares Phase 1 complete:
 1. **Apply the requirements-elicitation protocol** to decompose
    changes into atomic, testable requirement modifications.
 2. **Apply the anti-hallucination protocol** — ground every change
-   in what was discussed.  Flag assumptions with `[ASSUMED]`.
+   in what was discussed.  Flag assumptions with `[ASSUMPTION]`.
 3. **Format the output** according to the structured-patch format:
    - Change manifest summarizing all requirement changes
    - Detailed change entries with Before/After content
    - Each change traces to `USER-REQUEST: <what the user asked for>`
    - Invariant impact assessment
-4. **Include a Pre-Patch Analysis** section before the patch:
+4. **Include a Pre-Patch Analysis** inside the Change Context section:
    - Ambiguities resolved during Phase 1 (and how)
    - Ambiguities that remain unresolved
    - Existing requirements affected
@@ -136,5 +136,5 @@ Before presenting the patch in Phase 2, verify:
 - [ ] Every new/modified requirement uses RFC 2119 keywords
 - [ ] No existing requirement IDs are renumbered
 - [ ] Invariant impact section is present and complete
-- [ ] No fabricated requirements — all unknowns marked with [UNKNOWN]
+- [ ] No fabricated requirements — all unknowns marked with [UNKNOWN: <what is missing>]
 - [ ] Traceability matrix accounts for every discussed change

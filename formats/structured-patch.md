@@ -33,6 +33,10 @@ request) so reviewers can verify alignment at each transition.
 ## 6. Application Notes
 ```
 
+All six top-level sections (1–6) are **mandatory**. If a section has no
+content for this patch, still include the heading and state "None identified"
+or "Not applicable" rather than omitting the section.
+
 ## 1. Change Context
 
 Provide the context for this patch set:
@@ -113,6 +117,8 @@ Map every upstream change to its downstream changes:
 **Status values**:
 - **Complete** — all necessary downstream changes are included
 - **Partial** — some downstream changes are deferred (explain in notes)
+- **No-Impact** — upstream change verified to have no downstream effect
+  (MUST include rationale)
 - **Blocked** — downstream changes cannot be made yet (explain why)
 
 ## 5. Invariant Impact
