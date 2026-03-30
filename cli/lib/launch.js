@@ -54,7 +54,8 @@ function copyDirRecursive(src, dest) {
 }
 
 function launchInteractive(contentDir, cliName) {
-  const cli = cliName || detectCli();
+  const detected = detectCli();
+  const cli = cliName || detected;
 
   if (!cli) {
     console.error(
@@ -68,24 +69,35 @@ function launchInteractive(contentDir, cliName) {
     process.exit(1);
   }
 
+  // Warn the user when auto-detection chose a fallback CLI
+  if (!cliName && detected !== "copilot" && detected !== "gh-copilot") {
+    console.warn(
+      `Warning: GitHub Copilot CLI not found on PATH. ` +
+        `Falling back to '${cli}'.\n` +
+        `To use a specific CLI, pass --cli <name> (e.g., --cli copilot).\n`
+    );
+  }
+
   // Copy content to a temp directory so the LLM can read the files
   const tmpDir = copyContentToTemp(contentDir);
   console.log(`PromptKit content staged at: ${tmpDir}`);
   console.log(`Launching ${cli}...\n`);
 
+  const bootstrapPrompt = "Read and execute bootstrap.md";
+
   let cmd, args;
   switch (cli) {
     case "copilot":
       cmd = "copilot";
-      args = ["-i", "Read and execute bootstrap.md"];
+      args = ["-i", bootstrapPrompt];
       break;
     case "gh-copilot":
       cmd = "gh";
-      args = ["copilot", "-i", "Read and execute bootstrap.md"];
+      args = ["copilot", "-i", bootstrapPrompt];
       break;
     case "claude":
       cmd = "claude";
-      args = [];
+      args = [bootstrapPrompt];
       break;
     default:
       console.error(`Unknown CLI: ${cli}`);
