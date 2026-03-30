@@ -177,9 +177,7 @@ describe("Launch Module", () => {
     });
 
     it("TC-CLI-078: copies content to temp directory", () => {
-      // Use fixtures as the source to avoid issues with real content dir
-      const fixturesDir = path.resolve(__dirname, "fixtures");
-      tmpDir = copyContentToTemp(fixturesDir);
+      tmpDir = copyContentToTemp(contentDir);
       assert.ok(fs.existsSync(tmpDir), "temp dir should exist");
       assert.ok(
         tmpDir.includes("promptkit-"),
