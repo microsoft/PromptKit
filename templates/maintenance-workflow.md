@@ -113,8 +113,9 @@ Apply the **traceability-audit protocol**:
    and at least one test case.  Flag gaps as D1 or D2.
 2. **Backward traceability** — every design element and test case
    traces to a requirement.  Flag orphans as D3 or D4.
-3. **Cross-document consistency** — assumptions, constraints, and
-   terminology are consistent.  Flag drift as D5 or D6.
+3. **Cross-document consistency** — assumptions are aligned across
+   documents (flag contradictions as D5).  Constraints stated in
+   requirements are not violated by design (flag violations as D6).
 4. **Acceptance criteria coverage** — test cases cover all acceptance
    criteria.  Flag gaps as D7.
 
@@ -146,23 +147,25 @@ Apply the **test-compliance-audit protocol**:
 ### Output
 
 Produce a comprehensive drift report following the
-**investigation-report format's required 9-section structure**:
+**investigation-report format's required 9-section structure**.
+Use these exact numbered headings, in order, and order findings
+by severity (Critical first):
 
-1. **Executive Summary** — overall health assessment with key metrics
-2. **Problem Statement** — periodic maintenance audit scope
-3. **Investigation Scope** — artifacts examined, tools used
-4. **Findings** — structured exactly as in the investigation-report
+1. `## 1. Executive Summary` — overall health assessment with key metrics
+2. `## 2. Problem Statement` — periodic maintenance audit scope
+3. `## 3. Investigation Scope` — artifacts examined, tools used
+4. `## 4. Findings` — structured exactly as in the investigation-report
    format.  For each finding F-NNN, include: **Severity**,
    **Category** (use the D1–D13 drift classification, e.g.,
-   "D2\_UNTESTED\_REQUIREMENT"), **Location** (artifact and
+   `D2_UNTESTED_REQUIREMENT`), **Location** (artifact and
    section/file), **Description**, **Evidence** (specific
    references), **Root Cause**, **Impact**, **Confidence**
    (High/Medium/Low), and initial **Remediation** recommendation
-5. **Root Cause Analysis** — systemic patterns across findings
-6. **Remediation Plan** — prioritized by severity
-7. **Prevention** — process recommendations to prevent recurrence
-8. **Open Questions** — items needing user clarification
-9. **Revision History** — audit metadata
+5. `## 5. Root Cause Analysis` — systemic patterns across findings
+6. `## 6. Remediation Plan` — prioritized by severity
+7. `## 7. Prevention` — process recommendations to prevent recurrence
+8. `## 8. Open Questions` — items needing user clarification
+9. `## 9. Revision History` — audit metadata
 
 Present the drift report to the user before proceeding.
 
