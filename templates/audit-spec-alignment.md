@@ -120,15 +120,18 @@ Apply the **adversarial-falsification protocol**:
 
 ### Step 5 — Report
 
-Produce an investigation report with:
+Produce an investigation report following the **investigation-report
+format's required 9-section structure** exactly.  Do not add, remove,
+or reorder top-level sections.  Map this template's content as follows:
 
-1. **Executive Summary** — overall alignment assessment (Aligned /
-   Partially Aligned / Misaligned) with key findings.
-2. **Findings** — each classified with a D1–D7 label, severity,
+- **Executive Summary** — overall alignment assessment (Aligned /
+   Partially Aligned / Misaligned) with key D1–D7 findings.
+- **Findings** — each classified with a D1–D7 label, severity,
    evidence, and specific remediation.
-3. **Recommendations** — prioritized list of changes needed to
+- **Remediation Plan** — prioritized list of changes needed to
    restore alignment.
-4. **Verdict** — one of:
+- **Open Questions** — include the **Verdict** as a clearly labeled
+   line: `Verdict: PASS | REVISE | RESTART`, where:
    - **PASS** — patches faithfully represent user intent, proceed
      to user review
    - **REVISE** — specific issues found, loop back to fix patches

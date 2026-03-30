@@ -1445,7 +1445,6 @@ pipelines:
         consumes: structured-patch
         produces: investigation-report
       - template: generate-implementation-changes
-        consumes: structured-patch
         produces: structured-patch
       - template: audit-implementation-alignment
         consumes: structured-patch

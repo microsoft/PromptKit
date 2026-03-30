@@ -35,9 +35,10 @@ input_contract: null
 output_contract:
   type: structured-patch
   description: >
-    A set of structured patches covering requirements, specifications,
-    and implementation changes, each fully traceable. Accompanied by
-    adversarial audit reports at each transition.
+    Multiple structured-patch documents produced across phases
+    (requirements patch, specification patch, implementation patch),
+    each fully traceable. Audit phases produce investigation-report
+    artifacts with PASS/REVISE/RESTART verdicts that gate progression.
 ---
 
 # Task: Incremental Development Workflow

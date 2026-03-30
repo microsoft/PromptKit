@@ -111,15 +111,19 @@ Apply the **adversarial-falsification protocol**:
 
 ### Step 5 — Report
 
-Produce an investigation report with:
+Produce an investigation report following the **investigation-report
+format's required 9-section structure** exactly.  Do not add, remove,
+or reorder top-level sections.  Map this template's content as follows:
 
-1. **Executive Summary** — overall implementation alignment
-   assessment with key findings.
-2. **Findings** — each classified with D8–D13 label, severity,
+- **Executive Summary** — overall implementation alignment assessment
+   with key D8–D13 findings.
+- **Findings** — each classified with D8–D13 label, severity,
    evidence (specific locations in both spec and implementation
    patches), and remediation.
-3. **Recommendations** — prioritized fixes.
-4. **Verdict** — one of:
+- **Remediation Plan** — prioritized fixes.
+- **Open Questions** — include the **Verdict** as a clearly labeled
+   line: `Verdict: PASS | REVISE-IMPLEMENTATION | REVISE-SPEC | RESTART`,
+   where:
    - **PASS** — implementation faithfully realizes the specification
      changes, proceed to user review
    - **REVISE-IMPLEMENTATION** — implementation issues found, loop
