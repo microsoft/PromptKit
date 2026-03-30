@@ -54,8 +54,8 @@ function copyDirRecursive(src, dest) {
 }
 
 function launchInteractive(contentDir, cliName) {
-  const detected = detectCli();
-  const cli = cliName || detected;
+  let detected = null;
+  const cli = cliName || (detected = detectCli());
 
   if (!cli) {
     console.error(
