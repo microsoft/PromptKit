@@ -22,12 +22,12 @@ params:
   validation_plan: "Existing validation plan or test specification"
   context: "Additional context — architecture, constraints, domain conventions"
 input_contract:
-  type: structured-patch
+  type: requirements-patch
   description: >
     A structured requirements patch with CHG-IDs, Before/After content,
     and traceability to user intent.
 output_contract:
-  type: structured-patch
+  type: spec-patch
   description: >
     A structured patch covering design and validation changes, with
     every change tracing to a requirement change from the input patch.

@@ -1318,7 +1318,7 @@ templates:
       persona: configurable
       protocols: [anti-hallucination, self-verification, adversarial-falsification, operational-constraints, requirements-elicitation, iterative-refinement, change-propagation, traceability-audit, code-compliance-audit, test-compliance-audit]
       taxonomies: [specification-drift]
-      format: structured-patch
+      format: multi-artifact
 
     - name: collaborate-requirements-change
       path: templates/collaborate-requirements-change.md
@@ -1347,7 +1347,7 @@ templates:
         specification patch. Propagates design and validation changes
         to implementation artifacts. Domain-agnostic.
       persona: configurable
-      protocols: [anti-hallucination, self-verification, change-propagation, operational-constraints]
+      protocols: [anti-hallucination, self-verification, operational-constraints, change-propagation]
       format: structured-patch
 
     - name: audit-spec-alignment
@@ -1437,15 +1437,16 @@ pipelines:
       back based on audit verdicts or user feedback.
     stages:
       - template: collaborate-requirements-change
-        produces: structured-patch
+        produces: requirements-patch
       - template: generate-spec-changes
-        consumes: structured-patch
-        produces: structured-patch
+        consumes: requirements-patch
+        produces: spec-patch
       - template: audit-spec-alignment
-        consumes: structured-patch
+        consumes: [requirements-patch, spec-patch]
         produces: investigation-report
       - template: generate-implementation-changes
-        produces: structured-patch
+        consumes: spec-patch
+        produces: implementation-patch
       - template: audit-implementation-alignment
-        consumes: structured-patch
+        consumes: [spec-patch, implementation-patch]
         produces: investigation-report

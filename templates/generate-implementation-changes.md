@@ -24,12 +24,12 @@ params:
   verification_artifacts: "Existing tests, simulations, inspection procedures, or other verification artifacts"
   context: "Additional context — build system, toolchain, domain conventions, coding standards"
 input_contract:
-  type: structured-patch
+  type: spec-patch
   description: >
     A structured specification patch with design and validation changes,
     each tracing to a requirement change.
 output_contract:
-  type: structured-patch
+  type: implementation-patch
   description: >
     A structured patch covering implementation and verification changes,
     with every change tracing to a specification change from the input

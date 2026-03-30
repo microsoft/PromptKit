@@ -25,7 +25,7 @@ params:
   context: "Additional context — system architecture, constraints, domain conventions"
 input_contract: null
 output_contract:
-  type: structured-patch
+  type: requirements-patch
   description: >
     A structured requirements patch with traceable change entries,
     each linked to the user's stated intent. Ready for downstream

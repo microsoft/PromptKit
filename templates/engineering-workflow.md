@@ -24,7 +24,7 @@ protocols:
   - reasoning/test-compliance-audit
 taxonomies:
   - specification-drift
-format: structured-patch
+format: multi-artifact
 params:
   persona: "Persona to use — select from library (e.g., software-architect, electrical-engineer, mechanical-engineer)"
   project_name: "Name of the project, product, or system being changed"
@@ -33,12 +33,12 @@ params:
   context: "Additional context — architecture, constraints, domain conventions, toolchain"
 input_contract: null
 output_contract:
-  type: structured-patch
+  type: artifact-set
   description: >
-    Multiple structured-patch documents produced across phases
-    (requirements patch, specification patch, implementation patch),
-    each fully traceable. Audit phases produce investigation-report
-    artifacts with PASS/REVISE/RESTART verdicts that gate progression.
+    Multiple artifacts produced across phases: requirements-patch,
+    spec-patch, and implementation-patch (each using structured-patch
+    format), plus investigation-report artifacts from adversarial
+    audits with PASS/REVISE/RESTART verdicts that gate progression.
 ---
 
 # Task: Incremental Development Workflow

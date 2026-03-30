@@ -25,7 +25,7 @@ params:
   implementation_patch: "The structured implementation patch (code/artifact + verification changes)"
   existing_artifacts: "Existing implementation and verification artifacts for context"
 input_contract:
-  type: structured-patch
+  type: [spec-patch, implementation-patch]
   description: >
     Structured patches for specifications and implementation, to be
     audited for alignment.

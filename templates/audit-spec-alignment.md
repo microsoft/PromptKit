@@ -24,7 +24,7 @@ params:
   spec_patch: "The structured specification patch (design + validation changes)"
   existing_artifacts: "Existing requirements, design, and validation documents for context"
 input_contract:
-  type: structured-patch
+  type: [requirements-patch, spec-patch]
   description: >
     Structured patches for requirements and specifications, plus the
     user's original intent description.
