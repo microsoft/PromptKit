@@ -33,20 +33,18 @@ related:
 
 ### 1.2 Current State
 
-The CLI has no automated tests. [KNOWN — no test files exist under `cli/`]
-This validation plan defines the test cases needed to verify all functional
-requirements. Tests should be implemented using Node.js built-in test runner
-(`node --test`) to avoid adding test framework dependencies.
+The CLI has 24 automated tests across 4 test files, executed via
+`npm test` using Node.js built-in test runner (`node --test`). The
+`pretest` hook automatically populates `cli/content/` before each run.
+No external test framework dependencies are required.
 
 ### 1.3 Test Data
 
-Tests require a minimal PromptKit content fixture with:
-- A `manifest.yaml` with at least two templates in different categories.
-- A `bootstrap.md` stub file.
-- Corresponding `.md` component files are NOT required for the `list`
-  command tests (only `manifest.yaml` is parsed).
-- For `interactive` command tests, the full content directory structure
-  is needed (copied to a temp directory).
+Tests use real PromptKit content from `cli/content/`, populated
+automatically by the `pretest` hook. No static fixtures are maintained.
+- The `list` command tests parse the real `manifest.yaml`.
+- The `interactive` command tests copy the real content directory to a
+  temp directory via `copyContentToTemp()`.
 
 ---
 
@@ -496,35 +494,18 @@ The following known gaps (from design.md Section 7) are tracked:
 ### 5.1 Minimum Setup
 
 - Node.js >= 18.0.0
-- PromptKit repository cloned with `cli/content/` populated
-  (`npm run prepare` or `node scripts/copy-content.js`)
+- PromptKit repository cloned
+- Run `npm test` from `cli/` — the `pretest` hook populates `cli/content/`
+  automatically. No manual setup required.
 - No LLM CLI required (except for TC-CLI-070 through TC-CLI-081 system
   tests, which can use mocks)
 
-### 5.2 Test Fixtures
+### 5.2 Test Data
 
-A minimal test fixture should be created under `cli/tests/fixtures/`
-containing:
+All tests use the **real PromptKit content** from `cli/content/`, which
+is populated automatically by the `pretest` hook (`node scripts/copy-content.js`).
+No static test fixtures are maintained — this eliminates maintenance burden
+and prevents content drift between test data and real components.
 
-```
-fixtures/
-├── manifest.yaml          # Minimal manifest with known templates
-├── bootstrap.md           # Stub bootstrap
-├── personas/
-│   └── test-persona.md    # Stub persona file
-├── protocols/
-│   └── guardrails/
-│       └── test-guardrail.md
-├── formats/
-│   └── test-format.md
-├── taxonomies/
-│   └── test-taxonomy.md
-└── templates/
-    ├── category-a/
-    │   └── test-full.md   # Template with all dependency types
-    └── category-b/
-        └── test-minimal.md  # Template with persona only
-```
-
-The fixture `manifest.yaml` must have at least two templates in different
-categories to verify the `list` command's grouping behavior.
+The `pretest` hook ensures `npm test` is self-contained and works from a
+clean checkout without any prior setup.
