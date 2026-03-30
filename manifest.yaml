@@ -474,6 +474,14 @@ protocols:
         Maps execution back to PromptKit components and produces
         actionable optimization recommendations.
 
+    - name: change-propagation
+      path: protocols/reasoning/change-propagation.md
+      description: >
+        Systematic reasoning protocol for propagating changes through
+        artifact layers while maintaining alignment. Covers impact
+        analysis, change derivation, invariant checking, completeness
+        verification, and conflict detection. Domain-agnostic.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -643,6 +651,15 @@ formats:
       network and software architecture, programming interfaces, persisted
       state, and cross-cutting implications (security, performance,
       management, observability, testing).
+
+  - name: structured-patch
+    path: formats/structured-patch.md
+    produces: structured-patch
+    description: >
+      Traceable, structured patch format for incremental changes to
+      existing artifacts. Each change entry links to its upstream
+      motivation with Before/After content, traceability matrix, and
+      invariant impact assessment. Domain-agnostic.
 
 taxonomies:
   - name: stack-lifetime-hazards
@@ -1290,6 +1307,71 @@ templates:
       protocols: [anti-hallucination, self-verification, protocol-validation-design]
       format: protocol-validation-spec
 
+  dev-workflow:
+    - name: dev-workflow
+      path: templates/dev-workflow.md
+      description: >
+        Full incremental development workflow with human-in-the-loop
+        review. Guides an agent through requirements discovery,
+        specification changes, implementation changes, adversarial
+        audits, and deliverable creation. Domain-agnostic.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, adversarial-falsification, operational-constraints, requirements-elicitation, iterative-refinement, change-propagation, traceability-audit, code-compliance-audit, test-compliance-audit]
+      taxonomies: [specification-drift]
+      format: structured-patch
+
+    - name: collaborate-requirements-change
+      path: templates/collaborate-requirements-change.md
+      description: >
+        Interactive requirements discovery for incremental changes.
+        Work with the user to understand, refine, and produce a
+        structured requirements patch. Domain-agnostic.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, requirements-elicitation, iterative-refinement]
+      format: structured-patch
+
+    - name: generate-spec-changes
+      path: templates/generate-spec-changes.md
+      description: >
+        Generate design and validation specification changes from a
+        requirements patch. Propagates each requirement change to
+        design sections and validation entries. Domain-agnostic.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, change-propagation]
+      format: structured-patch
+
+    - name: generate-implementation-changes
+      path: templates/generate-implementation-changes.md
+      description: >
+        Generate implementation and verification changes from a
+        specification patch. Propagates design and validation changes
+        to implementation artifacts. Domain-agnostic.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, change-propagation, operational-constraints]
+      format: structured-patch
+
+    - name: audit-spec-alignment
+      path: templates/audit-spec-alignment.md
+      description: >
+        Adversarial audit of specification patches against user intent.
+        Verifies requirements, design, and validation changes faithfully
+        represent what the user asked for. Domain-agnostic.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, adversarial-falsification, traceability-audit]
+      taxonomies: [specification-drift]
+      format: investigation-report
+
+    - name: audit-implementation-alignment
+      path: templates/audit-implementation-alignment.md
+      description: >
+        Adversarial audit of implementation patches against specification
+        deltas. Verifies implementation and verification changes correctly
+        realize the specification changes. Domain-agnostic.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, adversarial-falsification, operational-constraints, code-compliance-audit, test-compliance-audit]
+      taxonomies: [specification-drift]
+      format: investigation-report
+
 pipelines:
   document-lifecycle:
     description: >
@@ -1344,4 +1426,27 @@ pipelines:
         produces: investigation-report
       - template: review-layout
         consumes: requirements-document
+        produces: investigation-report
+
+  dev-workflow:
+    description: >
+      Domain-agnostic incremental development workflow with
+      human-in-the-loop review. Propagates changes through
+      requirements, specifications, and implementation with
+      adversarial audits at each transition. Phases can loop
+      back based on audit verdicts or user feedback.
+    stages:
+      - template: collaborate-requirements-change
+        produces: structured-patch
+      - template: generate-spec-changes
+        consumes: structured-patch
+        produces: structured-patch
+      - template: audit-spec-alignment
+        consumes: structured-patch
+        produces: investigation-report
+      - template: generate-implementation-changes
+        consumes: structured-patch
+        produces: structured-patch
+      - template: audit-implementation-alignment
+        consumes: structured-patch
         produces: investigation-report
