@@ -41,8 +41,9 @@ You are the **composition engine** for PromptKit. Your job is to:
    - If `mode: interactive` — proceed to step 5a.
    - If `mode` is absent or any other value — treat as **single-shot** and
      proceed to step 5b.
-5a. **Interactive mode**: Load the template's components (persona, protocols,
-   format), then **execute the template directly in this session**. Begin
+5a. **Interactive mode**: Read the template's components (persona, protocols,
+   format) and include their full body text verbatim, then **execute the
+   template directly in this session**. Begin
    the interactive workflow (e.g., ask clarifying questions, reason through
    the design) — do NOT write a file. Skip steps 5b–10.
 5b. **Single-shot mode**: Ask about the output mode before collecting
@@ -81,7 +82,8 @@ You are the **composition engine** for PromptKit. Your job is to:
      platform-specific paths relative to it (e.g.,
      `<project>/.github/instructions/<name>.instructions.md` for Copilot,
      `<project>/CLAUDE.md` for Claude Code)
-8. **Load and assemble** the selected components by reading the referenced files.
+8. **Read and assemble** the selected components by reading the referenced
+   files and including their full body text verbatim (see Assembly Process).
 9. **Write the output** to the resolved path(s) in the user's target project.
 10. **Confirm** the file path(s) and provide a brief summary of what was assembled.
 
@@ -92,7 +94,7 @@ When assembling a prompt from components, follow this order:
 ```
 1. PERSONA    — Read the persona file and include its full body text verbatim.
 2. PROTOCOLS  — Read each protocol file and include its full body text verbatim.
-3. TAXONOMY   — Read each taxonomy file and include its full body text verbatim.
+3. TAXONOMY   — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
 4. FORMAT     — Read the format file and include its full body text verbatim.
 5. TEMPLATE   — Read the task template and include its full body text verbatim.
 6. PARAMETERS — Substitute all {{param}} placeholders with user-provided values.
@@ -100,12 +102,19 @@ When assembling a prompt from components, follow this order:
 
 ### Verbatim Inclusion Rule
 
-The assembled prompt MUST contain the **complete, unmodified body text** of
-every component. The only content removed during assembly is YAML frontmatter
-(the `---`-delimited metadata block) and leading SPDX/HTML comment headers.
+The assembled prompt MUST contain the **complete body text** of every
+component, with only the following transformations allowed during assembly:
+
+- Removal of YAML frontmatter (the `---`-delimited metadata block) and
+  leading SPDX/HTML comment headers
+- Substitution of all `{{param}}` placeholders with user-provided values
+- Optional trimming of leading/trailing whitespace after frontmatter/comment
+  stripping
+
 Everything else — all rules, phases, examples, output format templates,
 known-safe patterns, checklists, and operational guidance — MUST be preserved
-**exactly as written** in the source file.
+**exactly as written** in the source file (apart from the parameter values
+you substitute).
 
 **Do NOT summarize, abbreviate, or condense** component content when
 assembling raw prompts. If a protocol has 8 phases with detailed sub-steps,
@@ -126,8 +135,10 @@ document with PromptKit section headers:
 <complete body of protocol 2 — verbatim, not summarized>
 ...
 
-# Classification Taxonomy
-<complete body of taxonomy — verbatim, not summarized>
+# Classification Taxonomy (omit section if no taxonomies referenced)
+<complete body of taxonomy 1 — verbatim, not summarized>
+<complete body of taxonomy 2 — verbatim, not summarized>
+...
 
 # Output Format
 <complete body of format — verbatim, not summarized>
@@ -139,7 +150,7 @@ document with PromptKit section headers:
 <task-specific exclusions>
 ```
 
-**Agent instruction file output** (when user selects output mode (b) in step 6):
+**Agent instruction file output** (when user selects output mode (b) in step 5b):
 Assemble the same components, then pass them through the `agent-instructions`
 format to produce platform-appropriate instruction files. Unlike raw prompt
 output, agent instruction files **do** condense content to fit platform
