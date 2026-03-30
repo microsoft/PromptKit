@@ -1,19 +1,29 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) PromptKit Contributors
 
-name: Validate Manifest
+name: Validate Prompt Library
 
 on:
   push:
     paths:
       - 'manifest.yaml'
+      - 'personas/**'
+      - 'protocols/**'
+      - 'formats/**'
+      - 'taxonomies/**'
       - 'templates/**'
       - 'tests/validate-manifest.py'
+      - 'tests/validate-graph-integrity.py'
   pull_request:
     paths:
       - 'manifest.yaml'
+      - 'personas/**'
+      - 'protocols/**'
+      - 'formats/**'
+      - 'taxonomies/**'
       - 'templates/**'
       - 'tests/validate-manifest.py'
+      - 'tests/validate-graph-integrity.py'
 
 jobs:
   validate-manifest:
@@ -29,3 +39,17 @@ jobs:
 
       - name: Validate manifest protocols
         run: python tests/validate-manifest.py
+
+  validate-graph-integrity:
+    name: Check prompt graph integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate graph integrity
+        run: python tests/validate-graph-integrity.py
