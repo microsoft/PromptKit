@@ -256,7 +256,7 @@ prompt based on the user's needs.
 ### Chaining / Pipelines
 
 Templates declare **input and output contracts** so they can be chained.
-Four pipelines are included:
+Four pipelines are defined in the manifest:
 
 **Document Lifecycle**
 
@@ -283,16 +283,7 @@ extract-rfc-requirements  →  evolve-protocol  →  author-protocol-validation 
                                protocol delta)      validation spec)                report)
 ```
 
-**Engineering Lifecycle** (the three workflows from [above](#the-engineering-lifecycle))
-
-```
-spec-extraction-workflow  →  engineering-workflow  →  maintenance-workflow
-  (bootstrap: extract        (evolve: propagate       (maintain: detect drift,
-   req / design / validation  changes with audits)      correct specs and code)
-   from existing repo)
-```
-
-The `engineering-workflow` pipeline itself chains five internal stages:
+**Engineering Workflow** (five internal stages)
 
 ```
 collaborate-requirements-change → generate-spec-changes → audit-spec-alignment
@@ -300,6 +291,9 @@ collaborate-requirements-change → generate-spec-changes → audit-spec-alignme
 ```
 
 The output of one template becomes the input parameter of the next.
+The [Engineering Lifecycle](#the-engineering-lifecycle) workflows
+(spec-extraction, engineering, maintenance) compose these pipelines
+into a higher-level lifecycle.
 
 ### Use Case: Specification Traceability Audit
 
