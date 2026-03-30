@@ -15,6 +15,8 @@ Checks performed:
   3. Orphaned files    — component files on disk not listed in the manifest
   4. Missing companions — templates lacking required persona and/or protocols
   5. Pipeline integrity — pipeline stage templates exist in the manifest
+  6. Frontmatter refs  — template file frontmatter references resolve to
+                         manifest entries (cross-checks the actual files)
 
 Exit code 0 = all checks pass.
 Exit code 1 = one or more issues detected.
@@ -37,6 +39,81 @@ def _parse_inline_list(text: str) -> list[str]:
     if match:
         return [item.strip().strip("'\"") for item in match.group(1).split(",")]
     return []
+
+
+def _protocol_short_name(full_path: str) -> str:
+    """Extract the short protocol name from a category/name path.
+
+    E.g. ``'guardrails/anti-hallucination'`` → ``'anti-hallucination'``
+    """
+    return full_path.rsplit("/", 1)[-1]
+
+
+def _parse_template_frontmatter(text: str) -> dict[str, object] | None:
+    """Extract key fields from a template file's YAML frontmatter.
+
+    Returns a dict with ``persona``, ``protocols``, ``format``, and
+    ``taxonomies``, or *None* if no frontmatter block is found.
+    """
+    match = re.search(r"^---\s*\n(.*?)\n---", text, re.DOTALL | re.MULTILINE)
+    if not match:
+        return None
+    block = match.group(1)
+
+    result: dict[str, object] = {
+        "persona": "",
+        "protocols": [],
+        "format": "",
+        "taxonomies": [],
+    }
+    current_list_field: str | None = None
+
+    for line in block.splitlines():
+        stripped = line.strip()
+        indent = len(line) - len(line.lstrip())
+
+        # Only match top-level fields (no indentation) to avoid
+        # picking up identically-named keys inside nested blocks
+        # like params, input_contract, or output_contract.
+        if indent > 0:
+            # Still collect multi-line list items at indent 2
+            if current_list_field and stripped.startswith("- "):
+                result[current_list_field].append(
+                    stripped[2:].strip().strip("'\"")
+                )
+            elif stripped and current_list_field and not stripped.startswith("#"):
+                current_list_field = None
+            continue
+
+        # Scalar fields
+        for field in ("persona", "format"):
+            if stripped.startswith(f"{field}:"):
+                val = stripped.split(":", 1)[1].strip().strip("'\"")
+                if val == "null":
+                    val = ""
+                result[field] = val
+                current_list_field = None
+                break
+        else:
+            # List fields (inline or multi-line)
+            for list_field in ("protocols", "taxonomies"):
+                if stripped.startswith(f"{list_field}:"):
+                    inline = re.search(r"\[(.+)]", stripped)
+                    if inline:
+                        result[list_field] = [
+                            item.strip().strip("'\"")
+                            for item in inline.group(1).split(",")
+                        ]
+                        current_list_field = None
+                    else:
+                        current_list_field = list_field
+                    break
+            else:
+                # Any other top-level key ends a multi-line list
+                if current_list_field:
+                    current_list_field = None
+
+    return result
 
 
 def _split_sections(text: str) -> dict[str, str]:
@@ -228,7 +305,7 @@ def validate(repo_root: Path) -> list[str]:
     # ------------------------------------------------------------------
     for component in all_components:
         path = component.get("path", "")
-        if path and not (repo_root / str(path)).exists():
+        if path and not (repo_root / str(path)).is_file():
             errors.append(
                 f"[broken-path] {component['name']}: "
                 f"path '{path}' does not exist"
@@ -303,6 +380,59 @@ def validate(repo_root: Path) -> list[str]:
                     f"[broken-pipeline] pipeline '{pipeline_name}': "
                     f"stage template '{tmpl}' not found in manifest"
                 )
+
+    # ------------------------------------------------------------------
+    # Check 6: Template frontmatter references → manifest entries
+    #
+    # Parse each template file's YAML frontmatter and validate that
+    # persona, protocol, format, and taxonomy references resolve to
+    # entries in the manifest.  Protocol paths are normalized to short
+    # names (e.g. 'guardrails/anti-hallucination' → 'anti-hallucination').
+    # ------------------------------------------------------------------
+    templates_dir = repo_root / "templates"
+    if templates_dir.is_dir():
+        for tmpl_file in sorted(templates_dir.glob("*.md")):
+            tmpl_text = tmpl_file.read_text(encoding="utf-8")
+            fm = _parse_template_frontmatter(tmpl_text)
+            if fm is None:
+                continue
+
+            fname = tmpl_file.stem
+
+            persona = fm.get("persona", "")
+            # Allow configurable/template-variable personas
+            if (
+                persona
+                and persona != "configurable"
+                and "{{" not in str(persona)
+                and persona not in persona_names
+            ):
+                errors.append(
+                    f"[broken-ref-frontmatter] {fname}: "
+                    f"persona '{persona}' not in manifest"
+                )
+
+            for proto in fm.get("protocols", []):
+                short = _protocol_short_name(str(proto))
+                if short not in protocol_names:
+                    errors.append(
+                        f"[broken-ref-frontmatter] {fname}: "
+                        f"protocol '{proto}' not in manifest"
+                    )
+
+            fmt = fm.get("format", "")
+            if fmt and "{{" not in str(fmt) and fmt not in format_names:
+                errors.append(
+                    f"[broken-ref-frontmatter] {fname}: "
+                    f"format '{fmt}' not in manifest"
+                )
+
+            for tax in fm.get("taxonomies", []):
+                if tax not in taxonomy_names:
+                    errors.append(
+                        f"[broken-ref-frontmatter] {fname}: "
+                        f"taxonomy '{tax}' not in manifest"
+                    )
 
     return errors
 
