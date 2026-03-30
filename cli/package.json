@@ -18,7 +18,9 @@
   ],
   "scripts": {
     "prepublishOnly": "node scripts/copy-content.js",
-    "prepare": "node scripts/copy-content.js"
+    "prepare": "node scripts/copy-content.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "commander": "^12.0.0",
@@ -38,5 +40,8 @@
     "prompt-templates",
     "agentic-ai",
     "developer-tools"
-  ]
+  ],
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
 }

@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) PromptKit Contributors
+
+name: CLI Tests
+
+on:
+  push:
+    paths:
+      - 'cli/**'
+  pull_request:
+    paths:
+      - 'cli/**'
+
+jobs:
+  test:
+    name: Run CLI tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: cli
+        run: npm ci
+
+      - name: Run tests
+        working-directory: cli
+        run: npm test
