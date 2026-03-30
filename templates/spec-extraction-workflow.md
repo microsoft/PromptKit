@@ -161,14 +161,14 @@ The assembled prompt includes only the multi-artifact format, so
 use this section skeleton for the requirements document:
 
 1. **Overview** — purpose and scope of the system
-2. **Scope** — boundaries, in-scope and out-of-scope
-3. **Definitions** — domain terminology extracted from code
+2. **Scope** — in-scope and out-of-scope boundaries
+3. **Definitions and Glossary** — domain terminology extracted from code
 4. **Requirements** — atomic items with REQ-IDs, RFC 2119 keywords,
    and acceptance criteria (AC-1, AC-2, ...)
-5. **Constraints** — technical, legal, operational, or organizational limits
-6. **Dependencies** (DEP-NNN) — external systems, libraries, or services
-7. **Assumptions** (ASM-NNN) — conditions presumed true but not enforced
-8. **Risks** (RISK-NNN) — potential failures, uncertainties, or impact areas
+5. **Dependencies** (DEP-NNN) — external systems, libraries, or services
+6. **Assumptions** (ASM-NNN) — conditions presumed true but not enforced
+7. **Risks** (RISK-NNN) — potential failures, uncertainties, or impact areas
+8. **Revision History** — initial extraction metadata
 
 For any section with no content, explicitly state **"None identified."** — never omit sections.
 
@@ -187,15 +187,15 @@ design specification covering:
 Format the output according to the **design-doc** format.
 Use this section skeleton:
 
-1. **Context & Goals** — problem statement, objectives, and success criteria
-2. **Non-Goals** — what is explicitly out of scope for this design
-3. **Requirements Summary** — key functional and non-functional requirements
-4. **Architecture Overview** — high-level architecture, components, and boundaries
-5. **Detailed Design** — component behavior, data flows, and key algorithms
-6. **Security/Operational Considerations** — security model, observability, deployment, and ops
-7. **Tradeoffs and Alternatives** — major decisions, options considered, and rationale
+1. **Overview** — system purpose, design philosophy, and goals
+2. **Requirements Summary** — key functional and non-functional requirements
+3. **Architecture** — high-level architecture, components, layers, boundaries
+4. **Detailed Design** — component behavior, data flows, interfaces, and key algorithms
+5. **Tradeoff Analysis** — major decisions, options considered, and rationale
+6. **Security Considerations** — threat model, trust boundaries, mitigations
+7. **Operational Considerations** — deployment, observability, monitoring, and ops
 8. **Open Questions** — unresolved issues, risks, and follow-up investigations
-9. **Revision History** — significant changes to the design over time
+9. **Revision History** — initial extraction metadata
 
 ### 2c. Validation Extraction
 
@@ -213,14 +213,12 @@ Use this section skeleton:
 1. **Overview** — objectives, system under test, and validation approach
 2. **Scope of Validation** — in-scope vs. out-of-scope features and constraints
 3. **Test Strategy** — test levels, techniques, and types (unit, integration, system, regression)
-4. **Risk-Based Prioritization** — risk categories, impact/likelihood, and prioritization rationale
+4. **Requirements Traceability Matrix** — REQ-ID → TC-NNN mapping
 5. **Test Cases** — TC-NNN entries linked to REQ-IDs, with pass/fail
    criteria and test levels
-6. **Traceability Matrix** — REQ-ID → TC-NNN mapping
+6. **Risk-Based Test Prioritization** — risk categories, impact/likelihood, and prioritization rationale
 7. **Pass/Fail Criteria** — overall entry/exit criteria and acceptance thresholds
-8. **Coverage Assessment** — what is tested vs. gaps
-9. **Environmental Assumptions** — test environment, data, and tooling requirements
-10. **Revision History** — date, author, and summary of changes
+8. **Revision History** — initial extraction metadata
 
 ### Critical Rule
 
