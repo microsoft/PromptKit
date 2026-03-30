@@ -41,17 +41,17 @@ engineering, and beyond.
      and drift detected in Maintain loops back to Bootstrap. -->
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    Bootstrap    │────▶│     Evolve      │────▶│    Maintain     │
-│                 │     │                 │     │                 │
-│  Scan repo,     │     │  Propagate      │     │  Detect drift,  │
-│  extract specs  │     │  changes with   │     │  correct specs  │
-│  (req / design  │     │  adversarial    │     │  and code       │
-│  / validation)  │     │  audits         │     │                 │
-└─────────────────┘     └─────────────────┘     └────────┬────────┘
-         ▲                                               │
-         └───────────────────────────────────────────────┘
-                          drift detected
+ ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+ │    Bootstrap     │────>│     Evolve       │────>│    Maintain      │
+ │                  │     │                  │     │                  │
+ │  Scan repo,      │     │  Propagate       │     │  Detect drift,   │
+ │  extract specs   │     │  changes with    │     │  correct specs   │
+ │  (req / design   │     │  adversarial     │     │  and code        │
+ │   / validation)  │     │  audits          │     │                  │
+ └──────────────────┘     └──────────────────┘     └────────┬─────────┘
+          ▲                                                 │
+          └─────────────────────────────────────────────────┘
+                           drift detected
 ```
 
 | Stage | Workflow | What it does | Entry point |
