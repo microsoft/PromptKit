@@ -1,0 +1,31 @@
+personas:
+  - name: test-persona
+    description: Test persona
+    path: personas/test-persona.md
+protocols:
+  guardrails:
+    - name: test-guardrail
+      description: Test guardrail
+      path: protocols/guardrails/test-guardrail.md
+formats:
+  - name: test-format
+    description: Test format
+    path: formats/test-format.md
+taxonomies:
+  - name: test-taxonomy
+    description: Test taxonomy
+    path: taxonomies/test-taxonomy.md
+templates:
+  test-category:
+    - name: test-template
+      description: A test template for unit testing
+      path: templates/test-category/test-template.md
+      persona: test-persona
+      protocols:
+        - test-guardrail
+      format: test-format
+  another-category:
+    - name: another-template
+      description: Another test template in a different category
+      path: templates/another-category/another-template.md
+      persona: test-persona
