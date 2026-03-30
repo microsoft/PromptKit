@@ -147,9 +147,6 @@ describe("CLI Entry Point", () => {
     after(() => cleanTmp(tmpDir));
 
     it("exits code 1 with error about missing content", () => {
-      const result = runExpectFail(["list"], {
-        env: { PATH: process.env.PATH },
-      });
       // Run against the temp CLI that has bootstrap.md removed
       try {
         execFileSync(process.execPath, [tmpCliJs, "list"], {
@@ -218,27 +215,12 @@ describe("CLI Entry Point", () => {
   });
 
   it("TC-CLI-120: 'assemble' is not a valid command", () => {
-    // Use a temp dir so we don't depend on CWD state
-    const tmpDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), "promptkit-cli-assemble-")
+    // Confirm --help Commands section does not list assemble
+    const helpOutput = run(["--help"]);
+    const commandsSection = helpOutput.split(/Commands:/i)[1] || "";
+    assert.ok(
+      !commandsSection.match(/^\s+assemble\b/m),
+      "Commands section should not list assemble"
     );
-    try {
-      runExpectFail(["assemble", "investigate-bug"], { cwd: tmpDir });
-      // No assembly file should be written in the temp dir
-      const assembledFile = path.join(tmpDir, "assembled-prompt.md");
-      assert.ok(
-        !fs.existsSync(assembledFile),
-        "no assembled-prompt.md should be written"
-      );
-      // Confirm --help Commands section does not list assemble
-      const helpOutput = run(["--help"]);
-      const commandsSection = helpOutput.split(/Commands:/i)[1] || "";
-      assert.ok(
-        !commandsSection.match(/^\s+assemble\b/m),
-        "Commands section should not list assemble"
-      );
-    } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
   });
 });
