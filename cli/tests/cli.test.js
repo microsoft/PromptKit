@@ -69,8 +69,11 @@ function makeTempContent(removeFiles) {
   const srcModules = path.resolve(__dirname, "..", "node_modules");
   const destModules = path.join(tmpCli, "node_modules");
   if (fs.existsSync(srcModules)) {
-    // Use junction on Windows, symlink on others
-    fs.symlinkSync(srcModules, destModules, "junction");
+    if (process.platform === "win32") {
+      fs.symlinkSync(srcModules, destModules, "junction");
+    } else {
+      fs.symlinkSync(srcModules, destModules, "dir");
+    }
   }
 
   // Copy content dir

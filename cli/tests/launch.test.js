@@ -205,8 +205,8 @@ describe("Launch Module", () => {
     });
   });
 
-  describe("Command construction", () => {
-    it("TC-CLI-080/081: bootstrap prompt and CLI args are correct", () => {
+  describe("Module exports and bootstrap prompt", () => {
+    it("TC-CLI-080/081: launch module exports expected functions and contains bootstrap prompt", () => {
       const launchSrc = fs.readFileSync(launchModulePath, "utf8");
 
       const bootstrapPrompt = "Read and execute bootstrap.md";

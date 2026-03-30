@@ -136,71 +136,10 @@ describe("Content Bundling (copy-content.js)", () => {
         );
       }
 
-      // Create a copy-content.js wrapper that uses our temp paths
+      // Copy the real copy-content.js — it uses __dirname-relative paths,
+      // so placing it at tmpDir/cli/scripts/ makes it resolve correctly
       tmpScript = path.join(tmpScriptsDir, "copy-content.js");
-      const scriptContent = `
-const fs = require("fs");
-const path = require("path");
-
-const repoRoot = ${JSON.stringify(tmpRepoRoot)};
-const contentDir = ${JSON.stringify(tmpContentDir)};
-
-const dirs = ["personas", "protocols", "formats", "templates", "taxonomies"];
-const files = ["manifest.yaml", "bootstrap.md"];
-
-function copyDirRecursive(src, dest) {
-  if (!fs.existsSync(src)) return;
-  fs.mkdirSync(dest, { recursive: true });
-  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      copyDirRecursive(srcPath, destPath);
-    } else if (entry.name.endsWith(".md") || entry.name.endsWith(".yaml")) {
-      fs.copyFileSync(srcPath, destPath);
-    }
-  }
-}
-
-if (!fs.existsSync(path.join(repoRoot, "manifest.yaml"))) {
-  console.error(
-    "Error: manifest.yaml not found at repo root. " +
-    "Run this script from the promptkit repository."
-  );
-  process.exit(1);
-}
-
-if (fs.existsSync(contentDir)) {
-  fs.rmSync(contentDir, { recursive: true });
-}
-fs.mkdirSync(contentDir, { recursive: true });
-
-for (const file of files) {
-  const src = path.join(repoRoot, file);
-  if (fs.existsSync(src)) {
-    fs.copyFileSync(src, path.join(contentDir, file));
-  }
-}
-
-for (const dir of dirs) {
-  copyDirRecursive(path.join(repoRoot, dir), path.join(contentDir, dir));
-}
-
-function countEntries(dir) {
-  let count = 0;
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    count++;
-    if (entry.isDirectory()) {
-      count += countEntries(path.join(dir, entry.name));
-    }
-  }
-  return count;
-}
-
-const count = countEntries(contentDir);
-console.log("Copied PromptKit content to cli/content/ (" + count + " entries)");
-`;
-      fs.writeFileSync(tmpScript, scriptContent);
+      fs.copyFileSync(copyContentScript, tmpScript);
     });
 
     afterEach(() => {
@@ -265,7 +204,7 @@ console.log("Copied PromptKit content to cli/content/ (" + count + " entries)");
 
   describe("Error handling", () => {
     it("TC-CLI-094: exits 1 when manifest.yaml not found", () => {
-      // Create a temp dir without manifest.yaml and a copy-content wrapper
+      // Create a temp dir structure without manifest.yaml at repo root
       const tmpDir = fs.mkdtempSync(
         path.join(os.tmpdir(), "promptkit-no-manifest-")
       );
@@ -273,38 +212,23 @@ console.log("Copied PromptKit content to cli/content/ (" + count + " entries)");
       const tmpScriptsDir = path.join(tmpCliDir, "scripts");
       fs.mkdirSync(tmpScriptsDir, { recursive: true });
 
-      // Write a copy-content.js that points to this empty repo root
-      const script = `
-const fs = require("fs");
-const path = require("path");
-const repoRoot = ${JSON.stringify(tmpDir)};
-if (!fs.existsSync(path.join(repoRoot, "manifest.yaml"))) {
-  console.error(
-    "Error: manifest.yaml not found at repo root. " +
-    "Run this script from the promptkit repository."
-  );
-  process.exit(1);
-}
-`;
+      // Copy the real copy-content.js into the temp structure
       const scriptPath = path.join(tmpScriptsDir, "copy-content.js");
-      fs.writeFileSync(scriptPath, script);
+      fs.copyFileSync(copyContentScript, scriptPath);
 
       try {
-        // Run the temp script directly
-        try {
-          execFileSync(process.execPath, [scriptPath], {
-            encoding: "utf8",
-            timeout: 15000,
-          });
-          assert.fail("should have thrown");
-        } catch (err) {
-          assert.strictEqual(err.status, 1, "exit code should be 1");
-          const stderr = (err.stderr || "").toString();
-          assert.ok(
-            stderr.includes("manifest.yaml not found"),
-            "stderr should mention manifest.yaml not found"
-          );
-        }
+        execFileSync(process.execPath, [scriptPath], {
+          encoding: "utf8",
+          timeout: 15000,
+        });
+        assert.fail("should have thrown");
+      } catch (err) {
+        assert.strictEqual(err.status, 1, "exit code should be 1");
+        const stderr = (err.stderr || "").toString();
+        assert.ok(
+          stderr.includes("manifest.yaml not found"),
+          "stderr should mention manifest.yaml not found"
+        );
       } finally {
         try {
           fs.rmSync(tmpDir, { recursive: true, force: true });
