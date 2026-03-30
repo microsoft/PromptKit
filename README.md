@@ -41,17 +41,17 @@ engineering, and beyond.
      and drift detected in Maintain loops back to Bootstrap. -->
 
 ```
-┌───────────────┐     ┌───────────────┐     ┌───────────────┐
-│   Bootstrap   │────▶│    Evolve     │────▶│   Maintain    │
-│               │     │               │     │               │
-│ Scan repo,    │     │ Propagate     │     │ Detect drift, │
-│ extract specs │     │ changes with  │     │ correct specs │
-│ (req / design │     │ adversarial   │     │ and code      │
-│  / validation)│     │ audits        │     │               │
-└───────────────┘     └───────────────┘     └───────┬───────┘
-        ▲                                           │
-        └───────────────────────────────────────────┘
-                      drift detected
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│    Bootstrap    │────▶│     Evolve      │────▶│    Maintain     │
+│                 │     │                 │     │                 │
+│  Scan repo,     │     │  Propagate      │     │  Detect drift,  │
+│  extract specs  │     │  changes with   │     │  correct specs  │
+│  (req / design  │     │  adversarial    │     │  and code       │
+│  / validation)  │     │  audits         │     │                 │
+└─────────────────┘     └─────────────────┘     └────────┬────────┘
+         ▲                                               │
+         └───────────────────────────────────────────────┘
+                          drift detected
 ```
 
 | Stage | Workflow | What it does | Entry point |
@@ -283,13 +283,20 @@ extract-rfc-requirements  →  evolve-protocol  →  author-protocol-validation 
                                protocol delta)      validation spec)                report)
 ```
 
-**Engineering Workflow**
+**Engineering Lifecycle** (the three workflows from [above](#the-engineering-lifecycle))
 
 ```
 spec-extraction-workflow  →  engineering-workflow  →  maintenance-workflow
   (bootstrap: extract        (evolve: propagate       (maintain: detect drift,
    req / design / validation  changes with audits)      correct specs and code)
    from existing repo)
+```
+
+The `engineering-workflow` pipeline itself chains five internal stages:
+
+```
+collaborate-requirements-change → generate-spec-changes → audit-spec-alignment
+  → generate-implementation-changes → audit-implementation-alignment
 ```
 
 The output of one template becomes the input parameter of the next.
