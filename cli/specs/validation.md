@@ -377,7 +377,7 @@ concern.*
 
 **TC-CLI-122**: List command uses inline manifest parsing.
 - *Requirement*: REQ-CLI-103
-- *Type*: Behavioral
+- *Type*: Integration
 - *Steps*: In a test environment where no separate `manifest` module
   (e.g., `lib/manifest.js`) exists, run `promptkit list`.
 - *Expected*: `promptkit list` completes successfully and lists available
