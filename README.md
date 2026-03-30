@@ -15,17 +15,54 @@
 Every AI-assisted task — investigating bugs, writing requirements, reviewing code — lives or dies by the prompt that drives it.
 Yet most teams still write these prompts ad hoc: copy-pasted, untested, inconsistent, and impossible to improve systematically.
 
-PromptKit treats prompts as code. It gives you composable, version-controlled
-components — personas, reasoning protocols, output formats, and task
-templates — that snap together into reliable, repeatable prompts. The same
-engineering rigor you apply to your software (modularity, reuse, testing,
-code review) now applies to the prompts that build it.
+PromptKit treats prompts as engineered artifacts. It gives you composable,
+version-controlled components — personas, reasoning protocols, output formats,
+and task templates — that snap together into reliable, repeatable prompts.
+Three interactive workflows cover the full engineering lifecycle: bootstrap
+specifications from any codebase, evolve them under change with adversarial
+audits, and detect drift before it becomes debt. The same engineering rigor
+you apply to your software now applies to the prompts that build it.
 
-A composable, versioned library of prompt templates for engineering tasks —
-software, hardware, firmware, and protocol domains. Designed for engineers
-who design, build, verify, and ship.
+A composable, versioned prompt library for engineering tasks — software,
+hardware, mechanical, RF, firmware, and protocol domains. Designed for
+engineers who design, build, verify, and ship.
 
-**136 components** — 13 personas · 44 protocols · 20 formats · 5 taxonomies · 54 templates across 3 pipelines
+**157 components** — 15 personas · 48 protocols · 21 formats · 5 taxonomies · 64 templates across 4 pipelines
+
+## The Engineering Lifecycle
+
+PromptKit's three interactive workflows form a domain-agnostic engineering
+lifecycle — they work for software, hardware, mechanical, RF, protocol
+engineering, and beyond.
+
+<!-- Alt-text: Diagram showing the engineering lifecycle as three stages
+     in a cycle: Bootstrap (spec-extraction-workflow) feeds into Evolve
+     (engineering-workflow) which feeds into Maintain (maintenance-workflow),
+     and drift detected in Maintain loops back to Bootstrap. -->
+
+```
+┌───────────────┐     ┌───────────────┐     ┌───────────────┐
+│   Bootstrap   │────▶│    Evolve     │────▶│   Maintain    │
+│               │     │               │     │               │
+│ Scan repo,    │     │ Propagate     │     │ Detect drift, │
+│ extract specs │     │ changes with  │     │ correct specs │
+│ (req / design │     │ adversarial   │     │ and code      │
+│  / validation)│     │ audits        │     │               │
+└───────────────┘     └───────────────┘     └───────┬───────┘
+        ▲                                           │
+        └───────────────────────────────────────────┘
+                      drift detected
+```
+
+| Stage | Workflow | What it does | Entry point |
+|-------|----------|--------------|-------------|
+| **Bootstrap** | `spec-extraction-workflow` | Scans any repository and extracts structured requirements, design, and validation specifications from existing code and artifacts | `Read and execute templates/spec-extraction-workflow.md` |
+| **Evolve** | `engineering-workflow` | Propagates a requirements change through specs and implementation with adversarial alignment audits at each stage | `Read and execute templates/engineering-workflow.md` |
+| **Maintain** | `maintenance-workflow` | Periodic drift detection — finds where code and specs have diverged, then corrects both | `Read and execute templates/maintenance-workflow.md` |
+
+Each workflow is interactive (`mode: interactive`) — it runs directly in
+your LLM session, guiding you through structured phases with built-in
+challenge and verification steps.
 
 ## Prerequisites
 
@@ -83,7 +120,7 @@ and presents the available templates:
 
 I've loaded the PromptKit manifest. I'm ready to help you build a task-specific prompt.
 
-Available templates (54):
+Available templates (64):
 
 ┌────────────────────────┬───────┬──────────────────────────────────────────────────────┐
 │ Category               │ Count │ Examples                                             │
@@ -91,8 +128,11 @@ Available templates (54):
 │ Document Authoring     │   16  │ author-requirements-doc, interactive-design,         │
 │                        │       │ audit-traceability, validate-budget, ...             │
 ├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
-│ Code Analysis          │    8  │ review-code, review-cpp-code, exhaustive-bug-hunt,  │
-│                        │       │ review-schematic, review-bom, review-layout, ...    │
+│ Engineering Workflow   │    8  │ engineering-workflow, spec-extraction-workflow,       │
+│                        │       │ maintenance-workflow, audit-spec-alignment, ...      │
+├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
+│ Code Analysis          │   10  │ review-code, review-cpp-code, exhaustive-bug-hunt,  │
+│                        │       │ review-schematic, review-enclosure, ...              │
 ├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
 │ DevOps                 │    7  │ author-pipeline, triage-issues, author-release, ...  │
 ├────────────────────────┼───────┼──────────────────────────────────────────────────────┤
@@ -109,8 +149,8 @@ Available templates (54):
 │ Agent · Contribution   │       │ author-agent-instructions, extend-library, ...       │
 └────────────────────────┴───────┴──────────────────────────────────────────────────────┘
 
-Personas: systems-engineer · electrical-engineer · protocol-architect ·
-          embedded-firmware-engineer · security-auditor · ... (13 total)
+Personas: systems-engineer · electrical-engineer · rf-engineer ·
+          mechanical-engineer · protocol-architect · ... (15 total)
 
 What would you like to accomplish?
 ```
@@ -216,7 +256,7 @@ prompt based on the user's needs.
 ### Chaining / Pipelines
 
 Templates declare **input and output contracts** so they can be chained.
-Three pipelines are included:
+Four pipelines are included:
 
 **Document Lifecycle**
 
@@ -241,6 +281,15 @@ author-requirements-doc  →  review-schematic  →  validate-simulation  →  r
 extract-rfc-requirements  →  evolve-protocol  →  author-protocol-validation  →  analyze-protocol-conflicts
   (produces: requirements)    (produces:           (produces: protocol             (produces: investigation
                                protocol delta)      validation spec)                report)
+```
+
+**Engineering Workflow**
+
+```
+spec-extraction-workflow  →  engineering-workflow  →  maintenance-workflow
+  (bootstrap: extract        (evolve: propagate       (maintain: detect drift,
+   req / design / validation  changes with audits)      correct specs and code)
+   from existing repo)
 ```
 
 The output of one template becomes the input parameter of the next.
@@ -303,6 +352,8 @@ personas, analysis protocols, and task templates.
 | `test-engineer` | Specification-driven test authoring, coverage analysis |
 | `embedded-firmware-engineer` | Boot sequences, OTA updates, flash management, power-fail-safe, watchdogs |
 | `electrical-engineer` | Power delivery, signal integrity, PCB design, schematic review, component selection |
+| `rf-engineer` | Link budget analysis, antenna design, signal integrity, RF system review |
+| `mechanical-engineer` | Enclosure design, thermal analysis, tolerance stacks, DFM/DFA review |
 | `protocol-architect` | Protocol design, evolution, formal specification, state machines, interoperability |
 
 ### Protocols
@@ -336,6 +387,8 @@ personas, analysis protocols, and task templates.
 | `simulation-validation` | Circuit simulation output vs. specification constraints |
 | `bom-consistency` | BOM audit against schematic, ratings, sourcing |
 | `layout-design-review` | PCB layout review (traces, impedance, thermal, DRC) |
+| `link-budget-audit` | RF link budget analysis against requirements |
+| `enclosure-design-review` | Mechanical enclosure design review |
 
 **Reasoning** (systematic reasoning approaches):
 
@@ -365,6 +418,8 @@ personas, analysis protocols, and task templates.
 | `quantitative-constraint-validation` | Budget/rollup/margin validation against spec constraints |
 | `spec-evolution-diff` | Specification version comparison at invariant level |
 | `session-profiling` | LLM session log analysis for token inefficiencies |
+| `change-propagation` | Multi-artifact change impact analysis and propagation |
+| `step-retrospective` | Post-step retrospective and quality evaluation |
 
 ### Formats
 
@@ -390,6 +445,7 @@ personas, analysis protocols, and task templates.
 | `behavioral-model` | Behavioral model | State machines, flow graphs, invariant catalogs |
 | `interface-contract` | Interface contract | Per-resource guarantees, obligations, failure modes |
 | `architecture-spec` | Architecture specification | System description, interfaces, cross-cutting concerns |
+| `structured-patch` | Structured patch | Machine-readable code changes with context |
 
 ### Taxonomies
 
@@ -452,7 +508,7 @@ personas, analysis protocols, and task templates.
 | `profile-session` | Analyze LLM session log for token inefficiencies |
 | `classify-findings` | Classify findings against a reference catalog |
 
-**Code Analysis** (8 templates):
+**Code Analysis** (10 templates):
 
 | Name | Description |
 |------|-------------|
@@ -464,6 +520,8 @@ personas, analysis protocols, and task templates.
 | `validate-simulation` | Review simulation output against spec constraints |
 | `review-bom` | Audit BOM against schematic, ratings, sourcing |
 | `review-layout` | Audit PCB layout against schematic intent |
+| `review-enclosure` | Audit mechanical enclosure design against requirements |
+| `audit-link-budget` | Audit RF link budget against requirements |
 
 **Testing** (2 templates):
 
@@ -511,6 +569,19 @@ personas, analysis protocols, and task templates.
 | `evolve-protocol` | Interactive protocol evolution session |
 | `analyze-protocol-conflicts` | Compare protocol specs for conflicts |
 | `author-protocol-validation` | Derive validation spec from protocol spec |
+
+**Engineering Workflow** (8 templates):
+
+| Name | Description |
+|------|-------------|
+| `spec-extraction-workflow` | Bootstrap: scan repo and extract requirements, design, and validation specs |
+| `engineering-workflow` | Evolve: propagate a requirements change through specs and implementation |
+| `maintenance-workflow` | Maintain: periodic drift detection and correction across specs and code |
+| `collaborate-requirements-change` | Interactive requirements change proposal and impact analysis |
+| `generate-spec-changes` | Generate specification updates from an approved requirements change |
+| `generate-implementation-changes` | Generate implementation changes from updated specifications |
+| `audit-spec-alignment` | Adversarial audit of specification alignment after changes |
+| `audit-implementation-alignment` | Adversarial audit of implementation alignment against specifications |
 
 ## Directory Structure
 
