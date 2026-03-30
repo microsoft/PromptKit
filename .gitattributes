@@ -1,0 +1,9 @@
+# Normalize all text files to LF
+* text=auto eol=lf
+
+# Explicitly mark file types
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.py text eol=lf
