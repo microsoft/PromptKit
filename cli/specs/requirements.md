@@ -113,8 +113,9 @@ directory to a temporary directory before launching the LLM CLI.
   content files.
 
 **REQ-CLI-015**: The `interactive` command MUST spawn the LLM CLI process
-with `cwd` set to the user's original working directory (captured at
-process start) and `stdio: "inherit"` so the user can interact directly.
+with `cwd` set to the user's working directory at the time the interactive
+session is launched (captured when launching) and `stdio: "inherit"` so the
+user can interact directly.
 - *Source*: `launch.js` (`launchInteractive()`).
 - *Acceptance*: The spawned process has `cwd` equal to the directory from
   which `promptkit` was invoked. The process inherits stdin/stdout/stderr.

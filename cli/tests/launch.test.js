@@ -270,7 +270,7 @@ describe("Launch Module", () => {
       if (process.platform === "win32") {
         fs.writeFileSync(
           path.join(mockBinDir, `${binName}.cmd`),
-          `@${process.execPath} "${implScript}" %*\r\n`
+          `@"${process.execPath}" "${implScript}" %*\r\n`
         );
       } else {
         const p = path.join(mockBinDir, binName);
