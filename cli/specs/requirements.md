@@ -19,6 +19,7 @@ source_files:
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
 | 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired assemble command (REQ-CLI-030–037), assembly engine (REQ-CLI-040–051), manifest resolution module (REQ-CLI-060–069). Kept list command with inline manifest parsing. Modified REQ-CLI-002, 004, 011, 012, 020–023, 080, 091, 094. Retired REQ-CLI-092, CON-005, ASSUMPTION-002, ASSUMPTION-006. Added REQ-CLI-100, 101, 103. |
+| 0.3 | 2026-03-31 | Bug-fix | Added REQ-CLI-024 (cwd preservation for claude). Updated REQ-CLI-015 and REQ-CLI-017 to reflect per-CLI spawn cwd behaviour. |
 
 ---
 
@@ -111,24 +112,46 @@ directory to a temporary directory before launching the LLM CLI.
   content files.
 
 **REQ-CLI-015**: The `interactive` command MUST spawn the LLM CLI process
-with the working directory set to the temporary content directory and
-`stdio: "inherit"` so the user can interact directly.
-- *Source*: `launch.js` lines 107–110.
-- *Acceptance*: The child process has `cwd` equal to the temp directory
-  and inherits stdin/stdout/stderr.
+with `stdio: "inherit"` so the user can interact directly. For CLIs that
+do not depend on their process cwd for session context (`copilot`,
+`gh-copilot`), the working directory MUST be set to the temporary content
+directory. For CLIs that use their process cwd as the session working
+directory (`claude`), the working directory MUST be set to the user's
+original working directory (captured at process start).
+- *Source*: `launch.js` (`launchInteractive()`).
+- *Acceptance*: `copilot`/`gh-copilot` child processes have `cwd` equal to
+  the temp directory; `claude` child process has `cwd` equal to the
+  directory from which `promptkit` was invoked. All children inherit
+  stdin/stdout/stderr.
 
 **REQ-CLI-016**: The `interactive` command MUST pass the bootstrap prompt
-`"Read and execute bootstrap.md"` as the initial instruction to the LLM CLI.
-- *Source*: `launch.js` line 86.
+as the initial instruction to the LLM CLI. For `copilot` and `gh-copilot`
+the prompt is the string `"Read and execute bootstrap.md"`. For `claude`
+the prompt is `"Read and execute <abs-path-to-bootstrap.md>"` where
+`<abs-path-to-bootstrap.md>` is the absolute path to `bootstrap.md` inside
+the temporary content directory, allowing Claude to locate the file
+regardless of the spawn cwd.
+- *Source*: `launch.js` (`launchInteractive()`).
 - *Acceptance*: The spawned process receives this string as an argument.
 
 **REQ-CLI-017**: The CLI MUST construct the correct command and arguments
 for each supported LLM CLI:
 - `copilot`: `copilot -i "Read and execute bootstrap.md"`
 - `gh-copilot`: `gh copilot -i "Read and execute bootstrap.md"`
-- `claude`: `claude "Read and execute bootstrap.md"`
-- *Source*: `launch.js` lines 89–105.
+- `claude`: `claude "Read and execute <abs-path>/bootstrap.md"` where
+  `<abs-path>` is the absolute path to the temporary content directory
+- *Source*: `launch.js` (`launchInteractive()`).
 - *Acceptance*: Spawn is called with the documented cmd/args for each CLI.
+
+**REQ-CLI-024**: The `interactive` command MUST preserve the user's original
+working directory when launching an LLM CLI that uses its process cwd as the
+session working directory. For `claude`, the child process MUST be spawned
+with `cwd` equal to the working directory of the terminal that invoked
+`promptkit`, not the temporary staging directory.
+- *Source*: `launch.js` (`launchInteractive()`).
+- *Acceptance*: When `promptkit --cli claude` is run from directory `D`, the
+  `claude` process reports `cwd = D`; the cwd is NOT the temporary
+  `promptkit-*` staging directory.
 
 **REQ-CLI-018**: When the child process exits, the CLI MUST clean up the
 temporary directory (best-effort) and then exit with the child's exit code.

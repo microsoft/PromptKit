@@ -230,4 +230,80 @@ describe("Launch Module", () => {
       );
     });
   });
+
+  describe("CWD preservation", () => {
+    let cwdTestTmpDir;
+
+    before(() => {
+      cwdTestTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pk-cwdtest-"));
+    });
+
+    after(() => {
+      try {
+        fs.rmSync(cwdTestTmpDir, { recursive: true, force: true });
+      } catch {
+        // best effort
+      }
+    });
+
+    it("TC-CLI-082: claude is spawned with the user's original cwd, not the temp content dir", () => {
+      const cwdFile = path.join(cwdTestTmpDir, "captured-cwd.txt");
+      const mockBinDir = path.join(cwdTestTmpDir, "mock-bin");
+      fs.mkdirSync(mockBinDir, { recursive: true });
+
+      // Create a mock claude that writes its cwd to cwdFile then exits.
+      const implScript = path.join(cwdTestTmpDir, "claude-impl.js");
+      fs.writeFileSync(
+        implScript,
+        `const fs = require('fs');\nfs.writeFileSync(${JSON.stringify(cwdFile)}, process.cwd());\n`
+      );
+
+      if (process.platform === "win32") {
+        fs.writeFileSync(
+          path.join(mockBinDir, "claude.cmd"),
+          `@${process.execPath} "${implScript}" %*\r\n`
+        );
+      } else {
+        const claudePath = path.join(mockBinDir, "claude");
+        fs.writeFileSync(
+          claudePath,
+          `#!/bin/sh\n${process.execPath} "${implScript}" "$@"\n`
+        );
+        fs.chmodSync(claudePath, 0o755);
+      }
+
+      // Use cwdTestTmpDir itself as the "user's original cwd".
+      const userCwd = cwdTestTmpDir;
+
+      const pathSep = path.delimiter;
+      const newPath = `${mockBinDir}${pathSep}${process.env.PATH || ""}`;
+
+      execFileSync(
+        process.execPath,
+        [cliPath, "interactive", "--cli", "claude"],
+        {
+          env: { ...process.env, PATH: newPath },
+          cwd: userCwd,
+          encoding: "utf8",
+          timeout: 15000,
+        }
+      );
+
+      assert.ok(
+        fs.existsSync(cwdFile),
+        "mock claude should have written its cwd to disk"
+      );
+
+      const actualCwd = fs.realpathSync(
+        fs.readFileSync(cwdFile, "utf8").trim()
+      );
+      const expectedCwd = fs.realpathSync(userCwd);
+
+      assert.strictEqual(
+        actualCwd,
+        expectedCwd,
+        "claude should be spawned with the user's original cwd, not the temp PromptKit staging dir"
+      );
+    });
+  });
 });

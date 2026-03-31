@@ -78,26 +78,33 @@ function launchInteractive(contentDir, cliName) {
     );
   }
 
+  // Preserve the user's working directory before staging content.
+  const originalCwd = process.cwd();
+
   // Copy content to a temp directory so the LLM can read the files
   const tmpDir = copyContentToTemp(contentDir);
   console.log(`PromptKit content staged at: ${tmpDir}`);
   console.log(`Launching ${cli}...\n`);
 
-  const bootstrapPrompt = "Read and execute bootstrap.md";
-
-  let cmd, args;
+  let cmd, args, spawnCwd;
   switch (cli) {
     case "copilot":
       cmd = "copilot";
-      args = ["-i", bootstrapPrompt];
+      args = ["-i", "Read and execute bootstrap.md"];
+      spawnCwd = tmpDir;
       break;
     case "gh-copilot":
       cmd = "gh";
-      args = ["copilot", "-i", bootstrapPrompt];
+      args = ["copilot", "-i", "Read and execute bootstrap.md"];
+      spawnCwd = tmpDir;
       break;
     case "claude":
+      // Claude Code uses its spawn cwd as the session working directory.
+      // Spawn from the user's original cwd and supply an absolute path to
+      // bootstrap.md so Claude can locate the staged content.
       cmd = "claude";
-      args = [bootstrapPrompt];
+      args = [`Read and execute ${path.join(tmpDir, "bootstrap.md")}`];
+      spawnCwd = originalCwd;
       break;
     default:
       console.error(`Unknown CLI: ${cli}`);
@@ -105,7 +112,7 @@ function launchInteractive(contentDir, cliName) {
   }
 
   const child = spawn(cmd, args, {
-    cwd: tmpDir,
+    cwd: spawnCwd,
     stdio: "inherit",
   });
 

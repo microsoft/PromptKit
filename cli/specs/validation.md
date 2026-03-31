@@ -17,6 +17,7 @@ related:
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
 | 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired test cases for assembly engine (TC-CLI-010–024), manifest resolution (TC-CLI-030–042), assemble command (TC-CLI-060–067), Windows frontmatter (TC-CLI-113). Updated TC-CLI-001, TC-CLI-003, TC-CLI-053. Added TC-CLI-120–122 for new requirements. Updated traceability matrix. |
+| 0.3 | 2026-03-31 | Bug-fix | Added TC-CLI-082 for REQ-CLI-024 (claude cwd preservation). Updated TC-CLI-080/081 notes. Updated traceability matrix. |
 
 ---
 
@@ -267,7 +268,9 @@ See REQ-CLI-100.*
 - *Requirement*: REQ-CLI-016
 - *Type*: Unit
 - *Steps*: Inspect the spawn arguments for each CLI type.
-- *Expected*: `"Read and execute bootstrap.md"` appears in args.
+- *Expected*: `"Read and execute bootstrap.md"` appears in the args for
+  `copilot` and `gh-copilot`. For `claude`, an absolute path ending in
+  `bootstrap.md` appears in the args.
 
 **TC-CLI-081**: Correct command construction for each CLI.
 - *Requirement*: REQ-CLI-017
@@ -276,7 +279,19 @@ See REQ-CLI-100.*
 - *Expected*:
   - copilot: `cmd="copilot"`, `args=["-i", "Read and execute bootstrap.md"]`
   - gh-copilot: `cmd="gh"`, `args=["copilot", "-i", "Read and execute bootstrap.md"]`
-  - claude: `cmd="claude"`, `args=["Read and execute bootstrap.md"]`
+  - claude: `cmd="claude"`, `args=["Read and execute <abs-path>/bootstrap.md"]`
+
+**TC-CLI-082**: claude spawned with user's original working directory.
+- *Requirement*: REQ-CLI-024
+- *Type*: Integration (uses mock claude executable)
+- *Steps*:
+  1. Create a mock `claude` executable that records `process.cwd()` to a file and exits.
+  2. Run `promptkit interactive --cli claude` from a known directory `D`
+     with the mock on PATH.
+  3. Read the recorded cwd from the file.
+- *Expected*: The recorded cwd equals `D` (the directory from which
+  `promptkit` was invoked). It does NOT equal the temporary `promptkit-*`
+  staging directory.
 
 ### 2.7 Content Bundling (copy-content.js)
 
@@ -397,11 +412,12 @@ concern.*
 | REQ-CLI-012 | TC-CLI-076 | High | Active |
 | REQ-CLI-013 | TC-CLI-077 | Low | Active |
 | REQ-CLI-014 | TC-CLI-078 | High | Active |
-| REQ-CLI-015 | TC-CLI-078, TC-CLI-081 | High | Active |
+| REQ-CLI-015 | TC-CLI-078, TC-CLI-081, TC-CLI-082 | High | Active |
 | REQ-CLI-016 | TC-CLI-080 | High | Active |
 | REQ-CLI-017 | TC-CLI-081 | High | Active |
 | REQ-CLI-018 | TC-CLI-079 | High | Active |
 | REQ-CLI-019 | TC-CLI-076 | Medium | Active |
+| REQ-CLI-024 | TC-CLI-082 | High | Active |
 | REQ-CLI-020 | TC-CLI-050 | Medium | Active |
 | REQ-CLI-021 | TC-CLI-051 | Medium | Active |
 | REQ-CLI-022 | TC-CLI-052 | Medium | Active |
