@@ -204,7 +204,11 @@ describe("Launch Module", () => {
   });
 
   describe("Module exports and bootstrap prompt", () => {
-    it("TC-CLI-080/081: launch module exports expected functions and contains bootstrap prompt", () => {
+    // Note: TC-CLI-080 (bootstrap prompt arg) and TC-CLI-081 (cmd/args per CLI)
+    // are validated by the integration tests in "CWD preservation and staging
+    // directory access" (TC-CLI-082/083), which assert --add-dir, absolute
+    // bootstrap path, and correct spawn cwd for each CLI.
+    it("launch module exports expected functions and source references bootstrap prompt", () => {
       const launchSrc = fs.readFileSync(launchModulePath, "utf8");
 
       // The bootstrap prompt now uses an absolute path, so check for the

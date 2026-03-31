@@ -1,8 +1,8 @@
 ---
 title: "PromptKit CLI — Validation Plan"
 project: "PromptKit CLI (@alan-jowett/promptkit)"
-version: "0.3.0"
-date: "2025-07-17"
+version: "0.4.0"
+date: "2026-03-31"
 status: draft
 related:
   - requirements: cli/specs/requirements.md
