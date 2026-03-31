@@ -253,7 +253,7 @@ describe("Launch Module", () => {
     });
 
     // Creates a mock CLI executable that records { cwd, args } to a JSON
-    // file at captureFile, then exits.  Returns a cleanup function.
+    // file at captureFile, then exits.
     function createCapturingMock(mockBinDir, binName, captureFile) {
       const implScript = path.join(cwdTestTmpDir, `${binName}-impl.js`);
       fs.writeFileSync(
@@ -274,7 +274,7 @@ describe("Launch Module", () => {
         );
       } else {
         const p = path.join(mockBinDir, binName);
-        fs.writeFileSync(p, `#!/bin/sh\n${process.execPath} "${implScript}" "$@"\n`);
+        fs.writeFileSync(p, `#!/bin/sh\n${JSON.stringify(process.execPath)} "${implScript}" "$@"\n`);
         fs.chmodSync(p, 0o755);
       }
     }
@@ -288,7 +288,7 @@ describe("Launch Module", () => {
           process.execPath,
           [cliPath, "interactive", "--cli", cliName],
           {
-            env: { ...process.env, PATH: newPath },
+            env: envWithPath(newPath),
             cwd: userCwd,
             encoding: "utf8",
             timeout: 15000,
@@ -305,7 +305,7 @@ describe("Launch Module", () => {
       return JSON.parse(fs.readFileSync(captureFile, "utf8"));
     }
 
-    for (const cliName of ["claude", "copilot"]) {
+    for (const cliName of ["claude", "copilot", "gh-copilot"]) {
       // TC-CLI-082 and TC-CLI-083 combined — run once per CLI
       it(`TC-CLI-082/083: ${cliName} spawned with originalCwd and --add-dir for staging dir`, () => {
         const mockBinDir = path.join(cwdTestTmpDir, `mock-bin-${cliName}`);
