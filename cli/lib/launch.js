@@ -116,6 +116,7 @@ function launchInteractive(contentDir, cliName) {
   const child = spawn(cmd, args, {
     cwd: originalCwd,
     stdio: "inherit",
+    shell: true,
   });
 
   child.on("error", (err) => {

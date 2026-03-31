@@ -432,12 +432,12 @@ concern.*
 | REQ-CLI-017 | TC-CLI-081 | High | Active |
 | REQ-CLI-018 | TC-CLI-079 | High | Active |
 | REQ-CLI-019 | TC-CLI-076 | Medium | Active |
-| REQ-CLI-024 | TC-CLI-082 | High | Active |
-| REQ-CLI-025 | TC-CLI-083 | High | Active |
 | REQ-CLI-020 | TC-CLI-050 | Medium | Active |
 | REQ-CLI-021 | TC-CLI-051 | Medium | Active |
 | REQ-CLI-022 | TC-CLI-052 | Medium | Active |
 | REQ-CLI-023 | TC-CLI-053 | Low | Active |
+| REQ-CLI-024 | TC-CLI-082 | High | Active |
+| REQ-CLI-025 | TC-CLI-083 | High | Active |
 | REQ-CLI-030 | ~~TC-CLI-060~~ | — | RETIRED |
 | REQ-CLI-031 | ~~TC-CLI-060, TC-CLI-061~~ | — | RETIRED |
 | REQ-CLI-032 | ~~TC-CLI-062~~ | — | RETIRED |
