@@ -2,7 +2,9 @@
 
 > **One protocol migration, 10+ spec documents, 28 modified requirements,
 > 16 retired, 8 new** — guided by an 8-phase interactive workflow that
-> caught a fundamental design misunderstanding before any code was written.
+> caught fundamental design errors at two stages: a wrong crypto model
+> before specs were written (Phase 1), and a frame ownership error
+> during implementation review (Phase 7).
 
 ## The Project
 
@@ -49,7 +51,7 @@ Phase 3: Specification Audit (adversarial)
     ↓  ← REVISE: 4 issues found, fixed, re-audited → PASS
 Phase 4: User Review
     ↓
-Phase 5: Implementation Changes (in progress)
+Phase 5: Implementation Changes
     ↓
 Phase 6: Implementation Audit
     ↓
