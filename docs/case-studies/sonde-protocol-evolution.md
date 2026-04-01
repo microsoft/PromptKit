@@ -171,9 +171,9 @@ GCM nonce construction should include `msg_type` to prevent nonce reuse
 between request/response pairs using the same PSK. This was a **real
 cryptographic security fix** found by automated spec review.
 
-## Phase 5: Implementation — Feature-Flag Migration (In Progress)
+## Phase 5: Implementation — Feature-Flag Migration
 
-Implementation uses an **additive, feature-flag** approach:
+Implementation used an **additive, feature-flag** approach:
 
 ```toml
 [features]
@@ -182,17 +182,76 @@ aes-gcm-codec = ["sonde-protocol/aes-gcm-codec"]
 
 - Old HMAC API stays intact (default)
 - New AES-GCM API added alongside, gated by feature flag
-- Consumers migrate one at a time
+- Consumers migrated one at a time
 - Old API removed only after all consumers migrated
 
-| Crate | Status |
-|-------|--------|
-| `sonde-protocol` | ✅ Merged (#608) |
-| `sonde-gateway` | ✅ Merged (#610) |
-| `sonde-node` | ✅ PR #611 |
-| `sonde-pair` | ✅ Merged (#612) |
-| `sonde-modem` | ✅ Merged (#613) |
-| `sonde-e2e` | ✅ Merged (#614) |
+| Crate | PR | What Changed |
+|-------|-----|-------------|
+| `sonde-protocol` | #608 | `AeadProvider` trait, `encode_frame_aead`/`decode_frame_aead`/`open_frame` |
+| `sonde-gateway` | #610 | `GatewayAead` impl, `process_frame_aead`, shared `_core` handlers |
+| `sonde-node` | #611 | `NodeAead` impl, AEAD wake cycle + peer request (4 rounds of review) |
+| `sonde-pair` | #612 | `encrypt/decrypt_pairing_request_aead`, simplified registration |
+| `sonde-modem` | #613 | Feature flag propagation only (transparent bridge) |
+| `sonde-e2e` | #614 | 5 AEAD integration tests |
+
+The initial implementation attempt was **break-before-make** — changing
+the protocol API without updating consumers, which broke the entire CI.
+The user caught this immediately and directed a switch to feature flags.
+
+### Lesson: Break-Before-Make vs Feature Flags
+
+The agent's instinct was to replace the old API. The user said:
+
+> "I was thinking more of a side by side approach. Everything can
+> continue using the old one, but with a compile time option to test
+> the new one."
+
+This saved significant time — each crate could be migrated and reviewed
+independently with the full test suite passing at every step.
+
+## Phase 6: Implementation Audit
+
+The adversarial implementation audit (D8-D10 code compliance) checked
+all 9 AEAD source files against 49 spec requirements.
+
+**Verdict: PASS** — zero D8/D9/D10 findings. All frame format, nonce
+construction, AAD, PSK assignment, and error handling matched the spec.
+
+Two documented incomplete items were found (PEER_REQUEST PSK and
+gateway rejection) that became the Phase 7 discovery — see below.
+
+## Phase 7: User Review — Frame Ownership Discovery
+
+During Phase 7 review, the user identified a **fundamental design error**
+in the PEER_REQUEST frame ownership:
+
+The spec (written in Phase 2) said the node uses `phone_psk` to build
+the PEER_REQUEST ESP-NOW frame. The user corrected this:
+
+> "The phone (pairing tool) generates an entire ESP-NOW frame,
+> including the header/AAD, encrypted payload, and tag. The node just
+> forwards it."
+
+This meant:
+- The node doesn't need `phone_psk` at all
+- The `sonde-pair` crate builds the complete frame
+- The node is a pure relay — zero crypto for PEER_REQUEST
+- The gateway accepts PEER_REQUEST on the AEAD path (not reject it)
+
+PR #615 fixed this across specs, node, pair, and gateway code, and
+also **enabled `aes-gcm-codec` by default** across all crates.
+
+### Lesson: Interactive Gates Catch Design Errors Late
+
+Even after 6 rounds of spec review and a full implementation audit,
+the frame ownership error wasn't caught until the user reviewed the
+code. The spec was internally consistent but wrong — only domain
+knowledge (how BLE provisioning actually works) could catch it.
+
+## Phase 8: Deliverable
+
+Issue #495 closed with a summary of all changes. The PromptKit case
+study (this document) updated to reflect the completed migration.
 
 ## Key Takeaways
 
@@ -234,6 +293,15 @@ code was written. The specification caught issues (nonce reuse,
 missing msg_type binding, wrong PSK assignments) that would have
 been much harder to find in code.
 
+### 6. Domain Knowledge Cannot Be Automated
+
+The frame ownership error (Phase 7) survived 6 rounds of automated
+spec review, a full adversarial audit, and complete implementation.
+Only the user — who understands how BLE provisioning physically
+works — caught it. LLM agents can check consistency and find
+contradictions, but they cannot substitute for domain expertise
+about how the system actually operates in the field.
+
 ## Metrics
 
 | Metric | Value |
@@ -243,9 +311,12 @@ been much harder to find in code.
 | PR review rounds (spec) | 6 |
 | Review threads resolved (spec) | 37 |
 | Security issues found by review | 1 (nonce reuse) |
-| Implementation PRs | 8 merged (608-615) |
+| Implementation PRs | 8 merged (#608–#615) |
+| Implementation review rounds | 15+ across 6 crates |
+| Design errors caught by user in Phase 7 | 1 (frame ownership) |
 | Phase 1 rewrites | 2 (initial was fundamentally wrong) |
-| Total spec + code PRs | 9 (601, 608-615) |
+| Total spec + code PRs | 9 (#601, #608–#615) |
+| Evolve workflow phases completed | 8/8 |
 
 ---
 
