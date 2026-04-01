@@ -204,13 +204,23 @@ describe("Launch Module", () => {
   });
 
   describe("Module exports and bootstrap prompt", () => {
-    it("TC-CLI-080/081: launch module exports expected functions and contains bootstrap prompt", () => {
+    // Note: TC-CLI-080 (bootstrap prompt arg) and TC-CLI-081 (cmd/args per CLI)
+    // are validated by the integration tests in "CWD preservation and staging
+    // directory access" (TC-CLI-082/083), which assert --add-dir, absolute
+    // bootstrap path, and correct spawn cwd for each CLI.
+    it("launch module exports expected functions and source references bootstrap prompt", () => {
       const launchSrc = fs.readFileSync(launchModulePath, "utf8");
 
-      const bootstrapPrompt = "Read and execute bootstrap.md";
+      // The bootstrap prompt now uses an absolute path, so check for the
+      // constant prefix ("Read and execute ") rather than the exact string.
+      const bootstrapPrefix = "Read and execute ";
       assert.ok(
-        launchSrc.includes(bootstrapPrompt),
-        "launch.js should contain the bootstrap prompt"
+        launchSrc.includes(bootstrapPrefix),
+        "launch.js should contain the bootstrap prompt prefix"
+      );
+      assert.ok(
+        launchSrc.includes("bootstrap.md"),
+        "launch.js should reference bootstrap.md"
       );
 
       // Verify command construction by checking source contains expected patterns.
@@ -229,5 +239,121 @@ describe("Launch Module", () => {
         "detectCli should be exported"
       );
     });
+  });
+
+  describe("CWD preservation and staging directory access", () => {
+    let cwdTestTmpDir;
+
+    before(() => {
+      cwdTestTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pk-cwdtest-"));
+    });
+
+    after(() => {
+      try {
+        fs.rmSync(cwdTestTmpDir, { recursive: true, force: true });
+      } catch {
+        // best effort
+      }
+    });
+
+    // Creates a mock CLI executable that records { cwd, args } to a JSON
+    // file at captureFile, then exits.
+    function createCapturingMock(mockBinDir, binName, captureFile) {
+      const implScript = path.join(cwdTestTmpDir, `${binName}-impl.js`);
+      fs.writeFileSync(
+        implScript,
+        [
+          `const fs = require('fs');`,
+          `fs.writeFileSync(`,
+          `  ${JSON.stringify(captureFile)},`,
+          `  JSON.stringify({ cwd: process.cwd(), args: process.argv.slice(2) })`,
+          `);`,
+        ].join("\n")
+      );
+
+      if (process.platform === "win32") {
+        fs.writeFileSync(
+          path.join(mockBinDir, `${binName}.cmd`),
+          `@"${process.execPath}" "${implScript}" %*\r\n`
+        );
+      } else {
+        const p = path.join(mockBinDir, binName);
+        fs.writeFileSync(p, `#!/bin/sh\n${JSON.stringify(process.execPath)} "${implScript}" "$@"\n`);
+        fs.chmodSync(p, 0o755);
+      }
+    }
+
+    // Run promptkit interactive --cli <cliName> from userCwd with mockBinDir
+    // prepended to PATH.  Returns the parsed JSON capture written by the mock.
+    function runAndCapture(cliName, mockBinDir, captureFile, userCwd) {
+      const newPath = `${mockBinDir}${path.delimiter}${process.env.PATH || ""}`;
+      try {
+        execFileSync(
+          process.execPath,
+          [cliPath, "interactive", "--cli", cliName],
+          {
+            env: envWithPath(newPath),
+            cwd: userCwd,
+            encoding: "utf8",
+            timeout: 15000,
+          }
+        );
+      } catch {
+        // The mock exits 0, so errors here are unexpected but we still want
+        // to read whatever was captured.
+      }
+      assert.ok(
+        fs.existsSync(captureFile),
+        `mock ${cliName} should have written capture file`
+      );
+      return JSON.parse(fs.readFileSync(captureFile, "utf8"));
+    }
+
+    for (const cliName of ["claude", "copilot", "gh-copilot"]) {
+      // TC-CLI-082 and TC-CLI-083 combined — run once per CLI
+      it(`TC-CLI-082/083: ${cliName} spawned with originalCwd and --add-dir for staging dir`, () => {
+        const mockBinDir = path.join(cwdTestTmpDir, `mock-bin-${cliName}`);
+        fs.mkdirSync(mockBinDir, { recursive: true });
+        const captureFile = path.join(cwdTestTmpDir, `${cliName}-capture.json`);
+
+        // For gh-copilot the binary is "gh"; for others it matches cliName.
+        const binName = cliName === "gh-copilot" ? "gh" : cliName;
+        createCapturingMock(mockBinDir, binName, captureFile);
+
+        // Use cwdTestTmpDir as the simulated user working directory.
+        const userCwd = cwdTestTmpDir;
+        const result = runAndCapture(cliName, mockBinDir, captureFile, userCwd);
+
+        // TC-CLI-082: verify cwd is the user's original directory.
+        const actualCwd = fs.realpathSync(result.cwd);
+        const expectedCwd = fs.realpathSync(userCwd);
+        assert.strictEqual(
+          actualCwd,
+          expectedCwd,
+          `${cliName} should be spawned with the user's original cwd`
+        );
+
+        // TC-CLI-083: verify --add-dir is present and points to a
+        // promptkit-* staging directory under os.tmpdir().
+        const addDirIdx = result.args.indexOf("--add-dir");
+        assert.ok(
+          addDirIdx !== -1,
+          `${cliName} args should include --add-dir`
+        );
+        const addDirValue = result.args[addDirIdx + 1];
+        assert.ok(
+          addDirValue && addDirValue.startsWith(os.tmpdir()) &&
+            path.basename(addDirValue).startsWith("promptkit-"),
+          `${cliName} --add-dir value should point to a promptkit-* staging dir under tmpdir`
+        );
+
+        // Also verify the bootstrap prompt uses an absolute path.
+        const bootstrapArg = result.args.find((a) => a.includes("bootstrap.md"));
+        assert.ok(
+          bootstrapArg && path.isAbsolute(bootstrapArg.replace("Read and execute ", "")),
+          `${cliName} bootstrap prompt should contain an absolute path to bootstrap.md`
+        );
+      });
+    }
   });
 });

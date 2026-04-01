@@ -78,35 +78,45 @@ function launchInteractive(contentDir, cliName) {
     );
   }
 
+  // Preserve the user's working directory before staging content.
+  const originalCwd = process.cwd();
+
   // Copy content to a temp directory so the LLM can read the files
   const tmpDir = copyContentToTemp(contentDir);
   console.log(`PromptKit content staged at: ${tmpDir}`);
   console.log(`Launching ${cli}...\n`);
 
-  const bootstrapPrompt = "Read and execute bootstrap.md";
+  // Use an absolute path so the LLM can locate bootstrap.md regardless of
+  // which directory it treats as its working directory.
+  const bootstrapPrompt = `Read and execute ${path.join(tmpDir, "bootstrap.md")}`;
 
   let cmd, args;
   switch (cli) {
     case "copilot":
       cmd = "copilot";
-      args = ["-i", bootstrapPrompt];
+      // --add-dir grants file access to the staging directory.
+      args = ["--add-dir", tmpDir, "-i", bootstrapPrompt];
       break;
     case "gh-copilot":
       cmd = "gh";
-      args = ["copilot", "-i", bootstrapPrompt];
+      args = ["copilot", "--add-dir", tmpDir, "-i", bootstrapPrompt];
       break;
     case "claude":
+      // --add-dir grants file access to the staging directory.
       cmd = "claude";
-      args = [bootstrapPrompt];
+      args = ["--add-dir", tmpDir, bootstrapPrompt];
       break;
     default:
       console.error(`Unknown CLI: ${cli}`);
       process.exit(1);
   }
 
+  // All CLIs are spawned from the user's original directory so the LLM
+  // session reflects the directory the user was working in.
   const child = spawn(cmd, args, {
-    cwd: tmpDir,
+    cwd: originalCwd,
     stdio: "inherit",
+    shell: true,
   });
 
   child.on("error", (err) => {

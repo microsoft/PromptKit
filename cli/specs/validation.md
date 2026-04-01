@@ -1,8 +1,8 @@
 ---
 title: "PromptKit CLI — Validation Plan"
 project: "PromptKit CLI (@alan-jowett/promptkit)"
-version: "0.3.0"
-date: "2025-07-17"
+version: "0.4.0"
+date: "2026-03-31"
 status: draft
 related:
   - requirements: cli/specs/requirements.md
@@ -17,6 +17,8 @@ related:
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
 | 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired test cases for assembly engine (TC-CLI-010–024), manifest resolution (TC-CLI-030–042), assemble command (TC-CLI-060–067), Windows frontmatter (TC-CLI-113). Updated TC-CLI-001, TC-CLI-003, TC-CLI-053. Added TC-CLI-120–122 for new requirements. Updated traceability matrix. |
+| 0.3 | 2026-03-31 | Bug-fix | Added TC-CLI-082 for REQ-CLI-024 (claude cwd preservation). Updated TC-CLI-080/081 notes. Updated traceability matrix. |
+| 0.4 | 2026-03-31 | Bug-fix | Extended TC-CLI-082 to all CLIs. Added TC-CLI-083 (--add-dir for staging dir). Updated TC-CLI-080/081/082. Added REQ-CLI-025 to traceability. |
 
 ---
 
@@ -267,16 +269,44 @@ See REQ-CLI-100.*
 - *Requirement*: REQ-CLI-016
 - *Type*: Unit
 - *Steps*: Inspect the spawn arguments for each CLI type.
-- *Expected*: `"Read and execute bootstrap.md"` appears in args.
+- *Expected*: For every CLI, the bootstrap prompt argument is an absolute
+  path ending in `bootstrap.md` (e.g. `"Read and execute /tmp/promptkit-xxx/bootstrap.md"`).
 
 **TC-CLI-081**: Correct command construction for each CLI.
 - *Requirement*: REQ-CLI-017
 - *Type*: Unit
 - *Steps*: Verify spawn cmd/args for `copilot`, `gh-copilot`, `claude`.
 - *Expected*:
-  - copilot: `cmd="copilot"`, `args=["-i", "Read and execute bootstrap.md"]`
-  - gh-copilot: `cmd="gh"`, `args=["copilot", "-i", "Read and execute bootstrap.md"]`
-  - claude: `cmd="claude"`, `args=["Read and execute bootstrap.md"]`
+  - copilot: `cmd="copilot"`, args include `"--add-dir"`, `<tmpDir>`,
+    `"-i"`, `"Read and execute <abs>/bootstrap.md"`
+  - gh-copilot: `cmd="gh"`, args include `"copilot"`, `"--add-dir"`,
+    `<tmpDir>`, `"-i"`, `"Read and execute <abs>/bootstrap.md"`
+  - claude: `cmd="claude"`, args include `"--add-dir"`, `<tmpDir>`,
+    `"Read and execute <abs>/bootstrap.md"`
+
+**TC-CLI-082**: All CLIs are spawned with the user's original working directory.
+- *Requirement*: REQ-CLI-024
+- *Type*: Integration (uses mock CLI executables)
+- *Steps*:
+  1. Create a mock executable (for each CLI under test) that records
+     `process.cwd()` to a JSON file and exits.
+  2. Run `promptkit interactive --cli <name>` from a known directory `D`
+     with the mock on PATH.
+  3. Read the recorded cwd from the file.
+- *Expected*: The recorded cwd equals `D` for every supported CLI. It does
+  NOT equal the temporary `promptkit-*` staging directory.
+
+**TC-CLI-083**: All CLIs receive `--add-dir <tmpDir>` in their spawn arguments.
+- *Requirement*: REQ-CLI-025
+- *Type*: Integration (uses mock CLI executables)
+- *Steps*:
+  1. Create a mock executable (for each CLI under test) that records
+     `process.argv.slice(2)` to a JSON file and exits.
+  2. Run `promptkit interactive --cli <name>` with the mock on PATH.
+  3. Read the recorded args from the file.
+- *Expected*: For every supported CLI, `"--add-dir"` appears in the recorded
+  args and the following argument is the path of the temporary staging
+  directory (a directory under `os.tmpdir()` with a `promptkit-` prefix).
 
 ### 2.7 Content Bundling (copy-content.js)
 
@@ -397,7 +427,7 @@ concern.*
 | REQ-CLI-012 | TC-CLI-076 | High | Active |
 | REQ-CLI-013 | TC-CLI-077 | Low | Active |
 | REQ-CLI-014 | TC-CLI-078 | High | Active |
-| REQ-CLI-015 | TC-CLI-078, TC-CLI-081 | High | Active |
+| REQ-CLI-015 | TC-CLI-078, TC-CLI-081, TC-CLI-082 | High | Active |
 | REQ-CLI-016 | TC-CLI-080 | High | Active |
 | REQ-CLI-017 | TC-CLI-081 | High | Active |
 | REQ-CLI-018 | TC-CLI-079 | High | Active |
@@ -406,6 +436,8 @@ concern.*
 | REQ-CLI-021 | TC-CLI-051 | Medium | Active |
 | REQ-CLI-022 | TC-CLI-052 | Medium | Active |
 | REQ-CLI-023 | TC-CLI-053 | Low | Active |
+| REQ-CLI-024 | TC-CLI-082 | High | Active |
+| REQ-CLI-025 | TC-CLI-083 | High | Active |
 | REQ-CLI-030 | ~~TC-CLI-060~~ | — | RETIRED |
 | REQ-CLI-031 | ~~TC-CLI-060, TC-CLI-061~~ | — | RETIRED |
 | REQ-CLI-032 | ~~TC-CLI-062~~ | — | RETIRED |

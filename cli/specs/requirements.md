@@ -1,8 +1,8 @@
 ---
 title: "PromptKit CLI — Requirements Specification"
 project: "PromptKit CLI (@alan-jowett/promptkit)"
-version: "0.3.0"
-date: "2025-07-17"
+version: "0.4.0"
+date: "2026-03-31"
 status: draft
 source_files:
   - cli/bin/cli.js
@@ -19,6 +19,8 @@ source_files:
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
 | 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired assemble command (REQ-CLI-030–037), assembly engine (REQ-CLI-040–051), manifest resolution module (REQ-CLI-060–069). Kept list command with inline manifest parsing. Modified REQ-CLI-002, 004, 011, 012, 020–023, 080, 091, 094. Retired REQ-CLI-092, CON-005, ASSUMPTION-002, ASSUMPTION-006. Added REQ-CLI-100, 101, 103. |
+| 0.3 | 2026-03-31 | Bug-fix | Added REQ-CLI-024 (cwd preservation for claude). Updated REQ-CLI-015 and REQ-CLI-017 to reflect per-CLI spawn cwd behaviour. |
+| 0.4 | 2026-03-31 | Bug-fix | Extended cwd fix to all CLIs. Added REQ-CLI-025 (--add-dir for staging directory). Updated REQ-CLI-015, 016, 017, 024 to be CLI-agnostic. |
 
 ---
 
@@ -111,24 +113,49 @@ directory to a temporary directory before launching the LLM CLI.
   content files.
 
 **REQ-CLI-015**: The `interactive` command MUST spawn the LLM CLI process
-with the working directory set to the temporary content directory and
-`stdio: "inherit"` so the user can interact directly.
-- *Source*: `launch.js` lines 107–110.
-- *Acceptance*: The child process has `cwd` equal to the temp directory
-  and inherits stdin/stdout/stderr.
+with `cwd` set to the user's working directory at the time the interactive
+session is launched (captured when launching) and `stdio: "inherit"` so the
+user can interact directly.
+- *Source*: `launch.js` (`launchInteractive()`).
+- *Acceptance*: The spawned process has `cwd` equal to the directory from
+  which `promptkit` was invoked. The process inherits stdin/stdout/stderr.
 
 **REQ-CLI-016**: The `interactive` command MUST pass the bootstrap prompt
-`"Read and execute bootstrap.md"` as the initial instruction to the LLM CLI.
-- *Source*: `launch.js` line 86.
-- *Acceptance*: The spawned process receives this string as an argument.
+`"Read and execute <abs-path-to-bootstrap.md>"` as the initial instruction
+to the LLM CLI, where `<abs-path-to-bootstrap.md>` is the absolute path to
+`bootstrap.md` inside the temporary staging directory. The absolute path
+allows the LLM to locate the file regardless of which directory it treats
+as its working directory.
+- *Source*: `launch.js` (`launchInteractive()`).
+- *Acceptance*: The spawned process receives a string argument that contains
+  an absolute path ending in `bootstrap.md`.
 
 **REQ-CLI-017**: The CLI MUST construct the correct command and arguments
-for each supported LLM CLI:
-- `copilot`: `copilot -i "Read and execute bootstrap.md"`
-- `gh-copilot`: `gh copilot -i "Read and execute bootstrap.md"`
-- `claude`: `claude "Read and execute bootstrap.md"`
-- *Source*: `launch.js` lines 89–105.
+for each supported LLM CLI. All CLIs receive `--add-dir <tmpDir>` and an
+absolute path to `bootstrap.md`:
+- `copilot`: `copilot --add-dir <tmpDir> -i "Read and execute <abs>/bootstrap.md"`
+- `gh-copilot`: `gh copilot --add-dir <tmpDir> -i "Read and execute <abs>/bootstrap.md"`
+- `claude`: `claude --add-dir <tmpDir> "Read and execute <abs>/bootstrap.md"`
+- *Source*: `launch.js` (`launchInteractive()`).
 - *Acceptance*: Spawn is called with the documented cmd/args for each CLI.
+
+**REQ-CLI-024**: The `interactive` command MUST preserve the user's original
+working directory for ALL supported LLM CLIs. Every LLM CLI child process
+MUST be spawned with `cwd` equal to the directory from which `promptkit`
+was invoked, not the temporary staging directory.
+- *Source*: `launch.js` (`launchInteractive()`).
+- *Acceptance*: When `promptkit --cli <name>` is run from directory `D`,
+  the spawned process reports `cwd = D` for every supported CLI. The cwd
+  is NOT the temporary `promptkit-*` staging directory.
+
+**REQ-CLI-025**: The `interactive` command MUST grant the LLM CLI file
+access to the temporary staging directory by passing `--add-dir <tmpDir>`
+at launch, for every supported LLM CLI. This ensures the LLM can read
+PromptKit content files from the staging directory even though the process
+cwd is the user's original working directory.
+- *Source*: `launch.js` (`launchInteractive()`).
+- *Acceptance*: The spawn args for every supported CLI contain `--add-dir`
+  followed by the path of the temporary staging directory.
 
 **REQ-CLI-018**: When the child process exits, the CLI MUST clean up the
 temporary directory (best-effort) and then exit with the child's exit code.
