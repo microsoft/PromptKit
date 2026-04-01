@@ -60,7 +60,7 @@ conversational interface.
 ## Copilot CLI Native Integration
 
 > **Status: Research complete.** See
-> [`docs/copilot-cli-integration-research.md`](copilot-cli-integration-research.md)
+> [`copilot-cli-integration-research.md`](./copilot-cli-integration-research.md)
 > for the full analysis.
 
 A complementary integration path: embed PromptKit directly into
@@ -68,8 +68,8 @@ A complementary integration path: embed PromptKit directly into
 extension points — making PromptKit available as a native capability
 within terminal-based workflows.
 
-```
-> /promptkit investigate this bug — segfault in packet_handler.c
+```sh
+/promptkit investigate this bug — segfault in packet_handler.c
 ```
 
 The research evaluates seven integration strategies (skills, custom
