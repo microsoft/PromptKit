@@ -16,10 +16,11 @@ and output structure.
 
 | File | Purpose |
 |------|---------|
-| `demo_server.c` | Code review sample — C echo server with 5 planted bugs |
-| `demo_queue.c` | Bug investigation sample — producer-consumer with a TOCTOU race |
+| `demo_server.c` | Code review sample — C echo server |
+| `demo_queue.c` | Bug investigation sample — producer-consumer queue |
 | `rate_limiter_description.md` | Requirements authoring sample — 3-sentence project description |
 | `demo-script.md` | Presenter script with timing, talking points, and scorecards |
+| `answer-key.md` | **Presenter only** — planted bug reference and scoring guide |
 
 ## Quick Start
 

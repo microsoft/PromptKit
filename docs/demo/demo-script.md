@@ -276,19 +276,7 @@ As the output renders, highlight:
 
 ## Appendix: Planted Bug Reference
 
-### demo_server.c (5 bugs)
+See [`answer-key.md`](answer-key.md) for the full planted bug reference
+with expected findings, interleavings, and implicit requirement checklist.
 
-| # | Bug | Severity | Location | Description |
-|---|-----|----------|----------|-------------|
-| 1 | Use-after-free | Critical | L65, L73 | `client->buf` freed on disconnect, then read if caller loops |
-| 2 | Buffer overflow | Critical | L52 | `strcpy`/`strcat` into 64-byte buffer, no bounds check |
-| 3 | Unchecked return | High | L61 | `recv()` can return -1; code treats it as valid length |
-| 4 | Off-by-one | Medium | L46 | `i <= len` writes one past buffer end |
-| 5 | Resource leak | Medium | L83 | `client_fd` not closed on `send()` failure path |
-
-### demo_queue.c (1 root cause + 1 red herring)
-
-| # | Issue | Type | Location | Description |
-|---|-------|------|----------|-------------|
-| 1 | TOCTOU race | Root cause | L55–60 | `count` checked outside lock; another thread can drain queue between check and lock |
-| 2 | strdup/free | Red herring | L42, L81 | Allocation in enqueue, free in consumer — this is correct |
+**⚠️ Do not include `answer-key.md` in any LLM context during the demo.**
