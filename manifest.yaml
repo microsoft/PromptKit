@@ -491,6 +491,14 @@ protocols:
         root causes, and feed concrete improvements back into the
         tooling and process for the next iteration.
 
+    - name: presentation-design
+      path: protocols/reasoning/presentation-design.md
+      description: >
+        Systematic reasoning protocol for designing technical
+        presentations. Covers audience analysis, narrative arc
+        construction, slide decomposition, visual design decisions,
+        time budgeting, and demo choreography. Domain-agnostic.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -669,6 +677,15 @@ formats:
       existing artifacts. Each change entry links to its upstream
       motivation with Before/After content, traceability matrix, and
       invariant impact assessment. Domain-agnostic.
+
+  - name: presentation-kit
+    path: formats/presentation-kit.md
+    produces: presentation-kit
+    description: >
+      Output format for technical presentations. Produces a PowerPoint
+      file via python-pptx, optional PDF export, embedded speaker
+      notes, a presentation timeline, and an optional demo plan.
+      All artifacts form a cohesive presentation kit.
 
 taxonomies:
   - name: stack-lifetime-hazards
@@ -940,6 +957,20 @@ templates:
       persona: protocol-architect
       protocols: [anti-hallucination, self-verification]
       format: rfc-document
+
+  presentations:
+    - name: author-presentation
+      path: templates/author-presentation.md
+      description: >
+        Interactive authoring of professional technical presentations.
+        Multi-phase workflow: audience analysis, narrative design,
+        slide planning, appearance preferences, content generation,
+        and PowerPoint production via python-pptx. Produces a
+        presentation kit with slides, speaker notes, timeline, and
+        optional demo plan and PDF export.
+      persona: configurable
+      protocols: [anti-hallucination, self-verification, operational-constraints, presentation-design]
+      format: presentation-kit
 
   code-generation:
     - name: author-implementation-prompt
