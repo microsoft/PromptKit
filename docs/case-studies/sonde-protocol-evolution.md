@@ -190,9 +190,9 @@ aes-gcm-codec = ["sonde-protocol/aes-gcm-codec"]
 | `sonde-protocol` | ✅ Merged (#608) |
 | `sonde-gateway` | ✅ Merged (#610) |
 | `sonde-node` | ✅ PR #611 |
-| `sonde-pair` | ⬜ Pending |
-| `sonde-modem` | ⬜ Pending |
-| `sonde-e2e` | ⬜ Pending |
+| `sonde-pair` | ✅ Merged (#612) |
+| `sonde-modem` | ✅ Merged (#613) |
+| `sonde-e2e` | ✅ Merged (#614) |
 
 ## Key Takeaways
 
@@ -243,11 +243,11 @@ been much harder to find in code.
 | PR review rounds (spec) | 6 |
 | Review threads resolved (spec) | 37 |
 | Security issues found by review | 1 (nonce reuse) |
-| Implementation PRs | 3 merged, 3 pending |
+| Implementation PRs | 8 merged (608-615) |
 | Phase 1 rewrites | 2 (initial was fundamentally wrong) |
-| Total spec + code PRs | ~10 |
+| Total spec + code PRs | 9 (601, 608-615) |
 
 ---
 
-*This case study is updated as the migration progresses. Last updated:
-2026-03-31.*
+*This case study reflects the completed migration. Last updated:
+2026-04-01.*
