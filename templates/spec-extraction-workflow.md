@@ -260,6 +260,21 @@ Apply the **iterative-refinement protocol** when updating:
 - Justify every change
 - Update traceability
 
+### Classification Rule
+
+When the user provides feedback during clarification, classify it as:
+
+1. **Editorial** — terminology, formatting, wording (apply silently)
+2. **Correction** — factual error in the draft (fix and cite)
+3. **Finding** — a gap, risk, or systemic issue not captured in the
+   drafts (create a formal finding with severity, add to the
+   appropriate spec, and confirm with the user: "I've added this
+   as [finding/requirement/risk] — does the severity look right?")
+
+Default to **finding** when uncertain. It is better to over-promote
+user feedback and have the user downgrade it than to silently
+under-promote it.
+
 ### Critical Rule
 
 **Do NOT proceed to Phase 4 until the user explicitly says the
