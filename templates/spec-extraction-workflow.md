@@ -264,16 +264,31 @@ Apply the **iterative-refinement protocol** when updating:
 
 When the user provides feedback during clarification, classify it as:
 
-1. **Editorial** — terminology, formatting, wording (apply silently)
+1. **Editorial** — terminology, formatting, wording (apply without
+   escalating to a formal finding, but briefly acknowledge the change
+   in the walkthrough, change summary, or revision history)
 2. **Correction** — factual error in the draft (fix and cite)
 3. **Finding** — a gap, risk, or systemic issue not captured in the
-   drafts (create a formal finding with severity, add to the
-   appropriate spec, and confirm with the user: "I've added this
-   as [finding/requirement/risk] — does the severity look right?")
+   drafts. In **Phase 3**, do **not** create a Phase-4-style formal
+   `F-NNN` finding yet. Instead:
+   - record it as a **candidate finding** in your working notes for
+     promotion in Phase 4;
+   - update the appropriate draft spec now:
+     - in the requirements draft, add/update a `Risks` entry
+       (`RISK-NNN`) or add/update a requirement if the issue is a
+       missing requirement rather than a risk;
+     - in the design draft, add/update `Open Questions` or the most
+       relevant design section;
+   - assign a provisional severity using:
+     **Critical / High / Medium / Low / Informational**;
+   - confirm with the user: "I've recorded this as a candidate
+     finding and updated the draft spec — does the classification
+     and severity look right?"
 
 Default to **finding** when uncertain. It is better to over-promote
 user feedback and have the user downgrade it than to silently
-under-promote it.
+under-promote it. Confirmed candidate findings are formalized as
+`F-NNN` entries in **Phase 4**.
 
 ### Critical Rule
 
