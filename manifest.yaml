@@ -575,6 +575,24 @@ formats:
       .github/instructions/*.instructions.md with applyTo targeting.
       Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
 
+  - name: copilot-prompt-file
+    path: formats/copilot-prompt-file.md
+    produces: copilot-prompt-file
+    description: >
+      Output format for GitHub Copilot prompt files
+      (.github/prompts/*.prompt.md). Packages an assembled PromptKit
+      prompt as a reusable slash command invokable in Copilot Chat.
+      Full semantic fidelity — no content condensation.
+
+  - name: agentic-workflow
+    path: formats/agentic-workflow.md
+    produces: agentic-workflow
+    description: >
+      Output format for GitHub Agentic Workflow files
+      (.github/workflows/*.md). Packages an assembled PromptKit prompt
+      as a scheduled or event-driven automation running in GitHub
+      Actions with a coding agent. Requires gh-aw CLI for compilation.
+
   - name: implementation-plan
     path: formats/implementation-plan.md
     produces: implementation-plan
