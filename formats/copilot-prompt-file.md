@@ -80,7 +80,7 @@ markers containing:
 - Include `tools` only when the prompt requires specific tools beyond
   the agent's defaults
 
-### 3. Markdown Body
+### 4. Markdown Body
 
 The body contains the full assembled PromptKit prompt, repackaged with
 format-native headings. Follow this structure:
@@ -127,7 +127,7 @@ expected output, NOT the .prompt.md packaging structure.>
 - Use `###` (h3) and below for sub-sections within protocol phases
 - See Formatting Rules for allowed section omissions
 
-### 4. Variable Translation
+### 5. Variable Translation
 
 Translate PromptKit parameter placeholders to `.prompt.md` input
 variable syntax:
@@ -154,7 +154,7 @@ the template's instructions reference editor context):
   review" maps to `${selection}`), note this in the body instructions
   but keep the explicit input variable as a fallback
 
-### 5. File References
+### 6. File References
 
 If the assembled prompt references other workspace files (e.g.,
 requirements documents, design docs, coding standards), use relative
@@ -171,7 +171,7 @@ the body:
 Use #tool:search/codebase to find relevant code before analysis.
 ```
 
-### 6. Activation Checklist
+### 7. Activation Checklist
 
 A numbered checklist of steps to activate the prompt file:
 

@@ -91,7 +91,7 @@ and tool access.
 - Use the `github:` tool set for repository context (issues, PRs,
   code, etc.)
 
-### 3. Markdown Body
+### 4. Markdown Body
 
 The body contains the full assembled PromptKit prompt, repackaged
 with format-native headings. Follow this structure:
@@ -142,7 +142,7 @@ using GitHub Actions expression syntax where applicable>
 - Use `###` (h3) and below for sub-sections within protocol phases
 - See Formatting Rules for allowed section omissions
 
-### 4. Variable Translation
+### 5. Variable Translation
 
 Translate PromptKit parameter placeholders to GitHub Actions
 expression syntax:
@@ -162,7 +162,7 @@ expression syntax:
   conventions, coding standards) should be hardcoded from the user's
   input during assembly
 
-### 5. Safe Output Adaptation
+### 6. Safe Output Adaptation
 
 The `## Output Expectations` section must be adapted to match the
 declared `safe-outputs:` in the frontmatter:
@@ -174,7 +174,7 @@ declared `safe-outputs:` in the frontmatter:
 | `create-pull-request` | Structure output as a PR body (description, changes, testing notes) |
 | `create-review` | Structure output as a PR review (file-specific comments, verdict) |
 
-### 6. Activation Checklist
+### 7. Activation Checklist
 
 A numbered checklist of steps to activate the agentic workflow:
 
