@@ -168,6 +168,8 @@ format, then assembles a complete prompt you can use in a fresh session.
 
 ### Using with Claude Code
 
+Claude Code does not support CLI skills, so use the manual bootstrap command:
+
 ```bash
 cd promptkit
 claude "Read and execute bootstrap.md"

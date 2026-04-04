@@ -15,9 +15,11 @@ npx promptkit
 # Then: "I want to add a template for <use case>"
 ```
 
-Or with GitHub Copilot CLI (the `/promptkit` skill activates automatically):
+Or with GitHub Copilot CLI from the PromptKit repo root (the `/promptkit`
+skill activates automatically):
 
 ```bash
+cd promptkit
 copilot
 # Then: "I want to add a template for <use case>"
 ```
