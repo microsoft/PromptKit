@@ -92,8 +92,11 @@ referenced. Omit this section entirely if no taxonomies apply.>
 
 ## Output Expectations
 
-<Complete format content — verbatim from the format file, describing
-the expected output structure>
+<Complete content from the template's originally declared format
+file — verbatim. For example, if the template declares
+format: investigation-report, include the investigation-report
+format's structure here. This section describes the task's
+expected output, NOT the .prompt.md packaging structure.>
 
 ## Instructions
 
@@ -108,10 +111,7 @@ the expected output structure>
 - Use `#` (h1) for the task title only
 - Use `##` (h2) for all major sections
 - Use `###` (h3) and below for sub-sections within protocol phases
-- If the template declares `format: null` or omits the format, skip
-  the `## Output Expectations` section
-- If no taxonomies are referenced, omit `## Classification Reference`
-  entirely (do NOT include an empty section)
+- See Formatting Rules for allowed section omissions
 
 ### 4. Variable Translation
 
@@ -188,7 +188,13 @@ A numbered checklist of steps to activate the prompt file:
   at the agent ("You are…", "When you encounter…")
 - Preserve ALL numbered phases, specific checks, known-safe patterns,
   examples, and checklists from protocol sources
-- Every section listed in the body structure MUST be present; if a
-  section has no content, state "None identified"
+- Every major section listed in the body structure MUST be present,
+  except for the following allowed omissions:
+  - If the template declares `format: null` or omits the format, omit
+    the `## Output Expectations` section
+  - If no taxonomies are referenced, omit `## Classification Reference`
+    entirely (do NOT include an empty section)
+  For all other sections, if a section has no content, state
+  "None identified"
 - File names MUST be kebab-case matching the PromptKit template name
   (e.g., `review-code.prompt.md`, `investigate-bug.prompt.md`)

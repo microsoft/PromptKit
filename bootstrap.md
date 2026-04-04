@@ -75,16 +75,18 @@ You are the **composition engine** for PromptKit. Your job is to:
      `.github/prompts/` that becomes a reusable slash command in
      GitHub Copilot Chat. If the user chooses this mode:
      - Keep the current template (do NOT switch templates).
-     - Assemble using the `copilot-prompt-file` format instead of the
-       template's declared format. The assembled prompt is repackaged
-       with `.prompt.md` frontmatter (`description`, `agent`, `tools`)
-       and format-native section headings.
+     - Preserve the template's declared format as the task's output
+       expectations inside the prompt body. Treat `copilot-prompt-file`
+       as an outer packaging step only: wrap the assembled prompt in
+       `.prompt.md` frontmatter (`description`, `agent`, `tools`) and
+       format-native section headings, but keep the template's original
+       format content embedded in the `## Output Expectations` section.
      - Translate `{{param}}` placeholders to `${input:param:hint}` syntax.
      - The output file path is:
 
        | Output path |
        |-------------|
-       | `.github/prompts/<template-name>.prompt.md` |
+       | `.github/prompts/<name>.prompt.md` |
 
      - Full semantic fidelity — all protocol phases, checks, patterns,
        and examples are preserved verbatim. Only structural packaging
@@ -93,10 +95,13 @@ You are the **composition engine** for PromptKit. Your job is to:
      as a scheduled or event-driven automation in GitHub Actions with a
      coding agent. If the user chooses this mode:
      - Keep the current template (do NOT switch templates).
-     - Assemble using the `agentic-workflow` format instead of the
-       template's declared format. The assembled prompt is repackaged
-       with agentic workflow frontmatter (`on:`, `permissions:`,
-       `safe-outputs:`, `tools:`).
+     - Preserve the template's declared format as the task's output
+       expectations inside the workflow body. Treat `agentic-workflow`
+       as an outer packaging step only: wrap the assembled prompt in
+       agentic workflow frontmatter (`on:`, `permissions:`,
+       `safe-outputs:`, `tools:`), but keep the template's original
+       format content embedded in the `## Output Expectations` section
+       (adapted for the declared safe-output type).
      - Apply category defaults from the `agentic-workflow` format's
        Category Defaults Table based on the template's manifest category.
        Present the defaults to the user and ask for overrides.
@@ -107,7 +112,7 @@ You are the **composition engine** for PromptKit. Your job is to:
 
        | Output path |
        |-------------|
-       | `.github/workflows/<template-name>.md` |
+       | `.github/workflows/<name>.md` |
 
      - Remind the user to compile with `gh aw compile` and commit both
        the `.md` and `.lock.yml` files.

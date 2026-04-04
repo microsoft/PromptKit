@@ -9,7 +9,7 @@ description: >
   (.github/workflows/*.md). Packages an assembled PromptKit prompt
   as a scheduled or event-driven automation that runs in GitHub
   Actions with a coding agent. Full semantic fidelity — no content
-  condensation. Requires gh-aw CLI for compilation.
+  condensation. Requires `gh aw` CLI for compilation.
 produces: agentic-workflow
 ---
 
@@ -102,9 +102,13 @@ referenced. Omit this section entirely if no taxonomies apply.>
 
 ## Output Expectations
 
-<Expected output structure and formatting, derived from the
-format file. Adapted for the safe-output type — e.g., if
-safe-output is create-issue, describe the issue structure.>
+<Complete content from the template's originally declared format
+file — verbatim. For example, if the template declares
+format: investigation-report, include that format's structure
+here, adapted for the selected safe-output type — e.g., if
+safe-output is create-issue, describe how the investigation
+report maps to an issue body. This section describes the task's
+expected output, NOT the agentic workflow packaging structure.>
 
 ## Instructions
 
@@ -186,6 +190,15 @@ A numbered checklist of steps to activate the agentic workflow:
 When assembling an agentic workflow from a PromptKit template, use
 the following defaults based on the template's manifest category.
 The user may override any of these during assembly.
+
+**Permissions vs safe-outputs model:** In GitHub Agentic Workflows,
+`permissions:` controls the GitHub token's **read** scopes available
+to the agent during analysis. Write operations are NOT granted via
+token permissions — they are exclusively mediated through
+`safe-outputs:`, which are pre-approved, sandboxed GitHub operations
+(create issue, add comment, open PR, etc.) that bypass the token's
+write scopes. This is a defense-in-depth design: the agent can read
+broadly but can only write through declared, reviewable channels.
 
 | Template category | Default `on:` trigger | Default `permissions:` | Default `safe-outputs:` | Default `tools:` |
 |-------------------|-----------------------|------------------------|-------------------------|------------------|
