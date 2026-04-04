@@ -3,10 +3,11 @@
 ## How to Use This Repository
 
 When a user asks you to perform a task that this library supports (writing
-requirements, investigating bugs, reviewing code, etc.), start by reading
-and executing `bootstrap.md`. It is the entry point that guides component
-selection, parameter gathering, and prompt assembly. Do not try to answer
-the task directly — assemble the right prompt first.
+requirements, investigating bugs, reviewing code, etc.), use the
+`/promptkit` skill (or read and execute `bootstrap.md`). It is the entry
+point that guides component selection, parameter gathering, and prompt
+assembly. Do not try to answer the task directly — assemble the right
+prompt first.
 
 ## What This Repository Is
 
@@ -119,7 +120,8 @@ The preferred workflow is to use PromptKit's own `extend-library` template
 (interactive mode) rather than hand-authoring:
 
 ```bash
-copilot -i "Read bootstrap.md and execute the prompt"
+copilot
+# The /promptkit skill activates automatically.
 # Then: "I want to add a template for <your use case>"
 ```
 

@@ -14,7 +14,8 @@ include all required metadata.
 
 ```bash
 cd promptkit
-copilot -i "Read bootstrap.md and execute the prompt"
+copilot
+# The /promptkit skill activates automatically.
 # Then: "I want to add a template for <your use case>"
 ```
 

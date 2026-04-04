@@ -15,10 +15,10 @@ npx promptkit
 # Then: "I want to add a template for <use case>"
 ```
 
-Or with GitHub Copilot CLI:
+Or with GitHub Copilot CLI (the `/promptkit` skill activates automatically):
 
 ```bash
-copilot -i "Read bootstrap.md and execute the prompt"
+copilot
 # Then: "I want to add a template for <use case>"
 ```
 

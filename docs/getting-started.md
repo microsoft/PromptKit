@@ -59,9 +59,11 @@ and you're running.
 npx promptkit
 ```
 
-Interactive modeauto-detects your LLM CLI (GitHub Copilot CLI or Claude
+Interactive mode auto-detects your LLM CLI (GitHub Copilot CLI or Claude
 Code), copies PromptKit's content to a temp directory, and launches an
-interactive session with `bootstrap.md` as the custom instruction. The
+interactive session with `bootstrap.md` as the custom instruction.
+(If using Copilot CLI directly in a cloned repo instead, the `/promptkit`
+skill activates automatically — no setup needed.) The
 bootstrap engine walks you through:
 
 1. What do you want to accomplish?

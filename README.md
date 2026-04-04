@@ -98,24 +98,28 @@ npx @alan-jowett/promptkit assemble investigate-bug \
 
 ### Using the repo directly
 
-Clone the repo and point Copilot at the bootstrap prompt:
+Clone the repo and start a session — Copilot discovers the `/promptkit`
+skill automatically:
 
 ```bash
 git clone https://github.com/microsoft/promptkit.git
 cd promptkit
 
-# Start a session — Copilot reads bootstrap.md, loads the manifest,
-# and asks what you need.
-copilot -i "Read and execute bootstrap.md"
+# Start a session — the /promptkit skill activates automatically,
+# reads the manifest, and asks what you need.
+copilot
 ```
+
+You can also invoke the skill explicitly with `/promptkit`, `/boot`, or
+`/bootstrap`.
 
 #### What a session looks like
 
-Copilot reads `bootstrap.md`, discovers all components via `manifest.yaml`,
-and presents the available templates:
+The bootstrap engine discovers all components via `manifest.yaml` and
+presents the available templates:
 
 ```
-● Read bootstrap.md
+● Read bootstrap.md  (via /promptkit skill)
 ● Read manifest.yaml
 
 I've loaded the PromptKit manifest. I'm ready to help you build a task-specific prompt.
@@ -171,8 +175,9 @@ claude "Read and execute bootstrap.md"
 
 ### Using with any LLM (manual)
 
-If your tool doesn't have file access, paste the bootstrap prompt
-into a session along with the manifest, then follow the interactive flow:
+If your tool doesn't support skills or file access, paste the bootstrap
+prompt into a session along with the manifest, then follow the
+interactive flow:
 
 ```
 1. Copy the contents of bootstrap.md into a new LLM chat.
@@ -599,6 +604,8 @@ promptkit/
 ├── manifest.yaml            # Index of all components
 ├── bootstrap.md             # Meta-prompt entry point
 ├── LICENSE                  # MIT license
+├── .github/
+│   └── skills/              # Copilot CLI skills (/promptkit, /boot, /bootstrap)
 ├── personas/                # LLM identity definitions
 ├── protocols/               # Reasoning and analysis protocols
 │   ├── guardrails/          # Cross-cutting safety protocols

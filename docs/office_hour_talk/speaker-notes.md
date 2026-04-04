@@ -248,7 +248,7 @@ So how do you actually start using this?
 ## Slide 25: Three Ways to Use PromptKit
 **Time**: 1:30 | **Cumulative**: 36:30
 
-There are three ways to get started. The easiest is npx — you don't even need to clone the repo. Just run npx @alan-jowett/promptkit and it launches an interactive session. It auto-detects whether you're using GitHub Copilot or Claude Code. If you want full access to all the component files, clone the repo and point your LLM CLI at bootstrap.md. And if you're not using a CLI tool, you can paste the bootstrap prompt and manifest into any LLM session — ChatGPT, Claude, whatever — and follow the interactive flow. It works everywhere.
+There are three ways to get started. The easiest is npx — you don't even need to clone the repo. Just run npx @alan-jowett/promptkit and it launches an interactive session. It auto-detects whether you're using GitHub Copilot or Claude Code. If you want full access to all the component files, clone the repo and run copilot — the /promptkit skill activates automatically, no special command needed. You can also type /promptkit, /boot, or /bootstrap explicitly. And if you're not using a CLI tool, you can paste the bootstrap prompt and manifest into any LLM session — ChatGPT, Claude, whatever — and follow the interactive flow. It works everywhere.
 
 **Key point to emphasize**: "npx — no clone needed" — lowest barrier to entry.
 
