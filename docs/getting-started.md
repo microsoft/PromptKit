@@ -67,7 +67,7 @@ bootstrap engine walks you through:
 1. What do you want to accomplish?
 2. Template recommendation
 3. Parameter collection
-4. Output mode (raw prompt file or agent instruction file)
+4. Output mode (raw prompt, agent instruction, Copilot prompt file, or agentic workflow)
 5. Assembled prompt written to your project
 
 ## Understanding the Output

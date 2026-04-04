@@ -34,13 +34,27 @@ read coherently as a standalone prompt file.
 
 ### 1. File Manifest
 
-State the file that will be created:
+State the file that will be created. This manifest is explanatory
+output only — it is NOT part of the committed `.prompt.md` file content.
 
 | File Path | Slash Command |
 |-----------|---------------|
 | `.github/prompts/<name>.prompt.md` | `/<name>` |
 
-### 2. YAML Frontmatter
+### 2. File Content
+
+Emit the complete contents of `.github/prompts/<name>.prompt.md` as one
+contiguous block (e.g., a single fenced code block), with no interleaved
+commentary, checklist items, tables, or explanatory prose inside that
+block. The block MUST contain the entire committed file, in order:
+
+1. YAML frontmatter between `---` markers
+2. The full Markdown body of the prompt
+
+Any file manifest, activation checklist, or other supporting guidance
+MUST appear outside that single file-content block.
+
+### 3. YAML Frontmatter
 
 The `.prompt.md` file MUST begin with YAML frontmatter between `---`
 markers containing:

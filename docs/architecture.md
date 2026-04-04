@@ -282,6 +282,10 @@ workflow. When an LLM reads it, it follows this decision tree:
      - **(a) Raw prompt file** — Markdown for a fresh LLM session
      - **(b) Agent instruction file** — persistent file for GitHub Copilot,
        Claude Code, or Cursor
+     - **(c) Copilot prompt file** — `.prompt.md` slash command for
+       Copilot Chat
+     - **(d) Agentic workflow** — `.github/workflows/*.md` for scheduled
+       or event-driven automation in GitHub Actions
 5. **Collect parameters** — gather template-specific inputs
 6. **Ask for target directory** — where output files go
 7. **Load and assemble** — read referenced files, compose in order
