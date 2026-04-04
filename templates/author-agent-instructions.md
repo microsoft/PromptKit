@@ -5,9 +5,11 @@
 name: author-agent-instructions
 description: >
   Assemble PromptKit components (persona, protocols) into composable
-  agent skill files. For GitHub Copilot, produces individual
-  .github/instructions/*.instructions.md files with applyTo targeting.
-  Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
+  agent skill files, custom agent definitions, or CLI skills. For
+  GitHub Copilot, produces individual .github/instructions/*.instructions.md
+  files with applyTo targeting, .github/agents/*.agent.md custom agents,
+  or .github/skills/*/SKILL.md CLI skills. Also supports Claude Code
+  (CLAUDE.md) and Cursor (.cursorrules).
 persona: promptkit-contributor
 protocols:
   - guardrails/anti-hallucination
@@ -15,6 +17,7 @@ protocols:
 format: agent-instructions
 params:
   platform: "Target agent platform(s): 'GitHub Copilot', 'Claude Code', 'Cursor', or 'All'"
+  output_type: "Type of output to produce: 'instructions' (default — persistent skill files), 'agent' (custom agent definition), or 'skill' (CLI skill)"
   base_persona: "PromptKit persona to use as the base identity (e.g., 'systems-engineer', 'security-auditor', 'software-architect', 'devops-engineer'). Specify 'custom' to define a new persona inline."
   selected_protocols: "Comma-separated list of PromptKit protocols to encode as standing instructions (e.g., 'anti-hallucination, self-verification, memory-safety-c'). Leave blank for persona-only output."
   behaviors: "Description of the reusable behaviors and skills to encode. What should the agent always do, never do, and how should it reason in this context?"
@@ -24,23 +27,32 @@ input_contract: null
 output_contract:
   type: agent-instruction-file
   description: >
-    One or more ready-to-commit agent instruction files. For GitHub Copilot,
+    One or more ready-to-commit agent instruction files, custom agent
+    definitions, or CLI skill files. For GitHub Copilot instructions,
     produces composable skill files under .github/instructions/ with
-    applyTo targeting. For Claude Code and Cursor, produces a single
-    combined file.
+    applyTo targeting. For custom agents, produces .github/agents/*.agent.md.
+    For CLI skills, produces .github/skills/*/SKILL.md. For Claude Code
+    and Cursor, produces a single combined file.
 ---
 
 # Task: Author Agent Instruction Files
 
 You are tasked with assembling PromptKit components into persistent agent
-instruction files for the specified platform(s). For GitHub Copilot, you
-will produce **composable skill files** — one per logical concern — that
-the runtime loads and combines automatically. The output will be
-version-controlled and automatically loaded by the agent runtime.
+instruction files, custom agent definitions, or CLI skills for the
+specified platform(s). The output type determines the file format:
+
+- **`instructions`** *(default)*: Composable skill files that the runtime
+  loads and combines automatically.
+- **`agent`**: A custom agent definition with its own persona, tools,
+  model preferences, and optional handoffs.
+- **`skill`**: A CLI skill — a focused, reusable workflow invokable via
+  `/skills` in the Copilot CLI.
 
 ## Inputs
 
 **Platform(s)**: {{platform}}
+
+**Output type**: {{output_type}}
 
 **Base Persona**: {{base_persona}}
 
@@ -71,7 +83,11 @@ version-controlled and automatically loaded by the agent runtime.
    - Review the Platform Reference in the `agent-instructions` format spec.
    - Note any size constraints or syntax restrictions that apply.
 
-### Step 2: Plan the Skill Decomposition (GitHub Copilot)
+### Step 2: Plan the Output Structure
+
+The planning step depends on the `{{output_type}}`:
+
+#### For `instructions` (default) — Skill Decomposition
 
 For GitHub Copilot output, determine how to split the content into
 composable skill files. The recommended decomposition:
@@ -98,6 +114,36 @@ composable skill files. The recommended decomposition:
 
 For Claude Code and Cursor, combine all content into a single file (these
 platforms do not support per-file skill targeting).
+
+#### For `agent` — Custom Agent Definition
+
+Plan a single `.github/agents/<name>.agent.md` file containing:
+
+1. **Frontmatter** with:
+   - `description` — derived from the persona's one-line summary
+   - `tools` — select the minimal set of tools the agent needs:
+     - Read-only agents: `['search/codebase', 'web/fetch']`
+     - Editing agents: `['search/codebase', 'edit', 'bash']`
+     - Review agents: `['search/codebase', 'search/usages']`
+   - `model` — optional, based on task complexity
+   - `handoffs` — optional, for multi-step workflows (e.g., plan → implement)
+
+2. **Body** with the full agent instructions assembled from:
+   - Condensed persona identity
+   - Protocol directives as operating methodology
+   - Task-specific instructions from `{{behaviors}}`
+   - Output expectations
+
+#### For `skill` — CLI Skill
+
+Plan a `.github/skills/<name>/SKILL.md` file containing:
+
+1. **A focused workflow** that the Copilot CLI user can invoke via `/skills`
+2. The skill should encode:
+   - A brief role context from the persona
+   - The protocol methodology as step-by-step instructions
+   - Clear input/output expectations
+   - Any file or tool requirements
 
 ### Step 3: Condense and Adapt the Content
 
@@ -218,15 +264,31 @@ Apply the `self-verification` protocol:
 
 Before presenting the output, verify:
 
-- [ ] GitHub Copilot files have valid YAML frontmatter (`description`, `applyTo`)
-- [ ] Filenames are lowercase, hyphen-separated, ending in `.instructions.md`
-- [ ] `applyTo` globs match the protocol's natural scope
-- [ ] Each skill file is self-contained and independently coherent
+**For all output types:**
 - [ ] No PromptKit-internal section headers appear in any output file
 - [ ] All `{{param}}` placeholders are resolved
-- [ ] Content size is within platform guidance for each file
-- [ ] Persona identity is clearly stated in the persona skill file
+- [ ] Persona identity is clearly stated
 - [ ] Every protocol phase is represented as a standing directive
 - [ ] No contradictory directives exist within or across files
 - [ ] Platform Notes and Activation Checklist are complete
 - [ ] Output is ready to commit without further editing
+
+**For `instructions` output:**
+- [ ] GitHub Copilot files have valid YAML frontmatter (`description`, `applyTo`)
+- [ ] Filenames are lowercase, hyphen-separated, ending in `.instructions.md`
+- [ ] `applyTo` globs match the protocol's natural scope
+- [ ] Each skill file is self-contained and independently coherent
+- [ ] Content size is within platform guidance for each file
+
+**For `agent` output:**
+- [ ] Agent file has valid YAML frontmatter (`description`, `tools`)
+- [ ] Filename is lowercase, hyphen-separated, ending in `.agent.md`
+- [ ] Tools list follows least-privilege (only what the agent needs)
+- [ ] Handoffs (if any) reference valid agent names
+- [ ] Agent file is self-contained as a complete system prompt
+
+**For `skill` output:**
+- [ ] Skill directory uses lowercase, hyphen-separated name
+- [ ] `SKILL.md` file is present in the skill directory
+- [ ] Skill instructions are focused on a single task or workflow
+- [ ] Input/output expectations are clearly documented

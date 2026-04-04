@@ -570,10 +570,10 @@ formats:
     path: formats/agent-instructions.md
     produces: agent-instruction-file
     description: >
-      Output format for persistent agent instruction files. For GitHub
-      Copilot, produces composable skill files under
-      .github/instructions/*.instructions.md with applyTo targeting.
-      Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
+      Output format for persistent agent instruction files, custom agent
+      definitions, and CLI skills. Produces .github/instructions/,
+      .github/agents/, .github/skills/, CLAUDE.md, and .cursorrules.
+      Works with VS Code, JetBrains, GitHub.com, and the Copilot CLI.
 
   - name: copilot-prompt-file
     path: formats/copilot-prompt-file.md
@@ -1241,9 +1241,10 @@ templates:
       path: templates/author-agent-instructions.md
       description: >
         Assemble PromptKit components (persona, protocols) into composable
-        agent skill files. For GitHub Copilot, produces individual
-        .github/instructions/*.instructions.md files with applyTo targeting.
-        Also supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
+        agent skill files, custom agent definitions, or CLI skills. For
+        GitHub Copilot, produces .github/instructions/*.instructions.md,
+        .github/agents/*.agent.md, or .github/skills/*/SKILL.md. Also
+        supports Claude Code (CLAUDE.md) and Cursor (.cursorrules).
       persona: promptkit-contributor
       protocols: [anti-hallucination, self-verification]
       format: agent-instructions
