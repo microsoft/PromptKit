@@ -17,7 +17,7 @@ protocols:
 format: agent-instructions
 params:
   platform: "Target agent platform(s): 'GitHub Copilot', 'Claude Code', 'Cursor', or 'All'"
-  output_type: "Type of output to produce: 'instructions' (default — persistent skill files), 'agent' (custom agent definition), or 'skill' (CLI skill)"
+  output_type: "Type of output to produce: 'instructions' (persistent skill files), 'agent' (custom agent definition), or 'skill' (CLI skill). If not specified, ask the user."
   base_persona: "PromptKit persona to use as the base identity (e.g., 'systems-engineer', 'security-auditor', 'software-architect', 'devops-engineer'). Specify 'custom' to define a new persona inline."
   selected_protocols: "Comma-separated list of PromptKit protocols to encode as standing instructions (e.g., 'anti-hallucination, self-verification, memory-safety-c'). Leave blank for persona-only output."
   behaviors: "Description of the reusable behaviors and skills to encode. What should the agent always do, never do, and how should it reason in this context?"
@@ -27,12 +27,14 @@ input_contract: null
 output_contract:
   type: agent-instruction-file
   description: >
-    One or more ready-to-commit agent instruction files, custom agent
-    definitions, or CLI skill files. For GitHub Copilot instructions,
-    produces composable skill files under .github/instructions/ with
-    applyTo targeting. For custom agents, produces .github/agents/*.agent.md.
-    For CLI skills, produces .github/skills/*/SKILL.md. For Claude Code
-    and Cursor, produces a single combined file.
+    One or more ready-to-commit agent customization files. The artifact
+    type `agent-instruction-file` covers all output types: instruction
+    files (.instructions.md), custom agents (.agent.md), and CLI skills
+    (SKILL.md). For GitHub Copilot instructions, produces composable
+    skill files under .github/instructions/ with applyTo targeting.
+    For custom agents, produces .github/agents/*.agent.md. For CLI
+    skills, produces .github/skills/*/SKILL.md. For Claude Code and
+    Cursor, produces a single combined file.
 ---
 
 # Task: Author Agent Instruction Files
@@ -124,7 +126,7 @@ Plan a single `.github/agents/<name>.agent.md` file containing:
    - `tools` — select the minimal set of tools the agent needs:
      - Read-only agents: `['search/codebase', 'web/fetch']`
      - Editing agents: `['search/codebase', 'edit', 'bash']`
-     - Review agents: `['search/codebase', 'search/usages']`
+     - Review agents: `['search/codebase']`
    - `model` — optional, based on task complexity
    - `handoffs` — optional, for multi-step workflows (e.g., plan → implement)
 
