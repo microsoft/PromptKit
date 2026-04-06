@@ -116,6 +116,8 @@ match the actual datasheet.
    - **Medium**: Spec is ambiguous (typical vs. max, conditional on
      operating mode)
    - **Low**: Minor discrepancy with no functional impact
+   - **Informational**: Observation with no correctness impact (e.g.,
+     over-specification, cost optimization opportunity)
 
 ## Phase 3: Requirements Satisfaction Audit
 

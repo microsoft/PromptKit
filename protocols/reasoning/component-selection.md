@@ -234,8 +234,10 @@ user-provided distributor links.
 
 2. **Lifecycle status**: Verify the part's lifecycle:
    - **Active**: Currently manufactured and recommended for new designs
-   - **NRND** (Not Recommended for New Designs): Still available but
-     will be discontinued — flag as risk
+   - **NRND** (Not Recommended for New Designs): Not recommended for
+     new designs; may still be available, but treat as a lifecycle
+     risk and verify status with the manufacturer or authorized
+     distributors
    - **Obsolete/Discontinued**: Eliminate unless no alternative exists
    - **Preview/Sampling**: Not yet in production — flag timeline risk
 
