@@ -239,14 +239,17 @@ Classify each component's density as: **Dense** (>80% actionable),
 
 #### 3.3 Yield Assessment
 
-For each component, assess its contribution to output quality:
+For each component, assess its methodological uniqueness and
+structural value within the assembled prompt (not whether it
+produces "good" LLM output):
 
 1. Does this component add unique analysis methodology not covered
    by other composed components?
 2. Could the component's essential content be expressed in fewer
    tokens without losing actionable specificity?
-3. Is the component's level of detail appropriate for its type?
-   (Protocols should be detailed; personas should be thin.)
+3. Is the component's level of detail appropriate for its type and
+   role in prompt assembly? (Protocols should be detailed;
+   personas should be thin.)
 
 #### 3.4 Optimization Recommendations
 
