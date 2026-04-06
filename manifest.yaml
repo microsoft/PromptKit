@@ -545,6 +545,15 @@ protocols:
         segments. Maps each to existing library components or marks
         as novel for assimilation.
 
+    - name: manufacturing-artifact-generation
+      path: protocols/reasoning/manufacturing-artifact-generation.md
+      description: >
+        Systematic reasoning protocol for generating manufacturing
+        deliverables from a completed PCB design. Covers Gerber files,
+        Excellon drill files, BOM formatting, pick-and-place centroid
+        files, and assembly drawings with fab-specific formatting for
+        JLCPCB, PCBWay, and other services.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
