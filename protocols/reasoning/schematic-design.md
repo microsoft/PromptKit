@@ -35,6 +35,12 @@ must provide the list of core components and their datasheets.
 circuit values. Ask the user to provide datasheet excerpts (reference
 circuit schematics, recommended component values, pin configurations)
 or mark derived values as `[UNVERIFIED — datasheet not consulted]`.
+Typical values given throughout this protocol (e.g., "typically
+100nF", "1kΩ–10kΩ") are illustrative examples of common engineering
+practice — they must be confirmed against the actual component
+datasheet before use as final design values. If a datasheet cannot
+be consulted, present such values only as `[UNVERIFIED]` examples,
+not as selected or recommended values.
 
 ## Phase 1: Input Validation
 
