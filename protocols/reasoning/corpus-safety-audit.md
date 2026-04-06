@@ -180,9 +180,14 @@ attribution records.
 
 ## Presentation
 
-For each phase, present findings in the investigation-report format
-with finding IDs prefixed by phase:
-- Phase 1: `F-PROV-NNN` (provenance)
-- Phase 2: `F-COPY-NNN` (verbatim copying)
-- Phase 3: `F-CONF-NNN` (confidentiality)
-- Phase 4: `F-LIC-NNN` (license compliance)
+Present findings in the shared `investigation-report` format using
+standard numeric finding IDs: `F-001`, `F-002`, `F-003`, etc.
+Do not prefix finding IDs by phase, because the report format and
+remediation plan table expect the canonical `F-<NNN>` shape.
+
+Encode the audit phase in the finding **Category** field (or, if
+needed by the consuming template, in the finding title):
+- Phase 1: `PROV` (provenance)
+- Phase 2: `COPY` (verbatim copying)
+- Phase 3: `CONF` (confidentiality)
+- Phase 4: `LIC` (license compliance)

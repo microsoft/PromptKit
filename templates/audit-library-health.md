@@ -147,7 +147,8 @@ Compare format document structures for overlap:
 
 Scan all components for inconsistent terminology:
 
-1. Epistemic labels (canonical: [KNOWN]/[INFERRED]/[ASSUMPTION]).
+1. Epistemic labels (canonical categories: KNOWN / INFERRED / ASSUMED;
+   assumed claims must be explicitly flagged with [ASSUMPTION]).
 2. Domain terms: "findings" vs. "issues" vs. "defects" and similar.
 3. Format field names across templates sharing a format.
 4. Finding type: **Terminology Drift**.
@@ -318,22 +319,31 @@ Severity guidance for this audit:
 - **Informational**: Observations, parameterization opportunities,
   or suggestions with no current problem
 
-Finding IDs use category prefixes:
-- `F-OVR-NNN`: Overlap / Redundancy
-- `F-CON-NNN`: Conflicts
-- `F-DRF-NNN`: Metadata Drift
-- `F-SAF-NNN`: Corpus Safety (canonical synthesized ID)
-- `F-FIT-NNN`: Runtime Fitness / Bloat
+Finding IDs in the unified audit report must use the
+`investigation-report` format: `F-001`, `F-002`, `F-003`, …
 
-Corpus-safety ID mapping rule:
-- During **Pass 2** presentation, keep the native IDs required by
-  `corpus-safety-audit` (`F-PROV-NNN`, `F-COPY-NNN`, `F-CONF-NNN`,
-  `F-LIC-NNN`).
-- During **final synthesis** into this unified audit report, remap each
-  Pass 2 finding to `F-SAF-<PHASE>-NNN` using the phase prefix from
-  the original ID (e.g., `F-PROV-002` → `F-SAF-PROV-002`).
-- When helpful for traceability, include the original Pass 2 ID in
-  parentheses after the synthesized ID on first reference.
+Do **not** encode category, pass, or subtype information into the
+finding ID. Instead, record that information in the required
+**Category** field and, when useful, in the finding title.
+
+Use the **Category** field to classify findings as one of:
+- `Overlap / Redundancy`
+- `Conflicts`
+- `Metadata Drift`
+- `Corpus Safety`
+- `Runtime Fitness / Bloat`
+
+You may still group findings by these categories in the report body,
+but each individual finding heading must retain the `F-<NNN>` form.
+
+Corpus-safety traceability rule:
+- During **Pass 2** presentation, keep the native IDs used by the
+  `corpus-safety-audit` protocol for internal tracking.
+- During **final synthesis** into this unified audit report, assign a
+  new sequential finding ID in `F-<NNN>` format.
+- Preserve the original Pass 2 phase tag only as traceability metadata
+  in the title or evidence (e.g., `Category: Corpus Safety`;
+  note: `Original phase: PROV`).
 
 ## Non-Goals
 
