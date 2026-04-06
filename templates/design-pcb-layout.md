@@ -223,22 +223,32 @@ in routing.
 
 **Goal**: Route the board and achieve DRC-clean status.
 
-Apply the **pcb-layout-design protocol Phases 8–9**:
+Apply the **pcb-layout-design protocol Phases 6, 8–9** in order:
 
-1. **Run the Python script**: Execute placement, export `.dsn`.
+1. **Define routing strategy** (protocol Phase 6): Pre-route
+   critical nets (USB differential pairs, crystal traces, analog
+   signals), set autorouter configuration and net priorities, and
+   establish ground/power routing strategy before automated routing.
+2. **Run the Python script**: Execute placement, export `.dsn`.
 2. **Run FreeRouting** headlessly:
    `java -jar freerouting.jar -de board.dsn -do board.ses -mp 20`
 3. **Import routing result**: `pcbnew.ImportSpecctraSES(board, "board.ses")`
 4. **Fill copper zones**.
 5. **Run DRC**: `kicad-cli pcb drc -o drc-report.json --format json --severity-all board.kicad_pcb`
-6. **Classify violations**: Clearance, unconnected nets, track
+7. **Classify violations**: Clearance, unconnected nets, track
    width, courtyard overlap, edge clearance.
-7. **Automated fix loop**: Adjust design rules or placement, re-run.
-   Maximum 5 iterations before escalating to user.
+8. **Automated fix loop**: Adjust routing and design-rule settings
+   only, then re-run. If resolving a violation requires a component
+   placement change, stop the loop and return to Phase 4 for
+   updated placement, then Phase 5 for user re-approval before
+   resuming. Maximum 5 routing/design-rule-only iterations before
+   escalating to user.
 
 ### Transition Rules
 
 - **DRC clean** (zero violations): Proceed to Phase 7.
+- **Placement change required**: Return to Phase 4, then Phase 5
+  for user re-approval before continuing with Phase 6.
 - **DRC violations persist after 5 iterations**: Present remaining
   violations to the user with analysis (placement issue vs. routing
   issue vs. design rule issue) and ask for guidance.
