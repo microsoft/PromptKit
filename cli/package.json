@@ -20,7 +20,7 @@
     "prepublishOnly": "node scripts/copy-content.js",
     "prepare": "node scripts/copy-content.js",
     "pretest": "node scripts/copy-content.js",
-    "test": "node --test --test-concurrency=1 tests/cli.test.js tests/list.test.js tests/launch.test.js tests/copy-content.test.js"
+    "test": "node --test --test-concurrency=1 tests/cli.test.js tests/list.test.js tests/search-show.test.js tests/launch.test.js tests/copy-content.test.js"
   },
   "dependencies": {
     "commander": "^12.0.0",

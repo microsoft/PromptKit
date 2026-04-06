@@ -82,14 +82,12 @@ describe("List Command", () => {
     );
   });
 
-  it("TC-CLI-122: list works without lib/manifest.js", () => {
-    // Verify that lib/manifest.js does NOT exist
+  it("TC-CLI-122: list uses lib/manifest.js for manifest parsing", () => {
     const manifestModule = path.resolve(__dirname, "..", "lib", "manifest.js");
     assert.ok(
-      !fs.existsSync(manifestModule),
-      "lib/manifest.js should not exist"
+      fs.existsSync(manifestModule),
+      "lib/manifest.js should exist"
     );
-    // And list still works (uses inline yaml parsing)
     const output = run(["list"]);
     assert.ok(output.includes("Available PromptKit templates"));
   });
