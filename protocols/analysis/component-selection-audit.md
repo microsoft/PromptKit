@@ -32,10 +32,17 @@ currently orderable.
 **If search/browsing is unavailable in the current environment**:
 do not attempt to fabricate verification results. Instead, ask the
 user to provide datasheet URLs, manufacturer product pages, or
-distributor links. Mark any assertion that cannot be independently
-verified as `[UNVERIFIED]`. An audit with unverified assertions
-MUST produce a PASS WITH CONDITIONS verdict at best, noting that
-source verification is pending.
+distributor links; these user-provided sources MAY be used to
+independently verify the part. Mark any assertion that cannot be
+independently verified as `[UNVERIFIED]`, but distinguish blocking
+from non-blocking items: if the exact part number's existence,
+claimed manufacturer, or current orderable status for a selected
+component cannot be independently verified from available evidence,
+treat that as a blocking finding and the audit MUST FAIL. A PASS
+WITH CONDITIONS verdict is allowed only for non-blocking assertions
+that remain `[UNVERIFIED]` (e.g., exact pricing, stock levels,
+lead times), with the report noting exactly which checks are
+pending source verification.
 
 1. **Part number existence**: Search the manufacturer's website or a
    major distributor (DigiKey, Mouser, LCSC) for the exact part

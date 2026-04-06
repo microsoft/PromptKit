@@ -218,7 +218,10 @@ Score each candidate against the requirements.
 
 ## Phase 5: Sourcing Evaluation
 
-Verify that each surviving candidate can be procured.
+Verify that each surviving candidate can be procured. The same
+search/browsing fallback from Phase 3 applies: if web search is
+unavailable, mark sourcing fields as `[UNVERIFIED]` and request
+user-provided distributor links.
 
 1. **Availability check**: For each candidate, search distributor
    websites (DigiKey, Mouser, LCSC) to determine:
