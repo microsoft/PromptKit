@@ -1613,14 +1613,20 @@ pipelines:
 
   hardware-lifecycle:
     description: >
-      Spec-first hardware design lifecycle from requirements through
-      manufacturing review. Each stage audits a hardware artifact
-      against the requirements document. Stages can be used
-      independently or sequentially as design artifacts become
-      available.
+      Full hardware design lifecycle from requirements through
+      manufacturing. Interleaves generative design stages with
+      adversarial audit stages. Each design stage produces an
+      artifact that the next audit stage reviews. The full
+      workflow can also be run as a single interactive session
+      using the hardware-design-workflow template. Stages can
+      be used independently or sequentially as design artifacts
+      become available.
     stages:
       - template: author-requirements-doc
         produces: requirements-document
+      - template: design-schematic
+        consumes: requirements-document
+        produces: artifact-set
       - template: review-schematic
         consumes: requirements-document
         produces: investigation-report
@@ -1630,9 +1636,15 @@ pipelines:
       - template: review-bom
         consumes: requirements-document
         produces: investigation-report
+      - template: design-pcb-layout
+        consumes: artifact-set
+        produces: artifact-set
       - template: review-layout
         consumes: requirements-document
         produces: investigation-report
+      - template: emit-manufacturing-artifacts
+        consumes: artifact-set
+        produces: artifact-set
 
   engineering-workflow:
     description: >
