@@ -109,9 +109,9 @@ requirements are complete** (e.g., "READY", "proceed", "looks good").
 
 ### Output
 
-A requirements summary table with CR-IDs (Component Requirements),
-priorities (Must/Should/May), and the component categories each
-requirement drives.
+A requirements summary table with REQ-IDs (using a hardware category
+tag, e.g., REQ-HW-001), priorities (Must/Should/May), and the
+component categories each requirement drives.
 
 ---
 
@@ -277,11 +277,10 @@ layout or manufacturing.
 
 2. **Next steps**: Inform the user of the next stages in the
    hardware design workflow:
-   - PCB layout and routing (uses `design-pcb-layout` template)
-   - Manufacturing artifact generation (uses
-     `emit-manufacturing-artifacts` template)
-   - Or the full end-to-end workflow (uses
-     `hardware-design-workflow` template)
+   - PCB layout and routing
+   - Manufacturing artifact generation
+   - Or a full end-to-end hardware design workflow, if available
+     in the library
 
 ---
 
