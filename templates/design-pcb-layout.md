@@ -20,15 +20,16 @@ protocols:
 format: null
 params:
   project_name: "Name of the hardware project or product"
-  schematic_path: "Path to the KiCad schematic (.kicad_sch) and board (.kicad_pcb) files"
+  schematic_path: "Path to the KiCad schematic file (.kicad_sch)"
+  board_path: "Path to the KiCad board file (.kicad_pcb), populated via Update PCB from Schematic"
   context: "Additional context — target fab service, board size constraints, enclosure fit, layer count preference, special routing requirements"
 input_contract:
   type: artifact-set
   description: >
-    A completed KiCad schematic with footprint assignments and a
-    .kicad_pcb file populated via 'Update PCB from Schematic'.
-    Optionally, a component selection report from the design-schematic
-    template.
+    A completed KiCad schematic file (.kicad_sch) with footprint
+    assignments and a corresponding .kicad_pcb file populated via
+    'Update PCB from Schematic'. Optionally, a component selection
+    report from the design-schematic template.
 output_contract:
   type: artifact-set
   description: >
@@ -53,8 +54,9 @@ into the layout.
 
 **Project**: {{project_name}}
 
-**Schematic / Board Files**:
-{{schematic_path}}
+**Schematic**: {{schematic_path}}
+
+**Board**: {{board_path}}
 
 **Additional Context**:
 {{context}}
@@ -64,26 +66,54 @@ into the layout.
 ## Workflow Overview
 
 ```
-Phase 1: Layout Requirements Gathering (interactive)
+Phase 1: Input Validation (pcb-layout-design protocol Phase 1)
     ↓
-Phase 2: Board Definition and Design Rules
+Phase 2: Layout Requirements Gathering (interactive)
     ↓
-Phase 3: Component Placement (generates Python script)
+Phase 3: Board Definition and Design Rules
     ↓
-Phase 4: User Review of Placement
-    ↓ ← loop back to Phase 3 if REVISE
-Phase 5: Routing and DRC Loop (FreeRouting + kicad-cli DRC)
+Phase 4: Component Placement (generates Python script)
     ↓
-Phase 6: Layout Audit (layout-design-review protocol)
+Phase 5: User Review of Placement
+    ↓ ← loop back to Phase 4 if REVISE
+Phase 6: Routing and DRC Loop (FreeRouting + kicad-cli DRC)
     ↓
-Phase 7: User Review of Layout
-    ↓ ← loop back to Phase 3, 5, or SCHEMATIC FEEDBACK
-Phase 8: Deliver Artifacts
+Phase 7: Layout Audit (layout-design-review protocol)
+    ↓
+Phase 8: User Review of Layout
+    ↓ ← loop back to Phase 4, 6, or SCHEMATIC FEEDBACK
+Phase 9: Deliver Artifacts
 ```
 
 ---
 
-## Phase 1 — Layout Requirements Gathering
+## Phase 1 — Input Validation
+
+**Goal**: Verify all prerequisites before beginning layout design.
+
+Apply the **pcb-layout-design protocol Phase 1** (Input Validation):
+
+1. **Schematic completeness**: Verify all components have footprint
+   assignments, all nets are named, and ERC passes.
+2. **Board file**: Verify the `.kicad_pcb` contains footprints and
+   nets from the schematic (user must have run "Update PCB from
+   Schematic").
+3. **Design constraints from upstream**: Extract power dissipation,
+   high-speed signals, RF clearance requirements, and current-
+   carrying trace needs.
+4. **Target fab service**: Confirm fab house and design rule
+   minimums.
+
+### Transition Rules
+
+- **All prerequisites met**: Proceed to Phase 2.
+- **Missing prerequisites**: Stop and inform the user what needs
+  to be fixed (e.g., "Run Update PCB from Schematic first",
+  "Assign footprints to U3 and U5").
+
+---
+
+## Phase 2 — Layout Requirements Gathering
 
 **Goal**: Gather the user's spatial, mechanical, and manufacturing
 requirements before any layout decisions.
@@ -105,7 +135,7 @@ Gathering) in full:
 
 ### Critical Rule
 
-**Do NOT proceed to Phase 2 until the user explicitly confirms the
+**Do NOT proceed to Phase 3 until the user explicitly confirms the
 layout requirements** (e.g., "READY", "proceed", "looks good").
 
 ### Output
@@ -114,7 +144,7 @@ A layout requirements summary table for user confirmation.
 
 ---
 
-## Phase 2 — Board Definition and Design Rules
+## Phase 3 — Board Definition and Design Rules
 
 **Goal**: Define the board structure and configure design rules.
 
@@ -136,7 +166,7 @@ Board definition specification and design rule configuration.
 
 ---
 
-## Phase 3 — Component Placement
+## Phase 4 — Component Placement
 
 **Goal**: Place all components following the user's requirements
 and engineering best practices.
@@ -164,7 +194,7 @@ Apply the **pcb-layout-design protocol Phases 5–7**:
 
 ---
 
-## Phase 4 — User Review of Placement
+## Phase 5 — User Review of Placement
 
 **Goal**: Get user approval of component placement before investing
 in routing.
@@ -178,13 +208,13 @@ in routing.
 
 ### Transition Rules
 
-- **Approved**: Proceed to Phase 5.
+- **Approved**: Proceed to Phase 6.
 - **Revise**: Adjust placement in the script configuration and
-  return to Phase 3.
+  return to Phase 4.
 
 ---
 
-## Phase 5 — Routing and DRC Loop
+## Phase 6 — Routing and DRC Loop
 
 **Goal**: Route the board and achieve DRC-clean status.
 
@@ -203,14 +233,14 @@ Apply the **pcb-layout-design protocol Phases 8–9**:
 
 ### Transition Rules
 
-- **DRC clean** (zero violations): Proceed to Phase 6.
+- **DRC clean** (zero violations): Proceed to Phase 7.
 - **DRC violations persist after 5 iterations**: Present remaining
   violations to the user with analysis (placement issue vs. routing
   issue vs. design rule issue) and ask for guidance.
 
 ---
 
-## Phase 6 — Layout Audit
+## Phase 7 — Layout Audit
 
 **Goal**: Adversarially verify the layout is correct.
 
@@ -232,14 +262,14 @@ Apply the **layout-design-review protocol** in full:
 
 ### Transition Rules
 
-- **PASS verdict**: Proceed to Phase 7.
+- **PASS verdict**: Proceed to Phase 8.
 - **FAIL verdict**: Fix blocking issues. If the fix requires
-  placement changes, return to Phase 3. If routing-only, return
-  to Phase 5.
+  placement changes, return to Phase 4. If routing-only, return
+  to Phase 6.
 
 ---
 
-## Phase 7 — User Review of Layout
+## Phase 8 — User Review of Layout
 
 **Goal**: Get user approval of the routed layout.
 
@@ -254,9 +284,9 @@ Apply the **layout-design-review protocol** in full:
 
 ### Transition Rules
 
-- **Approved**: Proceed to Phase 8.
-- **Revise placement**: Return to Phase 3.
-- **Revise routing only**: Return to Phase 5.
+- **Approved**: Proceed to Phase 9.
+- **Revise placement**: Return to Phase 4.
+- **Revise routing only**: Return to Phase 6.
 - **Schematic feedback required**: If the layout revealed issues
   that require schematic changes (e.g., need a different package,
   need to split a bus, need additional decoupling), document the
@@ -264,11 +294,11 @@ Apply the **layout-design-review protocol** in full:
   must be updated before continuing. The user should:
   1. Update the schematic
   2. Run "Update PCB from Schematic" in KiCad
-  3. Return to Phase 3 with the updated board file
+  3. Return to Phase 4 with the updated board file
 
 ---
 
-## Phase 8 — Deliver Artifacts
+## Phase 9 — Deliver Artifacts
 
 **Goal**: Present all deliverables and next steps.
 
@@ -301,7 +331,7 @@ Apply the **layout-design-review protocol** in full:
 
 ## Quality Checklist
 
-Before delivering artifacts in Phase 8, verify:
+Before delivering artifacts in Phase 9, verify:
 
 - [ ] DRC passes with zero violations
 - [ ] All nets are routed (no ratsnest lines remaining)
