@@ -289,6 +289,15 @@ protocols:
         environmental protection, antenna compatibility, sensor
         access, manufacturing feasibility, and mounting provisions.
 
+    - name: component-selection-audit
+      path: protocols/analysis/component-selection-audit.md
+      description: >
+        Adversarial audit of a component selection against requirements
+        and real-world data. Independently verifies part numbers exist,
+        datasheet specs match claims, sourcing data is current, and
+        compatibility assertions hold. Catches hallucinated parts and
+        stale specifications.
+
   reasoning:
     - name: root-cause-analysis
       path: protocols/reasoning/root-cause-analysis.md
@@ -498,6 +507,15 @@ protocols:
         presentations. Covers audience analysis, narrative arc
         construction, slide decomposition, visual design decisions,
         time budgeting, and demo choreography. Domain-agnostic.
+
+    - name: component-selection
+      path: protocols/reasoning/component-selection.md
+      description: >
+        Systematic reasoning protocol for selecting electronic components
+        from requirements. Covers functional decomposition, candidate
+        identification via real-time search, technical evaluation, sourcing
+        verification, cross-component compatibility, and decision matrix
+        generation. Scoped to core functional components.
 
 formats:
   - name: requirements-doc
