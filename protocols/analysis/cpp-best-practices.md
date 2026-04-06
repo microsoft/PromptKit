@@ -587,3 +587,12 @@ before release (Shull et al., 2002).
 11. **Shull, F., Basili, V., Boehm, B., et al.** (2002). "What We Have
     Learned About Fighting Defects." *Proceedings of the 8th International
     Software Metrics Symposium*, pp. 249–258.
+
+## Cross-References
+
+- **CPP-1** (Memory Safety) extends concepts from `memory-safety-c`
+  Phases 1–2 with C++-specific RAII patterns and smart pointer analysis.
+  For foundational allocation/deallocation pairing, see `memory-safety-c`.
+- **CPP-2** (Concurrency) extends `thread-safety` analysis with
+  C++-specific RAII lock patterns, condition variable usage, and
+  `std::atomic` ordering checks.

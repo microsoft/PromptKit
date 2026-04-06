@@ -87,6 +87,21 @@ The body should include:
 - **Specific checks** within each phase — not vague instructions
 - **Output format** for findings (if applicable)
 
+**Severity taxonomy** — protocols that produce classified findings should
+use this standard scale:
+
+| Level | Meaning |
+|-------|---------|
+| **Critical** | Prevents system function, introduces exploitable vulnerability, or causes data loss |
+| **High** | Degrades functionality, creates security risk, or has significant reliability impact |
+| **Medium** | Affects maintainability, performance, or has conditional impact |
+| **Low** | Style issue, edge case with minimal impact, or minor inconsistency |
+| **Informational** | Observation or improvement opportunity with no current correctness impact |
+
+Not all protocols require severity classification — omit when findings
+are purely structural (e.g., format compliance). When severity is used,
+reference this table rather than defining a custom scale.
+
 **Guidelines:**
 - Protocols must be **independent and additive** — applying two protocols
   together should not produce conflicting instructions

@@ -37,6 +37,9 @@ presenting it as final. Treat it as a pre-submission checklist.
 
 ### 2. Citation Audit
 
+Every factual claim must use the epistemic categories defined in the
+`anti-hallucination` protocol (KNOWN / INFERRED / ASSUMED).
+
 - Every factual claim in the output MUST be traceable to:
   - A specific location in the provided code or context, OR
   - An explicit `[ASSUMPTION]` or `[INFERRED]` label.
@@ -55,10 +58,10 @@ presenting it as final. Treat it as a pre-submission checklist.
   - If any areas were intentionally excluded, document why in a
     "Limitations" or "Coverage" section.
 - State explicitly:
-  - "The following **source documents were consulted**: [list each
-    document with a brief note of what was drawn from it]."
-  - "The following **areas were examined**: [list]."
-  - "The following **topics were excluded**: [list] because [reason]."
+  - "**Examined**: [what was analyzed — directories, files, patterns]."
+  - "**Method**: [how items were found — search queries, commands, scripts]."
+  - "**Excluded**: [what was intentionally not examined, and why]."
+  - "**Limitations**: [what could not be examined due to access, time, or context]."
 
 ### 4. Internal Consistency Check
 

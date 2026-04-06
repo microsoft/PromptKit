@@ -137,7 +137,8 @@ Check that specified constraints are respected in the implementation.
 
 ## Phase 6: Classification and Reporting
 
-Classify every finding using the specification-drift taxonomy.
+Classify every finding using the specification-drift taxonomy
+(see `taxonomies/specification-drift.md` for full definitions).
 
 1. Assign exactly one drift label (D8, D9, or D10) to each finding.
 2. Assign severity using the taxonomy's severity guidance.
