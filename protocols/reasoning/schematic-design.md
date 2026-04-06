@@ -10,7 +10,9 @@ description: >
   supporting circuitry derivation from datasheets, signal routing,
   protection circuits, and KiCad .kicad_sch S-expression generation
   with explicit visual layout rules for correct rendering.
-applicable_to: []
+applicable_to:
+  - design-schematic
+  - hardware-design-workflow
 ---
 
 # Protocol: Schematic Design
@@ -21,9 +23,6 @@ complete, correct, and visually readable KiCad schematic file
 (`.kicad_sch` S-expression format) that includes all supporting
 circuitry derived from component datasheets. Execute all phases in
 order.
-
-**Composition note**: This protocol is intended for standalone/manual
-composition and is not currently required by any template.
 
 **Input**: A component selection report (from the `component-selection`
 protocol or equivalent) containing selected components with part

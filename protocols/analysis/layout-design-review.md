@@ -12,6 +12,7 @@ description: >
 applicable_to:
   - review-layout
   - design-pcb-layout
+  - hardware-design-workflow
 ---
 
 # Protocol: Layout Design Review

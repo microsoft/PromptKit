@@ -13,6 +13,7 @@ description: >
   4-layer stackups.
 applicable_to:
   - design-pcb-layout
+  - hardware-design-workflow
 ---
 
 # Protocol: PCB Layout Design

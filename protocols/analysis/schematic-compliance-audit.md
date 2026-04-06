@@ -11,6 +11,8 @@ description: >
   circuits, power sequencing, passive components, and completeness.
 applicable_to:
   - review-schematic
+  - design-schematic
+  - hardware-design-workflow
 ---
 
 # Protocol: Schematic Compliance Audit

@@ -1288,6 +1288,16 @@ templates:
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, manufacturing-artifact-generation]
 
+    - name: hardware-design-workflow
+      path: templates/hardware-design-workflow.md
+      description: >
+        End-to-end hardware design workflow from initial idea to
+        manufacturable artifacts. Guides through requirements,
+        component selection, schematic, PCB layout, and manufacturing
+        with adversarial audits and user review at every gate.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, requirements-elicitation, component-selection, component-selection-audit, schematic-design, schematic-compliance-audit, pcb-layout-design, layout-design-review, manufacturing-artifact-generation]
+
   testing:
     - name: discover-tests-for-changes
       path: templates/discover-tests-for-changes.md
