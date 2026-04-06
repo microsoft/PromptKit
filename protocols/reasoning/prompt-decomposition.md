@@ -122,9 +122,9 @@ For every segment scored as **Novel** in Phase 3:
 
 1. **Assess reusability.** Ask: "Could another template besides
    `decompose-prompt` benefit from this component?" If the answer is
-   no, reclassify the segment as **belongs in template body** — it
-   will be included in the template's task instructions rather than
-   generated as a standalone component. Record this decision in the
+   no, reclassify the segment as **Task Instructions** — it will be
+   included in the template's task instructions rather than generated
+   as a standalone component. Record this decision in the
    decomposition report.
 2. **Determine component type.** Based on the Phase 2 classification:
    - Persona segments → evaluate whether they represent a genuinely new
