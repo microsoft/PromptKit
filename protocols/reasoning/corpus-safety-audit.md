@@ -180,14 +180,19 @@ attribution records.
 
 ## Presentation
 
-Present findings in the shared `investigation-report` format using
-standard numeric finding IDs: `F-001`, `F-002`, `F-003`, etc.
-Do not prefix finding IDs by phase, because the report format and
-remediation plan table expect the canonical `F-<NNN>` shape.
+Use a stable high-level finding **Category** that remains compatible
+with consuming templates (for example, `Corpus Safety`).
+Do not encode the audit phase in the **Category** field.
 
-Encode the audit phase in the finding **Category** field (or, if
-needed by the consuming template, in the finding title):
+Preserve the audit phase as traceability metadata in the finding
+title and/or supporting evidence:
 - Phase 1: `PROV` (provenance)
 - Phase 2: `COPY` (verbatim copying)
 - Phase 3: `CONF` (confidentiality)
 - Phase 4: `LIC` (license compliance)
+
+When useful, include the phase tag at the start of the finding title
+(for example, `[LIC] Missing license record for externally-derived
+protocol`) and repeat it in evidence or notes so downstream templates
+can preserve phase-level traceability without overloading
+**Category**.

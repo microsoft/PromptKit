@@ -283,7 +283,7 @@ After all passes are complete (or the subset selected by
    - Conflicts (from Pass 1)
    - Metadata Drift (from Pass 1)
    - Corpus Safety (from Pass 2)
-   - Runtime Bloat (from Pass 3)
+   - Runtime Fitness / Bloat (from Pass 3)
 
 2. **Deduplicate.** If a component appears in findings from multiple
    passes, consolidate into a single finding with cross-references.
@@ -337,13 +337,17 @@ You may still group findings by these categories in the report body,
 but each individual finding heading must retain the `F-<NNN>` form.
 
 Corpus-safety traceability rule:
-- During **Pass 2** presentation, keep the native IDs used by the
-  `corpus-safety-audit` protocol for internal tracking.
+- During **Pass 2** presentation, use a pass-scoped intermediate ID
+  for each `corpus-safety-audit` finding in the form
+  `CS-<PHASE>-<NNN>` (for example, `CS-PROV-001`) for internal
+  tracking and Pass 2 references.
 - During **final synthesis** into this unified audit report, assign a
-  new sequential finding ID in `F-<NNN>` format.
-- Preserve the original Pass 2 phase tag only as traceability metadata
-  in the title or evidence (e.g., `Category: Corpus Safety`;
-  note: `Original phase: PROV`).
+  new sequential finding ID in `F-<NNN>` format. Reserve `F-<NNN>`
+  exclusively for the final unified report; do not reuse Pass 2 IDs
+  in that namespace.
+- Preserve the original Pass 2 ID and phase only as traceability
+  metadata in the title or evidence (e.g., `Category: Corpus Safety`;
+  note: `Original Pass 2 ID: CS-PROV-001`).
 
 ## Non-Goals
 
