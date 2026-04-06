@@ -186,7 +186,11 @@ Configure design rules matching the target fab house.
    |-----------|-------------|-----------|----------|------------|
    | Default | 0.25mm | 0.2mm | 0.8/0.4mm | All signals |
    | Power | 0.5mm+ | 0.3mm | 1.0/0.5mm | VIN, VBAT, rail nets |
-   | High-Speed | per impedance calc | 0.2mm | 0.4/0.2mm | USB D+/D-, SPI CLK |
+   | High-Speed | per impedance calc | 0.2mm | 0.6/0.3mm | USB D+/D-, SPI CLK |
+
+   If a design requires smaller vias (e.g., 0.4/0.2mm), these are
+   HDI/microvia features not supported by standard fab services —
+   explicitly confirm fab capability before using them.
 
    Power trace width must be calculated from the current
    requirement using IPC-2221 (or a simplified formula:
@@ -367,7 +371,7 @@ the board setup, placement, and design rules from Phases 3–6.
    script, not buried in the code. This allows the user to tweak
    placement without reading the entire script.
 
-4. **Error handling**: The script must handle common errors:
+5. **Error handling**: The script must handle common errors:
    - Missing footprint libraries (suggest `kicad-cli fp list`)
    - Netlist import failures (check file path)
    - Invalid coordinates (out of board bounds)
