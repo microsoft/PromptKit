@@ -12,8 +12,66 @@ produces: investigation-report
 
 # Format: Investigation Report
 
-The output MUST be a structured investigation report with the following
-sections in this exact order.
+The output MUST be a structured investigation report. Use the **full
+format** by default. Use the **abbreviated format** when the conditions
+below are met.
+
+## Abbreviated Format
+
+Use the abbreviated format when **both** conditions are true:
+
+1. Total finding count is **5 or fewer**, AND
+2. **No** findings are Critical or High severity
+
+The abbreviated format includes only these sections:
+
+```markdown
+# <Investigation Title> — Investigation Report
+
+## 1. Executive Summary
+<2–4 sentences: what was investigated, the key finding(s),
+severity, and recommended action.>
+
+## 2. Findings
+
+### Finding F-<NNN>: <Short Title>
+- **Severity**: Medium / Low / Informational
+- **Category**: <bug class>
+- **Location**: <file:line or component>
+- **Description**: <detailed explanation of the issue>
+- **Evidence**: <code snippets, logs, or file references>
+- **Remediation**: <specific fix recommendation>
+- **Confidence**: High / Medium / Low
+
+## 3. Remediation Plan
+<Prioritized list of fixes:
+
+| Priority | Finding | Fix Description | Effort | Risk |
+|----------|---------|-----------------|--------|------|
+| 1        | F-001   | ...             | S/M/L  | ...  |>
+
+## 4. Coverage
+- **Examined**: <what was analyzed>
+- **Excluded**: <what was not examined, and why>
+```
+
+All formatting rules and the confidence framework from the full format
+still apply. The abbreviated format omits Problem Statement,
+Investigation Scope, Root Cause Analysis, Prevention, Open Questions,
+and Revision History — these add overhead without analytical value for
+routine, low-severity audits.
+
+If any finding is later upgraded to Critical or High during the
+investigation, switch to the full format.
+
+## Full Format
+
+Use the full format when the abbreviated conditions are **not** met
+(more than 5 findings, or any Critical/High severity finding), or when
+the investigation is an incident response, security audit, or other
+context where narrative and prevention matter.
+
+The full format MUST include the following sections in this exact order.
 
 ## Document Structure
 
@@ -71,8 +129,10 @@ symptoms → hypotheses → evidence → confirmed cause → causal chain.>
 <Unresolved items that need further investigation.
 For each: what is unknown, why it matters, and what would resolve it.>
 
-## 9. Revision History
-<Table: | Version | Date | Author | Changes |>
+## 9. Revision History (optional)
+<Table: | Version | Date | Author | Changes |
+Include only for documents maintained across revisions.
+Omit for single-pass automated audits.>
 ```
 
 ## Formatting Rules
