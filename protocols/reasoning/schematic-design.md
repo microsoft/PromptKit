@@ -322,7 +322,8 @@ A `.kicad_sch` file has this top-level structure:
   )
   ;; Symbol library references
   (lib_symbols ...)
-  ;; Component instances
+  ;; Component instances (includes ICs, passives, connectors,
+  ;; and power symbols like power:GND, power:+3V3, power:PWR_FLAG)
   (symbol ...)
   ;; Wires
   (wire ...)
@@ -330,8 +331,6 @@ A `.kicad_sch` file has this top-level structure:
   (label ...)
   (global_label ...)
   (hierarchical_label ...)
-  ;; Power flags
-  (power_port ...)
   ;; No-connect markers
   (no_connect ...)
   ;; Junctions
