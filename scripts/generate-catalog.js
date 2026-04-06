@@ -179,31 +179,40 @@ for (const [name, pipeline] of Object.entries(pipelines)) {
   w("");
 }
 
-// Cross-reference index
+// Cross-reference index — iterate actual component inventories
+// to include unused components and avoid phantom entries like "configurable"
 w("## Cross-Reference Index");
 w("");
-w("### Which templates use a given protocol?");
-w("");
-const sortedProtocols = Object.keys(xrefs.protocolUsedBy).sort();
-for (const p of sortedProtocols) {
-  w(`- **\`${p}\`** → ${xrefs.protocolUsedBy[p].map((t) => `\`${t}\``).join(", ")}`);
-}
-w("");
 
-w("### Which templates use a given persona?");
-w("");
-const sortedPersonas = Object.keys(xrefs.personaUsedBy).sort();
-for (const p of sortedPersonas) {
-  w(`- **\`${p}\`** → ${xrefs.personaUsedBy[p].map((t) => `\`${t}\``).join(", ")}`);
+function writeXrefSection(title, inventory, usedByMap) {
+  w(title);
+  w("");
+  const names = inventory.map((c) => c.name).sort();
+  for (const name of names) {
+    const refs = usedByMap[name];
+    const rendered = refs && refs.length > 0
+      ? refs.map((t) => `\`${t}\``).join(", ")
+      : "—";
+    w(`- **\`${name}\`** → ${rendered}`);
+  }
+  w("");
 }
-w("");
 
-w("### Which templates use a given format?");
-w("");
-const sortedFormats = Object.keys(xrefs.formatUsedBy).sort();
-for (const f of sortedFormats) {
-  w(`- **\`${f}\`** → ${xrefs.formatUsedBy[f].map((t) => `\`${t}\``).join(", ")}`);
-}
+writeXrefSection(
+  "### Which templates use a given protocol?",
+  components.protocols,
+  xrefs.protocolUsedBy
+);
+writeXrefSection(
+  "### Which templates use a given persona?",
+  components.personas,
+  xrefs.personaUsedBy
+);
+writeXrefSection(
+  "### Which templates use a given format?",
+  components.formats,
+  xrefs.formatUsedBy
+);
 w("");
 
 // Write output

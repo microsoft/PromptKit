@@ -357,11 +357,17 @@ Domain-agnostic incremental engineering workflow with human-in-the-loop review. 
 - **`interface-contract-audit`** → `audit-interface-contract`
 - **`invariant-extraction`** → `extract-invariants`, `reconstruct-behavior`
 - **`iterative-refinement`** → `interactive-design`, `engineering-workflow`, `collaborate-requirements-change`, `spec-extraction-workflow`, `maintenance-workflow`
+- **`kernel-correctness`** → —
 - **`layout-design-review`** → `review-layout`
 - **`link-budget-audit`** → `audit-link-budget`
+- **`manufacturing-artifact-generation`** → —
 - **`memory-safety-c`** → `review-cpp-code`
+- **`memory-safety-rust`** → —
 - **`minimal-edit-discipline`** → `find-and-fix-bugs`, `fix-compiler-warnings`
+- **`msvc-clang-portability`** → —
 - **`operational-constraints`** → `reverse-engineer-requirements`, `audit-code-compliance`, `audit-test-compliance`, `audit-integration-compliance`, `author-presentation`, `investigate-bug`, `find-and-fix-bugs`, `fix-compiler-warnings`, `investigate-security`, `review-code`, `review-cpp-code`, `reconstruct-behavior`, `discover-tests-for-changes`, `audit-library-health`, `engineering-workflow`, `generate-implementation-changes`, `audit-implementation-alignment`, `spec-extraction-workflow`, `maintenance-workflow`
+- **`pcb-layout-design`** → —
+- **`performance-critical-c-api`** → —
 - **`presentation-design`** → `author-presentation`
 - **`prompt-decomposition`** → `decompose-prompt`
 - **`promptkit-design`** → `extend-library`
@@ -382,15 +388,19 @@ Domain-agnostic incremental engineering workflow with human-in-the-loop review. 
 - **`simulation-validation`** → `validate-simulation`
 - **`spec-evolution-diff`** → `diff-specifications`
 - **`spec-invariant-audit`** → `audit-spec-invariants`
+- **`step-retrospective`** → —
 - **`test-compliance-audit`** → `audit-test-compliance`, `engineering-workflow`, `audit-implementation-alignment`, `maintenance-workflow`
+- **`thread-safety`** → —
 - **`traceability-audit`** → `audit-traceability`, `engineering-workflow`, `audit-spec-alignment`, `spec-extraction-workflow`, `maintenance-workflow`
+- **`win32-api-conventions`** → —
+- **`winrt-design-patterns`** → —
 - **`workflow-arbitration`** → `author-workflow-prompts`
 
 ### Which templates use a given persona?
 
-- **`configurable`** → `interactive-design`, `audit-spec-invariants`, `author-presentation`, `engineering-workflow`, `collaborate-requirements-change`, `generate-spec-changes`, `generate-implementation-changes`, `spec-extraction-workflow`, `maintenance-workflow`
 - **`devops-engineer`** → `author-pipeline`, `triage-issues`, `triage-pull-requests`, `root-cause-ci-failure`, `author-release`, `review-infrastructure`
 - **`electrical-engineer`** → `review-schematic`, `validate-simulation`, `review-bom`, `review-layout`, `design-schematic`
+- **`embedded-firmware-engineer`** → —
 - **`implementation-engineer`** → `author-implementation-prompt`
 - **`mechanical-engineer`** → `review-enclosure`
 - **`promptkit-contributor`** → `author-agent-instructions`, `extend-library`, `decompose-prompt`
@@ -407,8 +417,10 @@ Domain-agnostic incremental engineering workflow with human-in-the-loop review. 
 ### Which templates use a given format?
 
 - **`agent-instructions`** → `author-agent-instructions`
+- **`agentic-workflow`** → —
 - **`architecture-spec`** → `author-architecture-spec`
 - **`behavioral-model`** → `reconstruct-behavior`
+- **`copilot-prompt-file`** → —
 - **`design-doc`** → `author-design-doc`
 - **`exhaustive-review-report`** → `exhaustive-bug-hunt`
 - **`implementation-plan`** → `scaffold-test-project`, `plan-implementation`, `plan-refactoring`
@@ -428,4 +440,5 @@ Domain-agnostic incremental engineering workflow with human-in-the-loop review. 
 - **`structured-patch`** → `collaborate-requirements-change`, `generate-spec-changes`, `generate-implementation-changes`
 - **`triage-report`** → `discover-tests-for-changes`, `triage-issues`, `triage-pull-requests`
 - **`validation-plan`** → `author-validation-plan`, `author-test-prompt`
+
 
