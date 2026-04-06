@@ -517,6 +517,15 @@ protocols:
         verification, cross-component compatibility, and decision matrix
         generation. Scoped to core functional components.
 
+    - name: schematic-design
+      path: protocols/reasoning/schematic-design.md
+      description: >
+        Systematic reasoning protocol for designing a circuit schematic
+        from requirements and selected components. Covers power
+        architecture, supporting circuitry derivation from datasheets,
+        signal routing, protection circuits, and KiCad .kicad_sch
+        S-expression generation with explicit visual layout rules.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
