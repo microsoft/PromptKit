@@ -84,7 +84,7 @@ in Phase 2:
    |-------|-----------|
    | **Exact Match** | An existing component covers ≥90% of the segment's semantic content. The bespoke prompt's version adds no meaningful new information. |
    | **Partial Match** | An existing component covers 40–89% of the segment's content. The bespoke prompt adds specific rules, checks, or knowledge not in the existing component. |
-   | **Novel** | No existing component covers >40% of the segment's content. This represents new domain knowledge or methodology. |
+   | **Novel** | No existing component covers ≥40% of the segment's content. This represents new domain knowledge or methodology. |
 
 3. **Record the mapping.** For each segment, note:
    - Match score (Exact / Partial / Novel)
@@ -122,8 +122,10 @@ For every segment scored as **Novel** in Phase 3:
 
 1. **Assess reusability.** Ask: "Could another template besides
    `decompose-prompt` benefit from this component?" If the answer is
-   no, the content belongs in the template body, not a standalone
-   component.
+   no, reclassify the segment as **belongs in template body** — it
+   will be included in the template's task instructions rather than
+   generated as a standalone component. Record this decision in the
+   decomposition report.
 2. **Determine component type.** Based on the Phase 2 classification:
    - Persona segments → evaluate whether they represent a genuinely new
      domain expert, or whether they are persona *traits* that can be

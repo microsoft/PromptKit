@@ -74,8 +74,8 @@ protocol's Presentation section). Include:
 
 **Ask the user to review and confirm:**
 - Are the segment classifications correct?
-- Should any "Novel" segments be reclassified as "Template-specific"
-  (not worth a standalone component)?
+- Should any "Novel" segments instead be treated as belonging in the
+  template body (not worth a standalone component)?
 - Should any back-port candidates be promoted to new components or
   dropped?
 - Are the proposed component names acceptable?
@@ -131,8 +131,8 @@ Once the user is satisfied with the generated files:
   for separate follow-up PRs.
 - Do NOT execute the source prompt — you are decomposing it, not running it.
 - Do NOT generate components for segments classified as "Meta /
-  Non-reusable" or "Template-specific" — those belong in the template
-  body or are discarded.
+  Non-reusable" or determined to belong in the template body — those
+  are kept in the template body or discarded.
 - Do NOT force every segment into a PromptKit component. Some content
   is inherently non-reusable and that is acceptable.
 
