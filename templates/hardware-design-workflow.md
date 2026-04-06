@@ -117,8 +117,9 @@ requirements are complete.**
 ### Output
 
 A requirements summary table with REQ-IDs (using REQ-HW- prefix),
-priorities (Must/Should/May), and the component categories each
-requirement drives.
+priorities expressed using RFC 2119 keywords (`MUST`/`SHOULD`/`MAY`),
+the component categories each requirement drives, and acceptance
+criteria for each requirement.
 
 ---
 
