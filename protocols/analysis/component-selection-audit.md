@@ -10,7 +10,9 @@ description: >
   specs match claims, sourcing data is current, compatibility assertions
   hold, and no requirements are left unsatisfied. Designed to catch
   hallucinated parts and stale specifications.
-applicable_to: []
+applicable_to:
+  - design-schematic
+  - hardware-design-workflow
 ---
 
 # Protocol: Component Selection Audit
@@ -20,9 +22,6 @@ by the component-selection reasoning protocol (or any equivalent
 selection artifact). The auditor MUST NOT trust any claim in the
 selection report — every assertion is re-verified independently.
 Execute all phases in order.
-
-**Composition note**: This protocol is intended for standalone/manual
-composition and is not currently required by any template.
 
 ## Phase 1: Part Number Verification
 

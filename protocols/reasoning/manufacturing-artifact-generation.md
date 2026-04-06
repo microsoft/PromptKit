@@ -14,6 +14,7 @@ description: >
   pre-submission validation.
 applicable_to:
   - emit-manufacturing-artifacts
+  - hardware-design-workflow
 ---
 
 # Protocol: Manufacturing Artifact Generation

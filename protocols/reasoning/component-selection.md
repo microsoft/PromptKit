@@ -11,7 +11,9 @@ description: >
   verification, cross-component compatibility, and decision matrix
   generation. Scoped to core functional components — supporting
   circuitry (decoupling, ESD, regulation) belongs in schematic design.
-applicable_to: []
+applicable_to:
+  - design-schematic
+  - hardware-design-workflow
 ---
 
 # Protocol: Component Selection
@@ -21,9 +23,6 @@ design based on requirements. The goal is to choose core functional
 components (MCU/SoC, wireless modules, sensors, actuators, displays,
 connectors) that fulfil the user's feature requirements, are available
 for purchase, and are mutually compatible. Execute all phases in order.
-
-**Composition note**: This protocol is intended for standalone/manual
-composition and is not currently required by any template.
 
 **Scope boundary**: This protocol selects components that deliver the
 user's requested functionality. It does NOT select supporting circuitry
