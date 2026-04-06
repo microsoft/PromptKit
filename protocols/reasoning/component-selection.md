@@ -28,6 +28,11 @@ user's requested functionality. It does NOT select supporting circuitry
 resistors, filtering passives) — those are derived from the selected
 components' datasheets during schematic design.
 
+**Input**: A natural language description of the desired product, an
+existing requirements document, or a combination of user-provided
+context. If inputs are incomplete, probe the user for missing
+information before proceeding.
+
 ## Phase 1: Requirements Extraction
 
 Extract the functional and environmental requirements that constrain
@@ -66,6 +71,10 @@ component selection.
    | CR-001 | Measure temperature ±0.5°C, −40–85°C | Temperature sensor | Must |
    | CR-002 | BLE 5.0 connectivity, 10m range | Wireless MCU or module | Must |
    | ... | ... | ... | ... |
+
+   Priority values: **Must** (non-negotiable — failing it eliminates
+   the candidate), **Should** (strongly preferred but workarounds
+   acceptable), **May** (nice-to-have, does not affect elimination).
 
 ## Phase 2: Component Category Identification
 
@@ -107,7 +116,11 @@ components the design needs.
 
 ## Phase 3: Candidate Search
 
-For each component category, identify 2–3 viable candidates.
+For each component category, identify at least 2 viable candidates
+where possible. For categories with many options (MCU, wireless),
+consider up to 4–5 to capture meaningful tradeoffs. For niche
+categories with limited options, document why fewer candidates were
+evaluated.
 
 1. **Initial candidates from domain knowledge**: List well-known
    options in the category (e.g., for BLE MCU: nRF52840, ESP32-C3,
@@ -116,6 +129,13 @@ For each component category, identify 2–3 viable candidates.
    - Manufacturer
    - Key specification that satisfies the requirement
    - Package options
+
+   For **wireless components**, explicitly evaluate both pre-certified
+   modules and bare ICs. Pre-certified modules can be used under the
+   module's existing certification (FCC/CE); bare ICs require full
+   intentional radiator certification. For prototype and low-volume
+   designs, strongly prefer modules unless the user has certification
+   experience and budget.
 
 2. **Real-time verification**: For each candidate, use web search
    to verify:
@@ -227,6 +247,10 @@ Verify that the selected components work together as a system.
    - 3.3V I2C bus: all devices must tolerate 3.3V logic levels
    - Mixed-voltage interfaces need level shifting — flag as a
      schematic design requirement
+   - For each voltage domain identified, if no power source directly
+     provides that voltage, flag that a voltage regulator or converter
+     is required. Document the input voltage range → output requirement
+     as a handoff to schematic design.
 
 2. **Interface compatibility**: For each inter-component connection:
    - Verify protocol compatibility (I2C speed modes, SPI clock

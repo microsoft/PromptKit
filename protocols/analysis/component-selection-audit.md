@@ -48,8 +48,9 @@ currently orderable.
    | ... | ... | ... | ... | ... |
 
 4. **If a part number cannot be verified**: Flag as
-   `[UNVERIFIED PART NUMBER]` — this is a Critical finding. Do not
-   proceed with downstream phases for that component until resolved.
+   `[UNVERIFIED PART NUMBER]` — this is a Critical finding. Continue
+   auditing remaining components, but an unverified part number is a
+   blocking finding that alone forces a FAIL verdict.
 
 ## Phase 2: Specification Cross-Check
 
