@@ -81,7 +81,7 @@ Phase 6: Routing and DRC Loop (FreeRouting + kicad-cli DRC)
 Phase 7: Layout Audit (layout-design-review protocol)
     ↓
 Phase 8: User Review of Layout
-    ↓ ← loop back to Phase 4, 6, or SCHEMATIC FEEDBACK
+    ↓ ← loop back to Phase 4, 6, or SCHEMATIC FEEDBACK (→ Phase 3)
 Phase 9: Deliver Artifacts
 ```
 
@@ -175,7 +175,8 @@ Board definition specification and design rule configuration.
 **Goal**: Place all components following the user's requirements
 and engineering best practices.
 
-Apply the **pcb-layout-design protocol Phases 5–7**:
+Apply the **pcb-layout-design protocol Phase 5** (Component Placement
+Strategy) and **Phase 7** (Python Script Generation):
 
 1. **Placement priority**: Fixed-position components first
    (connectors, mounting holes, antenna), then MCU, power section,
@@ -302,7 +303,9 @@ Apply the **layout-design-review protocol** in full:
   must be updated before continuing. The user should:
   1. Update the schematic
   2. Run "Update PCB from Schematic" in KiCad
-  3. Return to Phase 4 with the updated board file
+  3. Return to Phase 3 with the updated board file (board
+     definition and design rules may need revision if footprints
+     or packages changed)
 
 ---
 
