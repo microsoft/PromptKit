@@ -95,13 +95,17 @@ Apply the **pcb-layout-design protocol Phase 1** (Input Validation):
 
 1. **Schematic completeness**: Verify all components have footprint
    assignments, all nets are named, and ERC passes.
-2. **Board file**: Verify the `.kicad_pcb` contains footprints and
+2. **Component footprint inventory**: For each component, confirm
+   the assigned footprint, physical dimensions, mounting type
+   (SMD/through-hole), and any placement requirements from the
+   schematic (layout carry-forward notes).
+3. **Board file**: Verify the `.kicad_pcb` contains footprints and
    nets from the schematic (user must have run "Update PCB from
    Schematic").
-3. **Design constraints from upstream**: Extract power dissipation,
+4. **Design constraints from upstream**: Extract power dissipation,
    high-speed signals, RF clearance requirements, and current-
    carrying trace needs.
-4. **Target fab service**: Confirm fab house and design rule
+5. **Target fab service**: Confirm fab house and design rule
    minimums.
 
 ### Transition Rules
@@ -256,9 +260,13 @@ Apply the **layout-design-review protocol** in full:
    power pour adequacy, star grounding if applicable).
 6. Manufacturing constraint compliance (minimum features, board
    outline, panelization, assembly constraints).
-7. Conclude with an explicit audit verdict:
-   - **PASS**: No blocking issues; proceed.
-   - **FAIL**: Blocking issues found; must be corrected.
+7. Findings summary: document each finding with severity
+   (Critical / High / Medium / Low / Informational), affected
+   area, and remediation. Produce a coverage summary (phases
+   checked, areas examined).
+8. Conclude with an explicit audit verdict:
+   - **PASS**: No Critical or High findings; proceed.
+   - **FAIL**: Critical or High findings remain; must be corrected.
 
 ### Transition Rules
 
