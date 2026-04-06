@@ -85,16 +85,21 @@ Not using a CLI tool? Use `promptkit assemble` to generate prompt files, or see
 # Interactive mode — detects your LLM CLI and launches bootstrap
 npx @alan-jowett/promptkit
 
-# List available templates
-npx @alan-jowett/promptkit list
+# Browse the full component catalog
+npx @alan-jowett/promptkit list --all
 
-# Assemble a specific prompt to a file
-npx @alan-jowett/promptkit assemble investigate-bug \
-  -p problem_description="Segfault on startup" \
-  -p code_context="See attached files" \
-  -p environment="Linux x86_64" \
-  -o bug-investigation.md
+# Search for components by keyword
+npx @alan-jowett/promptkit search "memory safety"
+
+# Show details and cross-references for a component
+npx @alan-jowett/promptkit show review-cpp-code
+
+# List available templates (backward compatible)
+npx @alan-jowett/promptkit list
 ```
+
+> **📖 Full component catalog:** See [CATALOG.md](CATALOG.md) for a browsable
+> reference of all 168 components with cross-reference index — no CLI needed.
 
 ### Using the repo directly
 
@@ -191,26 +196,49 @@ interactive flow:
 
 ## CLI Reference
 
-The `promptkit` CLI provides three commands:
+The `promptkit` CLI provides these commands:
 
 | Command | Description |
 |---------|-------------|
 | `promptkit` | Launch interactive session with auto-detected LLM CLI |
-| `promptkit list` | List all available templates with descriptions |
-| `promptkit assemble <template>` | Assemble a prompt from a template to a file |
+| `promptkit list` | List available templates (default) or all components |
+| `promptkit search <keyword>` | Search components by keyword across name + description |
+| `promptkit show <name>` | Show component details with cross-references |
 
-### `promptkit assemble`
+### `promptkit list`
 
 ```bash
-promptkit assemble <template> [options]
+promptkit list [options]
 
 Options:
-  -o, --output <file>       Output file path (default: "assembled-prompt.md")
-  -p, --param <key=value>   Template parameter (repeatable)
+  --all                 Show all component types (not just templates)
+  --type <type>         Filter by type (persona, protocol, format, taxonomy, template)
+  --category <category> Filter by category (e.g., hardware, investigation, devops)
+  --language <language> Filter protocols by language (e.g., C, C++, Rust)
+  --json                Output as JSON
 ```
 
-The assembled prompt follows the PromptKit composition order:
-Identity → Reasoning Protocols → Output Format → Task (with parameters filled).
+### `promptkit search`
+
+```bash
+promptkit search <keyword> [options]
+
+Options:
+  --type <type>  Filter results by component type
+  --json         Output as JSON
+```
+
+### `promptkit show`
+
+```bash
+promptkit show <name> [options]
+
+Options:
+  --json  Output as JSON
+```
+
+Shows component details including type, category, description, and
+cross-references (which templates use this protocol/persona/format).
 
 ### `promptkit list --json`
 
