@@ -363,7 +363,8 @@ the board setup, placement, and design rules from Phases 3–6.
    - Copper zone (pour) definitions
    - Export to Specctra DSN format for FreeRouting:
      `pcbnew.ExportSpecctraDSN(board, "board.dsn")`
-   - Save the board: `board.Save("board.kicad_pcb")`
+   - Save the board back to the input path:
+     `board.Save(sys.argv[1])`
 
 4. **Configuration section**: All user-adjustable parameters
    (board dimensions, component positions, design rules) must be
@@ -372,9 +373,15 @@ the board setup, placement, and design rules from Phases 3–6.
    placement without reading the entire script.
 
 5. **Error handling**: The script must handle common errors:
-   - Missing footprint libraries (suggest `kicad-cli fp list`)
-   - Netlist import failures (check file path)
-   - Invalid coordinates (out of board bounds)
+   - Missing or invalid command-line board path (print usage and
+     verify the `.kicad_pcb` file exists)
+   - `pcbnew.LoadBoard(path)` failures (report that the board
+     could not be opened or parsed)
+   - Loaded board is missing expected footprints or nets (advise
+     the user to run "Update PCB from Schematic" and save the
+     board before running the script)
+   - DSN export failures (`pcbnew.ExportSpecctraDSN`)
+   - SES import failures (`pcbnew.ImportSpecctraSES`)
 
 ## Phase 8: Autorouting Execution
 
