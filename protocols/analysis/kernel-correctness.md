@@ -162,8 +162,9 @@ the false-positive-rejected section of the output.
 
 ## Output Format
 
-For each finding, report using markdown headings consistent with the
-`investigation-report` format:
+For each finding, report using structured markdown. This format uses
+kernel-specific fields (Trigger path, falsification proof) that extend
+the standard finding structure for kernel defect analysis:
 
 ```markdown
 ### Finding: <concise title>
