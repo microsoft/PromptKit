@@ -7,10 +7,22 @@
 const path = require("path");
 const fs = require("fs");
 
+const cliRoot = path.resolve(__dirname, "..", "cli");
+
 // Resolve js-yaml from the CLI's node_modules
-const yaml = require(require.resolve("js-yaml", {
-  paths: [path.resolve(__dirname, "..", "cli")],
-}));
+let yaml;
+try {
+  yaml = require(require.resolve("js-yaml", {
+    paths: [cliRoot],
+  }));
+} catch (_error) {
+  console.error(
+    `Unable to load "js-yaml" from ${cliRoot}.\n` +
+    `This script depends on the CLI dependencies being installed.\n` +
+    `To fix this, run "npm ci" (or "npm install") in the "cli/" directory and try again.`
+  );
+  process.exit(1);
+}
 
 const repoRoot = path.resolve(__dirname, "..");
 const manifestPath = path.join(repoRoot, "manifest.yaml");
