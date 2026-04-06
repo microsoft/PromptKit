@@ -158,10 +158,19 @@ and Phase 9**:
 
 2. **Present the script** to the user before execution. The
    configuration section at the top should clearly show:
-   - Board and schematic paths
+   - Board path (`{{board_path}}`)
+   - Derived schematic path (same directory and basename as
+     the board file, with `.kicad_sch` extension — must match
+     `{{schematic_path}}`)
    - Fab service and its formatting rules
    - Board parameters (layers, thickness, finish)
    - Output directory
+
+   **Note**: The script derives the schematic path from the board
+   path (same directory, same basename). Verify in Phase 1 that
+   `{{schematic_path}}` is consistent with this derivation. If
+   the schematic is in a different location, the user must move
+   or symlink it before running the script.
 
 3. **Execute the script** (or instruct the user to run it):
    ```bash
@@ -263,7 +272,7 @@ Apply the **manufacturing-artifact-generation protocol Phase 8**:
 
    **PCBWay**:
    - Go to pcbway.com → Quote Now
-   - Upload Gerber files
+   - Upload `gerbers.zip` (Gerber + drill files; PCBWay accepts ZIP uploads)
    - For assembly: use the Assembly service, upload BOM and
      pick-and-place files
    - Place order
