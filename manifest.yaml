@@ -554,6 +554,14 @@ protocols:
         files, and assembly drawings with fab-specific formatting for
         JLCPCB, PCBWay, and other services.
 
+    - name: corpus-safety-audit
+      path: protocols/reasoning/corpus-safety-audit.md
+      description: >
+        Systematic audit of a prompt component corpus for assimilation
+        risks. Checks provenance and attribution, detects verbatim
+        copying from external sources, screens for confidential or
+        internal-only content, and verifies license compliance.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -1333,6 +1341,18 @@ templates:
         stale cross-references.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification]
+      format: investigation-report
+
+    - name: audit-library-health
+      path: templates/audit-library-health.md
+      description: >
+        Comprehensive health audit of the PromptKit component library.
+        Three-pass analysis covering structural consistency, corpus
+        safety for assimilation risks, and runtime fitness assessment.
+        Produces a unified investigation report with PR-ready
+        remediation recommendations.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, operational-constraints, corpus-safety-audit]
       format: investigation-report
 
   devops:
