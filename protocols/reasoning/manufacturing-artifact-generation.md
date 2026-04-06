@@ -155,11 +155,18 @@ service.
 1. **BOM extraction**: Export the BOM from the schematic using:
    ```bash
    kicad-cli sch export bom \
-     --output bom.csv \
-     --fields "Reference,Value,Footprint,${QUANTITY},${DNP}" \
+     --output bom-raw.csv \
+     --fields "Reference,Value,Footprint,MPN,Manufacturer,LCSC,DNP" \
      --group-by Value,Footprint \
      board.kicad_sch
    ```
+   The `--fields` list must match the actual custom field names
+   defined in the schematic's symbol properties (e.g., "MPN",
+   "Manufacturer", "LCSC"). Quantity is computed automatically
+   by the `--group-by` grouping — it appears as the count of
+   grouped reference designators, not as a separate field.
+   The script derives the schematic path from the PCB path
+   (same directory, same basename, `.kicad_sch` extension).
 
 2. **Required BOM fields** (assembly services require these):
 
@@ -359,7 +366,8 @@ the user submits to the fab.
    - **Gerber layer count** matches the board's stackup (2 or 4
      copper layers + mask + silk + paste + outline)
    - **Drill file hole count** matches the PCB's via + through-hole
-     count (query from pcbnew API)
+     count (parse tool definitions and hit counts from the Excellon
+     drill file rather than requiring pcbnew API)
    - **BOM component count** matches the schematic's total component
      count (after grouping and excluding DNP)
    - **Pick-and-place component count** matches BOM (minus
@@ -413,13 +421,23 @@ Generate a single Python script that automates phases 2–8.
    Usage:
      python3 generate_manufacturing.py board.kicad_pcb [fab_service]
 
-   Supported fab services: jlcpcb, pcbway, oshpark (default: jlcpcb)
+   Supported fab services: jlcpcb, pcbway (default: jlcpcb)
    """
    import subprocess
    import sys
    import os
    import csv
    from pathlib import Path
+
+   # Derive schematic path from PCB path (same dir, same basename)
+   board_path = Path(sys.argv[1])
+   sch_path = board_path.with_suffix(".kicad_sch")
+   if not sch_path.exists():
+       raise SystemExit(
+           f"Schematic not found at '{sch_path}'. "
+           "Ensure the .kicad_sch file is in the same directory "
+           "with the same basename as the .kicad_pcb file."
+       )
    ```
 
 2. **Script must implement**:
