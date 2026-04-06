@@ -1251,6 +1251,17 @@ templates:
       protocols: [anti-hallucination, self-verification, enclosure-design-review]
       format: investigation-report
 
+  hardware-design:
+    - name: design-schematic
+      path: templates/design-schematic.md
+      description: >
+        Interactive schematic design session. Guides the user from
+        project requirements through component selection to a complete
+        KiCad schematic with adversarial audits at each gate.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, component-selection, component-selection-audit, schematic-design, schematic-compliance-audit]
+      format: multi-artifact
+
   testing:
     - name: discover-tests-for-changes
       path: templates/discover-tests-for-changes.md
