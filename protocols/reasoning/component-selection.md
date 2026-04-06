@@ -260,12 +260,22 @@ Verify that the selected components work together as a system.
    - Verify pin availability — does the MCU have enough of the
      required interface instances?
 
-3. **Power budget roll-up**: Sum worst-case power consumption of
-   all selected components:
-   - Active mode total
-   - Sleep mode total
-   - Compare against the power source capacity from CR requirements
-   - Flag if total exceeds 80% of source capacity
+3. **Power budget roll-up**: Evaluate both instantaneous loading
+   and battery-life feasibility with explicit units:
+   - Sum worst-case current draw by rail/source for each operating
+     mode (e.g., active and sleep), in mA or A; if useful, also
+     compute power in mW or W using the rail voltage
+   - For each rail, regulator, or source, compare the worst-case
+     current draw against its maximum current rating from CR
+     requirements or selected power components
+   - Flag if worst-case current draw exceeds 80% of any rail,
+     regulator, or source maximum current rating
+   - Separately estimate battery life using average current in the
+     relevant mode profile versus battery capacity (e.g., mAh or Wh)
+     and required runtime from CR requirements; do not compare
+     worst-case current/power directly to battery capacity
+   - In any summary table or bullets, label units explicitly
+     (e.g., mA, A, mW, W, mAh, Wh, hours)
 
 4. **Physical compatibility**: Verify all selected component
    packages can coexist on the target board:
