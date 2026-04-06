@@ -35,8 +35,8 @@ output_contract:
     Complete hardware design package produced across phases:
     requirements document, component selection report, KiCad
     schematic (.kicad_sch), routed KiCad PCB (.kicad_pcb), Python
-    layout script, manufacturing artifacts (Gerbers, BOM, pick-and-
-    place), audit reports, and fab submission checklist.
+    layout script, manufacturing artifacts (Gerbers, BOM,
+    pick-and-place), audit reports, and fab submission checklist.
 ---
 
 # Task: End-to-End Hardware Design Workflow

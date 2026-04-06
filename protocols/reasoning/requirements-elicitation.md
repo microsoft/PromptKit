@@ -11,6 +11,7 @@ description: >
 applicable_to:
   - author-requirements-doc
   - interactive-design
+  - hardware-design-workflow
 ---
 
 # Protocol: Requirements Elicitation
