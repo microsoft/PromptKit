@@ -107,7 +107,7 @@ Generate Gerber files for PCB fabrication.
 3. **kicad-cli command**:
    ```bash
    kicad-cli pcb export gerbers \
-     --output ./gerbers/ \
+     --output manufacturing/gerbers/ \
      --layers F.Cu,B.Cu,F.Mask,B.Mask,F.SilkS,B.SilkS,Edge.Cuts,F.Paste,B.Paste \
      --use-protel-extensions \
      board.kicad_pcb
@@ -134,7 +134,7 @@ Generate Excellon drill files for all holes.
 3. **kicad-cli command**:
    ```bash
    kicad-cli pcb export drill \
-     --output ./gerbers/ \
+     --output manufacturing/gerbers/ \
      --format excellon \
      --drill-origin absolute \
      --excellon-units mm \
@@ -155,7 +155,7 @@ service.
 1. **BOM extraction**: Export the BOM from the schematic using:
    ```bash
    kicad-cli sch export bom \
-     --output bom-raw.csv \
+     --output manufacturing/assembly/bom-raw.csv \
      --fields "Reference,Value,Footprint,MPN,Manufacturer,LCSC,DNP" \
      --group-by Value,Footprint \
      board.kicad_sch
@@ -214,7 +214,7 @@ Generate component placement (centroid) files for automated assembly.
 1. **kicad-cli command**:
    ```bash
    kicad-cli pcb export pos \
-     --output ./assembly/ \
+     --output manufacturing/assembly/ \
      --format csv \
      --units mm \
      --side both \
@@ -264,12 +264,12 @@ Generate visual assembly references.
    orientation marks:
    ```bash
    kicad-cli pcb export pdf \
-     --output ./assembly/assembly-top.pdf \
+     --output manufacturing/assembly/assembly-top.pdf \
      --layers F.Fab,F.SilkS,Edge.Cuts \
      board.kicad_pcb
 
    kicad-cli pcb export pdf \
-     --output ./assembly/assembly-bottom.pdf \
+     --output manufacturing/assembly/assembly-bottom.pdf \
      --layers B.Fab,B.SilkS,Edge.Cuts \
      --mirror \
      board.kicad_pcb
@@ -278,7 +278,7 @@ Generate visual assembly references.
 2. **3D render** (optional): If the user wants a visual preview:
    ```bash
    kicad-cli pcb render \
-     --output ./assembly/board-3d.png \
+     --output manufacturing/assembly/board-3d.png \
      --width 1920 --height 1080 \
      board.kicad_pcb
    ```
@@ -429,8 +429,15 @@ Generate a single Python script that automates phases 2–8.
    import csv
    from pathlib import Path
 
+   if len(sys.argv) < 2:
+       print("Usage: python3 generate_manufacturing.py board.kicad_pcb [fab_service]",
+             file=sys.stderr)
+       raise SystemExit(1)
+
    # Derive schematic path from PCB path (same dir, same basename)
    board_path = Path(sys.argv[1])
+   if not board_path.exists():
+       raise SystemExit(f"Board file not found: '{board_path}'")
    sch_path = board_path.with_suffix(".kicad_sch")
    if not sch_path.exists():
        raise SystemExit(
