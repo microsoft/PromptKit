@@ -9,7 +9,7 @@ description: >
   user from a completed, DRC-clean PCB design to a full set of
   fab-ready deliverables: Gerbers, drill files, BOM, pick-and-place
   files, and assembly drawings. Supports fab-specific formatting
-  for JLCPCB, PCBWay, and other services.
+  for JLCPCB and PCBWay.
 persona: electrical-engineer
 protocols:
   - guardrails/anti-hallucination
@@ -141,8 +141,7 @@ Confirmed fab configuration summary.
 
 **Goal**: Generate all manufacturing artifacts via a Python script.
 
-Apply the **manufacturing-artifact-generation protocol Phases 2–7
-and Phase 9**:
+Apply the **manufacturing-artifact-generation protocol Phases 2–9**:
 
 1. **Generate the Python script** that automates:
    - Gerber export for all layers (with correct layer mapping for
@@ -154,6 +153,7 @@ and Phase 9**:
    - Output directory organization (`manufacturing/gerbers/`,
      `manufacturing/assembly/`)
    - Gerber ZIP creation
+   - Cross-artifact validation checks (protocol Phase 8)
    - Submission checklist generation
 
 2. **Present the script** to the user before execution. The
@@ -262,7 +262,7 @@ Apply the **manufacturing-artifact-generation protocol Phase 8**:
 
    **JLCPCB**:
    - Go to jlcpcb.com → Order Now
-   - Upload `gerbers.zip`
+   - Upload `manufacturing/gerbers.zip`
    - Review the Gerber preview — verify board outline, layers,
      drill holes
    - For assembly: switch to the Assembly tab, upload BOM and
@@ -272,7 +272,7 @@ Apply the **manufacturing-artifact-generation protocol Phase 8**:
 
    **PCBWay**:
    - Go to pcbway.com → Quote Now
-   - Upload `gerbers.zip` (Gerber + drill files; PCBWay accepts ZIP uploads)
+   - Upload `manufacturing/gerbers.zip` (Gerber + drill files; PCBWay accepts ZIP uploads)
    - For assembly: use the Assembly service, upload BOM and
      pick-and-place files
    - Place order
@@ -304,4 +304,4 @@ Before delivering artifacts in Phase 6, verify:
 - [ ] Assembly drawings show correct component placement
 - [ ] Gerber ZIP is properly structured
 - [ ] Submission checklist is complete
-- [ ] User has been advised to inspect Gerbers in a viewer
+- [ ] User has inspected and approved the Gerbers in a viewer

@@ -1283,8 +1283,8 @@ templates:
       description: >
         Interactive manufacturing artifact generation session. Produces
         fab-ready Gerbers, drill files, BOM, pick-and-place, and
-        assembly drawings with fab-specific formatting for JLCPCB,
-        PCBWay, and other services.
+        assembly drawings with fab-specific formatting for JLCPCB
+        and PCBWay.
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, manufacturing-artifact-generation]
 
