@@ -156,7 +156,11 @@ Scan all components for inconsistent terminology:
 
 Verify all inter-component references:
 
-1. Protocol `applicable_to` ↔ template `protocols` bidirectionality.
+1. Protocol `applicable_to` ↔ template `protocols` bidirectionality,
+   with these exceptions: treat `applicable_to: all` as intentionally
+   global (do not require explicit per-template back-references), and
+   treat `applicable_to: []` as intentionally standalone/optional (do
+   not flag it solely for having no template references).
 2. Template references to non-existent components.
 3. Pipeline stage artifact type chaining.
 4. Finding type: **Stale Reference**.
@@ -188,10 +192,10 @@ workflows that assimilate external prompts into the library.
    permissions.
 
 Additionally, enforce the user-provided `corpus_safety_policy`:
-- Verify every policy rule is checked against every component in scope.
-- Any policy rule that cannot be verified (e.g., "license was granted
-  verbally") must be flagged as **Unverifiable** with a recommendation
-  to obtain written confirmation.
+- Verify every policy rule against every component in scope.
+- Flag any policy rule that cannot be verified (e.g., "license was
+  granted verbally") as **Unverifiable**, with a recommendation to
+  obtain written confirmation.
 
 **Present Pass 2 findings to the user before proceeding to Pass 3.**
 
@@ -318,8 +322,18 @@ Finding IDs use category prefixes:
 - `F-OVR-NNN`: Overlap / Redundancy
 - `F-CON-NNN`: Conflicts
 - `F-DRF-NNN`: Metadata Drift
-- `F-SAF-NNN`: Corpus Safety (sub-prefixed per corpus-safety-audit)
+- `F-SAF-NNN`: Corpus Safety (canonical synthesized ID)
 - `F-FIT-NNN`: Runtime Fitness / Bloat
+
+Corpus-safety ID mapping rule:
+- During **Pass 2** presentation, keep the native IDs required by
+  `corpus-safety-audit` (`F-PROV-NNN`, `F-COPY-NNN`, `F-CONF-NNN`,
+  `F-LIC-NNN`).
+- During **final synthesis** into this unified audit report, remap each
+  Pass 2 finding to `F-SAF-<PHASE>-NNN` using the phase prefix from
+  the original ID (e.g., `F-PROV-002` → `F-SAF-PROV-002`).
+- When helpful for traceability, include the original Pass 2 ID in
+  parentheses after the synthesized ID on first reference.
 
 ## Non-Goals
 

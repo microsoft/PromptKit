@@ -49,10 +49,18 @@ third-party sources.
 
 3. **Cross-reference with assimilation workflows.** Check whether any
    components were produced by the `decompose-prompt` template or
-   similar ingestion workflows. Evidence includes:
-   - Branch names containing "assimilate" or "decompose"
-   - PR descriptions referencing source prompts
+   similar ingestion workflows. Use these signals only if they are
+   present in the provided inputs or in repository metadata available
+   to you; do not infer missing workflow history. Optional evidence
+   includes:
+   - Branch names containing "assimilate" or "decompose", if branch
+     history is available in the audit context
+   - PR descriptions referencing source prompts, if PR metadata is
+     available
    - Components added in batches that share a common external theme
+   If branch names, PR descriptions, or similar workflow metadata are
+   unavailable, record the provenance signal as unknown/unverifiable
+   rather than treating absence as evidence.
 
 **Output**: A provenance inventory listing each component as:
 Verified Original, Attributed External, Suspected External, or Unknown.
@@ -91,7 +99,9 @@ wording.
 
 3. **Document evidence.** For each finding, record:
    - Component file path and line range
-   - The suspicious text (quoted)
+   - A minimal excerpt only when necessary to identify the issue;
+     prefer short snippets or redacted fragments, and do not quote
+     full suspicious passages when file+line references are sufficient
    - What signals triggered the detection
    - Classification and recommended action
 
@@ -126,6 +136,15 @@ customer-specific, or proprietary sources.
      Flag as **High** — requires human verification.
    - **Generic content**: Domain-specific but not attributable to any
      particular organization. No action needed.
+
+4. **Redact evidence in the report.** When documenting confidentiality
+   findings, do NOT reproduce the sensitive content in the audit
+   report — doing so would make the report itself a leak. Instead:
+   - Reference the file path and line range
+   - Describe the type of content found (e.g., "internal URL" or
+     "customer identifier") without reproducing the actual values
+   - Use redacted placeholders (e.g., `[REDACTED-URL]`,
+     `[REDACTED-NAME]`) if quoting surrounding context
 
 ## Phase 4: License and Attribution Compliance
 
