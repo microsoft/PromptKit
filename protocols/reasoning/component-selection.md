@@ -22,7 +22,10 @@ components (MCU/SoC, wireless modules, sensors, actuators, displays,
 connectors) that fulfil the user's feature requirements, are available
 for purchase, and are mutually compatible. Execute all phases in order.
 
-**Scope boundary**: This protocol selects components that deliver the
+**Composition note**: This protocol is intended for standalone/manual
+composition and is not currently required by any template.
+
+**Scope boundary**:This protocol selects components that deliver the
 user's requested functionality. It does NOT select supporting circuitry
 (decoupling capacitors, ESD protection, voltage regulators, pull-up
 resistors, filtering passives) — those are derived from the selected

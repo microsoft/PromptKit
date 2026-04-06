@@ -21,6 +21,9 @@ selection artifact). The auditor MUST NOT trust any claim in the
 selection report — every assertion is re-verified independently.
 Execute all phases in order.
 
+**Composition note**: This protocol is intended for standalone/manual
+composition and is not currently required by any template.
+
 ## Phase 1: Part Number Verification
 
 For every selected component, verify the part number is real and
