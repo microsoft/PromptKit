@@ -29,6 +29,14 @@ composition and is not currently required by any template.
 For every selected component, verify the part number is real and
 currently orderable.
 
+**If search/browsing is unavailable in the current environment**:
+do not attempt to fabricate verification results. Instead, ask the
+user to provide datasheet URLs, manufacturer product pages, or
+distributor links. Mark any assertion that cannot be independently
+verified as `[UNVERIFIED]`. An audit with unverified assertions
+MUST produce a PASS WITH CONDITIONS verdict at best, noting that
+source verification is pending.
+
 1. **Part number existence**: Search the manufacturer's website or a
    major distributor (DigiKey, Mouser, LCSC) for the exact part
    number. Common hallucination patterns:

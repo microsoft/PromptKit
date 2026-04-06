@@ -25,7 +25,7 @@ for purchase, and are mutually compatible. Execute all phases in order.
 **Composition note**: This protocol is intended for standalone/manual
 composition and is not currently required by any template.
 
-**Scope boundary**:This protocol selects components that deliver the
+**Scope boundary**: This protocol selects components that deliver the
 user's requested functionality. It does NOT select supporting circuitry
 (decoupling capacitors, ESD protection, voltage regulators, pull-up
 resistors, filtering passives) — those are derived from the selected
@@ -140,18 +140,31 @@ evaluated.
    designs, strongly prefer modules unless the user has certification
    experience and budget.
 
-2. **Real-time verification**: For each candidate, use web search
-   to verify:
+2. **Real-time verification**: For each candidate, when
+   search/browsing tools are available, use web search to verify:
    - The part number is current (not discontinued or NRND)
    - Key specifications match the requirement (do not rely solely
      on training data — datasheet specifications can be misremembered)
    - The part is available from major distributors (DigiKey, Mouser,
      LCSC, Farnell)
 
+   **If search/browsing is unavailable in the current environment**:
+   - Do **not** claim that lifecycle status, specifications, or
+     distributor availability were verified
+   - Ask the user to provide datasheet links, manufacturer pages,
+     or distributor URLs if verified sourcing/status is required
+   - Mark any unverified lifecycle/spec/availability fields as
+     `[UNVERIFIED]` or `[UNKNOWN]`
+   - Base recommendations only on clearly labeled prior knowledge,
+     and state that final selection is pending source verification
+
 3. **Expand search if needed**: If initial candidates are
    insufficient (discontinued, unavailable, too expensive), search
    distributor websites or Octopart with parametric filters matching
-   the requirements.
+   the requirements. If search/browsing is unavailable, state that
+   expansion could not be completed in-session and request
+   user-provided links or permission to proceed with an
+   `[UNVERIFIED]` candidate list.
 
 4. **Produce a candidate list per category**:
 
