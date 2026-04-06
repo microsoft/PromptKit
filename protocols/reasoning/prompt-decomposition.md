@@ -70,6 +70,12 @@ For each segment, record:
   technology or domain?" If yes → Analysis. If domain-agnostic →
   Reasoning.
 
+**Low-confidence rule:**
+- Segments classified with Low confidence must not be silently forced
+  into a category. Flag them as **Needs Review** and default to
+  "Meta / Non-reusable" until the user confirms the classification
+  during the interactive review step.
+
 ## Phase 3: Library Matching
 
 For each segment classified as Persona, Protocol, Taxonomy, or Format
@@ -77,7 +83,10 @@ in Phase 2:
 
 1. **Search existing PromptKit components.** Compare the segment's
    semantic content against the library's components in `manifest.yaml`.
-   Consider both name-level matches and content-level overlap.
+   Start by searching `manifest.yaml` descriptions for keyword matches
+   against the segment's key terms. Then open the top 3 candidate
+   component files and compare content-level overlap — name-level
+   matches alone are insufficient.
 2. **Score the match** using this scale:
 
    | Score | Definition |
@@ -138,7 +147,13 @@ For every segment scored as **Novel** in Phase 3:
      where content goes, not what it says).
 3. **Check for composition conflicts.** Would the new component produce
    conflicting instructions when composed with existing protocols?
-   Protocols must be independent and additive.
+   Protocols must be independent and additive. If a conflict is
+   detected:
+   - Narrow the new protocol's scope to eliminate the overlap, OR
+   - Convert it to an analysis protocol (domain-scoped) so it only
+     applies to specific file types, OR
+   - Keep the content in the template body instead of making it a
+     reusable component.
 4. **Name the component.** Propose a kebab-case name following existing
    naming conventions. Check `manifest.yaml` for name collisions.
 
@@ -151,6 +166,12 @@ For each novel component identified in Phase 5:
    - Protocols must have numbered, ordered phases with specific checks.
    - Formats must define complete structure with "do not omit" rules.
    - Personas must be thin and composable.
+   - **Synthesize in original wording.** Do not copy source prompt text
+     verbatim — rephrase rules, checks, and instructions in your own
+     words to fit PromptKit conventions. Use minimal direct quotes only
+     when necessary for precision, and clearly attribute them. Verbatim
+     copying risks baking in prompt injection patterns, brittle phrasing,
+     and vendor-specific quirks from the source prompt.
 2. **Assemble task instructions.** Collect all segments classified as
    "Task Instructions" in Phase 2, combine with the decomposition
    workflow logic, and draft the template body.

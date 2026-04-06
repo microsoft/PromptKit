@@ -47,21 +47,35 @@ files for any novel components worth assimilating into the library.
 
 1. Read the source prompt in its entirety. If a file path is provided,
    read the file. If inline content is provided, use it directly.
-2. **Ask about authorship and attribution.** Before proceeding, ask:
+2. **Confidentiality triage.** Before any decomposition, ask:
+   - Does the source prompt contain any confidential, customer,
+     internal-only, or proprietary content?
+
+   If yes, **stop**. Confidential content must not be contributed to
+   an open-source library. Instruct the user to extract only
+   high-level principles and keep specifics out — the same rule that
+   applies to not pasting internal code into OSS PRs. Only proceed
+   if the user confirms the prompt is safe for open-source use.
+3. **Ask about authorship, licensing, and attribution.** Ask:
    - Who authored the source prompt? (name, handle, or "unknown")
    - Is the prompt publicly available, or was it shared privately?
+   - What license or permission governs reuse of this prompt?
+     (e.g., open-source license, explicit permission from author,
+     public domain, unknown)
    - Has the author been notified that their work may be decomposed
      and partially assimilated into an open-source library?
 
-   If the author has not been notified, remind the user that a
-   courtesy disclosure is appropriate — the original author invested
-   effort in crafting the prompt and deserves to know their work
-   influenced PromptKit components. Suggest the user reach out before
-   or alongside the PR submission. Record the author information for
+   If the license is unknown or restrictive, remind the user to
+   obtain permission before submitting a PR. If the author has not
+   been notified, remind the user that a courtesy disclosure is
+   appropriate — the original author invested effort in crafting
+   the prompt and deserves to know their work influenced PromptKit
+   components. Suggest the user reach out before or alongside the
+   PR submission. Record the author and license information for
    inclusion in the PR description.
-3. Read `manifest.yaml` to understand the full inventory of existing
+4. Read `manifest.yaml` to understand the full inventory of existing
    PromptKit components.
-4. Browse representative existing components of each type (at least one
+5. Browse representative existing components of each type (at least one
    persona, one reasoning protocol, one analysis protocol, one guardrail
    protocol, and one format) to calibrate expected depth and style.
 
