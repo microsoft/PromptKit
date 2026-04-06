@@ -1278,6 +1278,16 @@ templates:
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, pcb-layout-design, layout-design-review]
 
+    - name: emit-manufacturing-artifacts
+      path: templates/emit-manufacturing-artifacts.md
+      description: >
+        Interactive manufacturing artifact generation session. Produces
+        fab-ready Gerbers, drill files, BOM, pick-and-place, and
+        assembly drawings with fab-specific formatting for JLCPCB,
+        PCBWay, and other services.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, manufacturing-artifact-generation]
+
   testing:
     - name: discover-tests-for-changes
       path: templates/discover-tests-for-changes.md

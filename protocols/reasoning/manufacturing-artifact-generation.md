@@ -12,7 +12,8 @@ description: >
   formatting for JLCPCB, PCBWay, and other services. Outputs a
   Python script using kicad-cli for automated generation and
   pre-submission validation.
-applicable_to: []
+applicable_to:
+  - emit-manufacturing-artifacts
 ---
 
 # Protocol: Manufacturing Artifact Generation
@@ -22,9 +23,6 @@ a completed, DRC-clean KiCad PCB design. The goal is to produce all
 files needed to submit a board for fabrication and assembly at a
 turnkey service (JLCPCB, PCBWay, OSH Park, etc.). Execute all
 phases in order.
-
-**Composition note**: This protocol is intended for standalone/manual
-composition and is not currently required by any template.
 
 **Input**: A DRC-clean KiCad PCB file (`.kicad_pcb`) and its
 associated schematic (`.kicad_sch`), plus the target fabrication
