@@ -265,9 +265,13 @@ Apply the **layout-design-review protocol** in full:
    (Critical / High / Medium / Low / Informational), affected
    area, and remediation. Produce a coverage summary (phases
    checked, areas examined).
-8. Conclude with an explicit audit verdict:
-   - **PASS**: No Critical or High findings; proceed.
-   - **FAIL**: Critical or High findings remain; must be corrected.
+
+**Template-specific verdict gate**:
+
+After completing the protocol review, conclude with an explicit
+audit verdict:
+- **PASS**: No Critical or High findings; proceed.
+- **FAIL**: Critical or High findings remain; must be corrected.
 
 ### Transition Rules
 
@@ -347,11 +351,12 @@ Before delivering artifacts in Phase 9, verify:
 - [ ] DRC passes with zero violations
 - [ ] All nets are routed (no ratsnest lines remaining)
 - [ ] Power trace widths are adequate for current loads
-- [ ] USB differential pairs are length-matched and impedance-
-      controlled
+- [ ] Controlled-impedance or differential nets (if any) are
+      length-matched and impedance-controlled as required
 - [ ] Decoupling capacitors are within 3mm of IC power pins
-- [ ] Ground plane is continuous under signal traces
-- [ ] Antenna keepout zones are respected
+- [ ] Ground plane coverage (if used) is continuous under signal
+      traces where required
+- [ ] RF/antenna keepout zones (if any) are respected
 - [ ] All components meet fab house minimum spacing
 - [ ] Board outline is within specified dimensions
 - [ ] Mounting holes are at correct positions

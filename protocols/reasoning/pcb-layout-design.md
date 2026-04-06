@@ -11,7 +11,8 @@ description: >
   and automated execution via Python pcbnew API with FreeRouting
   autorouter and KiCad DRC validation loop. Supports 2-layer and
   4-layer stackups.
-applicable_to: []
+applicable_to:
+  - design-pcb-layout
 ---
 
 # Protocol: PCB Layout Design
@@ -22,9 +23,6 @@ file by generating a Python script that uses KiCad's `pcbnew` API
 for board setup and component placement, FreeRouting for automated
 trace routing, and `kicad-cli` for design rule validation. Execute
 all phases in order.
-
-**Composition note**: This protocol is intended for standalone/manual
-composition and is not currently required by any template.
 
 **Input**: A completed KiCad schematic (`.kicad_sch`) with a netlist,
 component footprint assignments, and the component selection report

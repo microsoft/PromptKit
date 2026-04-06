@@ -11,6 +11,7 @@ description: >
   placement, thermal design, and manufacturing constraints.
 applicable_to:
   - review-layout
+  - design-pcb-layout
 ---
 
 # Protocol: Layout Design Review
