@@ -74,8 +74,7 @@ To use the interactive mode, you'll also need one of the following LLM CLI tools
 - **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), authenticate with `gh auth login`, ensure Copilot access is enabled for your account/organization, then run `gh extension install github/gh-copilot`
 - **Claude Code** — [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
-Not using a CLI tool? Use `promptkit assemble` to generate prompt files, or see
-[Using with any LLM (manual)](#using-with-any-llm-manual).
+Not using a CLI tool? See [Using with any LLM (manual)](#using-with-any-llm-manual).
 
 ## Quick Start
 
@@ -99,7 +98,7 @@ npx @alan-jowett/promptkit list
 ```
 
 > **📖 Full component catalog:** See [CATALOG.md](CATALOG.md) for a browsable
-> reference of all 168 components with cross-reference index — no CLI needed.
+> reference of all components with a cross-reference index — no CLI needed.
 
 ### Using the repo directly
 
@@ -213,7 +212,7 @@ promptkit list [options]
 Options:
   --all                 Show all component types (not just templates)
   --type <type>         Filter by type (persona, protocol, format, taxonomy, template)
-  --category <category> Filter by category (e.g., hardware, investigation, devops)
+  --category <category> Filter by category (e.g., document-authoring, code-analysis, guardrails)
   --language <language> Filter protocols by language (e.g., C, C++, Rust)
   --json                Output as JSON
 ```

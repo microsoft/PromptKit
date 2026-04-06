@@ -3,80 +3,46 @@
 // Copyright (c) PromptKit Contributors
 
 // scripts/generate-catalog.js — Generate CATALOG.md from manifest.yaml
+// Reuses cli/lib/manifest.js for parsing and cross-reference building.
 
 const path = require("path");
 const fs = require("fs");
 
 const cliRoot = path.resolve(__dirname, "..", "cli");
+const repoRoot = path.resolve(__dirname, "..");
+const outputPath = path.join(repoRoot, "CATALOG.md");
 
-// Resolve js-yaml from the CLI's node_modules
-let yaml;
+// Reuse the shared manifest parser from the CLI
+let loadManifest;
 try {
-  yaml = require(require.resolve("js-yaml", {
-    paths: [cliRoot],
-  }));
+  ({ loadManifest } = require(path.join(cliRoot, "lib", "manifest")));
 } catch (_error) {
   console.error(
-    `Unable to load "js-yaml" from ${cliRoot}.\n` +
+    `Unable to load shared manifest module from ${cliRoot}/lib/manifest.js.\n` +
     `This script depends on the CLI dependencies being installed.\n` +
     `To fix this, run "npm ci" (or "npm install") in the "cli/" directory and try again.`
   );
   process.exit(1);
 }
 
-const repoRoot = path.resolve(__dirname, "..");
-const manifestPath = path.join(repoRoot, "manifest.yaml");
-const outputPath = path.join(repoRoot, "CATALOG.md");
+const { manifest, components, xrefs } = loadManifest(repoRoot);
 
-const raw = fs.readFileSync(manifestPath, "utf8");
-const manifest = yaml.load(raw);
-
-// Collect all components
-const personas = manifest.personas || [];
-const protocols = { guardrails: [], analysis: [], reasoning: [] };
-for (const [cat, items] of Object.entries(manifest.protocols || {})) {
-  protocols[cat] = items;
-}
-const formats = manifest.formats || [];
-const taxonomies = manifest.taxonomies || [];
-const templates = {};
-for (const [cat, items] of Object.entries(manifest.templates || {})) {
-  templates[cat] = items;
-}
-const pipelines = manifest.pipelines || {};
-
-// Build cross-reference maps
-const protocolUsedBy = {};
-const personaUsedBy = {};
-const formatUsedBy = {};
-const taxonomyUsedBy = {};
-
-const allTemplates = [];
-for (const [cat, items] of Object.entries(templates)) {
-  for (const t of items) {
-    allTemplates.push({ ...t, category: cat });
-    if (t.protocols) {
-      for (const p of t.protocols) {
-        if (!protocolUsedBy[p]) protocolUsedBy[p] = [];
-        protocolUsedBy[p].push(t.name);
-      }
-    }
-    if (t.persona) {
-      if (!personaUsedBy[t.persona]) personaUsedBy[t.persona] = [];
-      personaUsedBy[t.persona].push(t.name);
-    }
-    if (t.format) {
-      if (!formatUsedBy[t.format]) formatUsedBy[t.format] = [];
-      formatUsedBy[t.format].push(t.name);
-    }
-    if (t.taxonomies) {
-      for (const tx of t.taxonomies) {
-        if (!taxonomyUsedBy[tx]) taxonomyUsedBy[tx] = [];
-        taxonomyUsedBy[tx].push(t.name);
-      }
-    }
+// Organize protocols by category (the shared module flattens them)
+const protocolsByCategory = { guardrails: [], analysis: [], reasoning: [] };
+for (const p of components.protocols) {
+  if (protocolsByCategory[p.category]) {
+    protocolsByCategory[p.category].push(p);
   }
 }
+
+// Organize templates by category
+const templatesByCategory = {};
+for (const t of components.templates) {
+  if (!templatesByCategory[t.category]) templatesByCategory[t.category] = [];
+  templatesByCategory[t.category].push(t);
+}
+
+const pipelines = manifest.pipelines || {};
 
 function desc(d) {
   return (d || "").trim().split("\n")[0].trim();
@@ -89,16 +55,13 @@ function xrefList(map, name) {
 }
 
 // Count totals
-const totalProtocols =
-  protocols.guardrails.length +
-  protocols.analysis.length +
-  protocols.reasoning.length;
-const totalTemplates = allTemplates.length;
+const totalProtocols = components.protocols.length;
+const totalTemplates = components.templates.length;
 const total =
-  personas.length +
+  components.personas.length +
   totalProtocols +
-  formats.length +
-  taxonomies.length +
+  components.formats.length +
+  components.taxonomies.length +
   totalTemplates;
 
 // Generate markdown
@@ -118,17 +81,17 @@ w("## Quick Reference");
 w("");
 w("| Layer | Count | Description |");
 w("|-------|-------|-------------|");
-w(`| Personas | ${personas.length} | Domain expert identities |`);
-w(`| Protocols | ${totalProtocols} | Guardrails (${protocols.guardrails.length}), Analysis (${protocols.analysis.length}), Reasoning (${protocols.reasoning.length}) |`);
-w(`| Formats | ${formats.length} | Output structure definitions |`);
-w(`| Taxonomies | ${taxonomies.length} | Classification schemes |`);
+w(`| Personas | ${components.personas.length} | Domain expert identities |`);
+w(`| Protocols | ${totalProtocols} | Guardrails (${protocolsByCategory.guardrails.length}), Analysis (${protocolsByCategory.analysis.length}), Reasoning (${protocolsByCategory.reasoning.length}) |`);
+w(`| Formats | ${components.formats.length} | Output structure definitions |`);
+w(`| Taxonomies | ${components.taxonomies.length} | Classification schemes |`);
 w(`| Templates | ${totalTemplates} | Task orchestration prompts |`);
 w("");
 
 // Templates by category
 w("## Templates by Category");
 w("");
-for (const [cat, items] of Object.entries(templates)) {
+for (const [cat, items] of Object.entries(templatesByCategory)) {
   w(`### ${cat} (${items.length})`);
   w("");
   w("| Template | Persona | Format | Description |");
@@ -144,7 +107,7 @@ for (const [cat, items] of Object.entries(templates)) {
 // Protocols by category
 w("## Protocols");
 w("");
-for (const [cat, items] of Object.entries(protocols)) {
+for (const [cat, items] of Object.entries(protocolsByCategory)) {
   if (items.length === 0) continue;
   w(`### ${cat} (${items.length})`);
   w("");
@@ -152,7 +115,7 @@ for (const [cat, items] of Object.entries(protocols)) {
   w("|----------|----------|---------|-------------|");
   for (const p of items) {
     w(
-      `| \`${p.name}\` | ${p.language || "—"} | ${xrefList(protocolUsedBy, p.name)} | ${desc(p.description)} |`
+      `| \`${p.name}\` | ${p.language || "—"} | ${xrefList(xrefs.protocolUsedBy, p.name)} | ${desc(p.description)} |`
     );
   }
   w("");
@@ -163,9 +126,9 @@ w("## Personas");
 w("");
 w("| Persona | Used by | Description |");
 w("|---------|---------|-------------|");
-for (const p of personas) {
+for (const p of components.personas) {
   w(
-    `| \`${p.name}\` | ${xrefList(personaUsedBy, p.name)} | ${desc(p.description)} |`
+    `| \`${p.name}\` | ${xrefList(xrefs.personaUsedBy, p.name)} | ${desc(p.description)} |`
   );
 }
 w("");
@@ -175,9 +138,9 @@ w("## Formats");
 w("");
 w("| Format | Produces | Consumes | Used by | Description |");
 w("|--------|----------|----------|---------|-------------|");
-for (const f of formats) {
+for (const f of components.formats) {
   w(
-    `| \`${f.name}\` | ${f.produces || "—"} | ${f.consumes || "—"} | ${xrefList(formatUsedBy, f.name)} | ${desc(f.description)} |`
+    `| \`${f.name}\` | ${f.produces || "—"} | ${f.consumes || "—"} | ${xrefList(xrefs.formatUsedBy, f.name)} | ${desc(f.description)} |`
   );
 }
 w("");
@@ -187,9 +150,9 @@ w("## Taxonomies");
 w("");
 w("| Taxonomy | Domain | Used by | Description |");
 w("|----------|--------|---------|-------------|");
-for (const t of taxonomies) {
+for (const t of components.taxonomies) {
   w(
-    `| \`${t.name}\` | ${t.domain || "—"} | ${xrefList(taxonomyUsedBy, t.name)} | ${desc(t.description)} |`
+    `| \`${t.name}\` | ${t.domain || "—"} | ${xrefList(xrefs.taxonomyUsedBy, t.name)} | ${desc(t.description)} |`
   );
 }
 w("");
@@ -221,25 +184,25 @@ w("## Cross-Reference Index");
 w("");
 w("### Which templates use a given protocol?");
 w("");
-const sortedProtocols = Object.keys(protocolUsedBy).sort();
+const sortedProtocols = Object.keys(xrefs.protocolUsedBy).sort();
 for (const p of sortedProtocols) {
-  w(`- **\`${p}\`** → ${protocolUsedBy[p].map((t) => `\`${t}\``).join(", ")}`);
+  w(`- **\`${p}\`** → ${xrefs.protocolUsedBy[p].map((t) => `\`${t}\``).join(", ")}`);
 }
 w("");
 
 w("### Which templates use a given persona?");
 w("");
-const sortedPersonas = Object.keys(personaUsedBy).sort();
+const sortedPersonas = Object.keys(xrefs.personaUsedBy).sort();
 for (const p of sortedPersonas) {
-  w(`- **\`${p}\`** → ${personaUsedBy[p].map((t) => `\`${t}\``).join(", ")}`);
+  w(`- **\`${p}\`** → ${xrefs.personaUsedBy[p].map((t) => `\`${t}\``).join(", ")}`);
 }
 w("");
 
 w("### Which templates use a given format?");
 w("");
-const sortedFormats = Object.keys(formatUsedBy).sort();
+const sortedFormats = Object.keys(xrefs.formatUsedBy).sort();
 for (const f of sortedFormats) {
-  w(`- **\`${f}\`** → ${formatUsedBy[f].map((t) => `\`${t}\``).join(", ")}`);
+  w(`- **\`${f}\`** → ${xrefs.formatUsedBy[f].map((t) => `\`${t}\``).join(", ")}`);
 }
 w("");
 
