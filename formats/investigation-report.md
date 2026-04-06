@@ -61,6 +61,10 @@ Investigation Scope, Root Cause Analysis, Prevention, Open Questions,
 and Revision History — these add overhead without analytical value for
 routine, low-severity audits.
 
+If there are **zero findings**, state "None identified" in the Findings
+section and "No remediation required" in the Remediation Plan. The
+Coverage section must still document what was examined.
+
 If any finding is later upgraded to Critical or High during the
 investigation, switch to the full format.
 
@@ -72,6 +76,9 @@ the investigation is an incident response, security audit, or other
 context where narrative and prevention matter.
 
 The full format MUST include the following sections in this exact order.
+Sections **1–8** are required. Section **9 (Revision History)** is
+included only when the report is maintained across revisions; if
+present, it MUST appear last. Omit §9 for single-pass automated audits.
 
 ## Document Structure
 
@@ -129,7 +136,7 @@ symptoms → hypotheses → evidence → confirmed cause → causal chain.>
 <Unresolved items that need further investigation.
 For each: what is unknown, why it matters, and what would resolve it.>
 
-## 9. Revision History (optional)
+## 9. Revision History
 <Table: | Version | Date | Author | Changes |
 Include only for documents maintained across revisions.
 Omit for single-pass automated audits.>
