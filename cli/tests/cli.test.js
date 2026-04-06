@@ -65,6 +65,12 @@ function makeTempContent(removeFiles) {
     path.join(tmpLib, "launch.js")
   );
 
+  // Copy lib/manifest.js
+  const manifestJs = path.resolve(__dirname, "..", "lib", "manifest.js");
+  if (fs.existsSync(manifestJs)) {
+    fs.copyFileSync(manifestJs, path.join(tmpLib, "manifest.js"));
+  }
+
   // Copy node_modules (symlink for speed)
   const srcModules = path.resolve(__dirname, "..", "node_modules");
   const destModules = path.join(tmpCli, "node_modules");
