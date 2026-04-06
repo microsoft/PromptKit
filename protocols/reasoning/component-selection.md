@@ -113,7 +113,7 @@ components the design needs.
 
    | Category | Driven By | Consolidation Opportunity |
    |----------|-----------|---------------------------|
-   | Wireless MCU | CR-001, CR-002 | Combines controller + BLE |
+   | Wireless MCU | CR-002 | Combines controller + BLE |
    | Temperature sensor | CR-001 | None — external sensor needed for ±0.5°C |
    | ... | ... | ... |
 
@@ -287,8 +287,11 @@ Verify that the selected components work together as a system.
    - For each rail, regulator, or source, compare the worst-case
      current draw against its maximum current rating from CR
      requirements or selected power components
-   - Flag if worst-case current draw exceeds 80% of any rail,
-     regulator, or source maximum current rating
+   - As a default conservative heuristic, flag if worst-case
+     current draw exceeds 80% of any rail, regulator, or source
+     maximum current rating; adjust this threshold based on
+     application context (battery sag, ambient temperature,
+     tolerances, transient or startup loads)
    - Separately estimate battery life using average current in the
      relevant mode profile versus battery capacity (e.g., mAh or Wh)
      and required runtime from CR requirements; do not compare
