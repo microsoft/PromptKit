@@ -413,10 +413,13 @@ symbol names where available:
 - Diodes: `Device:D`, `Device:D_Schottky`, `Device:D_Zener`,
   `Device:D_TVS`
 - Generic transistors: `Device:Q_NPN_BEC`, `Device:Q_PMOS_GDS`
-- Connectors: `Connector_Generic:Conn_01x0N` (N = pin count)
+- Connectors: `Connector_Generic:Conn_01x01`,
+  `Connector_Generic:Conn_01x02`, `Connector_Generic:Conn_01x04`,
+  etc. — substitute the actual pin count into the symbol name
+  (e.g., a 6-pin header uses `Connector_Generic:Conn_01x06`)
 - Power symbols: `power:GND`, `power:+3V3`, `power:+5V`,
   `power:VCC`, `power:PWR_FLAG`
-- Test points: `Connector:TestPoint`
+- Test points: `TestPoint:TestPoint`
 
 For specific ICs, use the manufacturer library if available
 (e.g., `MCU_Nordic:nRF52840-QIAA`) or create an inline symbol
