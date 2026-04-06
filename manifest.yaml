@@ -1260,7 +1260,6 @@ templates:
         KiCad schematic with adversarial audits at each gate.
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, component-selection, component-selection-audit, schematic-design, schematic-compliance-audit]
-      format: multi-artifact
 
   testing:
     - name: discover-tests-for-changes

@@ -18,7 +18,7 @@ protocols:
   - analysis/component-selection-audit
   - reasoning/schematic-design
   - analysis/schematic-compliance-audit
-format: multi-artifact
+format: null
 params:
   project_name: "Name of the hardware project or product"
   description: "Natural language description of what the hardware should do — features, interfaces, environment, constraints"
@@ -233,11 +233,15 @@ Apply the **schematic-compliance-audit protocol** in full:
 6. Passive component verification (values, ratings, derating).
 7. Completeness check (unconnected nets, floating inputs, missing
    ground, test points).
+8. Conclude with an explicit audit verdict:
+   - **PASS**: No blocking compliance issues remain; proceed.
+   - **FAIL**: One or more blocking compliance issues were found;
+     the schematic must be corrected and re-audited.
 
 ### Transition Rules
 
-- **No Critical or High findings**: Proceed to Phase 7.
-- **Critical or High findings**: Fix them in the schematic, then
+- **PASS verdict**: Proceed to Phase 7.
+- **FAIL verdict**: Fix the blocking issues in the schematic, then
   re-run the audit. Document what was fixed.
 
 ---
