@@ -47,9 +47,21 @@ files for any novel components worth assimilating into the library.
 
 1. Read the source prompt in its entirety. If a file path is provided,
    read the file. If inline content is provided, use it directly.
-2. Read `manifest.yaml` to understand the full inventory of existing
+2. **Ask about authorship and attribution.** Before proceeding, ask:
+   - Who authored the source prompt? (name, handle, or "unknown")
+   - Is the prompt publicly available, or was it shared privately?
+   - Has the author been notified that their work may be decomposed
+     and partially assimilated into an open-source library?
+
+   If the author has not been notified, remind the user that a
+   courtesy disclosure is appropriate — the original author invested
+   effort in crafting the prompt and deserves to know their work
+   influenced PromptKit components. Suggest the user reach out before
+   or alongside the PR submission. Record the author information for
+   inclusion in the PR description.
+3. Read `manifest.yaml` to understand the full inventory of existing
    PromptKit components.
-3. Browse representative existing components of each type (at least one
+4. Browse representative existing components of each type (at least one
    persona, one reasoning protocol, one analysis protocol, one guardrail
    protocol, and one format) to calibrate expected depth and style.
 
@@ -123,6 +135,10 @@ Once the user is satisfied with the generated files:
 5. **Include the improvement log** in the PR description so that
    back-port candidates for existing components are tracked as
    follow-up work.
+6. **Include attribution.** Add an "Acknowledgment" section to the PR
+   description crediting the original prompt author (if known). If
+   the author has a GitHub handle, @-mention them so they can follow
+   the PR.
 
 ## Non-Goals
 
