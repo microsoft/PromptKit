@@ -310,13 +310,18 @@ the board setup, placement, and design rules from Phases 3–6.
    
    Prerequisites:
      - KiCad 7.0+ with pcbnew Python API
-     - Netlist exported from schematic
+     - A .kicad_pcb file with footprints and nets imported from
+       the schematic (run "Update PCB from Schematic" in KiCad
+       at least once before running this script)
    
    Usage:
-     kicad-cli pcb new -o board.kicad_pcb
-     python3 layout.py
+     python3 layout.py path/to/board.kicad_pcb
    """
    import pcbnew
+   import sys
+   
+   # Load the board (must already have footprints/nets from schematic)
+   board = pcbnew.LoadBoard(sys.argv[1])
    
    # --- Configuration (user-adjustable) ---
    BOARD_WIDTH_MM = ...
@@ -331,7 +336,21 @@ the board setup, placement, and design rules from Phases 3–6.
    # ...
    ```
 
-2. **Script must implement**:
+2. **Board loading prerequisite**: The script MUST load an existing
+   `.kicad_pcb` file that has been populated with footprints and
+   nets from the schematic. The standard KiCad workflow is:
+   - User opens the KiCad project
+   - Runs "Update PCB from Schematic" (Tools → Update PCB from
+     Schematic) which imports all footprints and net connections
+   - Saves the `.kicad_pcb` file
+   - Then runs this script on the saved file
+
+   Do NOT assume `kicad-cli pcb new` or other CLI commands for
+   board creation are available or portable across KiCad versions.
+   The script should use `pcbnew.LoadBoard(path)` to load the
+   existing board.
+
+3. **Script must implement**:
    - Board outline creation on `Edge.Cuts`
    - Layer stackup configuration
    - Design rule and net class setup
@@ -342,7 +361,7 @@ the board setup, placement, and design rules from Phases 3–6.
      `pcbnew.ExportSpecctraDSN(board, "board.dsn")`
    - Save the board: `board.Save("board.kicad_pcb")`
 
-3. **Configuration section**: All user-adjustable parameters
+4. **Configuration section**: All user-adjustable parameters
    (board dimensions, component positions, design rules) must be
    in a clearly marked configuration section at the top of the
    script, not buried in the code. This allows the user to tweak
