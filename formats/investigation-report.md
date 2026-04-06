@@ -16,6 +16,18 @@ The output MUST be a structured investigation report. Use the **full
 format** by default. Use the **abbreviated format** when the conditions
 below are met.
 
+## Format Selection
+
+Before writing the report, **enumerate and classify all findings first**
+(count and highest severity). Then choose the format:
+
+- **Abbreviated**: finding count is 5 or fewer AND no Critical/High severity
+- **Full**: more than 5 findings, or any Critical/High, or incident
+  response / security audit context
+
+If the invoking template or workflow explicitly requires the full
+9-section structure, use the full format regardless of finding count.
+
 ## Abbreviated Format
 
 Use the abbreviated format when **both** conditions are true:
@@ -78,7 +90,10 @@ context where narrative and prevention matter.
 The full format MUST include the following sections in this exact order.
 Sections **1–8** are required. Section **9 (Revision History)** is
 included only when the report is maintained across revisions; if
-present, it MUST appear last. Omit §9 for single-pass automated audits.
+present, it MUST appear last. Omit §9 for single-pass automated audits
+unless the invoking template or workflow explicitly requires the full
+9-section structure — in that case, include §9 and state
+"Single-pass report; no prior revisions." when there is no history.
 
 ## Document Structure
 
