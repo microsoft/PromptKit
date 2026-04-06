@@ -526,6 +526,15 @@ protocols:
         signal routing, protection circuits, and KiCad .kicad_sch
         S-expression generation with explicit visual layout rules.
 
+    - name: pcb-layout-design
+      path: protocols/reasoning/pcb-layout-design.md
+      description: >
+        Systematic reasoning protocol for PCB layout and routing from
+        a completed schematic. Covers layout requirements gathering,
+        board definition, design rules, component placement, routing
+        strategy, and automated execution via Python pcbnew API with
+        FreeRouting autorouter and KiCad DRC validation loop.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
