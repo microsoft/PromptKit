@@ -1269,6 +1269,15 @@ templates:
       persona: electrical-engineer
       protocols: [anti-hallucination, self-verification, component-selection, component-selection-audit, schematic-design, schematic-compliance-audit]
 
+    - name: design-pcb-layout
+      path: templates/design-pcb-layout.md
+      description: >
+        Interactive PCB layout session. Guides the user from a completed
+        schematic through placement, automated routing, and DRC
+        validation with layout-to-schematic feedback loop.
+      persona: electrical-engineer
+      protocols: [anti-hallucination, self-verification, pcb-layout-design, layout-design-review]
+
   testing:
     - name: discover-tests-for-changes
       path: templates/discover-tests-for-changes.md
