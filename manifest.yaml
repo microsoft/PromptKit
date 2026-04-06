@@ -536,6 +536,15 @@ protocols:
         FreeRouting autorouter and KiCad DRC validation loop. Supports
         2-layer and 4-layer stackups.
 
+    - name: prompt-decomposition
+      path: protocols/reasoning/prompt-decomposition.md
+      description: >
+        Systematic reasoning protocol for decomposing an existing
+        hand-written prompt into PromptKit's semantic layers. Extracts
+        persona, protocol, taxonomy, format, and task instruction
+        segments. Maps each to existing library components or marks
+        as novel for assimilation.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -1294,6 +1303,16 @@ templates:
         components. Interactive workflow producing PR-ready files.
       persona: promptkit-contributor
       protocols: [anti-hallucination, self-verification, promptkit-design]
+      format: promptkit-pull-request
+
+    - name: decompose-prompt
+      path: templates/decompose-prompt.md
+      description: >
+        Reverse-engineer a hand-written prompt into PromptKit's semantic
+        layers. Maps segments to existing components, flags improvements,
+        and generates PR-ready files for novel components.
+      persona: promptkit-contributor
+      protocols: [anti-hallucination, self-verification, prompt-decomposition]
       format: promptkit-pull-request
 
     - name: audit-library-consistency
