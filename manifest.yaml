@@ -533,7 +533,8 @@ protocols:
         a completed schematic. Covers layout requirements gathering,
         board definition, design rules, component placement, routing
         strategy, and automated execution via Python pcbnew API with
-        FreeRouting autorouter and KiCad DRC validation loop.
+        FreeRouting autorouter and KiCad DRC validation loop. Supports
+        2-layer and 4-layer stackups.
 
 formats:
   - name: requirements-doc

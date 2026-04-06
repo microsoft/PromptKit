@@ -324,8 +324,18 @@ the board setup, placement, and design rules from Phases 3–6.
    import pcbnew
    import sys
    
+   if len(sys.argv) != 2:
+       print("Usage: python3 layout.py path/to/board.kicad_pcb",
+             file=sys.stderr)
+       raise SystemExit(1)
+   
+   board_path = sys.argv[1]
+   
    # Load the board (must already have footprints/nets from schematic)
-   board = pcbnew.LoadBoard(sys.argv[1])
+   try:
+       board = pcbnew.LoadBoard(board_path)
+   except Exception as exc:
+       raise SystemExit(f"Failed to load board '{board_path}': {exc}")
    
    # --- Configuration (user-adjustable) ---
    BOARD_WIDTH_MM = ...
