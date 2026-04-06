@@ -20,7 +20,7 @@ params:
   project_name: "Name of the hardware project or product"
   board_path: "Path to the DRC-clean KiCad board file (.kicad_pcb)"
   schematic_path: "Path to the KiCad schematic file (.kicad_sch)"
-  fab_service: "Target fabrication and assembly service (e.g., JLCPCB, PCBWay)"
+  fab_service: "Target fabrication and assembly service — use lowercase token (jlcpcb, pcbway)"
 input_contract:
   type: artifact-set
   description: >
@@ -90,9 +90,9 @@ Apply the **manufacturing-artifact-generation protocol Phase 1**:
    manufacturer part number (MPN). Flag components missing supplier
    part numbers (e.g., LCSC numbers for JLCPCB) — these must be
    resolved before assembly ordering.
-4. **Schematic file**: Verify the schematic file exists and is
-   accessible (derive from board path if not provided: same
-   directory, same basename, `.kicad_sch` extension).
+4. **Schematic file**: Verify the provided schematic file exists,
+   is accessible, and corresponds to the board design being
+   prepared for fabrication and assembly.
 
 ### Transition Rules
 
@@ -215,17 +215,20 @@ Apply the **manufacturing-artifact-generation protocol Phase 8**:
 2. Present the **generated files list** with sizes.
 3. Present any **warnings** (missing supplier PNs, unverified
    rotation offsets).
-4. **Strongly recommend** the user inspect Gerbers in a viewer
-   before submitting:
+4. **Gerber inspection gate**: The user MUST inspect Gerbers in a
+   viewer before submitting. Present viewer options:
    - Online: fab's built-in preview (JLCPCB/PCBWay Gerber viewer)
    - Offline: gerbv, KiCad Gerber viewer, or Tracespace.io
 5. Present the **submission checklist** from the generated README.
-6. Ask: "Have you reviewed the Gerbers and are you ready to submit,
-   or do you want to make changes?"
+6. Ask: "Have you inspected the Gerbers in a viewer and confirmed
+   the board looks correct? Are you ready to submit, or do you
+   want to make changes?"
 
 ### Transition Rules
 
-- **Approved**: Proceed to Phase 6.
+- **User confirms Gerber review + approval**: Proceed to Phase 6.
+- **User has NOT reviewed Gerbers**: Do NOT proceed. Reiterate
+  that Gerber inspection is required before submission.
 - **Revise**: Return to Phase 3 with specific feedback (e.g.,
   "add LCSC numbers for C3 and R7", "change solder mask to black").
 - **Layout issue found**: The user must return to the PCB layout
