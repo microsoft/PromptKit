@@ -27,6 +27,9 @@ on:
       - 'tests/validate-graph-integrity.py'
       - 'cli/**'
 
+permissions:
+  contents: read
+
 jobs:
   validate-manifest:
     name: Check manifest ↔ template protocol sync

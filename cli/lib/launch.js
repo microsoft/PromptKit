@@ -16,10 +16,13 @@ function isOnPath(cmd) {
   const exts = process.platform === "win32"
     ? (process.env.PATHEXT || ".EXE;.COM;.BAT;.CMD").split(";").map((e) => e.toLowerCase())
     : [""];
+  // On Windows, X_OK is not meaningful — any file with a matching PATHEXT
+  // extension is considered executable, so we check for existence (F_OK) only.
+  const accessFlag = process.platform === "win32" ? fs.constants.F_OK : fs.constants.X_OK;
   for (const dir of pathDirs) {
     for (const ext of exts) {
       try {
-        fs.accessSync(path.join(dir, cmd + ext), fs.constants.X_OK);
+        fs.accessSync(path.join(dir, cmd + ext), accessFlag);
         return true;
       } catch {
         // not found in this directory, continue

@@ -241,8 +241,14 @@ describe("Launch Module", () => {
       // bootstrap prompt string into multiple arguments. This source-level check
       // ensures the option is never re-introduced.
       const launchSrc = fs.readFileSync(launchModulePath, "utf8");
+      // Filter out comment lines to avoid false positives from comments that
+      // mention shell: true while explaining why it must not be used.
+      const nonCommentLines = launchSrc
+        .split("\n")
+        .filter((l) => !l.trim().startsWith("//"))
+        .join("\n");
       assert.ok(
-        !launchSrc.includes("shell: true"),
+        !nonCommentLines.includes("shell: true"),
         "launch.js must not pass shell: true to spawn() — doing so splits the bootstrap prompt into multiple arguments"
       );
     });
@@ -395,18 +401,29 @@ describe("Launch Module", () => {
           stdout.includes("DRY RUN"),
           `--dry-run output should contain 'DRY RUN' for ${cliName}`
         );
-        assert.ok(
-          stdout.includes("bootstrap.md"),
-          `--dry-run output should mention bootstrap.md for ${cliName}`
-        );
-        // Verify the bootstrap prompt appears as a single argument (no shell splitting).
+
+        // Parse the args line as JSON so we verify structure, not wording.
         const lines = stdout.split("\n");
-        const argsLine = lines.find((l) => l.includes("args:"));
+        const argsLine = lines.find((l) => l.trim().startsWith("args:"));
         assert.ok(argsLine, `--dry-run output should include an 'args:' line for ${cliName}`);
-        // The bootstrap prompt "Read and execute ..." must appear as one element.
+        const parsedArgs = JSON.parse(argsLine.trim().slice("args:".length).trim());
+
+        // The bootstrap prompt must appear as exactly one element containing bootstrap.md,
+        // not split across multiple elements (the shell: true regression).
+        const bootstrapArgs = parsedArgs.filter((a) => a.includes("bootstrap.md"));
+        assert.strictEqual(
+          bootstrapArgs.length,
+          1,
+          `bootstrap.md should appear in exactly one arg for ${cliName} (shell-splitting regression)`
+        );
+        // The path in the bootstrap arg must be absolute.
+        const bootstrapArg = bootstrapArgs[0];
+        const bootstrapPath = bootstrapArg.includes(" ")
+          ? bootstrapArg.slice(bootstrapArg.lastIndexOf(" ") + 1)
+          : bootstrapArg;
         assert.ok(
-          argsLine.includes("Read and execute"),
-          `--dry-run args should contain the bootstrap prompt as a single element for ${cliName}`
+          path.isAbsolute(bootstrapPath),
+          `bootstrap arg must contain an absolute path for ${cliName}`
         );
       });
     }
