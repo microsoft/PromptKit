@@ -7,8 +7,8 @@ type: reasoning
 description: >
   Verify transformation correctness by checking convergence. Apply
   the transformation twice and confirm identical output. If the
-  outputs differ, the transformation has a bug — it does not
-  faithfully preserve semantics through a round trip.
+  outputs differ, the transformation does not reach a fixed point
+  and is not idempotent or round-trip stable.
 applicable_to: []
 ---
 
@@ -66,7 +66,15 @@ fixed point — applying it twice yields identical output.
 3. **Compare**: using the comparison method from Phase 1.3,
    determine whether `output_1 == output_2`.
 
-4. **Record results** in a convergence table:
+4. **If outputs differ, iterate**: some transformations converge
+   after more than 2 passes (e.g., multi-pass normalizers). Apply
+   the transformation up to 5 additional times (7 total), checking
+   for convergence after each pass. If `output_k == output_(k+1)`
+   at any point, a fixed point is reached at pass k. If no
+   convergence after 7 passes, proceed to Phase 3 (Diagnose
+   Divergence) using the last two outputs.
+
+5. **Record results** in a convergence table:
 
    | Stage | Output Size | Time | Notes |
    |-------|-------------|------|-------|
@@ -76,7 +84,7 @@ fixed point — applying it twice yields identical output.
 
 ## Phase 3: Diagnose Divergence
 
-If `output_1 != output_2`, the transformation has a bug. Diagnose:
+If no fixed point is reached after iteration, diagnose the divergence:
 
 1. **Diff the outputs**: produce a structured diff between
    output_1 and output_2. Categorize each difference as:
