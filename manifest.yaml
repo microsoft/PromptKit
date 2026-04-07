@@ -883,6 +883,16 @@ taxonomies:
       extension, optional behavior change, state machine modification,
       message format change, security-impacting, and deprecation/removal.
 
+  - name: agent-behavioral-failures
+    path: taxonomies/agent-behavioral-failures.md
+    domain: agent-reliability
+    description: >
+      Classification scheme (ABF-1 through ABF-6) for AI agent
+      behavioral failure modes. Covers safety bypass under optimization
+      pressure, confidence-driven misdiagnosis, infinite retry loops,
+      context hoarding, premature optimization, and ephemeral memory
+      failure.
+
 templates:
   document-authoring:
     - name: author-requirements-doc
