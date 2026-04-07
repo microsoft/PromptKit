@@ -89,8 +89,9 @@ Prevent conflicts through branch discipline:
 2. **No agent commits directly to `main`**. All changes go through
    branches and merges.
 
-3. **Pull before starting work**: at the beginning of each work
-   session, pull the latest `main` and rebase the working branch.
+3. **Sync before starting work**: at the beginning of each work
+   session, fetch the latest `origin/main` and rebase the working
+   branch onto `origin/main`.
 
 4. **Push frequently**: commit and push after each logical unit of
    work (not at the end of the session). This makes work visible
