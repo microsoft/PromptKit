@@ -81,7 +81,7 @@ For each remaining task or unresolved issue:
      dependency, or unresolved design decision. State what unblocks it.
    - **Ready**: fully understood, can be started immediately by the
      next session. Include enough detail to start without re-investigation.
-   - **Needs investigation**: root cause unknown or approach unclear.
+   - **Needs Investigation**: root cause unknown or approach unclear.
      Document what was already tried and ruled out.
 
 2. **For each item, include**:
