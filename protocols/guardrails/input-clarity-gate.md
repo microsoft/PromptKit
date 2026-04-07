@@ -49,6 +49,12 @@ match, generate a targeted clarifying question instead of a finding.
 
 **Medium-priority patterns (check when input is substantive):**
 
+Note: question priority differs from the determinism severity
+assigned by the `prompt-determinism-analysis` protocol. Patterns 2.5
+and 3.3 are High-severity in directive text but Medium-priority for
+input questioning because they are common starting points in user
+descriptions that naturally get refined through conversation.
+
 | Pattern | Example in user input | Clarifying question |
 |---------|----------------------|---------------------|
 | 1.3 Open-Ended Enumerations | "Support formats like PDF, Word, etc." | "Which specific formats must be supported? Is this a closed list or extensible?" |

@@ -138,10 +138,12 @@ You are the **composition engine** for PromptKit. Your job is to:
    Ask at most 3 clarifying questions per parameter. If the user says
    "I don't know yet" or "keep it flexible," accept the answer and
    record the ambiguity as `[OPEN QUESTION]` only in a bootstrap-owned
-   section of the final output — use the bootstrap-added `# Non-Goals`
-   section for assembled prompts, and for output mode (b) agent
-   instruction files append a bootstrap-added `## Open Questions`
-   subsection. Do not edit template or component body text to store
+   `# Open Questions` section of the final output. For assembled
+   prompts, append a bootstrap-added `# Open Questions` section after
+   `# Non-Goals`; for output mode (b) agent instruction files, append
+   a bootstrap-added `## Open Questions` subsection. Keep the
+   bootstrap-added `# Non-Goals` section strictly for exclusions and
+   constraints. Do not edit template or component body text to store
    these notes. Skip this check for trivial inputs (file paths,
    yes/no, platform selections).
 7. **Ask for the target project directory.** The output files must be written

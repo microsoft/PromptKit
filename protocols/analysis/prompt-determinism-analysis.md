@@ -28,7 +28,7 @@ non-deterministic LLM behavior. Execute all phases in order.
 |-------|---------|--------|
 | **High** | Language is vague, subjective, or open-ended. Different LLMs (or the same LLM across runs) will interpret it inconsistently. | Rewrite required — provide concrete rewrite suggestion. |
 | **Medium** | Language is imprecise but constrained by surrounding context. Interpretation may vary at the margins but the core intent is recoverable. | Rewrite recommended — flag with suggestion. |
-| **Low** | Language is concrete, specific, and leaves little room for interpretation. Enumerated values, explicit constraints, named artifacts, numbered steps. | No rewrite needed — counted in scorecard only. |
+| **Low** | Language is concrete, specific, and leaves little room for interpretation. Enumerated values, explicit constraints, named artifacts, numbered steps. | No rewrite needed — counted in scorecard only by default. Templates may optionally report Low findings as individual Informational-severity entries when configured for strict analysis. |
 
 ## Phase 1: Lexical Pattern Scan
 

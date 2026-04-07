@@ -48,11 +48,13 @@ concrete rewrite suggestions.
 ### Step 1: Input Validation
 
 1. Confirm the prompt content is non-empty. If the input is empty
-   or contains only whitespace, stop and produce a zero-findings
-   report with the Coverage section stating "Input was empty; no
-   analysis performed.", the Findings section stating
-   "None identified.", and the Remediation Plan stating
-   "No remediation required."
+   or contains only whitespace, stop and produce an abbreviated
+   investigation-report with:
+   - **Executive Summary**: "The provided input was empty or
+     whitespace-only; no determinism analysis was performed."
+   - **Findings**: "None identified."
+   - **Remediation Plan**: "No remediation required."
+   - **Coverage**: "Input was empty; no analysis performed."
 2. If `scope_notes` specifies sections or suppression patterns,
    record them before beginning analysis.
 3. Determine the strictness level. If the provided value does not
