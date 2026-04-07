@@ -139,13 +139,16 @@ You are the **composition engine** for PromptKit. Your job is to:
    "I don't know yet" or "keep it flexible," accept the answer and
    record the ambiguity as `[OPEN QUESTION]` only in a bootstrap-owned
    `# Open Questions` section of the final output. For assembled
-   prompts, append a bootstrap-added `# Open Questions` section after
-   `# Non-Goals`; for output mode (b) agent instruction files, append
-   a bootstrap-added `## Open Questions` subsection. Keep the
-   bootstrap-added `# Non-Goals` section strictly for exclusions and
-   constraints. Do not edit template or component body text to store
-   these notes. Skip this check for trivial inputs (file paths,
-   yes/no, platform selections).
+   prompts, place a bootstrap-added `# Open Questions` section
+   immediately before `# Non-Goals`, so `# Non-Goals` remains the
+   final section. For output mode (b) agent instruction files, add a
+   bootstrap-added `## Open Questions` subsection only in the
+   primary/root generated instruction file and do not duplicate it
+   across additional `.instructions.md` files. Keep the bootstrap-added
+   `# Non-Goals` section strictly for exclusions and constraints. Do
+   not edit template or component body text to store these notes. Skip
+   this check for trivial inputs (file paths, yes/no, platform
+   selections).
 7. **Ask for the target project directory.** The output files must be written
    to the **user's project**, not to the PromptKit repository. Ask the user
    for the path to their target project root. Suggest a sensible default
