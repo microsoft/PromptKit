@@ -1615,14 +1615,13 @@ pipelines:
     description: >
       Full hardware design lifecycle from requirements through
       manufacturing. Interleaves generative design stages with
-      adversarial audit stages. Audit stages review artifacts
-      produced by the preceding design stage. Design stages can
-      optionally consume a requirements-document from an earlier
-      stage or perform their own requirements discovery. The full
+      adversarial audit stages. Stages consume the artifacts
+      declared in their contracts and may be used independently
+      or sequentially as those artifacts become available. Audit
+      stages provide an independent review pass even when the
+      preceding design stage includes a self-audit. The full
       workflow can also be run as a single interactive session
-      using the hardware-design-workflow template. Stages can
-      be used independently or sequentially as design artifacts
-      become available.
+      using the hardware-design-workflow template.
     stages:
       - template: author-requirements-doc
         produces: requirements-document
@@ -1632,7 +1631,7 @@ pipelines:
         consumes: [requirements-document, artifact-set]
         produces: investigation-report
       - template: validate-simulation
-        consumes: [requirements-document, artifact-set]
+        consumes: requirements-document
         produces: investigation-report
       - template: review-bom
         consumes: [requirements-document, artifact-set]
