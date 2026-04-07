@@ -58,8 +58,9 @@ concrete rewrite suggestions.
 3. Determine the strictness level. If the provided value does not
    match one of the three levels below, default to "standard" and
    note the fallback in the report:
-   - **strict**: Flag and report all High and Medium findings.
-     Include Low findings as Informational-severity entries with
+   - **strict**: Flag and report all High, Medium, and Low findings.
+     High and Medium are reported at their respective severity levels.
+     Low findings are included as Informational-severity entries with
      remediation "No rewrite needed."
    - **standard**: Flag and report High and Medium. Count Low
      findings in the scorecard summary but do not produce

@@ -56,8 +56,9 @@ For each capability described:
 ## Phase 3: Ambiguity Detection
 
 Review each requirement for language that introduces non-deterministic
-interpretation. Apply the pattern categories from the
-`prompt-determinism-analysis` protocol systematically:
+interpretation. Apply the ambiguity pattern categories below
+systematically; these categories are aligned with the
+`prompt-determinism-analysis` protocol:
 
 1. **Vague adjectives**: "fast," "responsive," "secure," "scalable,"
    "user-friendly" — replace with measurable criteria.

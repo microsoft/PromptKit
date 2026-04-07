@@ -15,10 +15,11 @@ applicable_to: []
 
 # Protocol: Input Clarity Gate
 
-This protocol MUST be applied when collecting natural language input
-from users — parameter values, problem descriptions, use case
-definitions, or free-form context. It prevents vague or ambiguous
-input from propagating into generated artifacts.
+When this protocol is included in a prompt, it MUST be applied when
+collecting natural language input from users — parameter values,
+problem descriptions, use case definitions, or free-form context. It
+prevents vague or ambiguous input from propagating into generated
+artifacts.
 
 ## When to Apply
 
@@ -42,19 +43,19 @@ match, generate a targeted clarifying question instead of a finding.
 |---------|----------------------|---------------------|
 | 1.1 Vague Quantifiers | "Handle many concurrent users" | "How many concurrent users? (e.g., 100, 1,000, 10,000+)" |
 | 1.2 Subjective Adjectives | "Good error handling" | "What specific error handling behavior? (catch-and-log, retry with backoff, structured error responses, circuit breaker?)" |
-| 1.6 Unanchored Comparatives | "Faster than the current system" | "What is the current system's performance? What target latency or throughput?" |
-| 2.1 Missing Branches | "If the user is authenticated, show the dashboard" | "What should happen if the user is NOT authenticated? (redirect to login, show error, show public view?)" |
-| 2.2 Missing Bounds | "Limit the file size" | "What is the maximum file size? (e.g., 10 MB, 100 MB, 1 GB)" |
+| 1.6 Unanchored Comparatives and Superlatives | "Faster than the current system" | "What is the current system's performance? What target latency or throughput?" |
+| 2.1 Conditionals Without Exhaustive Branches | "If the user is authenticated, show the dashboard" | "What should happen if the user is NOT authenticated? (redirect to login, show error, show public view?)" |
+| 2.2 Missing Bounds and Constraints | "Limit the file size" | "What is the maximum file size? (e.g., 10 MB, 100 MB, 1 GB)" |
 
 **Medium-priority patterns (check when input is substantive):**
 
 | Pattern | Example in user input | Clarifying question |
 |---------|----------------------|---------------------|
 | 1.3 Open-Ended Enumerations | "Support formats like PDF, Word, etc." | "Which specific formats must be supported? Is this a closed list or extensible?" |
-| 1.4 Hedge Words | "Maybe add caching" | "Is caching a firm requirement or a nice-to-have? Under what conditions?" |
-| 1.5 Passive Voice | "Errors should be handled" | "Who or what handles the errors? (the calling function, a global handler, middleware?)" |
-| 2.5 Missing Output Spec | "Generate a report" | "What sections should the report include? What format? (Markdown, PDF, table?)" |
-| 3.3 Implicit Context | "Follow the usual conventions" | "Which specific conventions? (Can you point to a style guide or reference?)" |
+| 1.4 Hedge Words and Weak Modals | "Maybe add caching" | "Is caching a firm requirement or a nice-to-have? Under what conditions?" |
+| 1.5 Passive Voice Without Actor | "Errors should be handled" | "Who or what handles the errors? (the calling function, a global handler, middleware?)" |
+| 2.5 Missing Output Specification | "Generate a report" | "What sections should the report include? What format? (Markdown, PDF, table?)" |
+| 3.3 Implicit Context Dependencies | "Follow the usual conventions" | "Which specific conventions? (Can you point to a style guide or reference?)" |
 
 ### 2. Threshold for Challenge
 
