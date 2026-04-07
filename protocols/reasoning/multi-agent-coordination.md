@@ -30,13 +30,17 @@ documenting:
    CLI", "Claude Code sandbox", "VS Code + Copilot", "human").
 3. **Operating system**: the OS the agent runs on (affects path
    separators, shell syntax, available tools).
-4. **Working directory**: the absolute path to the repository root
-   on this agent's system.
+4. **Working directory**: the path to the repository root on this
+   agent's system. Use a repo-relative reference (e.g., "repo root")
+   or environment variable (e.g., `$REPO_ROOT`) rather than an
+   absolute path to avoid leaking machine-specific details.
 5. **Branch prefix**: a unique prefix for all branches created by
    this agent (e.g., `cam/`, `linux/`, `windows/`). No two agents
    share a prefix.
-6. **Git identity**: the name and email used for commits by this
-   agent.
+6. **Git identity**: the commit author name and email used by this
+   agent. Use a noreply or team-scoped email (e.g.,
+   `agent-name@users.noreply.github.com`) rather than a personal
+   email to avoid committing PII.
 7. **Strengths**: what this agent is best at (e.g., "fast iteration
    on Linux builds", "Windows-specific debugging", "architecture
    decisions").
@@ -47,6 +51,9 @@ documenting:
 
 Record all identity cards in a shared document accessible to all
 participants (e.g., `docs/agents/` directory in the repository).
+If identity cards contain machine-specific paths or personal
+information, keep the file untracked (add to `.gitignore`) or
+use a private shared location instead of committing to the repo.
 
 ## Phase 2: Scope of Authority
 
