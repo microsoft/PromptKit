@@ -568,6 +568,15 @@ protocols:
         key files, and stashed work. Prevents context loss and
         duplicate investigation across session boundaries.
 
+    - name: multi-agent-coordination
+      path: protocols/reasoning/multi-agent-coordination.md
+      description: >
+        Coordination protocol for multiple AI agents working on a
+        shared codebase. Covers agent identity cards, scope of
+        authority (freely modifiable / with care / do not modify),
+        branch isolation, cross-agent review, shared state via git,
+        bug handoff workflows, and coordination health checks.
+
     - name: component-selection
       path: protocols/reasoning/component-selection.md
       description: >
