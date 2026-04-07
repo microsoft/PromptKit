@@ -80,7 +80,9 @@ says the reasoning phase is complete** (e.g., "READY", "proceed",
 "generate the document"). If you are unsure, ask.
 
 Continue asking questions and challenging assumptions until:
-- You have no remaining ambiguities, OR
+- Each input parameter has been clarified, all stated constraints have
+  been recorded, and at least 3 alternative approaches have been
+  explored, OR
 - The user declares the reasoning phase complete.
 
 ## Phase 2 — Document Generation

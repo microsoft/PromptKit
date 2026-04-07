@@ -62,7 +62,10 @@ following code.
 
    ### Correctness
    - Does the code do what it claims to do?
-   - Are edge cases handled (null, empty, boundary values, overflow)?
+   - Are edge cases handled? For each boundary condition (null, empty,
+     boundary values, overflow), verify: (1) the code explicitly checks
+     the condition, (2) error handling is present, (3) the error response
+     is specific
    - Are error paths correct — do they clean up resources, propagate errors
      appropriately, and avoid leaving the system in an inconsistent state?
    - Are return values checked where they should be?
@@ -97,7 +100,8 @@ following code.
 5. **Summarize** at the end:
    - Total findings by severity
    - Overall assessment (approve / approve with changes / request changes)
-   - Top 3 most important things to fix
+   - Top 3 findings by severity (highest severity first, then by
+     impact breadth)
 
 ## Non-Goals
 
@@ -117,4 +121,4 @@ Before finalizing, verify:
 - [ ] Findings are ordered by severity
 - [ ] At least 3 findings have been re-verified against the source
 - [ ] Overall assessment (approve / approve with changes / request changes) is stated
-- [ ] Top 3 most important items are identified in the summary
+- [ ] Top 3 highest-severity items are identified in the summary

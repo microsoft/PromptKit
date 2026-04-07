@@ -26,8 +26,10 @@ presenting it as final. Treat it as a pre-submission checklist.
 
 ### 1. Sampling Verification
 
-- Select a **random sample** of at least 3–5 specific claims, findings,
-  or data points from your output.
+- Select a **random sample** of at least 5 specific claims, findings,
+  or data points from your output, representing different claim types
+  (e.g., one file path, one code snippet, one conclusion, one severity
+  assignment, one remediation recommendation).
 - For each sampled item, **re-verify** it against the source material:
   - Does the file path, line number, or location actually exist?
   - Does the code snippet match what is actually at that location?
@@ -102,7 +104,10 @@ that introduces non-deterministic interpretation:
 - [ ] Are action verbs decomposed into specific sub-steps (not
       standalone "analyze" or "evaluate")?
 
-If any answer is "no" and the vague language is not intentionally
-flexible, tighten the language before finalizing. This check applies
-to generated prompt text, instruction files, and protocol content —
-not to narrative prose, user-facing explanations, or creative output.
+If any answer is "no," tighten the language before finalizing. If the
+vague language serves a deliberate purpose (e.g., allowing LLM
+discretion in creative tasks), mark it with an inline comment
+`<!-- intentionally flexible -->` and leave it unchanged. This check
+applies to generated prompt text, instruction files, and protocol
+content — not to narrative prose, user-facing explanations, or
+creative output.

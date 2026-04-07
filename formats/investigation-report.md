@@ -21,7 +21,7 @@ below are met.
 Before writing the report, **enumerate and classify all findings first**
 (count and highest severity). Then choose the format:
 
-- **Abbreviated**: finding count is 5 or fewer AND no Critical/High severity
+- **Abbreviated**: finding count ≤5 AND no Critical/High severity
 - **Full**: more than 5 findings, or any Critical/High, or incident
   response / security audit context
 
@@ -171,7 +171,7 @@ This format uses a **three-level confidence scale**: High / Medium / Low.
 | Level | Meaning |
 |-------|---------|
 | **High** | Finding is verified through code inspection, reproduction, or direct evidence. The root cause is confirmed. |
-| **Medium** | Finding has reasonable supporting evidence but some uncertainty remains — e.g., partial reproduction, indirect evidence, or an untested code path. |
+| **Medium** | Finding has direct evidence (e.g., code inspection or partial reproduction) but one key aspect is untested or unverified — e.g., concurrent code path, platform-specific behavior, or an untested edge case. |
 | **Low** | Finding is plausible but evidence is weak or circumstantial. Expert review or additional investigation is needed before acting. |
 
 This scale is calibrated for general bug investigation and security audit

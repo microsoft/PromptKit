@@ -230,14 +230,14 @@ structural overhead:
 1. **Actionable content**: Specific checks, rules, patterns, examples,
    and phase instructions that directly drive LLM behavior.
 2. **Structural overhead**: Section headings, boilerplate preambles,
-   introductory paragraphs, and repeated context that could be
-   inferred from the component type.
+   introductory paragraphs, and content that appears two or more times
+   without variation across the component.
 3. **Redundant content**: Instructions that restate what a guardrail
    protocol already enforces (e.g., a protocol that repeats
    anti-hallucination rules).
 
-Classify each component's density as: **Dense** (>80% actionable),
-**Normal** (50–80%), **Bloated** (<50%).
+Classify each component's density as: **Dense** (≥80% actionable),
+**Normal** (50–79%), **Bloated** (≤49%).
 
 #### 3.3 Yield Assessment
 
@@ -245,8 +245,8 @@ For each component, assess its methodological uniqueness and
 structural value within the assembled prompt (not whether it
 produces "good" LLM output):
 
-1. Does this component add unique analysis methodology not covered
-   by other composed components?
+1. Does this component add analysis steps or checks that no other
+   composed component in the same assembled prompt performs?
 2. Could the component's essential content be expressed in fewer
    tokens without losing actionable specificity?
 3. Is the component's level of detail appropriate for its type and

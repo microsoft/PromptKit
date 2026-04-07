@@ -70,7 +70,9 @@ and assess sensitivity.
 3. **Adapt to the budget type.** The protocol is budget-type-agnostic,
    but apply domain knowledge:
    - **Power**: distinguish peak vs. average current, per-state
-     budgets, always-on vs. gated loads, datasheet typical vs. max
+     budgets, always-on vs. gated loads, datasheet maximum
+     (worst-case conditions per component datasheet) vs. nominal
+     (measured or expected typical values)
    - **Cost**: verify include/exclude boundaries match the spec,
      check quantity break pricing, flag estimated vs. quoted values
    - **Timing**: use worst-case values, distinguish blocking vs.
@@ -131,8 +133,8 @@ and assess sensitivity.
    - Confirm sensitivity analysis was performed for all Violated
      and Marginal findings (required). For Adequate findings with
      thin margin, sensitivity analysis is recommended — perform it
-     when the spec or engineering judgment calls for additional
-     scrutiny
+     when the margin is <20% (percentage-based) or within 1 standard
+     deviation of the limit (tolerance-stack-based)
 
 ## Non-Goals
 

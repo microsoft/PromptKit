@@ -92,7 +92,8 @@ The planning step depends on the `{{output_type}}`:
 #### For `instructions` (default) — Skill Decomposition
 
 For GitHub Copilot output, determine how to split the content into
-composable skill files. The recommended decomposition:
+composable skill files. Decompose as follows (this structure is
+normative unless the user requests an alternative in Step 1):
 
 1. **Persona + guardrails skill** — One file containing:
    - Condensed persona identity (3–8 sentences)
@@ -157,7 +158,8 @@ Transform the loaded components into agent instruction prose:
    - How it handles uncertainty
 
 2. **Condense each protocol** into standing directives:
-   - Preserve all specific checks and phase steps from the protocol
+   - Preserve every numbered phase and check from the protocol
+   - Preserve all conditional logic and examples
    - Omit meta-commentary about the protocol's structure
    - Rewrite in second person ("When you encounter X, always Y")
    - If multiple protocols overlap, merge the redundant parts
@@ -245,8 +247,10 @@ Apply the `self-verification` protocol:
 4. **Directive consistency**: No contradictory instructions exist within
    or across skill files.
 
-5. **Actionability**: All instructions are specific and actionable — no
-   vague guidance like "be careful" or "think deeply".
+5. **Actionability**: All instructions include concrete conditions and
+   actions — no vague guidance (flag any instruction containing "be
+   careful," "think deeply," "consider," "try to," "when appropriate"
+   without defined criteria).
 
 6. **No placeholders**: All `{{param}}` references are resolved; no
    unsubstituted placeholders remain in any output file.

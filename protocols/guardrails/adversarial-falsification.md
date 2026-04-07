@@ -31,8 +31,9 @@ accumulating plausible-looking issues.
   demonstrate coverage.
 - Do NOT stop at superficial scans or pattern matching. Pattern matches
   are only starting points — follow through with path tracing.
-- Treat prior "all false positives" conclusions as untrusted until
-  re-verified.
+- Treat prior "all false positives" conclusions as untrusted — re-verify
+  critical code paths (lock acquisition, buffer access, state machines,
+  error handling) regardless of any prior review conclusions.
 
 ### 2. Disprove Before Reporting
 
@@ -81,7 +82,8 @@ For every candidate finding:
 ### 6. False-Positive Awareness
 
 - Maintain a record of candidate findings that were investigated and
-  rejected. For each, document:
+  rejected, as a markdown table with columns: Candidate Finding,
+  Reason Rejected, Safe Mechanism. For each, document:
   - What the candidate finding was
   - Why it was rejected (what mechanism makes it safe)
 - This record serves two purposes:

@@ -57,7 +57,9 @@ Flag adjectives that depend on unstated evaluation criteria:
   "adequate", "sufficient", "clean", "elegant", "simple",
   "straightforward", "clear", "obvious", "intuitive"
 - "important", "significant", "critical", "key", "major", "minor"
-  (when used without a defined severity scale)
+  (when used without a defined severity scale or an explicit
+  enumeration of what qualifies — e.g., "significant" is acceptable
+  if immediately followed by criteria such as "affecting >2 components")
 
 **Rewrite pattern**: Replace with observable criteria. "Good error
 handling" → "Error handling that catches all thrown exception types,
@@ -201,8 +203,9 @@ method:
 - "analyze", "evaluate", "assess", "examine", "investigate",
   "review", "study", "explore"
 
-These are acceptable ONLY when followed by specific sub-steps
-that operationalize the verb. Flag instances where the verb
+These are acceptable ONLY when followed by numbered sub-steps, each
+naming a concrete action (not another abstract verb) with a
+measurable completion condition. Flag instances where the verb
 stands alone as the complete instruction.
 
 **Rewrite pattern**: Decompose into concrete sub-steps.

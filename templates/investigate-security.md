@@ -47,7 +47,9 @@ code or system component.
 ## Instructions
 
 1. **Apply the security-vulnerability protocol** systematically:
-   - Map trust boundaries
+   - Map trust boundaries (interfaces where data or control transitions
+     from one privilege or trust level to another — e.g., network input,
+     file system, user-provided arguments, IPC)
    - Audit input validation
    - Check authentication and authorization
    - Review cryptographic usage
@@ -62,7 +64,9 @@ code or system component.
 
 3. **Format the output** according to the investigation-report format specification,
    with these security-specific additions:
-   - Include CWE identifiers for each finding where applicable
+   - Include CWE identifiers for each vulnerability finding. If no exact
+     CWE match exists, use the closest applicable CWE; if the
+     vulnerability is novel, omit the CWE and state why
    - Include a concrete **attack scenario** for each finding rated High or Critical
    - Rate severity using CVSS-like criteria (attack vector, complexity,
      privileges required, impact)

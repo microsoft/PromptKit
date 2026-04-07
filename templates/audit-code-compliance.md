@@ -81,7 +81,8 @@ specified and what was built.
 
 5. **Apply the anti-hallucination protocol.** Every finding must cite
    specific REQ-IDs and code locations. Do NOT invent requirements or
-   claim code implements behavior you cannot point to. If you cannot
+   claim code implements behavior you cannot cite with a specific file
+   path, line range, and code excerpt. If you cannot
    fully trace a requirement due to incomplete code context, assign the
    appropriate drift label (D8) but set its confidence to Low and state
    what additional code would be needed to confirm.

@@ -23,7 +23,8 @@ creep, non-reproducible analysis, and context window exhaustion.
 
 ### 1. Scope Before You Search
 
-- **Do NOT ingest an entire source tree, repository, or data set.**
+- **Do NOT ingest more than 20% of the available context window in a
+  single search pass or read more than 50 files without summarizing.**
   Always start with targeted search to identify the relevant subset.
 - Before reading code or data, establish your **search strategy**:
   - What directories, files, or patterns are likely relevant?
@@ -54,8 +55,9 @@ Use a funnel approach:
 
 ### 4. Context Management
 
-- Be aware of context window limits. Do NOT attempt to read more
-  content than you can effectively reason about.
+- Be aware of context window limits. Do NOT attempt to read more than
+  50,000 lines or more than 60% of the available context window in a
+  single task.
 - When working with large codebases:
   - Summarize intermediate findings as you go.
   - Prefer reading specific functions over entire files.

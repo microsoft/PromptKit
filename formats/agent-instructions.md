@@ -220,8 +220,9 @@ A numbered checklist of steps to activate the instructions:
   `applyTo` glob.
 - **Scope**: Per-skill. Multiple skill files compose automatically;
   all matching skills are combined for the current file context.
-- **Size guidance**: Keep each skill file under ~4 KB for reliable
-  ingestion. Total combined instructions should stay under ~8 KB.
+- **Size guidance**: Keep each skill file ≤4 KB for reliable
+  ingestion. Total combined instructions should stay ≤8 KB. Hard
+  limit for reliable ingestion: 10 KB per file.
 - **Naming**: Filenames must be lowercase, hyphen-separated, ending in
   `.instructions.md` (e.g., `memory-safety-c.instructions.md`).
 - **Syntax**: Plain Markdown with YAML frontmatter. `description` and
@@ -277,7 +278,7 @@ A numbered checklist of steps to activate the instructions:
 - **Loaded automatically** by Cursor as project-level rules applied to
   all Cursor AI interactions within the workspace.
 - **Scope**: Project-level.
-- **Size guidance**: Keep under ~2 KB; Cursor may truncate longer files.
+- **Size guidance**: Keep ≤2 KB; Cursor may truncate longer files.
 - **Syntax**: Plain text or Markdown. Cursor reads the raw content.
 - **Testing**: Open Cursor in the repo and ask "What rules are you following?"
 

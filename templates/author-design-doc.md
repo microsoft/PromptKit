@@ -57,7 +57,9 @@ requirements specified below.
 
 3. **Format the output** according to the design-doc format specification.
 
-4. **For every significant design decision**, provide a tradeoff analysis:
+4. **For every design decision that (a) affects multiple components,
+   (b) impacts non-functional requirements, or (c) is difficult to
+   reverse**, provide a tradeoff analysis:
    - What alternatives were considered?
    - Why was this option chosen?
    - What is sacrificed?

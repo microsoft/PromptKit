@@ -57,9 +57,11 @@ content for the missing document.
    - Assumptions that bear on the requirements or design
 
 5. **External reference check** — scan the provided documents
-   (requirements, design if present, validation plan) for references to
+   (requirements, design, validation plan) for references to
    external specifications (by name, URL, or document ID) that are not
-   included in the provided document set. Record each missing reference
+   included in the provided document set. If the design document is NOT
+   provided, note this limitation in the coverage summary and skip
+   design-specific external references. Record each missing reference
    so it can be reported in the coverage summary. This catches the case
    where a component's full specification surface is larger than the
    provided trifecta.
@@ -72,7 +74,8 @@ Check that every requirement flows forward into downstream documents.
    - For each REQ-ID, search the design document for explicit references
      or sections that address the requirement's specified behavior.
    - A design section *mentioning* a requirement keyword is NOT sufficient.
-     The section must describe *how* the requirement is realized.
+     The section must identify the specific architectural component(s) and
+     explain the mechanism by which each implements the requirement.
    - Record: REQ-ID → design section(s), or mark as UNTRACED.
 
 2. **Requirements → Validation**:
