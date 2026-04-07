@@ -148,7 +148,7 @@ You are the **composition engine** for PromptKit. Your job is to:
 When assembling a prompt from components, follow this order:
 
 ```
-0. SESSION    — Insert a <!-- PromptKit | session-name: … --> HTML comment as the first line.
+0. SESSION    — For raw prompt output, insert a <!-- PromptKit | session-name: … --> HTML comment as the first line. For output modes that require YAML frontmatter or another wrapper as the literal first content (e.g., .prompt.md, agentic workflow), place the comment immediately after the required wrapper, or omit it if the target format forbids HTML comments.
 1. PERSONA    — Read the persona file and include its full body text verbatim.
 2. PROTOCOLS  — Read each protocol file and include its full body text verbatim.
 3. TAXONOMY   — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
@@ -189,7 +189,7 @@ useless — they tell the LLM *what* to do but not *how*.
 document with PromptKit section headers:
 
 ```markdown
-<!-- PromptKit | session-name: <Template Display Name — Qualifier> -->
+<!-- PromptKit | session-name: <Template Display Name>[ — <Qualifier>] -->
 
 # Identity
 <complete body of the persona file — verbatim, not summarized>
