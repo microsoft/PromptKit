@@ -26,10 +26,10 @@ presenting it as final. Treat it as a pre-submission checklist.
 
 ### 1. Sampling Verification
 
-- Select a **random sample** of at least 5 specific claims, findings,
-  or data points from your output, representing different claim types
-  (e.g., one file path, one code snippet, one conclusion, one severity
-  assignment, one remediation recommendation).
+- Select a **coverage sample** of at least 3 specific claims, findings,
+  or data points from your output. Include different claim types when
+  present (for example: a file path, a code snippet, a conclusion, a
+  severity assignment, or a remediation recommendation).
 - For each sampled item, **re-verify** it against the source material:
   - Does the file path, line number, or location actually exist?
   - Does the code snippet match what is actually at that location?

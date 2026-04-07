@@ -220,9 +220,10 @@ A numbered checklist of steps to activate the instructions:
   `applyTo` glob.
 - **Scope**: Per-skill. Multiple skill files compose automatically;
   all matching skills are combined for the current file context.
-- **Size guidance**: Keep each skill file ≤4 KB for reliable
-  ingestion. Total combined instructions should stay ≤8 KB. Hard
-  limit for reliable ingestion: 10 KB per file.
+- **Size guidance**: Recommended target: ≤4 KB per skill file for
+  reliable ingestion. Recommended combined target: all matching skill
+  files together should stay ≤8 KB. Absolute maximum: no individual
+  skill file should exceed 8 KB.
 - **Naming**: Filenames must be lowercase, hyphen-separated, ending in
   `.instructions.md` (e.g., `memory-safety-c.instructions.md`).
 - **Syntax**: Plain Markdown with YAML frontmatter. `description` and
