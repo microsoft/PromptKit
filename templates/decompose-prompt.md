@@ -48,8 +48,10 @@ files for any novel components worth assimilating into the library.
 1. Read the source prompt in its entirety. If a file path is provided,
    read the file. If inline content is provided, use it directly.
 2. **Confidentiality triage.** Before any decomposition, ask:
-   - Does the source prompt contain any confidential, customer,
-     internal-only, or proprietary content?
+   - Does the source prompt contain any of the following: (1) content
+     marked confidential by its author, (2) company-specific tooling
+     or process details, (3) customer data or PII, (4) unreleased
+     product features, or (5) pricing or business strategy?
 
    If yes, **stop**. Confidential content must not be contributed to
    an open-source library. Instruct the user to extract only

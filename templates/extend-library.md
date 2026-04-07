@@ -69,7 +69,9 @@ and conventions:
    - What template parameters are required?
 
 3. **Challenge the design.** Push back on:
-   - Scope that is too broad (should this be multiple templates?)
+   - Scope that is too broad (should this be split into multiple
+     templates?) or too narrow (should this merge with an existing
+     template?)
    - Missing edge cases (what if the repo has no PRs? no CI?)
    - Overlap with existing components
 

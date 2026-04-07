@@ -52,7 +52,8 @@ requirements are tested and verifiable.
 2. **Generate test cases** for each requirement:
    - Derive tests from the acceptance criteria in the requirements doc.
    - Add negative test cases (what should NOT happen).
-   - Add boundary/edge case tests where applicable.
+   - For every quantitative threshold or limit in the acceptance
+     criteria, add boundary tests (value−1, value, value+1).
    - If the design document is provided, add integration-level tests
      based on component interactions.
 

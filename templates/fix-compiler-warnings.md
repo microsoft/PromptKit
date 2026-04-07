@@ -66,7 +66,8 @@ output_contract:
    d. **Handle pragma suppressions** (toolchain-specific):
       - For MSVC warning codes (e.g., `C4456`): if
         `#pragma warning(suppress:NNNN)` exists before a violation,
-        REMOVE the pragma and apply the proper fix.
+        REMOVE the pragma and apply the proper fix. If no suppression
+        pragma exists, apply the fix directly.
       - For Clang/GCC flags (e.g., `-Wenum-conversion`): look for
         `#pragma clang diagnostic ignored` or `#pragma GCC diagnostic
         ignored` that suppress this warning at the violation site.

@@ -55,7 +55,8 @@ project or feature.
 4. **Before writing requirements**, identify and list:
    - Ambiguities in the description that need clarification
    - Implicit requirements that are not stated but likely intended
-   - Potential conflicts or contradictions
+   - Actual or possible conflicts (requirements that contradict each
+     other or cannot both be satisfied simultaneously)
 
    Present these as a preliminary section titled "Pre-Authoring Analysis"
    before the requirements document itself.

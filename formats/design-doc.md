@@ -33,7 +33,8 @@ Do NOT restate the full requirements — link to them.>
 ## 3. Architecture
 
 ### 3.1 High-Level Architecture
-<Description of the system's major components and their relationships.
+<Description of the system's components that cross system boundaries or
+have more than one external consumer, and their relationships.
 Include a text-based diagram (ASCII, Mermaid, or PlantUML).>
 
 ### 3.2 Component Descriptions

@@ -82,8 +82,10 @@ testing and what the automated tests actually verify.
    cannot fully trace a test case due to incomplete test code context,
    do NOT assign D11 — instead note the test case as INCONCLUSIVE with
    confidence Low and state what additional test code would be needed.
-   Only assign D11 after explicitly searching the provided test code
-   and failing to find an implementation.
+   Only assign D11 after searching the provided test code by: (1) test
+   case ID (TC-NNN), (2) requirement ID (REQ-NNN), (3) test function
+   naming patterns matching the test plan, and (4) test fixtures/helpers
+   — and failing to find an implementation.
 
 5. **Apply the operational-constraints protocol.** Do not attempt to
    ingest the entire test suite. Focus on the test functions that map

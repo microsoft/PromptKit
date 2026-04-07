@@ -38,7 +38,8 @@ Produce an impact map:
 Upstream CHG-<NNN> →
   Direct:   [list of downstream locations]
   Indirect: [list of downstream locations]
-  Unaffected: [list with rationale]
+  Unaffected: [list — for each item state why, e.g., "REQ-X does not
+  reference this artifact" or "this artifact's scope predates the change"]
 ```
 
 ## Phase 2: Change Derivation

@@ -70,7 +70,7 @@ for the following repository or project.
      - Large: > 3 days, significant design or cross-cutting changes
    - Adjust criteria based on the user's specific prioritization context
 
-4. **Identify patterns** across the triaged items:
+4. **Identify at least 3 patterns** across the triaged items:
    - Clusters of related issues (same component, same root cause)
    - Stale items that should be closed or re-evaluated
    - Duplicates or items that should be consolidated

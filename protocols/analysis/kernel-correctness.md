@@ -162,8 +162,20 @@ the false-positive-rejected section of the output.
 
 ## Output Format
 
-For each finding, report using structured markdown. This format uses
+For each finding, report using the following markdown template. This format uses
 kernel-specific fields (Trigger path, falsification proof) that extend
+
+```
+### Finding: <short title>
+- **Category**: <kernel-defect-categories ID, e.g., K1>
+- **Severity**: Critical / High / Medium / Low
+- **Location**: <file>:<function>:<line range>
+- **Trigger path**: <specific call sequence or execution path>
+- **Description**: <detailed explanation>
+- **Evidence**: <code snippet or trace>
+- **Falsification proof**: <what was checked to confirm this is real>
+- **Remediation**: <specific fix>
+```
 the standard finding structure for kernel defect analysis:
 
 ```markdown

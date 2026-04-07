@@ -155,9 +155,10 @@ For each integration flow and interface contract:
      handoff)
    - The linked integration spec section and component specs
 
-If no integration test code is provided, report all flows as
-D16 candidates with confidence Low and note that test code was not
-available for analysis.
+If no integration test code is provided, skip Phase 5 and note in
+the coverage summary: "Integration test coverage analysis skipped —
+no test code provided. All flows are D16 candidates pending test
+code review."
 
 ## Phase 6: Classification and Reporting
 

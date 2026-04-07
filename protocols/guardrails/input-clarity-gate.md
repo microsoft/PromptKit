@@ -67,8 +67,8 @@ descriptions that naturally get refined through conversation.
 
 Do NOT challenge every imprecise word. Apply these rules:
 
-- **Always challenge** High-priority patterns when they affect core
-  requirements (functional behavior, constraints, success criteria).
+- **Always challenge** High-priority patterns when they appear in
+  explicit requirements, success criteria, or constraint definitions.
 - **Challenge** Medium-priority patterns when the input is the
   primary problem description or use case definition.
 - **Accept without challenge** imprecise language in supplementary

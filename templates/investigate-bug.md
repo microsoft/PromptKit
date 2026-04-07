@@ -48,7 +48,7 @@ and producing a structured investigation report.
 
 1. **Apply the root-cause-analysis protocol** systematically:
    - Characterize the symptom precisely
-   - Generate multiple hypotheses (at least 3) before investigating any
+   - Generate 3–5 competing hypotheses before investigating any
    - Evaluate evidence for each hypothesis
    - Identify the root cause, not just the proximate trigger
 

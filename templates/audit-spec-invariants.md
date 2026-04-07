@@ -89,9 +89,10 @@ build it that way.
      triggers the violation
    - Include a **coverage matrix**: invariants × spec sections, showing
      which combinations were analyzed and which produced findings
-   - You may add an appendix that regroups the same findings by invariant
-     violated for cross-reference. Do not introduce new findings in the
-     appendix; it must only re-present findings already listed in the
+   - If there are more than 5 findings, add an appendix that regroups
+     the same findings by invariant violated for cross-reference. Do not
+     introduce new findings in the appendix; it must only re-present
+     findings already listed in the
      severity-ordered Findings section.
 
 6. **Prioritize findings** by severity:

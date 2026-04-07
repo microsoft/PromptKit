@@ -76,8 +76,10 @@ following application and platform.
 5. **Document prerequisites** — every secret, service connection,
    permission, and external dependency the pipeline requires.
 
-6. **Provide customization guidance** — how to adapt the pipeline for
-   different projects, environments, or team preferences.
+6. **Provide customization guidance** covering: (1) how to change
+   environment names or counts, (2) how to add or remove stages,
+   (3) how to modify secret or variable names, (4) how to change
+   artifact retention policies.
 
 7. **Format the output** according to the pipeline-spec format specification.
 

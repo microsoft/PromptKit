@@ -28,7 +28,7 @@ Every claim in your output MUST be categorized as one of:
 - **ASSUMED**: Not established by context. The assumption MUST be flagged
   with `[ASSUMPTION]` and a justification for why it is reasonable.
 
-When the ratio of ASSUMED to KNOWN content exceeds ~30%, stop and request
+When the ratio of ASSUMED to KNOWN content exceeds 30%, stop and request
 additional context instead of proceeding.
 
 ### 2. Refusal to Fabricate

@@ -134,9 +134,11 @@ after the last individual finding entry. Include:
   passages — examples are intentionally concrete by nature.
 - Do NOT rewrite the prompt — provide rewrite SUGGESTIONS only.
   The user decides which to adopt.
-- Language that is intentionally flexible (e.g., "use your best
-  judgment" in a creative writing prompt) may be noted only as an
-  Informational finding and must be marked as potentially intentional.
+- Language that is intentionally flexible (e.g., marked with an inline
+  comment `<!-- intentionally flexible -->`, or in a creative writing
+  prompt where LLM discretion is the explicit goal) may be noted only
+  as an Informational finding and must be marked as potentially
+  intentional.
 
 ## Quality Checklist
 
