@@ -29,17 +29,17 @@ input_contract: null
 output_contract:
   type: investigation-report
   description: >
-    A unified health audit report with findings grouped into five
+    A unified health audit report with findings grouped into six
     categories: Overlap/Redundancy, Conflicts, Metadata Drift,
-    Corpus Safety, and Runtime Bloat. Each finding includes
-    PR-ready remediation recommendations.
+    Corpus Safety, Runtime Bloat, and Language Determinism. Each
+    finding includes PR-ready remediation recommendations.
 ---
 
 # Task: Audit Library Health
 
 You are tasked with performing a **comprehensive health audit** of the
-PromptKit component library across three dimensions: structural
-consistency, corpus safety, and runtime fitness.
+PromptKit component library across four dimensions: structural
+consistency, corpus safety, runtime fitness, and language determinism.
 
 ## Inputs
 
@@ -49,7 +49,7 @@ consistency, corpus safety, and runtime fitness.
 **Component Files**:
 {{component_files}}
 
-**Focus Areas**: {{focus_areas}} (if blank, analyze all three passes)
+**Focus Areas**: {{focus_areas}} (if blank, analyze all four passes)
 
 **Since**: {{since}} (if blank, analyze all components regardless of age)
 
@@ -98,7 +98,7 @@ When running as a self-audit, the agent should:
    is blank, audit all components.
 
 4. **Focus selection.** If `focus_areas` is provided, execute only
-   the specified passes. If blank, execute all three passes.
+   the specified passes. If blank, execute all four passes.
 
 **Present the scoping results to the user and confirm before
 proceeding.**

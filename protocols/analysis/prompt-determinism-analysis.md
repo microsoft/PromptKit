@@ -28,7 +28,7 @@ non-deterministic LLM behavior. Execute all phases in order.
 |-------|---------|--------|
 | **High** | Language is vague, subjective, or open-ended. Different LLMs (or the same LLM across runs) will interpret it inconsistently. | Rewrite required — provide concrete rewrite suggestion. |
 | **Medium** | Language is imprecise but constrained by surrounding context. Interpretation may vary at the margins but the core intent is recoverable. | Rewrite recommended — flag with suggestion. |
-| **Low** | Language is concrete, specific, and leaves little room for interpretation. Enumerated values, explicit constraints, named artifacts, numbered steps. | No action needed. |
+| **Low** | Language is concrete, specific, and leaves little room for interpretation. Enumerated values, explicit constraints, named artifacts, numbered steps. | No rewrite needed — counted in scorecard only. |
 
 ## Phase 1: Lexical Pattern Scan
 
@@ -269,8 +269,9 @@ For each flagged instruction or passage:
 2. Assign a determinism level (High / Medium / Low non-determinism).
 3. Cite the specific pattern from Phase 1, 2, or 3 that triggered
    the flag.
-4. Provide a concrete rewrite suggestion that would reduce the
-   non-determinism level by at least one step.
+4. For High and Medium findings, provide a concrete rewrite
+   suggestion that would reduce the non-determinism level by at
+   least one step. For Low findings, record "No rewrite needed."
 
 ### 4.2 Per-Section Aggregation
 

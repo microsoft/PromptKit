@@ -47,15 +47,23 @@ concrete rewrite suggestions.
 
 ### Step 1: Input Validation
 
-1. Confirm the prompt content is non-empty.
+1. Confirm the prompt content is non-empty. If the input is empty
+   or contains only whitespace, stop and produce a zero-findings
+   report with the Coverage section stating "Input was empty; no
+   analysis performed."
 2. If `scope_notes` specifies sections or suppression patterns,
    record them before beginning analysis.
-3. Determine the strictness level:
-   - **strict**: Flag and report all High, Medium, and Low findings.
-   - **standard**: Flag and report High and Medium. Note Low findings
-     in a summary count but do not produce individual finding entries.
+3. Determine the strictness level. If the provided value does not
+   match one of the three levels below, default to "standard" and
+   note the fallback in the report:
+   - **strict**: Flag and report all High and Medium findings.
+     Include Low findings as Informational-severity entries with
+     remediation "No rewrite needed."
+   - **standard**: Flag and report High and Medium. Count Low
+     findings in the scorecard summary but do not produce
+     individual finding entries for them.
    - **lenient**: Flag and report only High findings. Summarize
-     Medium and Low counts.
+     Medium and Low counts in the scorecard only.
 
 ### Step 2: Apply the Prompt Determinism Analysis Protocol
 
@@ -88,7 +96,7 @@ severity as follows:
 |-------------------|-----------------|
 | High non-determinism | High |
 | Medium non-determinism | Medium |
-| Low non-determinism | Low |
+| Low non-determinism (strict mode only) | Informational |
 
 **Category**: Use the protocol's pattern category as the finding
 category (e.g., "Vague Quantifier", "Missing Bounds",
@@ -102,8 +110,9 @@ rewrite suggestion from the protocol analysis.
 
 ### Step 4: Determinism Scorecard
 
-After the findings section, append a **Determinism Scorecard** section
-with:
+Embed the **Determinism Scorecard** as a subsection within the
+Findings section (§4 of the investigation-report format). Place it
+after the last individual finding entry. Include:
 
 1. The per-section scorecard table from Phase 4.3.
 2. The overall grade (Precise / Acceptable / Imprecise).
