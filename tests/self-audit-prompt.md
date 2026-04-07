@@ -138,6 +138,32 @@ Categories:
 Order findings by severity. Focus on REAL gaps — every finding must
 cite a specific CONTRIBUTING.md requirement and a specific file.
 
+#### 7. Language Precision
+
+For each protocol and template in `manifest.yaml`:
+- Does the body avoid vague quantifiers ("some", "several", "many",
+  "a few") in directive text? Quantifiers in instructions should be
+  concrete counts or ranges (e.g., "at least 3", "2–4 sentences").
+- Does the body avoid subjective adjectives ("good", "appropriate",
+  "reasonable", "clean") as evaluation criteria? Criteria should be
+  observable and measurable.
+- Do all conditionals ("if X, do Y") have explicit else/default
+  branches? Flag conditionals that specify only the positive case.
+- Are action verbs ("analyze", "evaluate", "review") followed by
+  specific sub-steps that operationalize them? Flag standalone
+  abstract verbs used as complete instructions.
+- Are open-ended enumerations ("etc.", "and so on", "such as X, Y,
+  …") either closed with an exhaustive list or bounded by a
+  selection criterion?
+- Are instructions specific enough that two different LLMs would
+  produce structurally similar output?
+
+Note: This check applies to directive/instructional text only — not
+to description fields, illustrative examples, or narrative prose.
+Findings should cite the specific pattern type (vague quantifier,
+subjective adjective, missing branch, abstract verb, open-ended
+enumeration) and the exact text flagged.
+
 ### Quality Checklist
 
 Before finalizing, verify:
@@ -148,4 +174,5 @@ Before finalizing, verify:
 - [ ] Every taxonomy file was checked
 - [ ] Cross-reference integrity was verified
 - [ ] Param usage was checked for every template
+- [ ] Language precision was checked for protocols and templates
 - [ ] Findings cite specific files and CONTRIBUTING.md rules
