@@ -23,9 +23,6 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Ensure latest npm (for trusted publishing)
-        run: npm install -g npm@latest
-
       - name: Sync version from release tag
         run: |
           VERSION="${{ github.event.release.tag_name }}"
