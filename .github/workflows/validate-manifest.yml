@@ -14,6 +14,7 @@ on:
       - 'templates/**'
       - 'tests/validate-manifest.py'
       - 'tests/validate-graph-integrity.py'
+      - 'cli/**'
   pull_request:
     paths:
       - 'manifest.yaml'
@@ -24,6 +25,7 @@ on:
       - 'templates/**'
       - 'tests/validate-manifest.py'
       - 'tests/validate-graph-integrity.py'
+      - 'cli/**'
 
 jobs:
   validate-manifest:
@@ -53,3 +55,30 @@ jobs:
 
       - name: Validate graph integrity
         run: python tests/validate-graph-integrity.py
+
+  cli-smoke-test:
+    name: CLI smoke test (launch path)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install CLI dependencies
+        run: npm ci
+        working-directory: cli
+
+      - name: Run CLI tests
+        run: npm test
+        working-directory: cli
+
+      - name: Verify --dry-run smoke test (copilot)
+        run: node bin/cli.js interactive --cli copilot --dry-run
+        working-directory: cli
+
+      - name: Verify --dry-run smoke test (claude)
+        run: node bin/cli.js interactive --cli claude --dry-run
+        working-directory: cli

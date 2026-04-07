@@ -57,9 +57,13 @@ program
     "--cli <name>",
     "LLM CLI to use (copilot, gh-copilot, claude)"
   )
+  .option(
+    "--dry-run",
+    "Print the spawn command and args without launching the LLM CLI"
+  )
   .action((opts) => {
     ensureContent();
-    launchInteractive(contentDir, opts.cli || null);
+    launchInteractive(contentDir, opts.cli || null, { dryRun: !!opts.dryRun });
   });
 
 // List components

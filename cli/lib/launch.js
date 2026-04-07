@@ -9,13 +9,24 @@ const path = require("path");
 const os = require("os");
 
 function isOnPath(cmd) {
-  try {
-    const whereCmd = process.platform === "win32" ? "where" : "which";
-    execFileSync(whereCmd, [cmd], { stdio: "ignore" });
-    return true;
-  } catch {
-    return false;
+  // Search PATH entries directly rather than shelling out to `which`/`where`.
+  // This avoids requiring `which` to be on PATH itself (important in test
+  // environments where PATH is restricted to a mock directory).
+  const pathDirs = (process.env.PATH || "").split(path.delimiter);
+  const exts = process.platform === "win32"
+    ? (process.env.PATHEXT || ".EXE;.COM;.BAT;.CMD").split(";").map((e) => e.toLowerCase())
+    : [""];
+  for (const dir of pathDirs) {
+    for (const ext of exts) {
+      try {
+        fs.accessSync(path.join(dir, cmd + ext), fs.constants.X_OK);
+        return true;
+      } catch {
+        // not found in this directory, continue
+      }
+    }
   }
+  return false;
 }
 
 function detectCli() {
@@ -53,7 +64,7 @@ function copyDirRecursive(src, dest) {
   }
 }
 
-function launchInteractive(contentDir, cliName) {
+function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
   let detected = null;
   const cli = cliName || (detected = detectCli());
 
@@ -109,6 +120,21 @@ function launchInteractive(contentDir, cliName) {
     default:
       console.error(`Unknown CLI: ${cli}`);
       process.exit(1);
+  }
+
+  // In dry-run mode, print the spawn command and args then exit without
+  // actually launching the LLM CLI.  Useful for CI smoke tests and debugging.
+  if (dryRun) {
+    console.log("[DRY RUN] Would spawn:");
+    console.log(`  cmd:  ${cmd}`);
+    console.log(`  args: ${JSON.stringify(args)}`);
+    console.log(`  cwd:  ${originalCwd}`);
+    try {
+      fs.rmSync(tmpDir, { recursive: true });
+    } catch {
+      // best effort cleanup
+    }
+    return;
   }
 
   // All CLIs are spawned from the user's original directory so the LLM
