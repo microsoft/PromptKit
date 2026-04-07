@@ -23,6 +23,28 @@ Use these labels to classify findings when auditing requirements, design,
 and validation documents for consistency and completeness. Every finding
 MUST use exactly one label from this taxonomy.
 
+## Label Group Summaries
+
+When only a subset of labels is applicable to a given audit type, use
+these summaries for cross-reference context. The primary label group
+(determined by the audit template) uses full definitions below; non-primary
+groups use these summaries to preserve semantic context without consuming
+prompt tokens.
+
+- **D1–D7 (Traceability)**: Document-level drift — untraced requirements,
+  untested requirements, orphaned design decisions, orphaned test cases,
+  assumption drift between documents, constraint violations in design,
+  and acceptance criteria mismatches between test plans and requirements.
+- **D8–D10 (Code Compliance)**: Code-to-spec drift — unimplemented
+  requirements, undocumented behavior in source code, and constraint
+  violations in implementation.
+- **D11–D13 (Test Compliance)**: Test-to-plan drift — unimplemented test
+  cases, untested acceptance criteria, and assertion mismatches between
+  test code and validation plans.
+- **D14–D16 (Integration)**: Cross-component drift — unspecified
+  integration flows, interface contract mismatches between components,
+  and untested integration paths.
+
 ## Labels
 
 ### D1_UNTRACED_REQUIREMENT

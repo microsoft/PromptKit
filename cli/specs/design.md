@@ -1,8 +1,8 @@
 ---
 title: "PromptKit CLI — Design Specification"
 project: "PromptKit CLI (@alan-jowett/promptkit)"
-version: "0.3.0"
-date: "2025-07-17"
+version: "0.6.1"
+date: "2026-04-07"
 status: draft
 related:
   - requirements: cli/specs/requirements.md
@@ -17,6 +17,7 @@ related:
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
 | 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Removed assemble.js module design (§2.2), manifest.js module design (§2.3), assembly pipeline data flow (§3.1). Updated cli.js design for two commands with inline manifest parsing. Updated module structure, dependency graph, command flow, interface contracts, dependencies. Resolved GAP-001 through GAP-007, GAP-009, GAP-011. |
+| 0.6.1 | 2026-04-07 | Maintenance audit (F-003) | Bumped version to match requirements.md and package.json. No design changes — version alignment only. |
 
 ---
 

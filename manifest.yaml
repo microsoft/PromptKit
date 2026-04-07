@@ -777,6 +777,14 @@ formats:
       motivation with Before/After content, traceability matrix, and
       invariant impact assessment. Domain-agnostic.
 
+  - name: decision-log
+    path: formats/decision-log.md
+    produces: decision-log
+    description: >
+      Lightweight architectural decision record (ADR) format. Records
+      significant design decisions with context, options considered,
+      rationale, and consequences. Agent-consumable and human-readable.
+
   - name: presentation-kit
     path: formats/presentation-kit.md
     produces: presentation-kit

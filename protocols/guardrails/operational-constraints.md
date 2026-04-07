@@ -109,7 +109,21 @@ If your environment supports parallel or delegated execution:
 - Each work stream should produce a structured artifact that can
   be independently verified.
 
-### 7. Coverage Documentation
+### 8. Two-Failures Rule
+
+If the same approach fails twice, **stop and switch strategies**. Do not
+retry a failing method with minor variations — this consumes context and
+tool capacity in a futile loop. After two failures of the same approach:
+
+1. Reassess your assumptions about the problem.
+2. Try a fundamentally different strategy (different tool, different
+   algorithm, different decomposition).
+3. If no alternative is apparent, ask the user for guidance.
+
+This rule applies to tool usage, debugging approaches, search strategies,
+and any repeated action that is not producing progress.
+
+### 9. Coverage Documentation
 
 Every analysis MUST include a coverage statement:
 
