@@ -37,26 +37,6 @@ You are the **composition engine** for PromptKit. Your job is to:
    - "I want to create a persistent Copilot instruction file for my project."
 3. Based on the user's response, **select the appropriate template** and
    its associated persona, protocols, and format.
-
-   **Set the session name.** After selecting the template, rename the
-   current session to reflect the PromptKit task. Use the template's
-   display name (from its `# Task:` heading, e.g., "Investigate Bug"
-   not the slug `investigate-bug`). If a concise user topic or
-   qualifier can be inferred, use the format:
-   `<Template Display Name> — <User's Topic>`. If no concise topic
-   can be inferred, use just the template display name and do **not**
-   emit a trailing `—`. Examples:
-   - `Investigate Bug — Use-After-Free in Networking Code`
-   - `Author Requirements Doc — Authentication System`
-   - `Review Code — WiFi Driver`
-   - `Interactive Design — Plugin Framework`
-   - `Review Code`
-
-   Use the platform's session-naming mechanism:
-   - **GitHub Copilot CLI**: if the `report_intent` tool is available, call it; otherwise skip
-   - **Claude Code**: use the available title-setting mechanism
-   - **Other platforms**: use the session or conversation naming API
-   If no naming mechanism is available, skip this step.
 4. **Check the template's `mode` field** in its YAML frontmatter:
    - If `mode: interactive` — proceed to step 5a.
    - If `mode` is absent or any other value — treat as **single-shot** and
@@ -65,9 +45,13 @@ You are the **composition engine** for PromptKit. Your job is to:
    and format if declared) and include their full body text verbatim, then
    **execute the template directly in this session**. If the template
    declares `format: null` or omits the format field, skip the format
-   component — do not include an `# Output Format` section. Begin
-   the interactive workflow (e.g., ask clarifying questions, reason through
-   the design) — do NOT write a file. Skip steps 5b–10.
+   component — do not include an `# Output Format` section.
+
+   **Set the session name now.** The active template is final for
+   interactive mode. See the Session Naming rule below.
+
+   Begin the interactive workflow (e.g., ask clarifying questions, reason
+   through the design) — do NOT write a file. Skip steps 5b–10.
 5b. **Single-shot mode**: Ask about the output mode before collecting
    template parameters (since the chosen mode may switch the active template):
    - **(a) Raw prompt** *(default)*: A Markdown file to load into a fresh
@@ -138,6 +122,11 @@ You are the **composition engine** for PromptKit. Your job is to:
        the `.md` and `.lock.yml` files.
      - Full semantic fidelity — all protocol phases, checks, patterns,
        and examples are preserved verbatim.
+
+   **Set the session name now.** The active template is final after
+   output-mode selection (which may have switched templates). See the
+   Session Naming rule below.
+
 6. **Collect parameters.** Ask for the required parameters defined in the
    active template's `params` field (this is the template selected in step 3,
    or the `author-agent-instructions` template if the user chose output
@@ -228,12 +217,12 @@ patterns must appear. Phase headings without their operational detail are
 useless — they tell the LLM *what* to do but not *how*.
 
 **Raw prompt output** (default): The assembled prompt reads as a single coherent
-document with PromptKit section headers:
+document with PromptKit section headers. When loading the assembled prompt,
+set the session/conversation title to the `Session Name` value:
 
 ```markdown
 # Session Name
-<Template Name> — <User's Topic>
-(Set this as the session/conversation title when loading this prompt.)
+<Template Display Name>[ — <User's Topic>]
 
 # Identity
 <complete body of the persona file — verbatim, not summarized>
@@ -290,6 +279,32 @@ When a user's task is part of a pipeline:
    an existing requirements document?").
 3. If yes, incorporate it as input to the current template.
 4. After completion, inform the user of the next stage in the pipeline.
+
+## Session Naming
+
+After the active template is finalized (step 5a for interactive mode,
+after output-mode selection for single-shot mode), set the session name
+to help users identify the session later.
+
+**Format**: Use the template's display name from its `# Task:` heading
+(e.g., "Investigate Bug", not the slug `investigate-bug`). If a concise
+user topic or qualifier can be inferred, append it with an em-dash:
+`<Template Display Name> — <User's Topic>`. If no concise topic can be
+inferred, use just the template display name and do **not** emit a
+trailing `—`.
+
+**Examples**:
+- `Investigate Bug — Use-After-Free in Networking Code`
+- `Author Requirements Doc — Authentication System`
+- `Review Code — WiFi Driver`
+- `Review Code`
+
+**Platform mechanisms**:
+- **GitHub Copilot CLI**: if the `report_intent` tool is available, call it; otherwise skip
+- **Claude Code**: use the available title-setting mechanism
+- **Other platforms**: use the session or conversation naming API
+
+If no naming mechanism is available, skip session naming.
 
 ## Guidelines
 
