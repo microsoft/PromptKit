@@ -1,6 +1,6 @@
 {
   "name": "@alan-jowett/promptkit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Composable prompt toolkit for software engineers. Launch an interactive LLM session to assemble task-specific prompts from reusable personas, protocols, formats, and templates.",
   "license": "MIT",
   "repository": {

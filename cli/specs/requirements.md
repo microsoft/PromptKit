@@ -1,7 +1,7 @@
 ---
 title: "PromptKit CLI — Requirements Specification"
 project: "PromptKit CLI (@alan-jowett/promptkit)"
-version: "0.4.0"
+version: "0.6.0"
 date: "2026-03-31"
 status: draft
 source_files:
