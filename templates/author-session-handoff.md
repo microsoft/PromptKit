@@ -53,15 +53,20 @@ to continue work without re-investigation.
    - `git --no-pager log --oneline -10` to capture recent commits
    - `git --no-pager status` to capture uncommitted changes
    - `git stash list` to capture any stashed work
-   - The project's build command to capture build status
-   - The project's test command to capture test status
+   - The project's build command — record the exact command executed,
+     its exit code, and its success/failure output summary
+   - The project's test command — record the exact command executed,
+     its exit code, and its pass/fail output summary
 
 2. If you do not have repository access, extract state from the
-   provided `session_work` and `remaining_items` inputs.
+   provided `session_work` and `remaining_items` inputs. If build/test
+   results are mentioned there, preserve the exact commands and exit
+   codes when available.
 
 3. Record all metrics as exact numbers. Do NOT use qualitative
    assessments ("most tests pass") — use quantitative state
-   ("247/250 tests pass").
+   ("247/250 tests pass"). Record commands exactly as run and
+   include explicit exit codes for build and test steps.
 
 ### Step 2: Apply the Session Handoff Protocol
 

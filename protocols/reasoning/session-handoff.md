@@ -46,12 +46,20 @@ re-investigation by the next session.
 Capture the quantitative state of the project at session end:
 
 1. **Build status**: does it build? Zero errors? Zero warnings?
-   If warnings exist, state the count and whether they are
-   pre-existing or new.
+   If warnings exist, state the count and classify each as
+   pre-existing, new, or unknown. Use unknown if you do not
+   have a reliable baseline. If you classify warnings as
+   pre-existing or new, state the evidence used (e.g., prior CI
+   logs, earlier handoff notes, git diff, or a before/after
+   build comparison).
 
 2. **Test status**: how many tests pass / fail / skip? If any
-   tests fail, list the failing test names and whether they are
-   regressions or pre-existing failures.
+   tests fail, list the failing test names and classify each as
+   **regression**, **pre-existing failure**, or **unknown**.
+   Use unknown unless there is explicit evidence for another
+   classification (e.g., an earlier CI run, a known-conditions
+   registry, or a prior handoff showing the failure already
+   existed or was newly introduced in this session).
 
 3. **Task-specific metrics**: any metrics relevant to the task
    being worked on. Examples:
@@ -117,7 +125,8 @@ Produce the handoff document in this structure:
 **Date**: <ISO 8601 date>
 **Agent/User**: <who performed this session>
 **Branch**: <current branch name>
-**Commit**: <latest commit SHA, or "uncommitted changes present">
+**Commit**: <latest commit SHA (HEAD)>
+**Uncommitted changes**: <yes/no>
 
 ## Accomplishments
 
