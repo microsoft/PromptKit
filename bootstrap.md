@@ -218,11 +218,14 @@ useless — they tell the LLM *what* to do but not *how*.
 
 **Raw prompt output** (default): The assembled prompt reads as a single coherent
 document with PromptKit section headers. When loading the assembled prompt,
-set the session/conversation title to the `Session Name` value:
+set the session/conversation title to the session name value. Use one
+of these two forms (do not include square brackets literally):
+- `<Template Display Name>` — when the user did not provide a specific topic
+- `<Template Display Name> — <User's Topic>` — when the user provided a topic
 
 ```markdown
 # Session Name
-<Template Display Name>[ — <User's Topic>]
+<Template Display Name> — <User's Topic>
 
 # Identity
 <complete body of the persona file — verbatim, not summarized>
@@ -299,10 +302,15 @@ trailing `—`.
 - `Review Code — WiFi Driver`
 - `Review Code`
 
-**Platform mechanisms**:
-- **GitHub Copilot CLI**: if the `report_intent` tool is available, call it; otherwise skip
-- **Claude Code**: use the available title-setting mechanism
-- **Other platforms**: use the session or conversation naming API
+**Platform mechanisms** — pass the computed session title string:
+- **GitHub Copilot CLI**: if the `report_intent` tool is available,
+  call it with the session title as the `intent` parameter. Example:
+  `report_intent({ "intent": "Review Code — WiFi Driver" })`.
+  If the tool is not available, skip.
+- **Claude Code**: use the available title-setting mechanism, passing
+  the computed session title string
+- **Other platforms**: use the session or conversation naming API,
+  passing the computed session title string
 
 If no naming mechanism is available, skip session naming.
 
