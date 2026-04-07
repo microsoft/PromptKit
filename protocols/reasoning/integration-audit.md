@@ -157,8 +157,8 @@ For each integration flow and interface contract:
 
 If no integration test code is provided, skip Phase 5 and note in
 the coverage summary: "Integration test coverage analysis skipped —
-no test code provided. All flows are D16 candidates pending test
-code review."
+no test code provided. All flows are D16 candidates with confidence
+Low pending test code review."
 
 ## Phase 6: Classification and Reporting
 

@@ -173,9 +173,11 @@ fields (Trigger path, falsification proof):
 - **Location**: <file>:<function>:<line range>
 - **Trigger path**: <specific call sequence or execution path>
 - **Description**: <detailed explanation>
+- **Consequence**: <concrete bad outcome — BSOD, corruption, escalation, leak>
 - **Evidence**: <code snippet or trace>
 - **Falsification proof**: <what was checked to confirm this is real>
 - **Remediation**: <specific fix>
+- **Confidence**: Confirmed / High-confidence / Needs-domain-check
 ```
 
 ## Cross-References

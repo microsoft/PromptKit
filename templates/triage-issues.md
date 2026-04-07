@@ -70,7 +70,8 @@ for the following repository or project.
      - Large: > 3 days, significant design or cross-cutting changes
    - Adjust criteria based on the user's specific prioritization context
 
-4. **Identify at least 3 patterns** across the triaged items:
+4. **Identify up to 3 patterns** across the triaged items (if fewer
+   than 3 patterns exist, state how many were found and why):
    - Clusters of related issues (same component, same root cause)
    - Stale items that should be closed or re-evaluated
    - Duplicates or items that should be consolidated
@@ -103,6 +104,7 @@ Before presenting the triage report, verify:
 - [ ] All in-scope items are accounted for
 - [ ] Every item has priority, effort, and recommended action
 - [ ] Critical and High items have written justifications
-- [ ] Patterns section identifies at least 3 cross-cutting observations
+- [ ] Patterns section identifies up to 3 cross-cutting observations
+      (or states why fewer were found)
 - [ ] Recommended workflow is actionable and ordered
 - [ ] Coverage and limitations section is populated
