@@ -6,21 +6,23 @@ name: audit-library-health
 mode: interactive
 description: >
   Comprehensive health audit of the PromptKit component library.
-  Three-pass analysis: (1) structural consistency and overlap
-  detection, (2) corpus safety for assimilation risks, and
-  (3) runtime fitness assessment. Produces a unified investigation
-  report with PR-ready remediation recommendations.
+  Four-pass analysis: (1) structural consistency and overlap
+  detection, (2) corpus safety for assimilation risks,
+  (3) runtime fitness assessment, and (4) language determinism
+  analysis. Produces a unified investigation report with PR-ready
+  remediation recommendations.
 persona: specification-analyst
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
   - reasoning/corpus-safety-audit
+  - analysis/prompt-determinism-analysis
 format: investigation-report
 params:
   manifest_content: "The full contents of manifest.yaml"
   component_files: "The full contents of all component files to analyze (personas, protocols, formats, taxonomies, templates)"
-  focus_areas: "Optional — specific areas to prioritize: 'consistency', 'corpus-safety', 'fitness', or comma-separated combination. Default: all"
+  focus_areas: "Optional — specific areas to prioritize: 'consistency', 'corpus-safety', 'fitness', 'determinism', or comma-separated combination. Default: all"
   since: "Optional — restrict analysis to components added or changed since a tag, commit SHA, or date (e.g., 'v0.3.0', '2025-01-01'). Default: analyze all components"
   corpus_safety_policy: "Corpus safety rules to enforce. Must include at minimum: (1) confidentiality classification, (2) license/permission requirements, (3) no-verbatim-copying rule"
 input_contract: null
@@ -275,6 +277,69 @@ Classify each recommendation as:
 
 ---
 
+### Pass 4: Language Determinism Analysis
+
+**Apply the prompt-determinism-analysis protocol** (all four phases)
+to the directive content of each component in scope.
+
+This pass identifies vague, ambiguous, or imprecise language in
+protocols, templates, and formats that would cause different LLMs
+(or the same LLM across runs) to produce inconsistent output.
+
+#### 4.1 Scope Selection
+
+Determine which components contain directive text worth analyzing:
+
+1. **Protocols** — all phases and checks are directive text.
+   Analyze the body excluding the frontmatter and the top-level
+   description paragraph.
+2. **Templates** — Instructions, Quality Checklist, and Non-Goals
+   sections are directive text. Analyze these sections; skip the
+   Inputs section (which contains parameter placeholders, not
+   instructions).
+3. **Formats** — Document Structure, Formatting Rules, and any
+   conditional selection rules are directive text.
+4. **Personas** — Behavioral Constraints section is directive text.
+   The expertise areas section is descriptive and can be skipped.
+5. **Taxonomies** — Category definitions and classification criteria
+   are directive text.
+
+#### 4.2 Apply the Protocol
+
+For each component in scope:
+
+1. Execute Phase 1 (Lexical Pattern Scan) — flag vague quantifiers,
+   subjective adjectives, open-ended enumerations, hedge words,
+   passive voice without actor, and unanchored comparatives.
+2. Execute Phase 2 (Structural Completeness) — check for
+   conditionals without exhaustive branches, missing bounds,
+   missing exit criteria, unspecified ordering, and missing output
+   specifications.
+3. Execute Phase 3 (Semantic Precision) — assess abstract action
+   verbs, undefined domain terms, implicit context dependencies,
+   and missing examples.
+4. Execute Phase 4 (Classification & Reporting) — score each
+   finding and produce the per-component scorecard.
+
+#### 4.3 Aggregate Across Components
+
+After analyzing all components:
+
+1. Produce a cross-component determinism scorecard using the
+   Phase 4.3 table format, with one row per component.
+2. Identify the 5 most imprecise components (by High finding
+   count, then Medium).
+3. For each, produce the top 3 rewrite suggestions with the
+   highest non-determinism reduction impact.
+
+Finding types: **Vague Quantifier**, **Subjective Criterion**,
+**Open-Ended Enumeration**, **Missing Branch**, **Missing Bounds**,
+**Abstract Verb**, **Implicit Context**, **Missing Exit Criteria**.
+
+**Present Pass 4 findings to the user.**
+
+---
+
 ### Synthesis: Unified Report
 
 After all passes are complete (or the subset selected by
@@ -287,6 +352,7 @@ After all passes are complete (or the subset selected by
    - Metadata Drift (from Pass 1)
    - Corpus Safety (from Pass 2)
    - Runtime Fitness / Bloat (from Pass 3)
+   - Language Determinism (from Pass 4)
 
 2. **Deduplicate.** If a component appears in findings from multiple
    passes, consolidate into a single finding with cross-references.
@@ -317,10 +383,12 @@ Severity guidance for this audit:
   tokens
 - **Medium**: Inconsistency that could confuse users, bloated
   components, or incomplete attribution
-- **Low**: Minor terminology drift, stale references, or minor
-  compression opportunities
+- **Low**: Minor terminology drift, stale references, minor
+  compression opportunities, or isolated Medium non-determinism
+  patterns in directive text
 - **Informational**: Observations, parameterization opportunities,
-  or suggestions with no current problem
+  or suggestions with no current problem (includes Low
+  non-determinism patterns)
 
 Finding IDs in the unified audit report must use the
 `investigation-report` format: `F-001`, `F-002`, `F-003`, …
@@ -335,6 +403,7 @@ Use the **Category** field to classify findings as one of:
 - `Metadata Drift`
 - `Corpus Safety`
 - `Runtime Fitness / Bloat`
+- `Language Determinism`
 
 You may still group findings by these categories in the report body,
 but each individual finding heading must retain the `F-<NNN>` form.
@@ -385,6 +454,12 @@ Before finalizing, verify:
 - [ ] Pass 3: Content density classified for every component
 - [ ] Pass 3: Every optimization recommendation classified as safe
       or tradeoff
+- [ ] Pass 4: Lexical pattern scan applied to all directive text
+- [ ] Pass 4: Structural completeness checked for all directive text
+- [ ] Pass 4: Semantic precision assessed for all directive text
+- [ ] Pass 4: Per-component determinism scorecard produced
+- [ ] Pass 4: Top imprecise components identified with rewrite
+      suggestions
 - [ ] Every finding has a concrete, PR-ready remediation action
 - [ ] No component content was fabricated — all evidence cites actual
       files

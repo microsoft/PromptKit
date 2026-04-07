@@ -298,6 +298,16 @@ protocols:
         compatibility assertions hold. Catches hallucinated parts and
         stale specifications.
 
+    - name: prompt-determinism-analysis
+      path: protocols/analysis/prompt-determinism-analysis.md
+      description: >
+        Systematic analysis of prompt and instruction text for language
+        precision and determinism. Identifies vague quantifiers,
+        subjective adjectives, missing constraints, incomplete
+        conditionals, and ambiguous references. Classifies findings
+        as High, Medium, or Low non-determinism potential with concrete
+        rewrite suggestions.
+
   reasoning:
     - name: root-cause-analysis
       path: protocols/reasoning/root-cause-analysis.md
@@ -997,6 +1007,17 @@ templates:
       protocols: [anti-hallucination, self-verification, quantitative-constraint-validation]
       format: investigation-report
 
+    - name: lint-prompt
+      path: templates/lint-prompt.md
+      description: >
+        Analyze prompt text, instruction files, or prompt library
+        components for language that introduces non-deterministic LLM
+        behavior. Produces a determinism assessment report with
+        per-section scoring and concrete rewrite suggestions.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, prompt-determinism-analysis]
+      format: investigation-report
+
   standards:
     - name: extract-rfc-requirements
       path: templates/extract-rfc-requirements.md
@@ -1386,12 +1407,12 @@ templates:
       path: templates/audit-library-health.md
       description: >
         Comprehensive health audit of the PromptKit component library.
-        Three-pass analysis covering structural consistency, corpus
-        safety for assimilation risks, and runtime fitness assessment.
-        Produces a unified investigation report with PR-ready
-        remediation recommendations.
+        Four-pass analysis covering structural consistency, corpus
+        safety for assimilation risks, runtime fitness assessment,
+        and language determinism analysis. Produces a unified
+        investigation report with PR-ready remediation recommendations.
       persona: specification-analyst
-      protocols: [anti-hallucination, self-verification, operational-constraints, corpus-safety-audit]
+      protocols: [anti-hallucination, self-verification, operational-constraints, corpus-safety-audit, prompt-determinism-analysis]
       format: investigation-report
 
   devops:
