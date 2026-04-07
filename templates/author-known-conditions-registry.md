@@ -65,7 +65,7 @@ Assign each condition a unique ID using this scheme:
 |----------|--------|---------|
 | Build errors | BLD | BLD-001 |
 | Test failures | TST | TST-001 |
-| Tool errors | TEF | TEF-001 |
+| Tool errors | TOL | TOL-001 |
 | Environment issues | ENV | ENV-001 |
 | Known warnings | WRN | WRN-001 |
 

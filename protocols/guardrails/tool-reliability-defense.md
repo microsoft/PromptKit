@@ -42,8 +42,8 @@ verification of every mutation.
 ### 2. Snapshot Before Editing
 
 - Before modifying a file, note the current line count and a
-  checksum of the region being edited (first and last 3 lines of
-  the target region).
+  snapshot of the region being edited (for example, the first and
+  last 3 lines of the target region).
 - After editing, compare the snapshot to the result. If the
   surrounding context changed unexpectedly, the edit corrupted
   adjacent lines.
