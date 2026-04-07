@@ -951,7 +951,6 @@ templates:
         repeated wasted effort on solved or pre-existing problems.
       persona: systems-engineer
       protocols: [anti-hallucination, self-verification]
-      format: null
 
     - name: audit-code-compliance
       path: templates/audit-code-compliance.md
