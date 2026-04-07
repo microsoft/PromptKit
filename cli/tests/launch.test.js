@@ -248,7 +248,7 @@ describe("Launch Module", () => {
         .filter((l) => !l.trim().startsWith("//"))
         .join("\n");
       assert.ok(
-        !nonCommentLines.includes("shell: true"),
+        !/\bshell\s*:\s*true\b/.test(nonCommentLines),
         "launch.js must not pass shell: true to spawn() — doing so splits the bootstrap prompt into multiple arguments"
       );
     });
@@ -376,55 +376,62 @@ describe("Launch Module", () => {
         // --dry-run must print the command and args then exit 0 without
         // spawning the real LLM CLI.  We run with an empty PATH so that
         // no real CLI can be found, proving nothing was actually spawned.
-        const emptyBinDir = path.join(os.tmpdir(), "promptkit-dryrun-empty");
-        fs.mkdirSync(emptyBinDir, { recursive: true });
+        const emptyBinDir = fs.mkdtempSync(
+          path.join(os.tmpdir(), "promptkit-dryrun-empty-")
+        );
 
         let stdout = "";
         let exitCode = 0;
         try {
-          stdout = execFileSync(
-            process.execPath,
-            [cliPath, "interactive", "--cli", cliName, "--dry-run"],
-            {
-              encoding: "utf8",
-              timeout: 15000,
-              env: envWithPath(emptyBinDir),
-            }
+          try {
+            stdout = execFileSync(
+              process.execPath,
+              [cliPath, "interactive", "--cli", cliName, "--dry-run"],
+              {
+                encoding: "utf8",
+                timeout: 15000,
+                env: envWithPath(emptyBinDir),
+              }
+            );
+          } catch (err) {
+            stdout = (err.stdout || "").toString();
+            exitCode = err.status;
+          }
+
+          assert.strictEqual(exitCode, 0, `--dry-run should exit 0 for ${cliName}`);
+          assert.ok(
+            stdout.includes("DRY RUN"),
+            `--dry-run output should contain 'DRY RUN' for ${cliName}`
           );
-        } catch (err) {
-          stdout = (err.stdout || "").toString();
-          exitCode = err.status;
+
+          // Parse the args line as JSON so we verify structure, not wording.
+          const lines = stdout.split("\n");
+          const argsLine = lines.find((l) => l.trim().startsWith("args:"));
+          assert.ok(argsLine, `--dry-run output should include an 'args:' line for ${cliName}`);
+          const parsedArgs = JSON.parse(argsLine.trim().slice("args:".length).trim());
+
+          // The bootstrap prompt must appear as exactly one element containing bootstrap.md,
+          // not split across multiple elements (the shell: true regression).
+          const bootstrapArgs = parsedArgs.filter((a) => a.includes("bootstrap.md"));
+          assert.strictEqual(
+            bootstrapArgs.length,
+            1,
+            `bootstrap.md should appear in exactly one arg for ${cliName} (shell-splitting regression)`
+          );
+          // The path in the bootstrap arg must be absolute.
+          // Strip the known prefix rather than splitting on spaces (paths may contain spaces).
+          const bootstrapArg = bootstrapArgs[0];
+          const bootstrapPrefix = "Read and execute ";
+          const bootstrapPath = bootstrapArg.startsWith(bootstrapPrefix)
+            ? bootstrapArg.slice(bootstrapPrefix.length)
+            : bootstrapArg;
+          assert.ok(
+            path.isAbsolute(bootstrapPath),
+            `bootstrap arg must contain an absolute path for ${cliName}`
+          );
+        } finally {
+          fs.rmSync(emptyBinDir, { recursive: true, force: true });
         }
-
-        assert.strictEqual(exitCode, 0, `--dry-run should exit 0 for ${cliName}`);
-        assert.ok(
-          stdout.includes("DRY RUN"),
-          `--dry-run output should contain 'DRY RUN' for ${cliName}`
-        );
-
-        // Parse the args line as JSON so we verify structure, not wording.
-        const lines = stdout.split("\n");
-        const argsLine = lines.find((l) => l.trim().startsWith("args:"));
-        assert.ok(argsLine, `--dry-run output should include an 'args:' line for ${cliName}`);
-        const parsedArgs = JSON.parse(argsLine.trim().slice("args:".length).trim());
-
-        // The bootstrap prompt must appear as exactly one element containing bootstrap.md,
-        // not split across multiple elements (the shell: true regression).
-        const bootstrapArgs = parsedArgs.filter((a) => a.includes("bootstrap.md"));
-        assert.strictEqual(
-          bootstrapArgs.length,
-          1,
-          `bootstrap.md should appear in exactly one arg for ${cliName} (shell-splitting regression)`
-        );
-        // The path in the bootstrap arg must be absolute.
-        const bootstrapArg = bootstrapArgs[0];
-        const bootstrapPath = bootstrapArg.includes(" ")
-          ? bootstrapArg.slice(bootstrapArg.lastIndexOf(" ") + 1)
-          : bootstrapArg;
-        assert.ok(
-          path.isAbsolute(bootstrapPath),
-          `bootstrap arg must contain an absolute path for ${cliName}`
-        );
       });
     }
   });

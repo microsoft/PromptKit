@@ -12,7 +12,7 @@ function isOnPath(cmd) {
   // Search PATH entries directly rather than shelling out to `which`/`where`.
   // This avoids requiring `which` to be on PATH itself (important in test
   // environments where PATH is restricted to a mock directory).
-  const pathDirs = (process.env.PATH || "").split(path.delimiter);
+  const pathDirs = (process.env.PATH || "").split(path.delimiter).filter(Boolean);
   const exts = process.platform === "win32"
     ? (process.env.PATHEXT || ".EXE;.COM;.BAT;.CMD").split(";").map((e) => e.toLowerCase())
     : [""];
@@ -133,7 +133,7 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
     console.log(`  args: ${JSON.stringify(args)}`);
     console.log(`  cwd:  ${originalCwd}`);
     try {
-      fs.rmSync(tmpDir, { recursive: true });
+      fs.rmSync(tmpDir, { recursive: true, force: true });
     } catch {
       // best effort cleanup
     }
