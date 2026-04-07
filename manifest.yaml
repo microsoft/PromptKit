@@ -143,6 +143,14 @@ protocols:
         encoding-safe, and verifiable. Prevents collateral damage from
         automated fixes, refactoring, and code generation.
 
+    - name: input-clarity-gate
+      path: protocols/guardrails/input-clarity-gate.md
+      description: >
+        Validates user-provided input for clarity and specificity
+        before proceeding with task execution. Applies determinism
+        analysis patterns to natural language input and generates
+        targeted clarifying questions instead of findings.
+
     - name: adversarial-falsification
       path: protocols/guardrails/adversarial-falsification.md
       description: >
