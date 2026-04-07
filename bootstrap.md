@@ -36,7 +36,8 @@ You are the **composition engine** for PromptKit. Your job is to:
    - "I need to design an extension framework for a verifier — let's reason through it interactively."
    - "I want to create a persistent Copilot instruction file for my project."
 3. Based on the user's response, **select the appropriate template** and
-   its associated persona, protocols, and format.
+   its associated persona, protocols, and format. **Set the session name**
+   to reflect the selected task (see Session Naming).
 4. **Check the template's `mode` field** in its YAML frontmatter:
    - If `mode: interactive` — proceed to step 5a.
    - If `mode` is absent or any other value — treat as **single-shot** and
@@ -143,6 +144,7 @@ You are the **composition engine** for PromptKit. Your job is to:
 When assembling a prompt from components, follow this order:
 
 ```
+0. SESSION    — Insert a <!-- PromptKit | session-name: … --> HTML comment as the first line.
 1. PERSONA    — Read the persona file and include its full body text verbatim.
 2. PROTOCOLS  — Read each protocol file and include its full body text verbatim.
 3. TAXONOMY   — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
@@ -183,6 +185,8 @@ useless — they tell the LLM *what* to do but not *how*.
 document with PromptKit section headers:
 
 ```markdown
+<!-- PromptKit | session-name: <Template Display Name — Qualifier> -->
+
 # Identity
 <complete body of the persona file — verbatim, not summarized>
 
@@ -224,6 +228,39 @@ skill file:
 - Is self-contained and independently coherent
 
 For Claude Code and Cursor, a single combined file is produced instead.
+
+## Session Naming
+
+After selecting a template (step 3), **immediately rename the current
+session** so the title reflects the PromptKit task — not the generic
+"execute bootstrap" request that launched it.
+
+**Format**: `<Template Display Name>` or `<Template Display Name> — <Qualifier>`
+
+Derive the template display name by title-casing the template name and
+replacing hyphens with spaces. The qualifier is an optional short phrase
+from the user's description that distinguishes this session.
+
+**Examples**:
+- `Investigate Bug — Use-After-Free in Networking Code`
+- `Author Requirements Doc`
+- `Review C++ Code — WiFi Driver`
+- `Interactive Design — Authentication System`
+- `Author Agent Instructions — Memory Safety`
+
+**Platform mechanisms**:
+
+| Platform | How to set the session name |
+|----------|----------------------------|
+| GitHub Copilot CLI | Call the `report_intent` tool with the task name |
+| Claude Code | Use the available title-setting mechanism (e.g., `TodoWrite` title field, or state the task name prominently in your first substantive response so the auto-title reflects it) |
+| Other platforms | Use the platform's session or conversation naming API if available; if none exists, state the session name prominently in your first response |
+
+**Assembled prompts**: For single-shot output, the assembly process
+includes a `<!-- PromptKit | session-name: … -->` HTML comment on the
+first line. When a target LLM loads an assembled prompt, it should read
+this comment and set its session title accordingly using the platform
+mechanism above.
 
 ## Pipeline Support
 
