@@ -524,6 +524,24 @@ protocols:
         analysis, change derivation, invariant checking, completeness
         verification, and conflict detection. Domain-agnostic.
 
+    - name: minimal-reproduction
+      path: protocols/reasoning/minimal-reproduction.md
+      description: >
+        Systematic bug isolation through minimal reproduction and
+        binary simplification. Create the smallest input that triggers
+        the bug, strip features one at a time to isolate the
+        responsible component, and identify the pivot point between
+        working and broken.
+
+    - name: fixed-point-verification
+      path: protocols/reasoning/fixed-point-verification.md
+      description: >
+        Verify transformation correctness by checking convergence.
+        Apply the transformation twice and confirm identical output.
+        Diagnose divergence as semantic, syntactic, or additive.
+        Applicable to formatters, compilers, generators, migrators,
+        and serializers.
+
     - name: step-retrospective
       path: protocols/reasoning/step-retrospective.md
       description: >
