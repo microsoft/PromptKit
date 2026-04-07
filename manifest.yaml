@@ -559,6 +559,15 @@ protocols:
         construction, slide decomposition, visual design decisions,
         time budgeting, and demo choreography. Domain-agnostic.
 
+    - name: session-handoff
+      path: protocols/reasoning/session-handoff.md
+      description: >
+        Structured handoff between AI agent sessions. Captures
+        accomplishments, quantitative state, remaining work
+        categorized by status, prioritized next-session plan,
+        key files, and stashed work. Prevents context loss and
+        duplicate investigation across session boundaries.
+
     - name: component-selection
       path: protocols/reasoning/component-selection.md
       description: >
@@ -1429,6 +1438,16 @@ templates:
       persona: promptkit-contributor
       protocols: [anti-hallucination, self-verification]
       format: agent-instructions
+
+    - name: author-session-handoff
+      path: templates/author-session-handoff.md
+      description: >
+        Generate a structured session handoff document capturing
+        accomplishments, current state, remaining work, and a
+        prioritized plan for the next session. Interactive workflow
+        that gathers state and produces a handoff file.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, session-handoff]
 
   contribution:
     - name: extend-library
