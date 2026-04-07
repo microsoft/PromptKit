@@ -39,15 +39,21 @@ You are the **composition engine** for PromptKit. Your job is to:
    its associated persona, protocols, and format.
 
    **Set the session name.** After selecting the template, rename the
-   current session to reflect the PromptKit task using the format:
-   `<Template Name> — <User's Topic>`. Examples:
+   current session to reflect the PromptKit task. Use the template's
+   display name (from its `# Task:` heading, e.g., "Investigate Bug"
+   not the slug `investigate-bug`). If a concise user topic or
+   qualifier can be inferred, use the format:
+   `<Template Display Name> — <User's Topic>`. If no concise topic
+   can be inferred, use just the template display name and do **not**
+   emit a trailing `—`. Examples:
    - `Investigate Bug — Use-After-Free in Networking Code`
    - `Author Requirements Doc — Authentication System`
    - `Review Code — WiFi Driver`
    - `Interactive Design — Plugin Framework`
+   - `Review Code`
 
    Use the platform's session-naming mechanism:
-   - **GitHub Copilot CLI**: call the `report_intent` tool
+   - **GitHub Copilot CLI**: if the `report_intent` tool is available, call it; otherwise skip
    - **Claude Code**: use the available title-setting mechanism
    - **Other platforms**: use the session or conversation naming API
    If no naming mechanism is available, skip this step.
@@ -184,12 +190,13 @@ You are the **composition engine** for PromptKit. Your job is to:
 When assembling a prompt from components, follow this order:
 
 ```
-1. PERSONA    — Read the persona file and include its full body text verbatim.
-2. PROTOCOLS  — Read each protocol file and include its full body text verbatim.
-3. TAXONOMY   — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
-4. FORMAT     — Read the format file and include its full body text verbatim.
-5. TEMPLATE   — Read the task template and include its full body text verbatim.
-6. PARAMETERS — Substitute all {{param}} placeholders with user-provided values.
+1. SESSION NAME — Add a session-name header (raw prompt output only; not a component).
+2. PERSONA      — Read the persona file and include its full body text verbatim.
+3. PROTOCOLS    — Read each protocol file and include its full body text verbatim.
+4. TAXONOMY     — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
+5. FORMAT       — Read the format file and include its full body text verbatim.
+6. TEMPLATE     — Read the task template and include its full body text verbatim.
+7. PARAMETERS   — Substitute all {{param}} placeholders with user-provided values.
 ```
 
 ### Verbatim Inclusion Rule
