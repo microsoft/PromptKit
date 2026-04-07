@@ -166,7 +166,7 @@ For each finding, report using the following markdown template. This
 format extends the standard finding structure with kernel-specific
 fields (Trigger path, falsification proof):
 
-```
+```markdown
 ### Finding: <short title>
 - **Category**: <kernel-defect-categories ID, e.g., K1>
 - **Severity**: Critical / High / Medium / Low
