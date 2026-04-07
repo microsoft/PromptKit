@@ -100,8 +100,10 @@ following code.
 5. **Summarize** at the end:
    - Total findings by severity
    - Overall assessment (approve / approve with changes / request changes)
-   - Top 3 findings by severity (highest severity first, then by
-     impact breadth)
+   - Top 3 findings ranked by: (1) highest severity first,
+     (2) for equal severity, user-visible or external API findings
+     rank above internal-only, (3) if still tied, findings affecting
+     more distinct functions or modules rank higher
 
 ## Non-Goals
 

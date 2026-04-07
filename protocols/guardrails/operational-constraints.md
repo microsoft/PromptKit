@@ -27,7 +27,8 @@ creep, non-reproducible analysis, and context window exhaustion.
   summarizing findings first.** Always start with targeted search to
   identify the relevant subset. If the task explicitly requires
   exhaustive or comprehensive review, you may exceed 50 files but only
-  in bounded batches with a summary after each batch.
+  in batches of at most 50 files, with a summary after each batch
+  before continuing.
 - Before reading code or data, establish your **search strategy**:
   - What directories, files, or patterns are likely relevant?
   - What naming conventions, keywords, or symbols should guide search?

@@ -237,7 +237,7 @@ structural overhead:
    anti-hallucination rules).
 
 Classify each component's density as: **Dense** (≥80% actionable),
-**Normal** (50–79%), **Bloated** (≤49%).
+**Normal** (≥50% and <80%), **Bloated** (<50%).
 
 #### 3.3 Yield Assessment
 

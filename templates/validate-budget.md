@@ -133,13 +133,13 @@ and assess sensitivity.
    - Confirm sensitivity analysis was performed for all Violated
      and Marginal findings (required). For Adequate findings with
      thin margin, sensitivity analysis is recommended — perform it
-     when the margin is <20% (percentage-based). For
+     when the margin is less than 20% (percentage-based). For
      tolerance-stack-based analyses, apply a "within 1 standard
      deviation of the limit" trigger only when σ is explicitly
      provided in the artifact or derivable from a stated tolerance
      model. If only min/max tolerances are available and no
-     tolerance model is stated, use the <20% deterministic margin
-     threshold instead
+     tolerance model is stated, use the less-than-20% deterministic
+     margin threshold instead
 
 ## Non-Goals
 
