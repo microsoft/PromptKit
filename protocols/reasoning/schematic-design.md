@@ -304,11 +304,56 @@ Decide how to organize the schematic for readability.
 4. **Title block**: Include project name, sheet title, revision,
    date, and author in every sheet's title block.
 
+5. **Page boundary and placement area**: All component origins MUST
+   fall within the page drawing area with a minimum margin of 25mm
+   from all page borders. Before generating coordinates, calculate
+   the placement area from the selected page size:
+
+   | Page Size | Drawing Area (W × H mm) | Usable Area (with 25mm margins) |
+   |-----------|------------------------|---------------------------------|
+   | A4        | 297 × 210              | 247 × 160 (x: 25–272, y: 25–185) |
+   | A3        | 420 × 297              | 370 × 247 (x: 25–395, y: 25–272) |
+
+   Verify the selected page size can accommodate all components at
+   the required spacing (20.32mm minimum). If not, use a larger page
+   or hierarchical sheets.
+
 ## Phase 8: KiCad Schematic Generation
 
 Generate the `.kicad_sch` S-expression file(s) with correct visual
 rendering. This phase contains mandatory rules that prevent the
 "structurally correct but visually wrong" failure mode.
+
+### 8.0: Approach-Level Gate (BEFORE writing any code)
+
+Before writing any schematic generation code, symbol templates, or
+helper functions, complete these front-loaded checks. These catch
+approach-level errors before they propagate to every symbol and wire
+in the design.
+
+1. **Verify one symbol against the dimension table.** Pick the
+   simplest symbol you will generate (e.g., a resistor). Write its
+   `lib_symbols` entry with graphical body and pins. Verify:
+   - Body rectangle ≥ 2.032mm in both dimensions (§8.3 table)
+   - Pin span (tip-to-tip) ≥ 7.62mm for 2-pin passives
+   - Pin length ≥ 1.27mm
+   - A `_0_1` sub-symbol with at least one graphical primitive exists
+   - A `_1_1` sub-symbol with pin definitions exists
+
+   If your first symbol fails any of these, fix it before proceeding.
+   Every subsequent symbol will be built from the same patterns.
+
+2. **Verify placement fits the page.** Compute bounding boxes for all
+   functional blocks (§8.2 rule 9). Sum total extent plus inter-block
+   gaps plus 25mm margins per side. Verify the result fits within the
+   selected page size. If not, choose a larger page or split into
+   hierarchical sheets NOW — not after placing 20 components.
+
+3. **Check for existing code divergence.** If reusing any existing
+   symbol generation code, compare its pin positions and body
+   dimensions against the §8.3 mandatory dimension table BEFORE
+   using it. If any dimension is smaller than the table's values,
+   the existing code is non-conforming — do NOT use it as-is.
 
 ### 8.1: KiCad S-Expression Structure
 
@@ -325,7 +370,7 @@ A `.kicad_sch` file has this top-level structure:
     (date "<YYYY-MM-DD>")
     (rev "<revision>")
   )
-  ;; Symbol library references
+  ;; Symbol library definitions — MUST include graphical body
   (lib_symbols ...)
   ;; Component instances (includes ICs, passives, connectors,
   ;; and power symbols like power:GND, power:+3V3, power:PWR_FLAG)
@@ -344,6 +389,58 @@ A `.kicad_sch` file has this top-level structure:
   (sheet_instances ...)
 )
 ```
+
+**Critical: `lib_symbols` graphical body requirement.** KiCad schematic
+files are self-contained — the `(lib_symbols ...)` section MUST embed
+the **complete symbol definition** for every symbol used, including
+graphical primitives that make the symbol visible. A symbol with only
+pin definitions but no graphical body will produce a schematic that
+passes ERC and has correct connectivity but **renders as completely
+empty** when opened in the KiCad editor.
+
+Each symbol definition inside `lib_symbols` uses a **two-level
+sub-symbol structure**:
+
+```
+(symbol "<LibName>:<PartName>"
+  (in_bom yes) (on_board yes)
+
+  ;; Sub-symbol _0_1: GRAPHICAL BODY (what makes it visible)
+  (symbol "<LibName>:<PartName>_0_1"
+    ;; Rectangles, polylines, arcs, circles — at least one required
+    (rectangle (start <x1> <y1>) (end <x2> <y2>)
+      (stroke (width 0) (type default))
+      (fill (type none)))
+    ;; Additional graphical primitives as needed:
+    ;; (polyline (pts (xy ...) (xy ...)) (stroke ...) (fill ...))
+    ;; (circle (center ...) (radius ...) (stroke ...) (fill ...))
+    ;; (arc (start ...) (mid ...) (end ...) (stroke ...) (fill ...))
+    ;; (text "label text" (at x y) (effects (font (size ...))))
+  )
+
+  ;; Sub-symbol _1_1: PINS (what defines connectivity)
+  (symbol "<LibName>:<PartName>_1_1"
+    (pin <electrical_type> <graphical_style> (at <x> <y> <angle>)
+      (length <len>)
+      (name "<pin_name>" (effects (font (size 1.27 1.27))))
+      (number "<pin_num>" (effects (font (size 1.27 1.27)))))
+    ;; ... more pins ...
+  )
+)
+```
+
+**Both sub-symbols are required.** The `_0_1` sub-symbol contains the
+visual body (at minimum one `(rectangle ...)` for ICs or one
+`(polyline ...)` for passives). The `_1_1` sub-symbol contains pin
+definitions. Omitting the `_0_1` sub-symbol or leaving it empty
+produces an invisible component.
+
+**Pin coordinate rule:** Pin `(at ...)` coordinates are relative to
+the symbol origin (0, 0). The pin endpoint (where wires attach) is at
+the pin's `(at ...)` position. The pin extends inward by `(length ...)`
+toward the symbol body. Pin angles: 0 = extends left (pin end on
+right), 90 = extends down (pin end on top), 180 = extends right (pin
+end on left), 270 = extends up (pin end on bottom).
 
 ### 8.2: Visual Layout Rules (MANDATORY)
 
@@ -377,20 +474,53 @@ disconnected wires in KiCad.
    - Connectors: at sheet edges, pins facing inward
 
 5. **Wire routing rules**:
+   - **Every pin MUST have a wire segment** — net labels and power
+     symbols alone create electrical connections but are visually
+     unreadable without wire stubs. A pin with only a label placed
+     directly on its endpoint is prohibited.
+   - **Intra-block wires vs. inter-block labels**: Within a
+     functional block (e.g., an IC and its decoupling caps,
+     pull-ups, and supporting passives), components sharing a net
+     MUST be connected by **direct wires**. The reader should be
+     able to trace the circuit within a block without reading label
+     text. **Net labels are for inter-block connections only** —
+     signals that cross from one functional block to another (e.g.,
+     VBAT from the power block to the MCU block).
+
+   **Negative example — what BAD connectivity looks like:**
+   ```
+   BAD: Label directly on pin, no wire, label-only inter-component
+   ┌──────┐              ┌──────┐
+   │  IC  ├─VDD          │  C1  ├─VDD
+   └──────┘              └──────┘
+   (No wire between IC VDD pin and C1 — just matching labels.
+    Electrically valid but visually the reader cannot see these
+    are connected without reading every label on the sheet.)
+
+   GOOD: Direct wire within block, label only for inter-block
+   ┌──────┐    wire     ┌──────┐
+   │  IC  ├────────────┤  C1  │   (intra-block: direct wire)
+   └──┬───┘             └──────┘
+      │wire
+      ├──VDD_SENSOR               (inter-block: label on stub)
+   ```
+   If your schematic looks like the BAD example — labels everywhere,
+   no wires between nearby components — you have violated this rule.
+
    - Wires MUST be orthogonal (horizontal or vertical segments
      only — no diagonal wires)
    - Wire endpoints MUST align exactly with component pin
      endpoints (same X,Y coordinate) for KiCad to register a
      connection
-   - Use net labels instead of long wires for connections that
-     would cross many components or span large distances
    - Place junction dots where three or more wires meet at a
      point (KiCad requires explicit `(junction ...)` entries)
    - NEVER route wires through component bodies
 
 6. **Label placement**:
-   - Net labels placed on short wire stubs (2.54mm–5.08mm) from
-     pins, not floating in space
+   - Net labels MUST be placed on short wire stubs (2.54mm–5.08mm)
+     extending from pins — NEVER placed directly on pin endpoints
+     without a wire. Labels overlapping pin endpoints are unreadable
+     and obscure the connection.
    - Power symbols (VCC, GND, +3V3) placed on short vertical
      wire stubs above (power) or below (ground) the connection
      point
@@ -406,7 +536,65 @@ disconnected wires in KiCad.
    (not by a power symbol). This satisfies KiCad's ERC power
    source checks.
 
+9. **Layout composition algorithm**: To systematically place
+   components on the schematic sheet, follow this procedure:
+
+   **Step 1 — Define functional blocks.** Group all components
+   into logical blocks (e.g., "Power Input", "Voltage Regulation",
+   "MCU", "Sensor 1", "Connectors"). Each block contains one
+   primary IC or connector plus its supporting passives (decoupling
+   caps, pull-ups, series resistors).
+
+   **Step 2 — Compute each block's bounding box.** For each block:
+   - Count the components and their pin spans
+   - Block width = max(primary IC width, number of horizontal
+     passives × 10.16mm) + 2 × stub length (5.08mm) + 2 × label
+     margin (7.62mm)
+   - Block height = (number of pin rows on tallest component ×
+     2.54mm) + (number of supporting passives stacked vertically
+     × 10.16mm) + 2 × stub length (5.08mm)
+   - Minimum block size: 25.4mm × 25.4mm
+
+   **Step 3 — Arrange blocks in a grid.** Place blocks following
+   signal flow and power hierarchy:
+   - **Left column**: Power input, battery, protection
+   - **Center column**: Voltage regulation, MCU/controller
+   - **Right column**: Peripherals, sensors, output connectors
+   - **Top row**: Power chain (left to right)
+   - **Bottom row**: Signal chain (left to right)
+   - Inter-block gap: max(20.32mm, tallest label text in either
+     adjacent block × 1.27mm + 5.08mm)
+
+   **Step 4 — Determine page size from total extent.** Sum all
+   block bounding boxes plus inter-block gaps, then add 25mm
+   margins on all sides:
+
+   | Total component count | Recommended page |
+   |-----------------------|------------------|
+   | ≤ 15 components       | A4 (297 × 210mm) |
+   | 16–40 components      | A3 (420 × 297mm) |
+   | 41–80 components      | A2 (594 × 420mm) |
+
+   If the total extent exceeds the page, use hierarchical sheets
+   (one block per sheet) instead of increasing page size further.
+
+   **Step 5 — Assign absolute coordinates.** Convert each block's
+   grid position to absolute coordinates on the page. Start the
+   first block at (25.4, 25.4) — the top-left of the usable area.
+   All coordinates must snap to the 2.54mm grid.
+
 ### 8.3: Component Symbol References
+
+> ⚠️ **EXISTING CODE IS ASSUMED NON-CONFORMING.** If the repository
+> contains existing schematic generation code (helper functions,
+> templates, or prior `.kicad_sch` files), it predates these standards
+> and MUST NOT be trusted. Do NOT copy symbol dimensions, graphical
+> body patterns, or connectivity patterns from existing functions
+> without verifying each value against the mandatory dimension table
+> below. Common non-conformances in existing code: undersized symbol
+> bodies (e.g., 0.762mm instead of 2.032mm), missing `_0_1` graphical
+> sub-symbols, label-only connectivity without wire stubs, pin lengths
+> below 1.27mm, and hardcoded coordinates outside the page area.
 
 When generating symbol instances, use KiCad's standard library
 symbol names where available:
@@ -426,15 +614,235 @@ symbol names where available:
   `power:VCC`, `power:PWR_FLAG`
 - Test points: `TestPoint:TestPoint`
 
+**Every symbol referenced above MUST have a complete definition in
+the `lib_symbols` section**, including the graphical body sub-symbol
+(`_0_1`). KiCad schematic files are self-contained — they do NOT
+load symbols from external library files at render time. Even
+standard library symbols like `Device:R` must have their full
+graphical definition embedded in the file.
+
+#### Extracting Standard Symbols from KiCad (PREFERRED)
+
+Standard components (resistors, capacitors, inductors, diodes,
+transistors, connectors, power symbols) have **well-known electrical
+schematic symbols** — zigzag or rectangle for resistors, parallel
+plates for capacitors, triangle-and-bar for diodes, gate/drain/source
+arrow for MOSFETs, etc. Using plain rectangles for passives and
+transistors is non-conforming — it produces technically valid but
+visually wrong schematics that no engineer would recognize.
+
+The **preferred method** for obtaining correct symbol definitions is
+to extract them from KiCad's installed standard library files:
+
+```python
+# Extract a symbol definition from KiCad's standard library
+import subprocess, re
+
+def extract_kicad_symbol(lib_name: str, symbol_name: str) -> str:
+    """Extract a symbol definition from KiCad's installed libraries.
+
+    Args:
+        lib_name: Library name (e.g., "Device", "power",
+                  "Connector_Generic")
+        symbol_name: Symbol name (e.g., "R", "C", "GND",
+                     "Q_PMOS_GDS", "Conn_01x07")
+
+    Returns:
+        The complete (symbol ...) S-expression block for embedding
+        in a .kicad_sch lib_symbols section.
+
+    KiCad library paths:
+        Windows: C:\\Program Files\\KiCad\\<version>\\share\\kicad\\symbols\\
+        Linux:   /usr/share/kicad/symbols/
+        macOS:   /Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols/
+    """
+    import glob, os
+    # Find the library file
+    search_paths = [
+        "C:/Program Files/KiCad/*/share/kicad/symbols",
+        "/usr/share/kicad/symbols",
+        "/Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols",
+    ]
+    lib_file = None
+    for pattern in search_paths:
+        for path in glob.glob(pattern):
+            candidate = os.path.join(path, f"{lib_name}.kicad_sym")
+            if os.path.exists(candidate):
+                lib_file = candidate
+                break
+        if lib_file:
+            break
+
+    if not lib_file:
+        raise FileNotFoundError(
+            f"KiCad library '{lib_name}.kicad_sym' not found. "
+            f"Searched: {search_paths}")
+
+    with open(lib_file, "r") as f:
+        content = f.read()
+
+    # Extract the symbol block
+    full_name = f"{lib_name}:{symbol_name}"
+    # Find the top-level (symbol "Name" ...) block
+    pattern = rf'\(symbol "{re.escape(symbol_name)}"'
+    match = re.search(pattern, content)
+    if not match:
+        raise ValueError(
+            f"Symbol '{symbol_name}' not found in {lib_file}")
+
+    # Extract balanced parentheses
+    start = match.start()
+    depth = 0
+    for i in range(start, len(content)):
+        if content[i] == '(':
+            depth += 1
+        elif content[i] == ')':
+            depth -= 1
+            if depth == 0:
+                return content[start:i+1]
+
+    raise ValueError(f"Malformed symbol block for '{symbol_name}'")
+```
+
+**Usage**: For every standard symbol in the design, call
+`extract_kicad_symbol("Device", "R")`, etc., and embed the returned
+S-expression in the `lib_symbols` section. This gives you the real
+graphical shapes — zigzag resistors, capacitor plates, MOSFET arrows,
+diode triangles — not simplified rectangles.
+
+**If KiCad is not installed** or the library files cannot be found,
+fall back to the inline examples below. But note: inline examples
+use simplified IEC-style shapes. The extracted library versions are
+always preferred because they match what engineers expect to see.
+
+#### Mandatory Symbol Dimensions
+
+The dimensions below are **normative** — they match KiCad's standard
+library and produce legible, correctly-spaced schematics. Do NOT use
+smaller dimensions from existing code or training data. Symbols
+smaller than these minimums become illegible and overlap with labels.
+
+| Symbol Type | Body Size (W × H mm) | Pin Span (tip-to-tip mm) | Pin Length (mm) | Min Spacing Between Symbols (mm) |
+|-------------|----------------------|--------------------------|-----------------|----------------------------------|
+| 2-pin passive (R, C, L) | 2.032 × 5.08 | 7.62 | 1.27 | 10.16 |
+| 3-pin (SOT-23, transistor) | 2.54 × 5.08 | 7.62 | 2.54 | 12.70 |
+| IC (≤ 8 pins) | 10.16 × (pins/2 × 2.54) | pins/2 × 2.54 + 5.08 | 2.54 | 20.32 |
+| IC (> 8 pins) | 10.16 × (pins/2 × 2.54) | pins/2 × 2.54 + 5.08 | 2.54 | 25.40 |
+| Connector (N pins) | 2.54 × (N × 2.54) | N × 2.54 + 2.54 | 2.54 | 15.24 |
+| Power symbol | — | 2.54 (single stub) | 2.54 | 5.08 |
+
+**Validation rule:** If any symbol's body rectangle is smaller than
+2.032mm in either dimension, or any pin length is less than 1.27mm,
+the symbol is non-conforming and must be resized.
+
+**Standard symbol body examples** (FALLBACK — use only when KiCad
+library extraction is unavailable. These use simplified IEC-style
+shapes. Extract from the real library whenever possible.):
+
+```
+;; Resistor — IEC rectangular body (simplified fallback)
+;; The real KiCad Device:R has the same shape — IEC uses a rectangle.
+;; For US-style zigzag, extract from the KiCad library instead.
+(symbol "Device:R" (in_bom yes) (on_board yes)
+  (property "Reference" "R" (at 2.032 0 90)
+    (effects (font (size 1.27 1.27))))
+  (property "Value" "R" (at -2.032 0 90)
+    (effects (font (size 1.27 1.27))))
+  (property "Footprint" "" (at -1.778 0 90)
+    (effects (font (size 1.27 1.27)) hide))
+  (symbol "Device:R_0_1"
+    (rectangle (start -1.016 -2.54) (end 1.016 2.54)
+      (stroke (width 0) (type default))
+      (fill (type none)))
+  )
+  (symbol "Device:R_1_1"
+    (pin passive line (at 0 3.81 270) (length 1.27)
+      (name "~" (effects (font (size 1.27 1.27))))
+      (number "1" (effects (font (size 1.27 1.27)))))
+    (pin passive line (at 0 -3.81 90) (length 1.27)
+      (name "~" (effects (font (size 1.27 1.27))))
+      (number "2" (effects (font (size 1.27 1.27)))))
+  )
+)
+
+;; Capacitor — two parallel lines with two pins
+(symbol "Device:C" (in_bom yes) (on_board yes)
+  (property "Reference" "C" (at 1.524 0 0)
+    (effects (font (size 1.27 1.27)) (justify left)))
+  (property "Value" "C" (at 1.524 -2.54 0)
+    (effects (font (size 1.27 1.27)) (justify left)))
+  (symbol "Device:C_0_1"
+    (polyline (pts (xy -2.032 -0.762) (xy 2.032 -0.762))
+      (stroke (width 0.508) (type default)) (fill (type none)))
+    (polyline (pts (xy -2.032 0.762) (xy 2.032 0.762))
+      (stroke (width 0.508) (type default)) (fill (type none)))
+  )
+  (symbol "Device:C_1_1"
+    (pin passive line (at 0 3.81 270) (length 2.794)
+      (name "~" (effects (font (size 1.27 1.27))))
+      (number "1" (effects (font (size 1.27 1.27)))))
+    (pin passive line (at 0 -3.81 90) (length 2.794)
+      (name "~" (effects (font (size 1.27 1.27))))
+      (number "2" (effects (font (size 1.27 1.27)))))
+  )
+)
+
+;; Generic IC — rectangular body is CORRECT for ICs.
+;; Rectangles are the standard schematic symbol for integrated circuits.
+;; Do NOT use rectangles for passives or transistors — those have
+;; specific standard symbols (extract from KiCad library).
+(symbol "Custom:MyIC" (in_bom yes) (on_board yes)
+  (property "Reference" "U" (at 0 6.35 0)
+    (effects (font (size 1.27 1.27))))
+  (property "Value" "MyIC" (at 0 -6.35 0)
+    (effects (font (size 1.27 1.27))))
+  (symbol "Custom:MyIC_0_1"
+    (rectangle (start -5.08 5.08) (end 5.08 -5.08)
+      (stroke (width 0.254) (type default))
+      (fill (type background)))
+  )
+  (symbol "Custom:MyIC_1_1"
+    (pin input line (at -7.62 2.54 0) (length 2.54)
+      (name "VDD" (effects (font (size 1.27 1.27))))
+      (number "1" (effects (font (size 1.27 1.27)))))
+    (pin passive line (at -7.62 0 0) (length 2.54)
+      (name "GND" (effects (font (size 1.27 1.27))))
+      (number "2" (effects (font (size 1.27 1.27)))))
+    (pin bidirectional line (at 7.62 2.54 180) (length 2.54)
+      (name "SDA" (effects (font (size 1.27 1.27))))
+      (number "3" (effects (font (size 1.27 1.27)))))
+    (pin bidirectional line (at 7.62 0 180) (length 2.54)
+      (name "SCL" (effects (font (size 1.27 1.27))))
+      (number "4" (effects (font (size 1.27 1.27)))))
+  )
+)
+```
+
 For specific ICs, use the manufacturer library if available
 (e.g., `MCU_Nordic:nRF52840-QIAA`) or create an inline symbol
-definition in the `lib_symbols` section with correct pin
-positions, names, and electrical types.
+definition in the `lib_symbols` section. Custom IC symbols MUST
+include:
+- A `_0_1` sub-symbol with at least a `(rectangle ...)` for the
+  component body
+- A `_1_1` sub-symbol with all pins, including correct electrical
+  types (`input`, `output`, `bidirectional`, `passive`,
+  `power_in`, `power_out`, `unspecified`, `no_connect`)
+- Pin positions that place pin endpoints outside the rectangle
+  body, with pin length extending inward to the body edge
+- `(property ...)` entries for Reference, Value, and Footprint
 
 ### 8.4: S-Expression Generation Checklist
 
 Before outputting the `.kicad_sch` file, verify:
 
+- [ ] Every symbol in `lib_symbols` has a `_0_1` sub-symbol with at
+      least one graphical primitive (rectangle, polyline, arc, or circle)
+- [ ] Every symbol in `lib_symbols` has a `_1_1` sub-symbol with all
+      pin definitions
+- [ ] Every pin has at least one wire segment connecting it to a net
+      label, another pin, or a power symbol — no label-only connections
+- [ ] All component origins fall within the page drawing area (minimum
+      25mm from all page borders)
 - [ ] Every coordinate is a multiple of 2.54
 - [ ] Every wire endpoint matches a pin endpoint or another wire
       endpoint exactly
@@ -445,6 +853,152 @@ Before outputting the `.kicad_sch` file, verify:
 - [ ] All UUIDs are unique across the file
 - [ ] Reference designators are unique and sequential
 - [ ] Title block is populated
+
+### 8.5: Visual Verification Gate (MANDATORY)
+
+After generating the `.kicad_sch` file, **render the schematic and
+visually inspect it**. This step CANNOT be skipped — structural
+validation (checklist 8.4) does not catch visual failures.
+
+**How to render**: Open the file in KiCad's schematic editor, export
+a PDF via `kicad-cli sch export pdf`, or take a screenshot. If none
+of these are available, ask the user to open the file and report what
+they see.
+
+**Verify all five of the following:**
+
+1. **All symbols are visible at legible size** — every component
+   renders with a visible body (rectangle, polyline, or other
+   graphical element). If any component appears as an invisible
+   cluster of pins or as a tiny dot, the `_0_1` graphical body
+   sub-symbol is missing or the symbol dimensions are below the
+   mandatory minimums in the dimension table.
+2. **All wires are visible** — every connection has visible wire
+   segments. If the schematic shows labels but no wires, `(wire ...)`
+   entries are missing. Verify that intra-block connections use
+   direct wires (not just labels).
+3. **No components overlap or fall outside the page border** — all
+   components are within the drawable area and do not stack on top of
+   each other. Check that component bodies, labels, and designators
+   all have clear space around them.
+4. **Labels are readable** — no labels overlap pin names, designators,
+   or other labels. Labels sit on wire stubs with clear separation
+   from the pin endpoint.
+5. **Functional blocks are visually grouped** — related components
+   (IC + decoupling + pull-ups) are clustered together, and there is
+   clear visual separation between blocks matching the layout
+   composition algorithm.
+
+If any of these checks fail, diagnose and fix before presenting to
+the user. Common fixes:
+- Invisible symbols → add `_0_1` sub-symbol with graphical primitives
+  matching the mandatory dimension table
+- Tiny symbols → resize to match the mandatory dimension table;
+  do NOT reuse undersized dimensions from existing code
+- Missing wires → add `(wire ...)` entries between pins and labels
+- Off-page components → recalculate placement coordinates within
+  the page drawing area using the layout composition algorithm
+- Overlapping labels → extend wire stubs and adjust label positions
+- No visual grouping → re-run the layout composition algorithm
+  with explicit functional block assignments
+
+### 8.6: Executable Validator
+
+If schematic generation is automated via Python code (rather than
+hand-written S-expressions), implement and run the following
+validation function **before** declaring the schematic complete.
+This catches the errors that structural checklists miss — it
+validates at the code level, not the reading level.
+
+```python
+def validate_kicad_sch(sch_path: str) -> list[str]:
+    """Validate a .kicad_sch file against PromptKit schematic standards.
+
+    Returns a list of error strings. Empty list = all checks pass.
+    Run this BEFORE presenting the schematic to the user.
+    """
+    import re
+    errors = []
+    with open(sch_path, "r") as f:
+        content = f.read()
+
+    # 1. Every lib_symbol must have a _0_1 sub-symbol with graphics
+    lib_sym_names = re.findall(
+        r'\(symbol "([^"]+)"\s+\(in_bom', content)
+    for name in lib_sym_names:
+        escaped = re.escape(name)
+        pattern = rf'\(symbol "{escaped}_0_1"'
+        if not re.search(pattern, content):
+            errors.append(
+                f"MISSING GRAPHICAL BODY: {name} has no _0_1 sub-symbol")
+        else:
+            # Check for at least one graphical primitive
+            # Find the _0_1 block and check for rectangle/polyline/arc/circle
+            block_match = re.search(
+                rf'\(symbol "{escaped}_0_1"(.*?)\n  \)',
+                content, re.DOTALL)
+            if block_match:
+                block = block_match.group(1)
+                if not re.search(
+                    r'\(rectangle|\(polyline|\(arc|\(circle', block):
+                    errors.append(
+                        f"EMPTY GRAPHICAL BODY: {name}_0_1 has no "
+                        f"rectangle/polyline/arc/circle")
+
+    # 2. Pin dimensions — check against mandatory minimums
+    pin_lengths = re.findall(r'\(pin [^)]+\(length ([0-9.]+)\)', content)
+    for length in pin_lengths:
+        if float(length) < 1.27:
+            errors.append(
+                f"PIN TOO SHORT: length {length}mm < 1.27mm minimum")
+            break  # One error is enough to flag the pattern
+
+    # 3. Body dimensions — check rectangles are not undersized
+    rects = re.findall(
+        r'\(rectangle \(start ([0-9.-]+) ([0-9.-]+)\) '
+        r'\(end ([0-9.-]+) ([0-9.-]+)\)', content)
+    for x1, y1, x2, y2 in rects:
+        w = abs(float(x2) - float(x1))
+        h = abs(float(y2) - float(y1))
+        if w < 2.032 and h < 2.032:
+            errors.append(
+                f"BODY TOO SMALL: rectangle {w:.3f}x{h:.3f}mm, "
+                f"minimum 2.032mm in at least one dimension")
+
+    # 4. Wire existence — at least one (wire ...) entry must exist
+    wire_count = len(re.findall(r'\(wire ', content))
+    if wire_count == 0:
+        errors.append("NO WIRES: schematic has zero (wire ...) entries")
+
+    # 5. Page boundary — check component placement coordinates
+    # Symbol instances have (at X Y angle) for placement
+    placements = re.findall(
+        r'\(symbol \(lib_id "[^"]+"\).*?\(at ([0-9.-]+) ([0-9.-]+)',
+        content, re.DOTALL)
+    page_match = re.search(r'\(paper "([^"]+)"\)', content)
+    if page_match:
+        page = page_match.group(1)
+        limits = {"A4": (297, 210), "A3": (420, 297),
+                  "A2": (594, 420)}.get(page, (297, 210))
+        for x, y in placements:
+            fx, fy = float(x), float(y)
+            if fx < 25 or fx > limits[0] - 25:
+                errors.append(
+                    f"OFF PAGE: component at x={fx} outside "
+                    f"25–{limits[0]-25}mm range")
+            if fy < 25 or fy > limits[1] - 25:
+                errors.append(
+                    f"OFF PAGE: component at y={fy} outside "
+                    f"25–{limits[1]-25}mm range")
+
+    return errors
+```
+
+**Usage**: After generating the `.kicad_sch` file, call
+`validate_kicad_sch("path/to/schematic.kicad_sch")`. If errors are
+returned, fix each one before proceeding to the visual verification
+gate (§8.5). This validator is not exhaustive — it catches the most
+common structural failures but does not replace visual inspection.
 
 ## Phase 9: Self-Audit Checklist
 

@@ -53,11 +53,70 @@ Verify all prerequisites before beginning layout design.
 
 2. **Component footprint inventory**: For each component, confirm:
    - KiCad footprint library name and footprint name
-   - Physical dimensions (from footprint or datasheet)
    - Mounting type (SMD, through-hole, module)
    - Any special placement requirements from the schematic
      (layout carry-forward notes like "place near connector",
      "differential pair", "keep short")
+   - **Physical footprint dimensions** — produce a dimension table
+     with courtyard bounding box for EVERY component. This table
+     drives all placement decisions. Without it, components WILL
+     overlap.
+
+   **Mandatory footprint dimension table**: For each component,
+   record the courtyard bounding box (the rectangle that no other
+   component may enter). Courtyard = component body + pad
+   extensions + 0.25mm clearance on all sides. For connectors,
+   include the cable/plug mating area.
+
+   | Ref | Component | Courtyard W×H (mm) | Origin | Notes |
+   |-----|-----------|-------------------|--------|-------|
+   | U1 | nRF52840 QFN-73 | 8.0 × 8.0 | Center | Body 7×7 + pads |
+   | R1 | 0402 resistor | 1.8 × 1.0 | Center | — |
+   | C1 | 0805 capacitor | 3.0 × 1.8 | Center | — |
+   | J1 | JST-SH 4-pin SMD | 8.0 × 5.5 | Pin 1 | + 6mm cable zone |
+   | ... | ... | ... | ... | ... |
+
+   **Common footprint courtyard sizes** (typical, verify against
+   actual KiCad footprint or datasheet):
+
+   | Package | Courtyard W × H (mm) | Notes |
+   |---------|---------------------|-------|
+   | 0402 | 1.8 × 1.0 | Smallest standard SMD |
+   | 0603 | 2.4 × 1.4 | — |
+   | 0805 | 3.0 × 1.8 | — |
+   | SOT-23 (3-pin) | 3.5 × 3.0 | — |
+   | SOT-23-6 | 3.5 × 3.0 | Same body as SOT-23 |
+   | SOD-323 | 3.0 × 1.8 | Diode |
+   | SOIC-8 | 6.0 × 5.0 | — |
+   | QFN-16 (3×3) | 4.5 × 4.5 | Includes exposed pad |
+   | QFN-48 (7×7) | 8.5 × 8.5 | — |
+   | JST-PH 2-pin SMD RA | 8.0 × 6.0 | + cable exit zone ~10mm |
+   | JST-SH 4-pin SMD RA | 8.0 × 5.5 | Qwiic; + cable zone ~8mm |
+   | JST-XH 3-pin SMD RA | 10.5 × 8.0 | + cable zone ~12mm |
+   | 1×7 pin header 2.54mm | 2.54 × 17.78 | Through-hole |
+   | M2.5 mounting hole | 5.5 × 5.5 | Pad diameter |
+   | USB-C receptacle | 9.5 × 7.5 | — |
+
+   **Module/breakout boards** (e.g., Arduino Nano, Xiao, Pico):
+   Record the FULL module outline including overhang — not just the
+   socket pin positions. The module body sits between and extends
+   beyond the socket rows. Any component placed between or under
+   the socket rows will be physically covered by the module.
+
+   | Module | Outline W × H (mm) | Socket Spacing (mm) | Notes |
+   |--------|--------------------|--------------------|-------|
+   | Seeed Xiao | 21.0 × 17.5 | 17.5 (center-center) | USB-C overhangs 2mm beyond pin row |
+   | Arduino Nano | 45.0 × 18.0 | 15.24 (600mil) | USB and ICSP extend beyond pins |
+   | RPi Pico | 51.0 × 21.0 | 17.78 (700mil) | USB extends 2mm past pin row |
+
+   **Exclusion zone rule**: The rectangular area between and
+   including the socket rows, extended to the full module outline,
+   is an EXCLUSION ZONE. Do NOT place any components in this zone
+   — they will be physically under the module and inaccessible.
+
+   Connectors with cable exits require an additional CLEARANCE ZONE
+   extending from the mating face (typically 8–12mm) where no
+   components or board edge features may intrude.
 
 3. **Design constraints from upstream**: Extract from the component
    selection and schematic design:
@@ -233,7 +292,29 @@ engineering best practices.
 
 2. **Placement rules**:
    - All components on the 1.27mm (50mil) placement grid
-   - Minimum 1mm clearance between component courtyards
+   - **Courtyard collision check (MANDATORY)**: After assigning
+     coordinates to each component, verify that no two courtyard
+     bounding boxes overlap. Use the courtyard dimensions from the
+     Phase 1 footprint inventory — NOT estimated sizes. For each
+     pair of adjacent components, verify:
+     `gap = distance_between_origins - (courtyard_A/2 + courtyard_B/2)`
+     Gap must be ≥ 0.25mm (fab minimum) in both X and Y.
+   - **Module exclusion zone**: If the design includes a plug-in
+     module (Xiao, Nano, Pico, etc.), mark the full module outline
+     as an exclusion zone. No components may be placed within this
+     zone. Components associated with the module (decoupling caps,
+     pull-ups) must be placed OUTSIDE the module footprint — along
+     the edges or beyond the pin rows.
+   - **Connector clearance zones**: For each edge-mounted connector,
+     reserve a clearance zone extending inward from the connector's
+     mating face (typically 8–12mm for JST connectors with cables).
+     No components may be placed in this zone.
+   - **Edge-mounted connector offset**: Connectors placed at board
+     edges must have their BODY origin offset inward so that the
+     mating face is at the edge but the mounting pads are fully on
+     the board. A connector at X=0 with its origin at center will
+     have pads hanging off the board edge. Typical offset: half the
+     connector depth inward (e.g., 3mm for a JST-PH).
    - Decoupling capacitors within 3mm of the IC power pin
    - Crystal within 5mm of the MCU oscillator pins
    - No components in antenna keepout zones
@@ -250,6 +331,18 @@ engineering best practices.
      pad)
 
 4. **Group placement verification**: Before routing, verify:
+   - **Courtyard collision audit**: For every component pair where
+     center-to-center distance < sum of half-courtyards + 1mm,
+     verify no overlap. Produce a collision report:
+
+     | Comp A | Comp B | Distance (mm) | Min Required (mm) | Status |
+     |--------|--------|---------------|-------------------|--------|
+     | C1 | C2 | 2.0 | 3.0 | ❌ OVERLAP |
+     | Q1 | C3 | 4.0 | 3.25 | ✅ OK |
+
+     Fix ALL overlaps before proceeding to routing.
+   - **Module exclusion zone audit**: Verify zero components are
+     placed within the module outline exclusion zone.
    - Signal flow is logical (input connectors → processing →
      output connectors)
    - Power flows from source to loads without doubling back
