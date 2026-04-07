@@ -55,7 +55,10 @@ For each capability described:
 
 ## Phase 3: Ambiguity Detection
 
-Review each requirement for:
+Review each requirement for language that introduces non-deterministic
+interpretation. Apply the ambiguity pattern categories below
+systematically; these categories are aligned with the
+`prompt-determinism-analysis` protocol:
 
 1. **Vague adjectives**: "fast," "responsive," "secure," "scalable,"
    "user-friendly" — replace with measurable criteria.
@@ -67,6 +70,18 @@ Review each requirement for:
    readers, add it to a glossary with a precise definition.
 5. **Missing negative requirements**: for every "the system MUST do X,"
    consider "the system MUST NOT do Y" (e.g., "MUST NOT expose PII in logs").
+6. **Open-ended enumerations**: "support formats like PDF, Word, etc." —
+   enumerate the complete list or define the selection criterion
+   (e.g., "all formats supported by the pandoc library").
+7. **Hedge words in requirements**: "the system could support" or
+   "consider adding" — these must be resolved to MUST, SHOULD, or MAY.
+   If the user cannot decide, classify as MAY and flag for review.
+8. **Missing conditional branches**: "if the user is authenticated,
+   show the dashboard" — what happens if NOT authenticated? Add
+   explicit else-branches for every conditional requirement.
+9. **Unanchored comparatives**: "faster than the current system" —
+   anchor to measurable baselines (e.g., "response time under 200ms
+   at the 95th percentile, compared to the current 500ms").
 
 ## Phase 4: Dependency and Conflict Analysis
 

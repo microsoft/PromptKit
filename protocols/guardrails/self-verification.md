@@ -85,3 +85,24 @@ internally):
 - [ ] Is the output internally consistent?
 
 If any answer is "no," address the gap before finalizing.
+
+### 6. Determinism Check
+
+When the output contains instructions, protocols, checklists, or
+other directive text intended for LLM consumption, scan for language
+that introduces non-deterministic interpretation:
+
+- [ ] Are all instructions specific enough that two different LLMs
+      would produce structurally similar output?
+- [ ] Are quantifiers concrete (specific counts or ranges, not
+      "some" or "several")?
+- [ ] Are evaluation criteria observable (not subjective adjectives
+      like "good" or "appropriate")?
+- [ ] Do all conditionals have explicit else/default branches?
+- [ ] Are action verbs decomposed into specific sub-steps (not
+      standalone "analyze" or "evaluate")?
+
+If any answer is "no" and the vague language is not intentionally
+flexible, tighten the language before finalizing. This check applies
+to generated prompt text, instruction files, and protocol content —
+not to narrative prose, user-facing explanations, or creative output.
