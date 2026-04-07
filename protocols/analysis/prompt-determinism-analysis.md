@@ -249,9 +249,14 @@ examples:
 - Output formats without a concrete sample
 - Pattern descriptions without concrete instances
 
-Classify as Medium when the instruction introduces a novel concept
-central to the task. Classify as Low when the instruction describes
-a well-known concept that most LLMs handle consistently.
+Classify as Medium when the instruction introduces a concept,
+schema, category set, output structure, or term that is central
+to the task and the same document does not provide either (a) an
+explicit definition, or (b) at least one concrete example.
+Classify as Low when the instruction lacks an example but the same
+document already makes the meaning operational through an explicit
+definition, sample output, glossary entry, or enumerated categories
+or steps.
 
 **Rewrite pattern**: Add at least one concrete example for each
 novel concept. For classification schemes, provide one example

@@ -50,7 +50,9 @@ concrete rewrite suggestions.
 1. Confirm the prompt content is non-empty. If the input is empty
    or contains only whitespace, stop and produce a zero-findings
    report with the Coverage section stating "Input was empty; no
-   analysis performed."
+   analysis performed.", the Findings section stating
+   "None identified.", and the Remediation Plan stating
+   "No remediation required."
 2. If `scope_notes` specifies sections or suppression patterns,
    record them before beginning analysis.
 3. Determine the strictness level. If the provided value does not
@@ -111,7 +113,7 @@ rewrite suggestion from the protocol analysis.
 ### Step 4: Determinism Scorecard
 
 Embed the **Determinism Scorecard** as a subsection within the
-Findings section (§4 of the investigation-report format). Place it
+Findings section of the investigation-report format. Place it
 after the last individual finding entry. Include:
 
 1. The per-section scorecard table from Phase 4.3.
@@ -129,9 +131,9 @@ after the last individual finding entry. Include:
   passages — examples are intentionally concrete by nature.
 - Do NOT rewrite the prompt — provide rewrite SUGGESTIONS only.
   The user decides which to adopt.
-- Do NOT flag language that is intentionally flexible (e.g., "use your
-  best judgment" in a creative writing prompt). However, DO flag it
-  with a note that it may be intentional.
+- Language that is intentionally flexible (e.g., "use your best
+  judgment" in a creative writing prompt) may be noted only as an
+  Informational finding and must be marked as potentially intentional.
 
 ## Quality Checklist
 
