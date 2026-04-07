@@ -74,7 +74,7 @@ What follows from this decision? Include:
 2. **Chronological order.** New decisions are appended at the end.
 3. **Immutable once accepted.** Do not edit accepted decisions — instead,
    add a new decision that supersedes the old one and update the old
-   entry's Status to `Superseded by [new title]`.
+   entry's Status to `Superseded by [Decision Title]`.
 4. **Options table is mandatory.** Even if the decision seems obvious,
    document at least one alternative considered (including "do nothing").
 5. **Consequences must include negatives.** Every decision has tradeoffs.
