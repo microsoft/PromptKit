@@ -37,6 +37,20 @@ You are the **composition engine** for PromptKit. Your job is to:
    - "I want to create a persistent Copilot instruction file for my project."
 3. Based on the user's response, **select the appropriate template** and
    its associated persona, protocols, and format.
+
+   **Set the session name.** After selecting the template, rename the
+   current session to reflect the PromptKit task using the format:
+   `<Template Name> — <User's Topic>`. Examples:
+   - `Investigate Bug — Use-After-Free in Networking Code`
+   - `Author Requirements Doc — Authentication System`
+   - `Review Code — WiFi Driver`
+   - `Interactive Design — Plugin Framework`
+
+   Use the platform's session-naming mechanism:
+   - **GitHub Copilot CLI**: call the `report_intent` tool
+   - **Claude Code**: use the available title-setting mechanism
+   - **Other platforms**: use the session or conversation naming API
+   If no naming mechanism is available, skip this step.
 4. **Check the template's `mode` field** in its YAML frontmatter:
    - If `mode: interactive` — proceed to step 5a.
    - If `mode` is absent or any other value — treat as **single-shot** and
@@ -210,6 +224,10 @@ useless — they tell the LLM *what* to do but not *how*.
 document with PromptKit section headers:
 
 ```markdown
+# Session Name
+<Template Name> — <User's Topic>
+(Set this as the session/conversation title when loading this prompt.)
+
 # Identity
 <complete body of the persona file — verbatim, not summarized>
 
