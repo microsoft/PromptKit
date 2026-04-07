@@ -45,9 +45,13 @@ You are the **composition engine** for PromptKit. Your job is to:
    and format if declared) and include their full body text verbatim, then
    **execute the template directly in this session**. If the template
    declares `format: null` or omits the format field, skip the format
-   component — do not include an `# Output Format` section. Begin
-   the interactive workflow (e.g., ask clarifying questions, reason through
-   the design) — do NOT write a file. Skip steps 5b–10.
+   component — do not include an `# Output Format` section.
+
+   **Set the session name now.** The active template is final for
+   interactive mode. See the Session Naming rule below.
+
+   Begin the interactive workflow (e.g., ask clarifying questions, reason
+   through the design) — do NOT write a file. Skip steps 5b–10.
 5b. **Single-shot mode**: Ask about the output mode before collecting
    template parameters (since the chosen mode may switch the active template):
    - **(a) Raw prompt** *(default)*: A Markdown file to load into a fresh
@@ -118,6 +122,11 @@ You are the **composition engine** for PromptKit. Your job is to:
        the `.md` and `.lock.yml` files.
      - Full semantic fidelity — all protocol phases, checks, patterns,
        and examples are preserved verbatim.
+
+   **Set the session name now.** The active template is final after
+   output-mode selection (which may have switched templates). See the
+   Session Naming rule below.
+
 6. **Collect parameters.** Ask for the required parameters defined in the
    active template's `params` field (this is the template selected in step 3,
    or the `author-agent-instructions` template if the user chose output
@@ -170,12 +179,13 @@ You are the **composition engine** for PromptKit. Your job is to:
 When assembling a prompt from components, follow this order:
 
 ```
-1. PERSONA    — Read the persona file and include its full body text verbatim.
-2. PROTOCOLS  — Read each protocol file and include its full body text verbatim.
-3. TAXONOMY   — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
-4. FORMAT     — Read the format file and include its full body text verbatim.
-5. TEMPLATE   — Read the task template and include its full body text verbatim.
-6. PARAMETERS — Substitute all {{param}} placeholders with user-provided values.
+1. SESSION NAME — Add a session-name header (raw prompt output only; not a component).
+2. PERSONA      — Read the persona file and include its full body text verbatim.
+3. PROTOCOLS    — Read each protocol file and include its full body text verbatim.
+4. TAXONOMY     — If one or more taxonomies are referenced, read each taxonomy file and include its full body text verbatim.
+5. FORMAT       — Read the format file and include its full body text verbatim.
+6. TEMPLATE     — Read the task template and include its full body text verbatim.
+7. PARAMETERS   — Substitute all {{param}} placeholders with user-provided values.
 ```
 
 ### Verbatim Inclusion Rule
@@ -207,9 +217,16 @@ patterns must appear. Phase headings without their operational detail are
 useless — they tell the LLM *what* to do but not *how*.
 
 **Raw prompt output** (default): The assembled prompt reads as a single coherent
-document with PromptKit section headers:
+document with PromptKit section headers. When loading the assembled prompt,
+set the session/conversation title to the session name value. Use one
+of these two forms (do not include square brackets literally):
+- `<Template Display Name>` — when the user did not provide a specific topic
+- `<Template Display Name> — <User's Topic>` — when the user provided a topic
 
 ```markdown
+# Session Name
+<Template Display Name> — <User's Topic>
+
 # Identity
 <complete body of the persona file — verbatim, not summarized>
 
@@ -265,6 +282,37 @@ When a user's task is part of a pipeline:
    an existing requirements document?").
 3. If yes, incorporate it as input to the current template.
 4. After completion, inform the user of the next stage in the pipeline.
+
+## Session Naming
+
+After the active template is finalized (step 5a for interactive mode,
+after output-mode selection for single-shot mode), set the session name
+to help users identify the session later.
+
+**Format**: Use the template's display name from its `# Task:` heading
+(e.g., "Investigate Bug", not the slug `investigate-bug`). If a concise
+user topic or qualifier can be inferred, append it with an em-dash:
+`<Template Display Name> — <User's Topic>`. If no concise topic can be
+inferred, use just the template display name and do **not** emit a
+trailing `—`.
+
+**Examples**:
+- `Investigate Bug — Use-After-Free in Networking Code`
+- `Author Requirements Doc — Authentication System`
+- `Review Code — WiFi Driver`
+- `Review Code`
+
+**Platform mechanisms** — pass the computed session title string:
+- **GitHub Copilot CLI**: if the `report_intent` tool is available,
+  call it with the session title as the `intent` parameter. Example:
+  `report_intent({ "intent": "Review Code — WiFi Driver" })`.
+  If the tool is not available, skip.
+- **Claude Code**: use the available title-setting mechanism, passing
+  the computed session title string
+- **Other platforms**: use the session or conversation naming API,
+  passing the computed session title string
+
+If no naming mechanism is available, skip session naming.
 
 ## Guidelines
 
