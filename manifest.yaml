@@ -158,6 +158,21 @@ protocols:
         reviewer to disprove every candidate finding before reporting it,
         reject known-safe patterns, and resist premature summarization.
 
+    - name: definition-of-done
+      path: protocols/guardrails/definition-of-done.md
+      description: >
+        Completion-verification checklist defining explicit criteria for
+        when a task is done. Checks functionality, tests, diagnostics,
+        build health, regression safety, plan alignment, and cleanup.
+
+    - name: tool-reliability-defense
+      path: protocols/guardrails/tool-reliability-defense.md
+      description: >
+        Defensive protocol for verifying tool outputs and anticipating
+        silent failures. Requires independent read-back after edits,
+        pre-edit snapshots, one logical change per tool call, and
+        escalation on repeated failures.
+
   analysis:
     - name: memory-safety-c
       path: protocols/analysis/memory-safety-c.md
@@ -927,6 +942,16 @@ templates:
       format: investigation-report
       pipeline_position: 4
       requires: [requirements-document, validation-plan]
+
+    - name: author-known-conditions-registry
+      path: templates/author-known-conditions-registry.md
+      description: >
+        Generate a structured registry of known build, test, and tool
+        conditions that agents should not re-investigate. Prevents
+        repeated wasted effort on solved or pre-existing problems.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification]
+      format: null
 
     - name: audit-code-compliance
       path: templates/audit-code-compliance.md
