@@ -98,8 +98,10 @@ shared methodology.
 Compare template frontmatter and instructions for near-duplicates.
 
 1. **Frontmatter comparison**: For each pair of templates, check:
-   - Same persona + same format + overlapping protocols (more than
-     half of protocol lists in common) → candidate for parameterization
+   - Same persona + same format + overlapping protocols (Jaccard
+     similarity of protocol lists, computed as
+     `|intersection| / |union|`, greater than 0.5) → candidate
+     for parameterization
    - Same protocols but different persona → may indicate the persona
      is the only differentiator, not the methodology
 

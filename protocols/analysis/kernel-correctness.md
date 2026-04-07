@@ -162,8 +162,9 @@ the false-positive-rejected section of the output.
 
 ## Output Format
 
-For each finding, report using the following markdown template. This format uses
-kernel-specific fields (Trigger path, falsification proof) that extend
+For each finding, report using the following markdown template. This
+format extends the standard finding structure with kernel-specific
+fields (Trigger path, falsification proof):
 
 ```
 ### Finding: <short title>
@@ -175,20 +176,6 @@ kernel-specific fields (Trigger path, falsification proof) that extend
 - **Evidence**: <code snippet or trace>
 - **Falsification proof**: <what was checked to confirm this is real>
 - **Remediation**: <specific fix>
-```
-the standard finding structure for kernel defect analysis:
-
-```markdown
-### Finding: <concise title>
-- **Severity**: Critical | High | Medium | Low
-- **Category**: <kernel-defect-categories ID, e.g., K1: Lock leak>
-- **Location**: <file>:<line> or <function name>
-- **Description**: <concise description>
-- **Trigger path**: <step-by-step control flow to trigger the bug>
-- **Why this is NOT a false positive**: <disproof of likely counterargument>
-- **Consequence**: <concrete bad outcome — BSOD, corruption, escalation, leak>
-- **Remediation**: <specific fix recommendation>
-- **Confidence**: Confirmed | High-confidence | Needs-domain-check
 ```
 
 ## Cross-References

@@ -55,8 +55,9 @@ Check that the contract covers every combination of resource and state.
    - Cell has an explicit, non-placeholder value → OK
    - Cell is blank → finding: `INCOMPLETE_MATRIX_CELL`
    - Cell contains a disallowed placeholder ("Not specified", "TBD",
-     "TBA", "TK", "To be determined", "N/A" used without justification)
-     or an unresolved marker
+     "TBA", "TK", "To be determined", bare "N/A", or "N/A" without an
+     explicit in-cell reason in the form `N/A — <reason resource/state
+     combination is impossible>`) or an unresolved marker
      ("[UNKNOWN: ...]") → finding: `INCOMPLETE_MATRIX_CELL`
    - Cell in the **guarantee** matrix is vague prose without a numeric
      bound or checkable predicate → finding: `VAGUE_GUARANTEE`

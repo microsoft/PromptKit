@@ -103,6 +103,6 @@ Before presenting the triage report, verify:
 - [ ] All in-scope items are accounted for
 - [ ] Every item has priority, effort, and recommended action
 - [ ] Critical and High items have written justifications
-- [ ] Patterns section identifies at least one cross-cutting observation
+- [ ] Patterns section identifies at least 3 cross-cutting observations
 - [ ] Recommended workflow is actionable and ordered
 - [ ] Coverage and limitations section is populated

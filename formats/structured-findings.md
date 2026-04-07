@@ -128,7 +128,7 @@ If no related findings exist, state "None identified".>
 
 - Findings with the **same diagnostic** (identical diagnostic code or
   message text), the **same root cause** (identical causal analysis), and
-  the **same fix** (identical or same-pattern code change) MUST be consolidated into a single finding with
+  the **same fix** (identical required code change) MUST be consolidated into a single finding with
   multiple occurrences listed in the Occurrence Locations table.
 - Do NOT consolidate when any of the following differ: diagnostic
   code/message, root cause, or required fix. Each distinct problem
