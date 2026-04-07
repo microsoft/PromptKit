@@ -56,7 +56,8 @@ verification of every mutation.
   Each edit should change one logical thing (one function, one
   block, one declaration).
 - Multi-line terminal commands are a corruption vector. Prefer
-  single-line commands chained with `&&` over heredocs or multi-line
+  single-line commands chained sequentially (`&&` in POSIX shells,
+  `; if ($?) { ... }` in PowerShell) over heredocs or multi-line
   strings.
 - If a bulk operation is required, execute it in bounded batches
   and verify each batch before proceeding.
