@@ -304,9 +304,13 @@ author-requirements-doc  →  author-design-doc  →  author-validation-plan  �
 **Hardware Lifecycle**
 
 ```
-author-requirements-doc  →  review-schematic  →  validate-simulation  →  review-bom  →  review-layout
-  (produces: requirements)    (consumes: req,      (consumes: req,         (consumes: req,  (consumes: req,
-                               audits netlist)      audits sim output)      audits BOM)      audits PCB)
+author-requirements-doc  →  design-schematic  →  review-schematic  →  validate-simulation  →  review-bom
+  (produces: requirements)   (produces:           (consumes: req +      (consumes: req,         (consumes: req +
+                              artifact-set)        artifact-set)         audits sim output)      artifact-set)
+
+                          →  design-pcb-layout  →  review-layout  →  emit-manufacturing-artifacts
+                             (consumes:             (consumes: req +    (consumes: artifact-set,
+                              artifact-set)          artifact-set)       produces: artifact-set)
 ```
 
 **Protocol Engineering**
