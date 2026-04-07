@@ -63,9 +63,11 @@ following code.
    ### Correctness
    - Does the code do what it claims to do?
    - Are edge cases handled? For each boundary condition (null, empty,
-     boundary values, overflow), verify: (1) the code explicitly checks
-     the condition, (2) error handling is present, (3) the error response
-     is specific
+     boundary values, overflow), verify that the code has explicit,
+     documented handling: either a defined non-error behavior (e.g.,
+     returning an empty result, applying a default, or clamping) or,
+     if the condition should be rejected, an explicit check, error
+     handling, and a specific error response
    - Are error paths correct — do they clean up resources, propagate errors
      appropriately, and avoid leaving the system in an inconsistent state?
    - Are return values checked where they should be?
