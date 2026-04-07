@@ -100,8 +100,10 @@ Make adjustments based on feedback before finalizing.
 
 - Do NOT continue working on the task — this template generates
   a handoff document, not task output.
-- Do NOT speculate about solutions to remaining items. Document
-  what is known and what was tried, not what might work.
+- Do NOT make ungrounded guesses about solutions to remaining
+  items. Document what is known, what was tried, and any
+  evidence-based hypotheses or candidate next steps — clearly
+  labeled as hypotheses rather than facts.
 - Do NOT include full file contents in the handoff. Reference
   files by path; the next session will read them.
 

@@ -100,10 +100,12 @@ Produce a prioritized, actionable plan for the next session:
    - What output to expect (how to know the step succeeded)
    - What to do if it fails (fallback approach)
 
-3. **Include a "read these files first" section** listing the 3–7
-   files the next session should read before doing anything else,
-   ordered by importance. For each file, state why it matters
-   (e.g., "contains the failing parser — start here").
+3. **Include "read these files first" content in the `## Key Files`
+   section** of the handoff document, listing the 3–7 files the next
+   session should read before doing anything else, ordered by
+   importance. For each file, state why it matters (e.g., "contains
+   the failing parser — start here"). Do not create a separate
+   section with a different heading.
 
 ## Phase 5: Format the Handoff Document
 
