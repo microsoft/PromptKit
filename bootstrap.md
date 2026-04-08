@@ -350,6 +350,37 @@ If no naming mechanism is available, skip session naming.
   for a code review of C code, suggest adding the `memory-safety-c` protocol.
 - **Suggest taxonomies** when the task involves classification. For example,
   if investigating stack corruption, suggest the `stack-lifetime-hazards` taxonomy.
+- **Ask for the audit domain** when the selected template is
+  `investigate-security`, `review-code`, `review-cpp-code`, or
+  `exhaustive-bug-hunt`. The library includes CWE-derived per-domain
+  taxonomies that scope findings to domain-relevant vulnerability classes.
+  Ask the user which domain best describes the code under review:
+
+  | Domain | Taxonomy | Description |
+  |--------|----------|-------------|
+  | `kernel-mode-c-cpp` | `cwe-kernel-mode-c-cpp` | OS kernel and driver code in C/C++ |
+  | `native-user-mode-c-cpp` | `cwe-native-user-mode-c-cpp` | User-mode native applications in C/C++ |
+  | `managed-dotnet` | `cwe-managed-dotnet` | .NET managed code (C#, F#, VB.NET) |
+  | `web-js-ts` | `cwe-web-js-ts` | Web frontend JavaScript/TypeScript |
+  | `web-backend` | `cwe-web-backend` | Server-side web applications (any language) |
+  | `cloud-service` | `cwe-cloud-service` | Cloud-hosted services and APIs |
+  | `iac` | `cwe-iac` | Infrastructure as Code (Terraform, Bicep, ARM, etc.) |
+  | `firmware-embedded` | `cwe-firmware-embedded` | Firmware and embedded systems |
+  | `crypto-protocols` | `cwe-crypto-protocols` | Cryptographic protocol design and implementation |
+  | `data-processing` | `cwe-data-processing` | Data pipelines, ETL, batch processing |
+  | `cli-tools` | `cwe-cli-tools` | Command-line tools and utilities |
+  | `mobile-app` | `cwe-mobile-app` | Mobile applications (iOS, Android) |
+  | `container-k8s` | `cwe-container-k8s` | Container and Kubernetes workloads |
+  | *(none)* | *(skip)* | Do not scope by CWE domain |
+
+  If the user has already provided enough context to infer the domain
+  (e.g., "review this C kernel driver" → `kernel-mode-c-cpp`), suggest
+  the inferred domain and ask for confirmation instead of presenting the
+  full table. If the user declines CWE scoping, skip it — the template's
+  existing taxonomies still apply. When a domain is selected, add the
+  corresponding `cwe-<domain>` taxonomy to the assembled prompt's
+  `# Classification Taxonomy` section alongside any taxonomies already
+  declared by the template.
 - **Include non-goals** in every assembled prompt. Ask the user what should be
   explicitly out of scope, or suggest sensible defaults from the template.
 - **Allow customization.** If the user wants to modify a component (e.g.,
