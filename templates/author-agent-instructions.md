@@ -147,10 +147,12 @@ Plan a `.github/skills/<name>/SKILL.md` file containing:
    - The protocol methodology as step-by-step instructions
    - Clear input/output expectations
    - Any file or tool requirements
-3. **For multi-phase workflows** (source template has multiple sequential
-   phases, pipeline passes, or `mode: interactive` with explicit gates):
-   - Add a `## Critical Constraints` section at the top (see the
-     `agent-instructions` format's "Multi-phase workflow rules")
+3. **For multi-phase workflows** (source template has pipeline passes, or
+   is `mode: interactive` with more than two phases or explicit gates):
+   - Add a `## Critical Constraints` section immediately after the
+     opening task description, before any architecture/methodology
+     content (see the `agent-instructions` format's "Multi-phase
+     workflow rules")
    - Add `### Critical Rule` stop directives at each phase boundary
    - Add a `## Current Pass Tracking` section with a status template
    - Explicitly name prohibited output types per phase
