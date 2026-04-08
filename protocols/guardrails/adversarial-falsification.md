@@ -9,10 +9,12 @@ description: >
   Requires the reviewer to attempt to disprove every candidate finding before
   reporting it, reject known-safe patterns, and resist premature summarization.
 applicable_to:
-  - review-code
-  - investigate-bug
-  - investigate-security
   - exhaustive-bug-hunt
+  - engineering-workflow
+  - maintenance-workflow
+  - spec-extraction-workflow
+  - audit-spec-alignment
+  - audit-implementation-alignment
 ---
 
 # Protocol: Adversarial Falsification

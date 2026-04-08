@@ -9,7 +9,12 @@ description: >
   the transformation twice and confirm identical output. If the
   outputs differ, the transformation does not reach a fixed point
   and is not idempotent or round-trip stable.
-applicable_to: []
+applicable_to:
+  - composable
+  # User-composed protocol — not auto-included by any template.
+  # Intended for: compiler, formatter, serializer, migrator, or
+  # linter auto-fix tasks where idempotency or round-trip stability
+  # must be verified.
 ---
 
 # Protocol: Fixed-Point Verification

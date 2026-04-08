@@ -1522,16 +1522,9 @@ templates:
       path: templates/plan-implementation.md
       description: >
         Decompose a project into an actionable implementation plan
-        with tasks, dependencies, and risk assessment.
-      persona: software-architect
-      protocols: [anti-hallucination, self-verification]
-      format: implementation-plan
-
-    - name: plan-refactoring
-      path: templates/plan-refactoring.md
-      description: >
-        Plan a safe, incremental refactoring with step-by-step
-        changes that maintain correctness at each step.
+        with tasks, dependencies, and risk assessment. Supports two
+        modes: "implementation" (new feature/project) and "refactoring"
+        (safe, incremental transformation of existing code).
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
       format: implementation-plan

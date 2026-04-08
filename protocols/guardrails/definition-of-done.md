@@ -9,7 +9,12 @@ description: >
   when a task is truly done. Prevents premature completion declarations
   by requiring verification of functionality, tests, diagnostics, build
   health, regression safety, and plan alignment.
-applicable_to: []
+applicable_to:
+  - composable
+  # User-composed protocol — not auto-included by any template.
+  # Intended for: implementation planning, engineering workflows,
+  # and any task where explicit completion criteria prevent premature
+  # "done" declarations.
 ---
 
 # Protocol: Definition of Done

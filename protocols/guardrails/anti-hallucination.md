@@ -23,8 +23,8 @@ fabrication and enforce intellectual honesty.
 Every claim in your output MUST be categorized as one of:
 
 - **KNOWN**: Directly stated in or derivable from the provided context.
-- **INFERRED**: A reasonable conclusion drawn from the context, with the
-  reasoning chain made explicit.
+- **INFERRED**: A conclusion derived through a stated chain of logical steps
+  from the context, with the reasoning chain made explicit.
 - **ASSUMED**: Not established by context. The assumption MUST be flagged
   with `[ASSUMPTION]` and a justification for why it is reasonable.
 
@@ -45,8 +45,9 @@ additional context instead of proceeding.
 
 - When multiple interpretations of a requirement or behavior are possible,
   enumerate them explicitly rather than choosing one silently.
-- When confidence in a conclusion is low, state: "Low confidence — this conclusion
-  depends on [specific assumption]. Verify by [specific action]."
+- When a conclusion depends on 2 or more ASSUMED premises (per Rule 1), flag it
+  explicitly: "Low confidence — this conclusion depends on [N] assumptions:
+  [list each]. Verify by [specific action]."
 
 ### 4. Source Attribution
 
