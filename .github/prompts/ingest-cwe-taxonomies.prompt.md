@@ -398,87 +398,130 @@ produces artifacts consumed by subsequent phases.
    - If found, record the most recent previous version for diff generation
      in Phase 5.
 
-### Phase 2: Parsing and Normalization
+### Phase 2: Run Ingestion Script
 
-Write a Python script at `scripts/ingest-cwe.py` (or update the existing
-one) that performs the following. The script MUST be executable standalone
-(`python scripts/ingest-cwe.py <xml-path>`) for future re-runs without
-an LLM.
+The ingestion pipeline is implemented in `scripts/ingest-cwe.py` — a
+standalone Python script that handles parsing, normalization, domain
+mapping, taxonomy generation, and sanity checks in a single run.
 
-1. **Parse the CWE XML** using `xml.etree.ElementTree`.
-   Do **not** hardcode a CWE namespace URI. Instead, inspect the root
-   element tag at runtime and extract the namespace if the document is
-   namespaced (e.g., `{namespace}Weakness_Catalog`). Build element
-   lookups from that discovered namespace, or use namespace-agnostic
-   matching if no namespace is present. If the root element is not
-   `<Weakness_Catalog>` or expected child containers (weaknesses, views,
-   categories) cannot be found after namespace detection, fail with a
-   clear error describing the missing element and the detected root tag.
+1. **Check that the script exists** at `scripts/ingest-cwe.py`. If it
+   is missing, regenerate it following the specification below.
 
-2. **Extract per-weakness records** from `<Weakness>` elements. For each,
-   capture:
-
-   | Field | XML Source | Type |
-   |-------|-----------|------|
-   | `cwe_id` | `@ID` attribute | integer |
-   | `name` | `@Name` attribute | string |
-   | `abstraction` | `@Abstraction` attribute | enum: Pillar, Class, Base, Variant, Compound |
-   | `status` | `@Status` attribute | enum: Draft, Incomplete, Stable, Deprecated, Obsolete |
-   | `description` | `<Description>` element text | string |
-   | `extended_description` | `<Extended_Description>` element text | string or null |
-   | `applicable_platforms` | `<Applicable_Platforms>` children | object (see below) |
-   | `common_consequences` | `<Common_Consequences>/<Consequence>` | array of {scope, impact} |
-   | `detection_methods` | `<Detection_Methods>/<Detection_Method>` | array of {method, effectiveness} |
-   | `relationships` | `<Related_Weaknesses>/<Related_Weakness>` | array of {nature, cwe_id} |
-
-3. **Parse `Applicable_Platforms`** into a structured object:
-   ```json
-   {
-     "languages": [{"name": "C", "prevalence": "Often"}, ...],
-     "language_classes": [{"class": "Not Language-Specific", "prevalence": "Undetermined"}],
-     "operating_systems": [{"name": "Linux", "prevalence": "Sometimes"}, ...],
-     "os_classes": [{"class": "Not OS-Specific", "prevalence": "Undetermined"}],
-     "architectures": [...],
-     "technologies": [{"name": "Web Server", "prevalence": "Often"}, ...]
-   }
+2. **Run the script:**
    ```
+   python scripts/ingest-cwe.py <path-to-cwe-xml>
+   ```
+   The script will:
+   - Parse the CWE XML and extract version metadata
+   - Normalize all weakness records into structured JSON
+   - Map weaknesses to 13 audit domains using a 4-priority algorithm
+   - Generate per-domain taxonomy files at `taxonomies/cwe-<domain>.md`
+   - Save normalized data and mappings to `data/cwe/<version>/`
+   - Generate a diff report if a previous version exists
+   - Run domain exclusion and consistency sanity checks
+   - Exit with code 0 on success, 1 on sanity check failure
 
-4. **Extract CWE Views** from `<View>` elements and their members
-   from `<Has_Member>` relationships. Record both the view `@ID` and
-   view `@Name`, and record which CWE IDs belong to each view.
-   Treat views as **supplemental mapping signals**, not required inputs.
-   For domain mapping, resolve candidate views by **name first** where
-   possible; use numeric view IDs only as optional hints to improve
-   matching for known releases. If a hinted view ID is missing, renamed,
-   or does not resolve in the current CWE release, emit a warning and
-   fall back to `Applicable_Platforms`, relationships, category/context
-   rules, and textual cues rather than silently degrading or failing.
-   Candidate view mappings:
+3. **Review the script output.** The script prints:
+   - Domain exclusion test results (PASS/FAIL)
+   - Consistency check results
+   - Cross-domain coverage statistics (mapped vs unmapped CWEs)
+   - Domain size warnings (>200 CWEs suggests the domain may need splitting)
+   - Diff summary if a previous version existed
 
-   | View Name | Optional ID Hint | Primary Domain(s) | Notes |
-   |-----------|------------------|-------------------|-------|
-   | Software Written in C | 658 | kernel-mode-c-cpp, native-user-mode-c-cpp, firmware-embedded | Strong positive signal when present. |
-   | Software Written in C++ | 659 | kernel-mode-c-cpp, native-user-mode-c-cpp | Strong positive signal when present. |
-   | Software Written in Java | 660 | web-backend | Do not map to `managed-dotnet` in the core table. |
-   | Weaknesses in Mobile Applications | 919 | mobile-app | Supplemental signal only. |
-   | Hardware Design | 1194 | firmware-embedded | Supplemental signal only. |
-   | CWE Top 25 | 1435 | cross-domain reference | Treat as prioritization metadata, not a domain-defining signal. ID may change yearly. |
-   | OWASP Top Ten | 1450 | web-backend, web-js-ts | Prefer name match; release-specific ID may change. |
+4. **If any sanity checks fail**, investigate the root cause. Common
+   fixes involve updating the override rules or keyword patterns in the
+   script's constants section.
 
-   If a cross-language analogy such as mapping `Software Written in Java`
-   to `managed-dotnet` is desired, implement it only as an **explicit
-   override rule** in Phase 3 Priority 4 (PromptKit overrides), with
-   documented rationale so it can be reviewed independently.
+5. **If the domain registry needs updating** (adding/removing/renaming
+   domains), edit the `DOMAIN_REGISTRY` dict and associated mapping
+   tables (`LANGUAGE_DOMAIN_MAP`, `CONTEXT_KEYWORDS`, etc.) in the
+   script, then re-run.
 
-5. **Extract Categories** from `<Category>` elements for supplemental
-   grouping.
+#### Script Specification
 
-6. **Save normalized output** to `data/cwe/<version>/cwe-normalized.json`.
+The following describes what `scripts/ingest-cwe.py` must implement.
+Use this as a reference when validating the script's behavior, or as
+a specification for regenerating the script if it is missing.
 
-### Phase 3: Domain Registry and Mapping
+**Parsing.** The script MUST be executable standalone
+(`python scripts/ingest-cwe.py <xml-path>`) for future re-runs without
+an LLM. It parses CWE XML using `xml.etree.ElementTree`.
 
-Apply the following domain mapping algorithm. The script MUST implement
-this as a deterministic, reproducible process.
+Do **not** hardcode a CWE namespace URI. Instead, inspect the root
+element tag at runtime and extract the namespace if the document is
+namespaced (e.g., `{namespace}Weakness_Catalog`). Build element
+lookups from that discovered namespace, or use namespace-agnostic
+matching if no namespace is present. If the root element is not
+`<Weakness_Catalog>` or expected child containers (weaknesses, views,
+categories) cannot be found after namespace detection, fail with a
+clear error describing the missing element and the detected root tag.
+
+**Per-weakness extraction.** Extract records from `<Weakness>` elements:
+
+| Field | XML Source | Type |
+|-------|-----------|------|
+| `cwe_id` | `@ID` attribute | integer |
+| `name` | `@Name` attribute | string |
+| `abstraction` | `@Abstraction` attribute | enum: Pillar, Class, Base, Variant, Compound |
+| `status` | `@Status` attribute | enum: Draft, Incomplete, Stable, Deprecated, Obsolete |
+| `description` | `<Description>` element text | string |
+| `extended_description` | `<Extended_Description>` element text | string or null |
+| `applicable_platforms` | `<Applicable_Platforms>` children | object (see below) |
+| `common_consequences` | `<Common_Consequences>/<Consequence>` | array of {scope, impact} |
+| `detection_methods` | `<Detection_Methods>/<Detection_Method>` | array of {method, effectiveness} |
+| `relationships` | `<Related_Weaknesses>/<Related_Weakness>` | array of {nature, cwe_id} |
+
+**Applicable_Platforms structure:**
+```json
+{
+  "languages": [{"name": "C", "prevalence": "Often"}, ...],
+  "language_classes": [{"class": "Not Language-Specific", "prevalence": "Undetermined"}],
+  "operating_systems": [{"name": "Linux", "prevalence": "Sometimes"}, ...],
+  "os_classes": [{"class": "Not OS-Specific", "prevalence": "Undetermined"}],
+  "architectures": [...],
+  "technologies": [{"name": "Web Server", "prevalence": "Often"}, ...]
+}
+```
+
+**View extraction.** Extract CWE Views from `<View>` elements and their
+members from `<Has_Member>` relationships. Record both the view `@ID`
+and view `@Name`, and record which CWE IDs belong to each view.
+Treat views as **supplemental mapping signals**, not required inputs.
+For domain mapping, resolve candidate views by **name first** where
+possible; use numeric view IDs only as optional hints to improve
+matching for known releases. If a hinted view ID is missing, renamed,
+or does not resolve in the current CWE release, emit a warning and
+fall back to `Applicable_Platforms`, relationships, category/context
+rules, and textual cues rather than silently degrading or failing.
+Candidate view mappings:
+
+| View Name | Optional ID Hint | Primary Domain(s) | Notes |
+|-----------|------------------|-------------------|-------|
+| Software Written in C | 658 | kernel-mode-c-cpp, native-user-mode-c-cpp, firmware-embedded | Strong positive signal when present. |
+| Software Written in C++ | 659 | kernel-mode-c-cpp, native-user-mode-c-cpp | Strong positive signal when present. |
+| Software Written in Java | 660 | web-backend | Do not map to `managed-dotnet` in the core table. |
+| Weaknesses in Mobile Applications | 919 | mobile-app | Supplemental signal only. |
+| Hardware Design | 1194 | firmware-embedded | Supplemental signal only. |
+| CWE Top 25 | 1435 | cross-domain reference | Treat as prioritization metadata, not a domain-defining signal. ID may change yearly. |
+| OWASP Top Ten | 1450 | web-backend, web-js-ts | Prefer name match; release-specific ID may change. |
+
+If a cross-language analogy such as mapping `Software Written in Java`
+to `managed-dotnet` is desired, implement it only as an **explicit
+override rule** in Priority 4 (PromptKit overrides), with documented
+rationale so it can be reviewed independently.
+
+**Categories.** Extract from `<Category>` elements for supplemental
+grouping.
+
+**Output.** Save normalized data to `data/cwe/<version>/cwe-normalized.json`.
+
+### Phase 3: Domain Registry and Mapping Algorithm
+
+The following specifies the domain mapping algorithm that
+`scripts/ingest-cwe.py` implements. The script MUST implement this as a
+deterministic, reproducible process. Use this reference to validate the
+script's behavior or to guide modifications when adding domains or
+updating mapping rules.
 
 #### Domain Registry
 
