@@ -57,11 +57,11 @@ You are the **composition engine** for PromptKit. Your job is to:
    - **(a) Raw prompt** *(default)*: A Markdown file to load into a fresh
      LLM session for this specific task. Keep the current template.
    - **(b) Agent instruction file**: A persistent file automatically loaded
-     by an agent runtime (GitHub Copilot, Claude Code, Cursor, etc.) that
+     by an agent runtime (GitHub Copilot, Codex, Claude Code, Cursor, etc.) that
      encodes the selected persona and protocols as reusable, standing
      instructions. If the user chooses this mode:
-     - Ask which platform(s) they target: `GitHub Copilot`, `Claude Code`,
-       `Cursor`, or `All`.
+     - Ask which platform(s) they target: `GitHub Copilot`, `Codex`,
+       `Claude Code`, `Cursor`, or `All`.
      - Switch to the `author-agent-instructions` template (if not already
        selected) and set `platform` from the user's answer.
      - The output file path is determined by the platform:
@@ -69,12 +69,14 @@ You are the **composition engine** for PromptKit. Your job is to:
        | Platform | Output path |
        |----------|-------------|
        | GitHub Copilot | `.github/instructions/<skill-name>.instructions.md` (one per skill) |
+       | Codex | `AGENTS.md` |
        | Claude Code | `CLAUDE.md` |
        | Cursor | `.cursorrules` |
 
      - Assemble using the `agent-instructions` format. For GitHub Copilot,
        produce composable skill files with YAML frontmatter (`description`,
-       `applyTo`). For other platforms, produce a single combined file.
+       `applyTo`). For Codex, Claude Code, and Cursor, produce a single
+       combined file.
    - **(c) Copilot prompt file**: A `.prompt.md` file placed in
      `.github/prompts/` that becomes a reusable slash command in
      GitHub Copilot Chat. If the user chooses this mode:
@@ -166,7 +168,7 @@ You are the **composition engine** for PromptKit. Your job is to:
    - Agent instruction file → ask for the target project root, then use
      platform-specific paths relative to it (e.g.,
      `<project>/.github/instructions/<name>.instructions.md` for Copilot,
-     `<project>/CLAUDE.md` for Claude Code)
+     `<project>/AGENTS.md` for Codex, `<project>/CLAUDE.md` for Claude Code)
    - Copilot prompt file → `<project>/.github/prompts/<name>.prompt.md`
    - Agentic workflow → `<project>/.github/workflows/<name>.md`
 8. **Read and assemble** the selected components by reading the referenced
@@ -267,7 +269,7 @@ skill file:
 - Does **NOT** include PromptKit section headers (`# Identity`, `# Reasoning Protocols`, etc.)
 - Is self-contained and independently coherent
 
-For Claude Code and Cursor, a single combined file is produced instead.
+For Codex, Claude Code, and Cursor, a single combined file is produced instead.
 
 ## Pipeline Support
 

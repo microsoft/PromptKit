@@ -9,9 +9,9 @@ description: >
   and skills. Produces composable skill files for GitHub Copilot
   (.github/instructions/*.instructions.md), custom agent definitions
   (.github/agents/*.agent.md), CLI skills (SKILL.md), and
-  platform-appropriate equivalents for Claude Code and Cursor. Files
-  are version-controlled and automatically loaded by agent runtimes
-  including VS Code, JetBrains, GitHub.com, and the Copilot CLI.
+  platform-appropriate equivalents for Codex, Claude Code, and Cursor.
+  Files are version-controlled and automatically loaded by agent runtimes
+  including Codex, VS Code, JetBrains, GitHub.com, and the Copilot CLI.
 produces: agent-instruction-file
 ---
 
@@ -39,6 +39,7 @@ List every file that will be created:
 | GitHub Copilot (instructions) | `.github/instructions/<name>.instructions.md` | Per-skill (targeted via `applyTo`) |
 | GitHub Copilot (custom agent) | `.github/agents/<name>.agent.md` | Agent persona with tools and handoffs |
 | Copilot CLI (skill) | `.github/skills/<name>/SKILL.md` | Reusable workflow as slash command |
+| Codex | `AGENTS.md` | Project-wide by directory tree scope |
 | Claude Code | `CLAUDE.md` | Project-wide |
 | Cursor | `.cursorrules` | Project-wide |
 
@@ -281,11 +282,12 @@ These rules apply to skills generated from multi-phase templates
 that define explicit phase gates or pipeline passes). Single-phase or
 simple analysis skills do not require these enforcement mechanisms.
 
-### 5. File Content — Claude Code and Cursor
+### 5. File Content — Codex, Claude Code, and Cursor
 
-For Claude Code (`CLAUDE.md`) and Cursor (`.cursorrules`), produce a
-**single combined file** containing all persona and protocol content
-(these platforms do not support per-file skill targeting).
+For Claude Code (`CLAUDE.md`), Codex (`AGENTS.md`), and Cursor
+(`.cursorrules`), produce a **single combined file** containing all
+persona and protocol content (these platforms do not support PromptKit's
+per-file skill targeting model).
 
 The content MUST:
 
@@ -361,6 +363,18 @@ A numbered checklist of steps to activate the instructions:
 - **Syntax**: Plain Markdown. No frontmatter required.
 - **Testing**: Run `/skills` in the Copilot CLI and verify the skill
   appears in the list.
+
+### Codex — `AGENTS.md`
+
+- **Loaded automatically** by Codex when an `AGENTS.md` file is present.
+- **Scope**: The directory tree rooted at the folder containing
+  `AGENTS.md`; more deeply nested `AGENTS.md` files take precedence.
+- **Size guidance**: No hard limit documented; keep concise for best
+  results.
+- **Syntax**: Plain Markdown. Codex reads the full file as standing
+  repository instructions.
+- **Testing**: Start a Codex session in the repo and ask what
+  repository instructions are active.
 
 ### Claude Code — `CLAUDE.md`
 

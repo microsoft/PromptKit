@@ -170,6 +170,22 @@ format, then assembles a complete prompt you can use in a fresh session.
 > shows what PromptKit actually assembles for tasks like C++ code review,
 > compiler warning remediation, and adversarial bug hunting.
 
+### Using with Codex
+
+Codex supports interactive bootstrap sessions and can also consume a
+project-level `AGENTS.md` file as persistent repository instructions.
+Start it through the `promptkit` launcher or invoke the bootstrap prompt
+directly:
+
+```bash
+# Recommended: let PromptKit stage its content and launch Codex
+npx @alan-jowett/promptkit interactive --cli codex
+
+# Manual bootstrap from a cloned repo
+cd promptkit
+codex --add-dir . "Read and execute bootstrap.md"
+```
+
 ### Using with Claude Code
 
 Claude Code does not support CLI skills, so use the manual bootstrap command:
@@ -473,7 +489,7 @@ personas, analysis protocols, and task templates.
 | `pipeline-spec` | Pipeline specification | CI/CD YAML, rationale, deployment notes |
 | `triage-report` | Triage report | Prioritized items by priority and effort |
 | `release-notes` | Release notes | Changelog, breaking changes, upgrade instructions |
-| `agent-instructions` | Agent instruction file | Copilot skill files, CLAUDE.md, .cursorrules |
+| `agent-instructions` | Agent instruction file | Copilot skill files, AGENTS.md, CLAUDE.md, .cursorrules |
 | `implementation-plan` | Implementation plan | Task breakdown, dependencies, risk assessment |
 | `north-star-document` | North-star document | Vision, guiding principles, transition considerations |
 | `structured-findings` | Structured findings | Classified diagnostics with remediation guidance |

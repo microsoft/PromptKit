@@ -205,9 +205,9 @@ npx promptkit list
 
 ### Interactive mode says "No supported LLM CLI found"
 
-Interactive mode requires GitHub Copilot CLI (`copilot`) or Claude Code
-(`claude`) on your PATH. Install one of them, or use `assemble` mode
-instead.
+Interactive mode requires GitHub Copilot CLI (`copilot`), Codex CLI
+(`codex`), or Claude Code (`claude`) on your PATH. Install one of them,
+or use `assemble` mode instead.
 
 ### The assembled prompt is missing a section
 

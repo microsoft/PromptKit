@@ -35,6 +35,7 @@ function isOnPath(cmd) {
 function detectCli() {
   // Check for GitHub Copilot CLI first (most common)
   if (isOnPath("copilot")) return "copilot";
+  if (isOnPath("codex")) return "codex";
   // Check for gh with copilot extension
   if (isOnPath("gh")) {
     try {
@@ -76,6 +77,7 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
       "No supported LLM CLI found on PATH.\n\n" +
         "Install one of:\n" +
         "  - GitHub Copilot CLI: gh extension install github/gh-copilot\n" +
+        "  - Codex CLI: https://developers.openai.com/codex/cli\n" +
         "  - Claude Code: https://docs.anthropic.com/en/docs/claude-code\n\n" +
         "Alternatively, load bootstrap.md in your LLM manually from:\n" +
         `  ${contentDir}`
@@ -114,6 +116,11 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
     case "gh-copilot":
       cmd = "gh";
       args = ["copilot", "--add-dir", tmpDir, "-i", bootstrapPrompt];
+      break;
+    case "codex":
+      // --add-dir grants access to the staging directory.
+      cmd = "codex";
+      args = ["--sandbox", "workspace-write", "--add-dir", tmpDir, bootstrapPrompt];
       break;
     case "claude":
       // --add-dir grants file access to the staging directory.

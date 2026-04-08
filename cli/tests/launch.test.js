@@ -68,6 +68,7 @@ describe("Launch Module", () => {
       });
       assert.ok(
         result.stderr.includes("gh extension install") ||
+          result.stderr.includes("codex") ||
           result.stderr.includes("claude"),
         "error should include installation instructions"
       );
@@ -133,9 +134,15 @@ describe("Launch Module", () => {
       assert.strictEqual(runDetectCli(), "copilot");
     });
 
+    it("TC-CLI-071: detectCli finds codex on PATH", () => {
+      createMockCmd("codex");
+      assert.strictEqual(runDetectCli(), "codex");
+    });
+
     it("TC-CLI-072: detectCli finds claude as fallback", () => {
       removeMockCmd("copilot");
       removeMockCmd("gh");
+      removeMockCmd("codex");
       createMockCmd("claude");
       assert.strictEqual(runDetectCli(), "claude");
     });
@@ -322,7 +329,7 @@ describe("Launch Module", () => {
       return JSON.parse(fs.readFileSync(captureFile, "utf8"));
     }
 
-    for (const cliName of ["claude", "copilot", "gh-copilot"]) {
+    for (const cliName of ["claude", "codex", "copilot", "gh-copilot"]) {
       // TC-CLI-082 and TC-CLI-083 combined — run once per CLI
       it(`TC-CLI-082/083: ${cliName} spawned with originalCwd and --add-dir for staging dir`, () => {
         const mockBinDir = path.join(cwdTestTmpDir, `mock-bin-${cliName}`);
@@ -371,7 +378,7 @@ describe("Launch Module", () => {
   });
 
   describe("--dry-run flag", () => {
-    for (const cliName of ["copilot", "gh-copilot", "claude"]) {
+    for (const cliName of ["copilot", "gh-copilot", "codex", "claude"]) {
       it(`TC-CLI-085: --dry-run prints spawn command for ${cliName} without launching`, () => {
         // --dry-run must print the command and args then exit 0 without
         // spawning the real LLM CLI.  We run with an empty PATH so that
