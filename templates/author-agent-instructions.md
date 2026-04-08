@@ -156,6 +156,12 @@ Plan a `.github/skills/<name>/SKILL.md` file containing:
    - Explicitly name prohibited output types per phase
    - Include the anti-shortcut rationale explaining what failure mode
      the pipeline prevents
+   - If any phase produces code that consumes artifacts from earlier
+     phases (e.g., a renderer script that reads IR files), add the
+     IR consumption rule: the code MUST read data from artifacts at
+     runtime, MUST NOT hardcode it as literals, and include the
+     self-check ("if deleting the artifacts wouldn't change the
+     script's output, it's hardcoding data — rewrite it")
    - Do NOT condense the phase structure — it is the behavioral contract
 
 ### Step 3: Condense and Adapt the Content
@@ -185,6 +191,9 @@ Transform the loaded components into agent instruction prose:
      - Add a pass tracking block so the agent announces its current state
      - Include the anti-shortcut rationale (why the pipeline exists,
        what failure mode it prevents)
+     - For phases that produce code consuming earlier artifacts, include
+       the IR consumption rule: generated code reads data from artifacts
+       at runtime, never hardcodes it, with the self-check directive
      See the `agent-instructions` format's "Multi-phase workflow rules"
      for the complete set of required enforcement mechanisms.
 
