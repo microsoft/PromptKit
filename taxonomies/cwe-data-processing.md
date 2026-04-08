@@ -10,10 +10,6 @@ description: >
   69 weakness classes from CWE version 4.19.1. Use to scope
   security audits to domain-relevant vulnerability classes only.
 cwe_version: "4.19.1"
-applicable_to:
-  - investigate-security
-  - review-code
-  - exhaustive-bug-hunt
 ---
 
 # Taxonomy: CWE Data Processing
