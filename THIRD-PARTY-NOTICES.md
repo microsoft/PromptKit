@@ -25,7 +25,7 @@ CWE™ is a trademark of The MITRE Corporation.
 
 This product includes data derived from the Common Weakness
 Enumeration (CWE™) maintained by The MITRE Corporation. Used under
-the CWE Terms of Use:
+the CWE Terms of Use (excerpted below):
 
 > CWE™ is free to use by any organization or individual for any
 > research, development, and/or commercial purposes, including the
@@ -37,6 +37,6 @@ the CWE Terms of Use:
 > is authorized on the condition that you reproduce MITRE's copyright
 > designation and this license in any such copy.
 
-Full terms: https://cwe.mitre.org/about/termsofuse.html
+Complete terms: https://cwe.mitre.org/about/termsofuse.html
 
 **SPDX identifier**: `LicenseRef-MITRE-CWE-ToU`

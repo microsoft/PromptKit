@@ -14,9 +14,11 @@ cwe_version: "4.19.1"
 
 > This file contains data derived from the Common Weakness Enumeration
 > (CWE™) maintained by The MITRE Corporation. © 2006–2026 The MITRE
-> Corporation. Used under the CWE Terms of Use:
+> Corporation. Used under the CWE Terms of Use.
+>
+> See THIRD-PARTY-NOTICES.md in the repository root for the full
+> license text, or visit:
 > https://cwe.mitre.org/about/termsofuse.html
-
 
 # Taxonomy: CWE Firmware and Embedded Systems
 
