@@ -12,6 +12,12 @@ description: >
 cwe_version: "4.19.1"
 ---
 
+> This file contains data derived from the Common Weakness Enumeration
+> (CWE™) maintained by The MITRE Corporation. © 2006–2026 The MITRE
+> Corporation. Used under the CWE Terms of Use:
+> https://cwe.mitre.org/about/termsofuse.html
+
+
 # Taxonomy: CWE Container and Kubernetes
 
 This taxonomy contains 5 CWE weakness classes applicable to
