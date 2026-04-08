@@ -344,7 +344,10 @@ If a previous version exists under `data/cwe/`, also produce:
 
 Each artifact MUST include:
 
-1. **Header comment or frontmatter** identifying it as part of the output set.
+1. **Provenance metadata** identifying it as part of the output set.
+   For Markdown/YAML files, use a header comment or YAML frontmatter.
+   For JSON files, include a top-level `"_meta"` object with at minimum
+   `"generated_by": "ingest-cwe"`, `"cwe_version"`, and `"timestamp"`.
 2. **Internally consistent structure** — if it is JSON, every record must
    conform to the stated schema. If it is Markdown, it must follow the
    stated section structure.
@@ -512,9 +515,8 @@ language-specific or domain-specific view (Views 658, 659, 660, 919,
 - `languages` with name matching a domain's language(s)
 - `technologies` matching a domain's technology stack
 - `operating_systems` matching a domain's OS context
-- Only count entries with prevalence `Often` or `Sometimes` (ignore
-  `Rarely` and `Undetermined` for primary assignment, but include them
-  as secondary/optional entries).
+- Only count entries with prevalence `Often` or `Sometimes`; ignore
+  `Rarely` and `Undetermined` for domain assignment.
 
 **Priority 3 — Keyword-based context analysis.** For CWEs with
 `language_classes: ["Not Language-Specific"]` and no specific platform
