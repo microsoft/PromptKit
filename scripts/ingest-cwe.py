@@ -738,6 +738,18 @@ def generate_taxonomy_file(domain_key, cwes, weaknesses, version):
     info = DOMAIN_REGISTRY[domain_key]
     n = len(cwes)
 
+    # Domains where review-cpp-code is applicable
+    cpp_domains = {"kernel-mode-c-cpp", "native-user-mode-c-cpp",
+                   "firmware-embedded"}
+
+    applicable_to = [
+        "  - investigate-security",
+        "  - review-code",
+    ]
+    if domain_key in cpp_domains:
+        applicable_to.append("  - review-cpp-code")
+    applicable_to.append("  - exhaustive-bug-hunt")
+
     lines = [
         "<!-- SPDX-License-Identifier: MIT -->",
         "<!-- Copyright (c) PromptKit Contributors -->",
@@ -752,10 +764,7 @@ def generate_taxonomy_file(domain_key, cwes, weaknesses, version):
         "  security audits to domain-relevant vulnerability classes only.",
         f'cwe_version: "{version}"',
         "applicable_to:",
-        "  - investigate-security",
-        "  - review-code",
-        "  - review-cpp-code",
-        "  - exhaustive-bug-hunt",
+    ] + applicable_to + [
         "---",
         "",
         f"# Taxonomy: CWE {info['display_name']}",
