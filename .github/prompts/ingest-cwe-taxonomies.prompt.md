@@ -403,7 +403,14 @@ one) that performs the following. The script MUST be executable standalone
 an LLM.
 
 1. **Parse the CWE XML** using `xml.etree.ElementTree`.
-   Use the CWE namespace: `http://cwe.mitre.org/cwe-7`.
+   Do **not** hardcode a CWE namespace URI. Instead, inspect the root
+   element tag at runtime and extract the namespace if the document is
+   namespaced (e.g., `{namespace}Weakness_Catalog`). Build element
+   lookups from that discovered namespace, or use namespace-agnostic
+   matching if no namespace is present. If the root element is not
+   `<Weakness_Catalog>` or expected child containers (weaknesses, views,
+   categories) cannot be found after namespace detection, fail with a
+   clear error describing the missing element and the detected root tag.
 
 2. **Extract per-weakness records** from `<Weakness>` elements. For each,
    capture:
@@ -434,18 +441,31 @@ an LLM.
    ```
 
 4. **Extract CWE Views** from `<View>` elements and their members
-   from `<Has_Member>` relationships. Record which CWE IDs belong to
-   each view. Key views for domain mapping:
+   from `<Has_Member>` relationships. Record both the view `@ID` and
+   view `@Name`, and record which CWE IDs belong to each view.
+   Treat views as **supplemental mapping signals**, not required inputs.
+   For domain mapping, resolve candidate views by **name first** where
+   possible; use numeric view IDs only as optional hints to improve
+   matching for known releases. If a hinted view ID is missing, renamed,
+   or does not resolve in the current CWE release, emit a warning and
+   fall back to `Applicable_Platforms`, relationships, category/context
+   rules, and textual cues rather than silently degrading or failing.
+   Candidate view mappings:
 
-   | View ID | Name | Primary Domain(s) |
-   |---------|------|-------------------|
-   | 658 | Software Written in C | kernel-mode-c-cpp, native-user-mode-c-cpp, firmware-embedded |
-   | 659 | Software Written in C++ | kernel-mode-c-cpp, native-user-mode-c-cpp |
-   | 660 | Software Written in Java | managed-dotnet (via analogy), web-backend |
-   | 919 | Weaknesses in Mobile Applications | mobile-app |
-   | 1194 | Hardware Design | firmware-embedded |
-   | 1435 | CWE Top 25 (2025) | cross-domain reference |
-   | 1450 | OWASP Top Ten RC1 (2025) | web-backend, web-js-ts |
+   | View Name | Optional ID Hint | Primary Domain(s) | Notes |
+   |-----------|------------------|-------------------|-------|
+   | Software Written in C | 658 | kernel-mode-c-cpp, native-user-mode-c-cpp, firmware-embedded | Strong positive signal when present. |
+   | Software Written in C++ | 659 | kernel-mode-c-cpp, native-user-mode-c-cpp | Strong positive signal when present. |
+   | Software Written in Java | 660 | web-backend | Do not map to `managed-dotnet` in the core table. |
+   | Weaknesses in Mobile Applications | 919 | mobile-app | Supplemental signal only. |
+   | Hardware Design | 1194 | firmware-embedded | Supplemental signal only. |
+   | CWE Top 25 | 1435 | cross-domain reference | Treat as prioritization metadata, not a domain-defining signal. ID may change yearly. |
+   | OWASP Top Ten | 1450 | web-backend, web-js-ts | Prefer name match; release-specific ID may change. |
+
+   If a cross-language analogy such as mapping `Software Written in Java`
+   to `managed-dotnet` is desired, implement it only as an **explicit
+   override rule** in Phase 3 Priority 4 (PromptKit overrides), with
+   documented rationale so it can be reviewed independently.
 
 5. **Extract Categories** from `<Category>` elements for supplemental
    grouping.
@@ -496,20 +516,63 @@ language-specific or domain-specific view (Views 658, 659, 660, 919,
   `Rarely` and `Undetermined` for primary assignment, but include them
   as secondary/optional entries).
 
-**Priority 3 — Consequence and context analysis.** For CWEs with
+**Priority 3 — Keyword-based context analysis.** For CWEs with
 `language_classes: ["Not Language-Specific"]` and no specific platform
-data, analyze the weakness description and common consequences to
-determine applicable domains:
-- CWEs about web-specific concepts (cookies, sessions, HTTP headers,
-  HTML, DOM) → `web-js-ts` and/or `web-backend`
-- CWEs about memory management (buffer, heap, stack, pointer) →
-  `kernel-mode-c-cpp`, `native-user-mode-c-cpp`, `firmware-embedded`
-- CWEs about cryptography → `crypto-protocols`
-- CWEs about file system operations → `native-user-mode-c-cpp`,
-  `cli-tools`, `data-processing`
-- CWEs about authentication/authorization → all domains (but weight
-  toward `web-backend`, `cloud-service`)
-- CWEs about configuration → `iac`, `cloud-service`, `container-k8s`
+data, determine applicable domains using the following deterministic
+heuristic only; do not use free-form semantic judgment.
+
+1. Build a lowercase analysis corpus by concatenating:
+   - CWE description
+   - CWE extended description, if present
+   - all common consequence scope/impact/note text, if present
+2. Match only the exact keywords/phrases below as case-insensitive
+   substring matches.
+3. Score domains as follows:
+   - add `2` points for each matched keyword/phrase in a domain rule
+   - add `1` additional point when the same keyword/phrase appears in a
+     consequence field (not just the description)
+   - assign a domain only if its total score is `>= 2`
+4. If multiple domains meet the threshold, assign all of them except
+   where an explicit rule below says "only".
+5. For every Priority 3 assignment, append to `mapping_rationale`:
+   `P3:<domain>: matched ["<term1>", "<term2>"] score=<n>`
+   If no domain reaches the threshold, append:
+   `P3:no-match`
+
+Deterministic domain rules:
+- **Web concepts**: If corpus contains any of `cookie`, `cookies`,
+  `session`, `sessions`, `http header`, `http headers`, `html`, `dom`,
+  `cross-origin`, `same-origin`, `browser`:
+  → add score to `web-js-ts` and `web-backend`
+- **Memory management**: If corpus contains any of `buffer`, `heap`,
+  `stack`, `pointer`, `dangling pointer`, `use-after-free`,
+  `double free`, `memory corruption`, `out-of-bounds`,
+  `out of bounds`:
+  → add score to `kernel-mode-c-cpp`, `native-user-mode-c-cpp`,
+    `firmware-embedded`
+- **Cryptography**: If corpus contains any of `cryptographic`,
+  `cryptography`, `crypto`, `cipher`, `encryption`, `decryption`,
+  `signature`, `certificate`, `tls`, `ssl`, `key management`,
+  `randomness`:
+  → add score to `crypto-protocols` only
+- **File system operations**: If corpus contains any of `file`,
+  `filesystem`, `file system`, `path`, `pathname`, `directory`,
+  `folder`, `symlink`, `symbolic link`, `temporary file`:
+  → add score to `native-user-mode-c-cpp`, `cli-tools`,
+    `data-processing`
+- **Authentication/authorization**: If corpus contains any of
+  `authentication`, `authorization`, `authenticate`, `authorize`,
+  `credential`, `login`, `password`, `permission`, `privilege`,
+  `access control`, `identity`:
+  → add `2` points to `web-backend` and `cloud-service`;
+    add `1` point to every other domain;
+    assign only domains whose final score is `>= 2`
+- **Configuration**: If corpus contains any of `configuration`,
+  `config`, `misconfiguration`, `default configuration`,
+  `insecure default`, `deployment setting`, `runtime setting`,
+  `environment variable`, `feature flag`, `manifest`, `helm`,
+  `yaml`, `terraform`, `policy`:
+  → add score to `iac`, `cloud-service`, `container-k8s`
 
 **Priority 4 — PromptKit override rules.** Apply these manual overrides
 to correct known misclassifications or fill gaps:
@@ -656,7 +719,7 @@ mapping rules may be too aggressive.
 
    ```
    # Raw CWE XML downloads (large, available from MITRE)
-   *.xml.zip
+   cwec_*.xml.zip
    cwec_*.xml
    ```
 
