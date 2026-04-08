@@ -147,6 +147,16 @@ Plan a `.github/skills/<name>/SKILL.md` file containing:
    - The protocol methodology as step-by-step instructions
    - Clear input/output expectations
    - Any file or tool requirements
+3. **For multi-phase workflows** (source template has multiple sequential
+   phases, pipeline passes, or `mode: interactive` with explicit gates):
+   - Add a `## Critical Constraints` section at the top (see the
+     `agent-instructions` format's "Multi-phase workflow rules")
+   - Add `### Critical Rule` stop directives at each phase boundary
+   - Add a `## Current Pass Tracking` section with a status template
+   - Explicitly name prohibited output types per phase
+   - Include the anti-shortcut rationale explaining what failure mode
+     the pipeline prevents
+   - Do NOT condense the phase structure — it is the behavioral contract
 
 ### Step 3: Condense and Adapt the Content
 
@@ -163,6 +173,20 @@ Transform the loaded components into agent instruction prose:
    - Omit meta-commentary about the protocol's structure
    - Rewrite in second person ("When you encounter X, always Y")
    - If multiple protocols overlap, merge the redundant parts
+   - **Exception for multi-phase workflows**: If the source template
+     defines a multi-phase pipeline (multiple sequential phases where
+     each phase's output feeds the next), do NOT condense away the
+     phase gating logic. The sequential structure, explicit stop points,
+     and prohibited-output rules ARE the critical behavioral constraints.
+     Preserve them as imperative directives, not architectural
+     descriptions. Specifically:
+     - Keep each phase's gate rule as a `### Critical Rule` block
+     - Keep the prohibited-output-type list per phase
+     - Add a pass tracking block so the agent announces its current state
+     - Include the anti-shortcut rationale (why the pipeline exists,
+       what failure mode it prevents)
+     See the `agent-instructions` format's "Multi-phase workflow rules"
+     for the complete set of required enforcement mechanisms.
 
 3. **Incorporate the additional behaviors** from `{{behaviors}}`:
    - Add any domain-specific or project-specific instructions

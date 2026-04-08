@@ -183,6 +183,60 @@ files.
 | Format | Output structure instructions |
 | Template | Task instructions and workflow |
 
+**Multi-phase workflow rules:**
+
+When the source template defines a multi-phase or multi-pass workflow
+(multiple sequential phases where each phase's output feeds the next),
+the skill file MUST include behavioral enforcement that prevents the
+agent from short-circuiting the pipeline. Specifically:
+
+1. **Critical constraints block** — Place a prominent section immediately
+   after the opening task description (before the architecture or
+   methodology sections) titled `## Critical Constraints — Read Before
+   Doing Anything` (or similar). This section MUST contain:
+   - An explicit statement that phases execute one at a time, in order
+   - A list of **prohibited output types per phase** — name the specific
+     file types, languages, or formats the agent MUST NOT produce during
+     earlier phases (e.g., "You MUST NOT generate Python, KiCad
+     S-expressions, or any EDA-tool-specific files during front-end
+     passes — only structured YAML IRs")
+   - A self-correction directive: "If you find yourself producing
+     \<prohibited output\>, STOP and return to the current phase"
+   - A brief explanation of **why the pipeline exists** — what failure
+     mode it prevents (e.g., "A previous monolithic approach failed
+     because…"). This gives the agent a concrete reason to comply.
+
+2. **Phase gate directives** — Each phase MUST end with a `### Critical
+   Rule` subsection containing an explicit stop instruction:
+   ```
+   **Do NOT proceed to Phase N+1 until the user explicitly approves.**
+   Present the output artifact, ask for approval, and WAIT.
+   ```
+   Do NOT bury gate logic in a summary table or an appendix — it must
+   appear inline at the end of the phase it gates.
+
+3. **Pass tracking block** — Include a section (e.g., `## Current Pass
+   Tracking`) instructing the agent to announce its current state at the
+   start of the workflow and after each phase transition:
+   ```
+   CURRENT PHASE: Phase N — <Name>
+   STATUS: In progress
+   NEXT: Phase N+1 — <Name> (blocked until Phase N gate passes)
+   ```
+   This creates an observable invariant that both the agent and the user
+   can monitor.
+
+4. **Anti-shortcut warning** — If the workflow has phases that produce
+   intermediate artifacts (not final deliverables), explicitly state that
+   the intermediate artifact is the ONLY permitted output of that phase.
+   Name the artifact type (e.g., "IR-2 is a YAML netlist, NOT Python
+   code, NOT a schematic file").
+
+These rules apply to skills generated from multi-phase templates
+(templates with `mode: interactive` and more than two sequential phases,
+or templates that define explicit pipeline passes). Single-phase or
+simple analysis skills do not require these enforcement mechanisms.
+
 ### 5. File Content — Claude Code and Cursor
 
 For Claude Code (`CLAUDE.md`) and Cursor (`.cursorrules`), produce a
