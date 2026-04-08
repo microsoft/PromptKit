@@ -183,7 +183,7 @@ files.
 | Format | Output structure instructions |
 | Template | Task instructions and workflow |
 
-### Multi-phase workflow rules
+#### Multi-phase workflow rules
 
 When the source template defines a multi-phase or multi-pass workflow
 (three or more sequential phases where each phase's output feeds the
