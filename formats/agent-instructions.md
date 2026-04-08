@@ -247,6 +247,12 @@ agent from short-circuiting the pipeline. Specifically:
    - **Self-check**: If the generated code would produce the same output
      even if the IR files were deleted, the code is hardcoding data
      instead of consuming the IRs — this is a violation
+   - **Fail-stop**: If the code cannot read or parse a required artifact
+     (file missing, malformed YAML, missing expected fields), it MUST
+     raise an error and halt. It MUST NOT fall back to generating the
+     data from memory, prior conversation context, or hardcoded
+     defaults. A missing artifact means an earlier pass needs to be
+     re-executed, not worked around.
    - Include this rule as an explicit directive in any phase that
      produces scripts or code that transforms artifacts into
      downstream outputs
