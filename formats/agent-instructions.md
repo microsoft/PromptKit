@@ -253,6 +253,21 @@ agent from short-circuiting the pipeline. Specifically:
      data from memory, prior conversation context, or hardcoded
      defaults. A missing artifact means an earlier pass needs to be
      re-executed, not worked around.
+   - **Field-level mapping**: For each tool step that produces a script
+     consuming artifacts, the skill MUST enumerate which specific
+     artifact fields the script reads — not just "read from IR-3" but
+     "connector positions → `connector_placement[].position.x_mm`,
+     component courtyard sizes → `IR-1e.components[].courtyard_mm`."
+     Generic references like "read placement constraints from IR-3"
+     produce scripts that ignore the detailed fields. The mapping
+     must be specific enough that the script author knows exactly which
+     YAML paths to traverse.
+   - **Gate-driven iteration**: If a tool step has a validation gate
+     (e.g., DRC with zero violations), and the gate fails, the agent
+     MUST iterate on the script to fix the violations — not ask the
+     user whether to proceed. The agent only presents the output for
+     user approval after the gate criteria are satisfied. Asking the
+     user to accept a failing gate is a gate violation.
    - Include this rule as an explicit directive in any phase that
      produces scripts or code that transforms artifacts into
      downstream outputs
