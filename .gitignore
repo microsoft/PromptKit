@@ -3,3 +3,7 @@
 
 # Generated prompts are local test artifacts — do not commit
 tests/generated/
+
+# Raw CWE XML downloads (large, available from MITRE)
+*.xml.zip
+cwec_*.xml

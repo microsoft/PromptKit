@@ -902,6 +902,97 @@ taxonomies:
       context hoarding, premature optimization, and ephemeral memory
       failure.
 
+  - name: cwe-cli-tools
+    path: taxonomies/cwe-cli-tools.md
+    domain: cli-tools
+    description: >
+      CWE-derived classification scheme (65 classes) for
+      command-line tools and utilities. CWE version 4.19.1.
+
+  - name: cwe-cloud-service
+    path: taxonomies/cwe-cloud-service.md
+    domain: cloud-service
+    description: >
+      CWE-derived classification scheme (113 classes) for
+      cloud-hosted services and APIs. CWE version 4.19.1.
+
+  - name: cwe-container-k8s
+    path: taxonomies/cwe-container-k8s.md
+    domain: container-k8s
+    description: >
+      CWE-derived classification scheme (5 classes) for
+      container and Kubernetes workloads. CWE version 4.19.1.
+
+  - name: cwe-crypto-protocols
+    path: taxonomies/cwe-crypto-protocols.md
+    domain: crypto-protocols
+    description: >
+      CWE-derived classification scheme (63 classes) for
+      cryptographic protocol design and implementation. CWE version 4.19.1.
+
+  - name: cwe-data-processing
+    path: taxonomies/cwe-data-processing.md
+    domain: data-processing
+    description: >
+      CWE-derived classification scheme (69 classes) for
+      data pipelines, ETL, batch processing. CWE version 4.19.1.
+
+  - name: cwe-firmware-embedded
+    path: taxonomies/cwe-firmware-embedded.md
+    domain: firmware-embedded
+    description: >
+      CWE-derived classification scheme (226 classes) for
+      firmware and embedded systems. CWE version 4.19.1.
+
+  - name: cwe-iac
+    path: taxonomies/cwe-iac.md
+    domain: iac
+    description: >
+      CWE-derived classification scheme (8 classes) for
+      Infrastructure as Code (Terraform, Bicep, ARM, etc.). CWE version 4.19.1.
+
+  - name: cwe-kernel-mode-c-cpp
+    path: taxonomies/cwe-kernel-mode-c-cpp.md
+    domain: kernel-mode-c-cpp
+    description: >
+      CWE-derived classification scheme (113 classes) for
+      OS kernel and driver code in C/C++. CWE version 4.19.1.
+
+  - name: cwe-managed-dotnet
+    path: taxonomies/cwe-managed-dotnet.md
+    domain: managed-dotnet
+    description: >
+      CWE-derived classification scheme (92 classes) for
+      .NET managed code (C#, F#, VB.NET). CWE version 4.19.1.
+
+  - name: cwe-mobile-app
+    path: taxonomies/cwe-mobile-app.md
+    domain: mobile-app
+    description: >
+      CWE-derived classification scheme (23 classes) for
+      mobile applications (iOS, Android). CWE version 4.19.1.
+
+  - name: cwe-native-user-mode-c-cpp
+    path: taxonomies/cwe-native-user-mode-c-cpp.md
+    domain: native-user-mode-c-cpp
+    description: >
+      CWE-derived classification scheme (172 classes) for
+      user-mode native applications in C/C++. CWE version 4.19.1.
+
+  - name: cwe-web-backend
+    path: taxonomies/cwe-web-backend.md
+    domain: web-backend
+    description: >
+      CWE-derived classification scheme (423 classes) for
+      server-side web applications (any language). CWE version 4.19.1.
+
+  - name: cwe-web-js-ts
+    path: taxonomies/cwe-web-js-ts.md
+    domain: web-js-ts
+    description: >
+      CWE-derived classification scheme (265 classes) for
+      web frontend JavaScript/TypeScript. CWE version 4.19.1.
+
 templates:
   document-authoring:
     - name: author-requirements-doc
