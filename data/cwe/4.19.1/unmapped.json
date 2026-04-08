@@ -1,0 +1,1910 @@
+[
+  {
+    "cwe_id": 1023,
+    "name": "Incomplete Comparison with Missing Factors",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1024,
+    "name": "Comparison of Incompatible Types",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1025,
+    "name": "Comparison Using Wrong Factors",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1037,
+    "name": "Processor Optimization Removal or Modification of Security-critical Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1038,
+    "name": "Insecure Automated Optimizations",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1039,
+    "name": "Inadequate Detection or Handling of Adversarial Input Perturbations in Automated Recognition Mechanism",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1041,
+    "name": "Use of Redundant Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1042,
+    "name": "Static Member Data Element outside of a Singleton Class Element",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1043,
+    "name": "Data Element Aggregating an Excessively Large Number of Non-Primitive Elements",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1044,
+    "name": "Architecture with Number of Horizontal Layers Outside of Expected Range",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1045,
+    "name": "Parent Class with a Virtual Destructor and a Child Class without a Virtual Destructor",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1046,
+    "name": "Creation of Immutable Text Using String Concatenation",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1047,
+    "name": "Modules with Circular Dependencies",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1048,
+    "name": "Invokable Control Element with Large Number of Outward Calls",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1049,
+    "name": "Excessive Data Query Operations in a Large Data Table",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1050,
+    "name": "Excessive Platform Resource Consumption within a Loop",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1051,
+    "name": "Initialization with Hard-Coded Network Resource Configuration Data",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1052,
+    "name": "Excessive Use of Hard-Coded Literals in Initialization",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1054,
+    "name": "Invocation of a Control Element at an Unnecessarily Deep Horizontal Layer",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1055,
+    "name": "Multiple Inheritance from Concrete Classes",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1056,
+    "name": "Invokable Control Element with Variadic Parameters",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1057,
+    "name": "Data Access Operations Outside of Expected Data Manager Component",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1058,
+    "name": "Invokable Control Element in Multi-Thread Context with non-Final Static Storable or Member Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1061,
+    "name": "Insufficient Encapsulation",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1062,
+    "name": "Parent Class with References to Child Class",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1063,
+    "name": "Creation of Class Instance within a Static Code Block",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1064,
+    "name": "Invokable Control Element with Signature Containing an Excessive Number of Parameters",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1065,
+    "name": "Runtime Resource Management Control Element in a Component Built to Run on Application Servers",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1066,
+    "name": "Missing Serialization Control Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1067,
+    "name": "Excessive Execution of Sequential Searches of Data Resource",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1068,
+    "name": "Inconsistency Between Implementation and Documented Design",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1069,
+    "name": "Empty Exception Block",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1070,
+    "name": "Serializable Data Element Containing non-Serializable Item Elements",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1071,
+    "name": "Empty Code Block",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1072,
+    "name": "Data Resource Access without Use of Connection Pooling",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1074,
+    "name": "Class with Excessively Deep Inheritance",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1075,
+    "name": "Unconditional Control Flow Transfer outside of Switch Block",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1076,
+    "name": "Insufficient Adherence to Expected Conventions",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1077,
+    "name": "Floating Point Comparison with Incorrect Operator",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1078,
+    "name": "Inappropriate Source Code Style or Formatting",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1079,
+    "name": "Parent Class without Virtual Destructor Method",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1080,
+    "name": "Source Code File with Excessive Number of Lines of Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1082,
+    "name": "Class Instance Self Destruction Control Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1083,
+    "name": "Data Access from Outside Expected Data Manager Component",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1084,
+    "name": "Invokable Control Element with Excessive File or Data Access Operations",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1085,
+    "name": "Invokable Control Element with Excessive Volume of Commented-out Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1086,
+    "name": "Class with Excessive Number of Child Classes",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1087,
+    "name": "Class with Virtual Method without a Virtual Destructor",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1088,
+    "name": "Synchronous Access of Remote Resource without Timeout",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1089,
+    "name": "Large Data Table with Excessive Number of Indices",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1090,
+    "name": "Method Containing Access of a Member Element from Another Class",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1091,
+    "name": "Use of Object without Invoking Destructor Method",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1092,
+    "name": "Use of Same Invokable Control Element in Multiple Architectural Layers",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1093,
+    "name": "Excessively Complex Data Representation",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1094,
+    "name": "Excessive Index Range Scan for a Data Resource",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1095,
+    "name": "Loop Condition Value Update within the Loop",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1096,
+    "name": "Singleton Class Instance Creation without Proper Locking or Synchronization",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1097,
+    "name": "Persistent Storable Data Element without Associated Comparison Control Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1099,
+    "name": "Inconsistent Naming Conventions for Identifiers",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1100,
+    "name": "Insufficient Isolation of System-Dependent Functions",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1101,
+    "name": "Reliance on Runtime Component in Generated Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1102,
+    "name": "Reliance on Machine-Dependent Data Representation",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1103,
+    "name": "Use of Platform-Dependent Third Party Components",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1105,
+    "name": "Insufficient Encapsulation of Machine-Dependent Functionality",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1106,
+    "name": "Insufficient Use of Symbolic Constants",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1107,
+    "name": "Insufficient Isolation of Symbolic Constant Definitions",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1108,
+    "name": "Excessive Reliance on Global Variables",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1109,
+    "name": "Use of Same Variable for Multiple Purposes",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1110,
+    "name": "Incomplete Design Documentation",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1111,
+    "name": "Incomplete I/O Documentation",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1113,
+    "name": "Inappropriate Comment Style",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1114,
+    "name": "Inappropriate Whitespace Style",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1115,
+    "name": "Source Code Element without Standard Prologue",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1116,
+    "name": "Inaccurate Source Code Comments",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1117,
+    "name": "Callable with Insufficient Behavioral Summary",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1118,
+    "name": "Insufficient Documentation of Error Handling Techniques",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1119,
+    "name": "Excessive Use of Unconditional Branching",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1120,
+    "name": "Excessive Code Complexity",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1121,
+    "name": "Excessive McCabe Cyclomatic Complexity",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1122,
+    "name": "Excessive Halstead Complexity",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1123,
+    "name": "Excessive Use of Self-Modifying Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1124,
+    "name": "Excessively Deep Nesting",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1126,
+    "name": "Declaration of Variable with Unnecessarily Wide Scope",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1127,
+    "name": "Compilation with Insufficient Warnings or Errors",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1164,
+    "name": "Irrelevant Code",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1173,
+    "name": "Improper Use of Validation Framework",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1176,
+    "name": "Inefficient CPU Computation",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1177,
+    "name": "Use of Prohibited Code",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1188,
+    "name": "Initialization of a Resource with an Insecure Default",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1229,
+    "name": "Creation of Emergent Resource",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1230,
+    "name": "Exposure of Sensitive Information Through Metadata",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1236,
+    "name": "Improper Neutralization of Formula Elements in a CSV File",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1265,
+    "name": "Unintended Reentrant Invocation of Non-reentrant Code Via Nested Calls",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1284,
+    "name": "Improper Validation of Specified Quantity in Input",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1286,
+    "name": "Improper Validation of Syntactic Correctness of Input",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1287,
+    "name": "Improper Validation of Specified Type of Input",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1288,
+    "name": "Improper Validation of Consistency within Input",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1293,
+    "name": "Missing Source Correlation of Multiple Independent Data",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1321,
+    "name": "Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1322,
+    "name": "Use of Blocking Code in Single-threaded, Non-blocking Context",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1333,
+    "name": "Inefficient Regular Expression Complexity",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1339,
+    "name": "Insufficient Precision or Accuracy of a Real Number",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 138,
+    "name": "Improper Neutralization of Special Elements",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1386,
+    "name": "Insecure Operation on Windows Junction / Mount Point",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 140,
+    "name": "Improper Neutralization of Delimiters",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 141,
+    "name": "Improper Neutralization of Parameter/Argument Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 142,
+    "name": "Improper Neutralization of Value Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1426,
+    "name": "Improper Validation of Generative AI Output",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1427,
+    "name": "Improper Neutralization of Input Used for LLM Prompting",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 143,
+    "name": "Improper Neutralization of Record Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 1434,
+    "name": "Insecure Setting of Generative AI/ML Model Inference Parameters",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 144,
+    "name": "Improper Neutralization of Line Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 145,
+    "name": "Improper Neutralization of Section Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 146,
+    "name": "Improper Neutralization of Expression/Command Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 147,
+    "name": "Improper Neutralization of Input Terminators",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 148,
+    "name": "Improper Neutralization of Input Leaders",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 149,
+    "name": "Improper Neutralization of Quoting Syntax",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 150,
+    "name": "Improper Neutralization of Escape, Meta, or Control Sequences",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 151,
+    "name": "Improper Neutralization of Comment Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 152,
+    "name": "Improper Neutralization of Macro Symbols",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 153,
+    "name": "Improper Neutralization of Substitution Characters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 155,
+    "name": "Improper Neutralization of Wildcards or Matching Symbols",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 156,
+    "name": "Improper Neutralization of Whitespace",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 157,
+    "name": "Failure to Sanitize Paired Delimiters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 160,
+    "name": "Improper Neutralization of Leading Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 161,
+    "name": "Improper Neutralization of Multiple Leading Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 162,
+    "name": "Improper Neutralization of Trailing Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 163,
+    "name": "Improper Neutralization of Multiple Trailing Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 164,
+    "name": "Improper Neutralization of Internal Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 165,
+    "name": "Improper Neutralization of Multiple Internal Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 166,
+    "name": "Improper Handling of Missing Special Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 167,
+    "name": "Improper Handling of Additional Special Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 168,
+    "name": "Improper Handling of Inconsistent Special Elements",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 172,
+    "name": "Encoding Error",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 173,
+    "name": "Improper Handling of Alternate Encoding",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 174,
+    "name": "Double Decoding of the Same Data",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 175,
+    "name": "Improper Handling of Mixed Encoding",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 176,
+    "name": "Improper Handling of Unicode Encoding",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 177,
+    "name": "Improper Handling of URL Encoding (Hex Encoding)",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 178,
+    "name": "Improper Handling of Case Sensitivity",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 179,
+    "name": "Incorrect Behavior Order: Early Validation",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 180,
+    "name": "Incorrect Behavior Order: Validate Before Canonicalize",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 181,
+    "name": "Incorrect Behavior Order: Validate Before Filter",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 182,
+    "name": "Collapse of Data into Unsafe Value",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 184,
+    "name": "Incomplete List of Disallowed Inputs",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 185,
+    "name": "Incorrect Regular Expression",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 186,
+    "name": "Overly Restrictive Regular Expression",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 198,
+    "name": "Use of Incorrect Byte Ordering",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 202,
+    "name": "Exposure of Sensitive Information Through Data Queries",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 204,
+    "name": "Observable Response Discrepancy",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 210,
+    "name": "Self-generated Error Message Containing Sensitive Information",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 212,
+    "name": "Improper Removal of Sensitive Information Before Storage or Transfer",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 213,
+    "name": "Exposure of Sensitive Information Due to Incompatible Policies",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 222,
+    "name": "Truncation of Security-relevant Information",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 224,
+    "name": "Obscured Security-relevant Information by Alternate Name",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 228,
+    "name": "Improper Handling of Syntactically Invalid Structure",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 229,
+    "name": "Improper Handling of Values",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 230,
+    "name": "Improper Handling of Missing Values",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 231,
+    "name": "Improper Handling of Extra Values",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 232,
+    "name": "Improper Handling of Undefined Values",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 233,
+    "name": "Improper Handling of Parameters",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 236,
+    "name": "Improper Handling of Undefined Parameters",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 237,
+    "name": "Improper Handling of Structural Elements",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 238,
+    "name": "Improper Handling of Incomplete Structural Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 239,
+    "name": "Failure to Handle Incomplete Element",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 240,
+    "name": "Improper Handling of Inconsistent Structural Elements",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 241,
+    "name": "Improper Handling of Unexpected Data Type",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 253,
+    "name": "Incorrect Check of Function Return Value",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 267,
+    "name": "Privilege Defined With Unsafe Actions",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 268,
+    "name": "Privilege Chaining",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 270,
+    "name": "Privilege Context Switching Error",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 271,
+    "name": "Privilege Dropping / Lowering Errors",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 272,
+    "name": "Least Privilege Violation",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 273,
+    "name": "Improper Check for Dropped Privileges",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 277,
+    "name": "Insecure Inherited Permissions",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 278,
+    "name": "Insecure Preserved Inherited Permissions",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 279,
+    "name": "Incorrect Execution-Assigned Permissions",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 341,
+    "name": "Predictable from Observable State",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 344,
+    "name": "Use of Invariant Value in Dynamically Changing Context",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 348,
+    "name": "Use of Less Trusted Source",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 349,
+    "name": "Acceptance of Extraneous Untrusted Data With Trusted Data",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 35,
+    "name": "Path Traversal: '.../...//'",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 351,
+    "name": "Insufficient Type Distinction",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 354,
+    "name": "Improper Validation of Integrity Check Value",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 356,
+    "name": "Product UI does not Warn User of Unsafe Actions",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 357,
+    "name": "Insufficient UI Warning of Dangerous Operations",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 358,
+    "name": "Improperly Implemented Security Check for Standard",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 367,
+    "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 370,
+    "name": "Missing Check for Certificate Revocation after Initial Check",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 372,
+    "name": "Incomplete Internal State Distinction",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 378,
+    "name": "Creation of Temporary File With Insecure Permissions",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 386,
+    "name": "Symbolic Name not Mapping to Correct Object",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 39,
+    "name": "Path Traversal: 'C:dirname'",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 392,
+    "name": "Missing Report of Error Condition",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 393,
+    "name": "Return of Wrong Status Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 40,
+    "name": "Path Traversal: '\\\\UNC\\share\\name\\' (Windows UNC Share)",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 400,
+    "name": "Uncontrolled Resource Consumption",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 404,
+    "name": "Improper Resource Shutdown or Release",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 406,
+    "name": "Insufficient Control of Network Message Volume (Network Amplification)",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 407,
+    "name": "Inefficient Algorithmic Complexity",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 409,
+    "name": "Improper Handling of Highly Compressed Data (Data Amplification)",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 410,
+    "name": "Insufficient Resource Pool",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 412,
+    "name": "Unrestricted Externally Accessible Lock",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 413,
+    "name": "Improper Resource Locking",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 414,
+    "name": "Missing Lock Check",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 420,
+    "name": "Unprotected Alternate Channel",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 422,
+    "name": "Unprotected Windows Messaging Channel ('Shatter')",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 428,
+    "name": "Unquoted Search Path or Element",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 430,
+    "name": "Deployment of Wrong Handler",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 431,
+    "name": "Missing Handler",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 432,
+    "name": "Dangerous Signal Handler not Disabled During Sensitive Operations",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 435,
+    "name": "Improper Interaction Between Multiple Correctly-Behaving Entities",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 437,
+    "name": "Incomplete Model of Endpoint Features",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 439,
+    "name": "Behavioral Change in New Version or Environment",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 448,
+    "name": "Obsolete Feature in UI",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 449,
+    "name": "The UI Performs the Wrong Action",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 450,
+    "name": "Multiple Interpretations of UI Input",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 456,
+    "name": "Missing Initialization of a Variable",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 459,
+    "name": "Incomplete Cleanup",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 471,
+    "name": "Modification of Assumed-Immutable Data (MAID)",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 473,
+    "name": "PHP External Variable Modification",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 475,
+    "name": "Undefined Behavior for Input to API",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 488,
+    "name": "Exposure of Data Element to Wrong Session",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 507,
+    "name": "Trojan Horse",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 508,
+    "name": "Non-Replicating Malicious Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 510,
+    "name": "Trapdoor",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 512,
+    "name": "Spyware",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 515,
+    "name": "Covert Storage Channel",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 524,
+    "name": "Use of Cache Containing Sensitive Information",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 531,
+    "name": "Inclusion of Sensitive Information in Test Code",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 544,
+    "name": "Missing Standardized Error Handling Mechanism",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 546,
+    "name": "Suspicious Comment",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 549,
+    "name": "Missing Password Field Masking",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 561,
+    "name": "Dead Code",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 563,
+    "name": "Assignment to Variable without Use",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 57,
+    "name": "Path Equivalence: 'fakedir/../realdir/filename'",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 570,
+    "name": "Expression is Always False",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 571,
+    "name": "Expression is Always True",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 573,
+    "name": "Improper Following of Specification by Caller",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 58,
+    "name": "Path Equivalence: Windows 8.3 Filename",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 584,
+    "name": "Return Inside Finally Block",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 589,
+    "name": "Call to Non-ubiquitous API",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 591,
+    "name": "Sensitive Data Storage in Improperly Locked Memory",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 605,
+    "name": "Multiple Binds to the Same Port",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 606,
+    "name": "Unchecked Input for Loop Condition",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 616,
+    "name": "Incomplete Identification of Uploaded File Variables (PHP)",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 62,
+    "name": "UNIX Hard Link",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 621,
+    "name": "Variable Extraction Error",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 622,
+    "name": "Improper Validation of Function Hook Arguments",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 624,
+    "name": "Executable Regular Expression Error",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 625,
+    "name": "Permissive Regular Expression",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 627,
+    "name": "Dynamic Variable Evaluation",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 637,
+    "name": "Unnecessary Complexity in Protection Mechanism (Not Using 'Economy of Mechanism')",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 638,
+    "name": "Not Using Complete Mediation",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 64,
+    "name": "Windows Shortcut Following (.LNK)",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 648,
+    "name": "Incorrect Use of Privileged APIs",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 654,
+    "name": "Reliance on a Single Factor in a Security Decision",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 655,
+    "name": "Insufficient Psychological Acceptability",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 66,
+    "name": "Improper Handling of File Names that Identify Virtual Resources",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 662,
+    "name": "Improper Synchronization",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 664,
+    "name": "Improper Control of a Resource Through its Lifetime",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 666,
+    "name": "Operation on Resource in Wrong Phase of Lifetime",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 667,
+    "name": "Improper Locking",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 669,
+    "name": "Incorrect Resource Transfer Between Spheres",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 67,
+    "name": "Improper Handling of Windows Device Names",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 670,
+    "name": "Always-Incorrect Control Flow Implementation",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 673,
+    "name": "External Influence of Sphere Definition",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 674,
+    "name": "Uncontrolled Recursion",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 675,
+    "name": "Multiple Operations on Resource in Single-Operation Context",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 682,
+    "name": "Incorrect Calculation",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 683,
+    "name": "Function Call With Incorrect Order of Arguments",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 684,
+    "name": "Incorrect Provision of Specified Functionality",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 686,
+    "name": "Function Call With Incorrect Argument Type",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 687,
+    "name": "Function Call With Incorrectly Specified Argument Value",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 691,
+    "name": "Insufficient Control Flow Management",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 694,
+    "name": "Use of Multiple Resources with Duplicate Identifier",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 695,
+    "name": "Use of Low-Level Functionality",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 696,
+    "name": "Incorrect Behavior Order",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 697,
+    "name": "Incorrect Comparison",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 705,
+    "name": "Incorrect Control Flow Scoping",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 706,
+    "name": "Use of Incorrectly-Resolved Name or Reference",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 707,
+    "name": "Improper Neutralization",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 708,
+    "name": "Incorrect Ownership Assignment",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 710,
+    "name": "Improper Adherence to Coding Standards",
+    "abstraction": "Pillar",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 75,
+    "name": "Failure to Sanitize Special Elements into a Different Plane (Special Element Injection)",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 758,
+    "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 764,
+    "name": "Multiple Locks of a Critical Resource",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 765,
+    "name": "Multiple Unlocks of a Critical Resource",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 770,
+    "name": "Allocation of Resources Without Limits or Throttling",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 773,
+    "name": "Missing Reference to Active File Descriptor or Handle",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 774,
+    "name": "Allocation of File Descriptors or Handles Without Limits or Throttling",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 775,
+    "name": "Missing Release of File Descriptor or Handle after Effective Lifetime",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 777,
+    "name": "Regular Expression without Anchors",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 779,
+    "name": "Logging of Excessive Data",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 790,
+    "name": "Improper Filtering of Special Elements",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 791,
+    "name": "Incomplete Filtering of Special Elements",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 792,
+    "name": "Incomplete Filtering of One or More Instances of Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 793,
+    "name": "Only Filtering One Instance of a Special Element",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 794,
+    "name": "Incomplete Filtering of Multiple Instances of Special Elements",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 795,
+    "name": "Only Filtering Special Elements at a Specified Location",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 796,
+    "name": "Only Filtering Special Elements Relative to a Marker",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 797,
+    "name": "Only Filtering Special Elements at an Absolute Position",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 820,
+    "name": "Missing Synchronization",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 821,
+    "name": "Incorrect Synchronization",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 826,
+    "name": "Premature Release of Resource During Expected Lifetime",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 827,
+    "name": "Improper Control of Document Type Definition",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 831,
+    "name": "Signal Handler Function Associated with Multiple Signals",
+    "abstraction": "Variant",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 832,
+    "name": "Unlock of a Resource that is not Locked",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 833,
+    "name": "Deadlock",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 834,
+    "name": "Excessive Iteration",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 835,
+    "name": "Loop with Unreachable Exit Condition ('Infinite Loop')",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 837,
+    "name": "Improper Enforcement of a Single, Unique Action",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 842,
+    "name": "Placement of User into Incorrect Group",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 908,
+    "name": "Use of Uninitialized Resource",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 909,
+    "name": "Missing Initialization of Resource",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 912,
+    "name": "Hidden Functionality",
+    "abstraction": "Class",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 914,
+    "name": "Improper Control of Dynamically-Identified Variables",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  },
+  {
+    "cwe_id": 924,
+    "name": "Improper Enforcement of Message Integrity During Transmission in a Communication Channel",
+    "abstraction": "Base",
+    "reason": "No view, platform, context, or override match"
+  }
+]

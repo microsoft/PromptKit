@@ -1,0 +1,12 @@
+{
+  "cwe_version": "4.19.1",
+  "cwe_name": "CWE",
+  "cwe_date": "2026-01-21",
+  "source_sha256": "f7d6fae581116795aa3545ce2ab801f81cbb655410d65db703f1343df10ff7b9",
+  "generation_timestamp": "2026-04-08T15:38:09.699818+00:00",
+  "domain_count": 13,
+  "total_weaknesses": 969,
+  "active_weaknesses": 944,
+  "mapped_weaknesses": 626,
+  "unmapped_weaknesses": 318
+}
