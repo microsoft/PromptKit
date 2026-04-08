@@ -13,6 +13,7 @@ cwe_version: "4.19.1"
 applicable_to:
   - investigate-security
   - review-code
+  - review-cpp-code
   - exhaustive-bug-hunt
 ---
 

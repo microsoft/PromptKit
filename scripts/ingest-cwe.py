@@ -754,6 +754,7 @@ def generate_taxonomy_file(domain_key, cwes, weaknesses, version):
         "applicable_to:",
         "  - investigate-security",
         "  - review-code",
+        "  - review-cpp-code",
         "  - exhaustive-bug-hunt",
         "---",
         "",
