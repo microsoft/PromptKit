@@ -16,7 +16,8 @@ your behalf.
 
 - **Node.js 18+** — required for the `npx` CLI
 - **Optional:** [GitHub Copilot CLI](https://docs.github.com/en/copilot)
-  or [Claude Code](https://docs.anthropic.com/en/docs/claude-code) for
+  or [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or
+  [OpenAI Codex CLI](https://github.com/openai/codex) for
   interactive mode
 
 ## Quick Start
@@ -59,8 +60,8 @@ and you're running.
 npx promptkit
 ```
 
-Interactive mode auto-detects your LLM CLI (GitHub Copilot CLI or Claude
-Code), copies PromptKit's content to a temp directory, and launches an
+Interactive mode auto-detects your LLM CLI (GitHub Copilot CLI, Claude
+Code, or OpenAI Codex CLI), copies PromptKit's content to a temp directory, and launches an
 interactive session with `bootstrap.md` as the custom instruction. The
 bootstrap engine walks you through:
 

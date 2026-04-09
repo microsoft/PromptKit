@@ -73,6 +73,7 @@ To use the interactive mode, you'll also need one of the following LLM CLI tools
 
 - **GitHub Copilot CLI** — Install the [GitHub CLI](https://cli.github.com/), authenticate with `gh auth login`, ensure Copilot access is enabled for your account/organization, then run `gh extension install github/gh-copilot`
 - **Claude Code** — [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- **OpenAI Codex CLI** — [Install Codex CLI](https://github.com/openai/codex)
 
 Not using a CLI tool? See [Using with any LLM (manual)](#using-with-any-llm-manual).
 
@@ -177,6 +178,15 @@ Claude Code does not support CLI skills, so use the manual bootstrap command:
 ```bash
 cd promptkit
 claude "Read and execute bootstrap.md"
+```
+
+### Using with Codex CLI
+
+Codex also supports reading the bootstrap file directly from the repo root:
+
+```bash
+cd promptkit
+codex "Read and execute bootstrap.md"
 ```
 
 ### Using with any LLM (manual)

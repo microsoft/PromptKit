@@ -108,7 +108,7 @@ validate content availability.
   by category, and displays the result. No separate `manifest.js` module
   is used (see REQ-CLI-103).
 - The `--cli` flag documents valid values (`copilot`, `gh-copilot`,
-  `claude`) in its help text (see REQ-CLI-011).
+  `claude`, `codex`) in its help text (see REQ-CLI-011).
 
 **Key function**:
 
@@ -146,10 +146,15 @@ interactive session.
 - CLI detection uses `execFileSync` with `where` (Windows) or `which`
   (Unix) — this is the most reliable cross-platform way to check if a
   command exists on PATH without actually executing it.
-- The detection order (copilot → gh-copilot → claude) prioritizes GitHub
+- The detection order (copilot → gh-copilot → claude → codex) prioritizes GitHub
   Copilot CLI as the primary target. The `gh copilot` variant is checked
   by actually running `gh copilot --help` to verify the extension is
   installed, not just that `gh` exists.
+- On Windows, npm-installed CLIs such as `copilot`, `claude`, and `codex`
+  may need their `.cmd` shims invoked explicitly because Node's
+  `child_process.spawn()` does not resolve commands the same way an
+  interactive shell does. The launcher therefore prefers `<name>.cmd`
+  when present on `PATH`.
 - Content is copied to a temp directory (`os.tmpdir()` + `mkdtempSync`)
   because LLM CLIs need to read the files from their CWD, and the npm
   package's `content/` directory may be in a read-only or non-obvious
@@ -176,7 +181,7 @@ Internal helper. Checks if a command exists on PATH using platform-
 appropriate lookup.
 
 ```
-detectCli() → "copilot" | "gh-copilot" | "claude" | null
+detectCli() → "copilot" | "gh-copilot" | "claude" | "codex" | null
 ```
 Probes PATH for supported LLM CLIs in priority order.
 
@@ -397,7 +402,7 @@ Global options:
 
 Interactive options:
   --cli <name>      Override LLM CLI auto-detection
-                    Valid values: copilot, gh-copilot, claude
+                    Valid values: copilot, gh-copilot, claude, codex
 ```
 
 ### 5.2 Module Exports
@@ -405,7 +410,7 @@ Interactive options:
 **launch.js**:
 ```javascript
 module.exports = {
-  detectCli,          // () → "copilot" | "gh-copilot" | "claude" | null
+  detectCli,          // () → "copilot" | "gh-copilot" | "claude" | "codex" | null
   launchInteractive,  // (contentDir: string, cliName: string | null) → never
   copyContentToTemp   // (contentDir: string) → string (tmpDir path)
 }

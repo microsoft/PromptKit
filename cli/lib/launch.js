@@ -8,18 +8,37 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
+function pathDirs() {
+  return (process.env.PATH || "").split(path.delimiter).filter(Boolean);
+}
+
+function windowsPathExts() {
+  return (process.env.PATHEXT || ".EXE;.COM;.BAT;.CMD")
+    .split(";")
+    .map((e) => e.toLowerCase());
+}
+
+function isExactFileOnPath(fileName) {
+  for (const dir of pathDirs()) {
+    try {
+      fs.accessSync(path.join(dir, fileName), fs.constants.F_OK);
+      return true;
+    } catch {
+      // not found in this directory, continue
+    }
+  }
+  return false;
+}
+
 function isOnPath(cmd) {
   // Search PATH entries directly rather than shelling out to `which`/`where`.
   // This avoids requiring `which` to be on PATH itself (important in test
   // environments where PATH is restricted to a mock directory).
-  const pathDirs = (process.env.PATH || "").split(path.delimiter).filter(Boolean);
-  const exts = process.platform === "win32"
-    ? (process.env.PATHEXT || ".EXE;.COM;.BAT;.CMD").split(";").map((e) => e.toLowerCase())
-    : [""];
+  const exts = process.platform === "win32" ? windowsPathExts() : [""];
   // On Windows, X_OK is not meaningful — any file with a matching PATHEXT
   // extension is considered executable, so we check for existence (F_OK) only.
   const accessFlag = process.platform === "win32" ? fs.constants.F_OK : fs.constants.X_OK;
-  for (const dir of pathDirs) {
+  for (const dir of pathDirs()) {
     for (const ext of exts) {
       try {
         fs.accessSync(path.join(dir, cmd + ext), accessFlag);
@@ -30,6 +49,13 @@ function isOnPath(cmd) {
     }
   }
   return false;
+}
+
+function resolveSpawnCommand(cmd) {
+  if (process.platform !== "win32") return cmd;
+
+  const shim = `${cmd}.cmd`;
+  return isExactFileOnPath(shim) ? shim : cmd;
 }
 
 function detectCli() {
@@ -45,6 +71,7 @@ function detectCli() {
     }
   }
   if (isOnPath("claude")) return "claude";
+  if (isOnPath("codex")) return "codex";
   return null;
 }
 
@@ -76,7 +103,8 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
       "No supported LLM CLI found on PATH.\n\n" +
         "Install one of:\n" +
         "  - GitHub Copilot CLI: gh extension install github/gh-copilot\n" +
-        "  - Claude Code: https://docs.anthropic.com/en/docs/claude-code\n\n" +
+        "  - Claude Code: https://docs.anthropic.com/en/docs/claude-code\n" +
+        "  - OpenAI Codex CLI: https://github.com/openai/codex\n\n" +
         "Alternatively, load bootstrap.md in your LLM manually from:\n" +
         `  ${contentDir}`
     );
@@ -107,7 +135,7 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
   let cmd, args;
   switch (cli) {
     case "copilot":
-      cmd = "copilot";
+      cmd = resolveSpawnCommand("copilot");
       // --add-dir grants file access to the staging directory.
       args = ["--add-dir", tmpDir, "-i", bootstrapPrompt];
       break;
@@ -117,7 +145,11 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
       break;
     case "claude":
       // --add-dir grants file access to the staging directory.
-      cmd = "claude";
+      cmd = resolveSpawnCommand("claude");
+      args = ["--add-dir", tmpDir, bootstrapPrompt];
+      break;
+    case "codex":
+      cmd = resolveSpawnCommand("codex");
       args = ["--add-dir", tmpDir, bootstrapPrompt];
       break;
     default:
