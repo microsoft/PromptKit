@@ -44,8 +44,7 @@ Apply the epistemic labeling rules from the `anti-hallucination` protocol
 uncertainty disclosure, source attribution). Scan the output for factual
 claims that lack epistemic labels or source citations, and remediate each:
 add the appropriate epistemic label (`[KNOWN]`, `[INFERRED]`, or
-`[ASSUMED]`), add the citation, label as `[ASSUMPTION]` when that is the
-correct classification, or remove the claim. **Zero uncited factual
+`[ASSUMPTION]`), add the citation, or remove the claim. **Zero uncited factual
 claims** is the target.
 
 ### 3. Coverage Confirmation
