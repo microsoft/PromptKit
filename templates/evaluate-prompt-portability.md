@@ -122,17 +122,25 @@ Apply Phase 3 of the prompt-portability-evaluation protocol.
 1. Build the claim universe from all model outputs.
 2. Perform pairwise semantic matching across all claims.
 3. Cluster matched claims and record match confidence.
-4. Flag any `uncertain` matches for the user's attention.
+4. If any claim cluster contains an `uncertain` semantic match,
+   place that cluster into a Manual Review bucket rather than a
+   scored classification bucket.
+5. Exclude all Manual Review clusters from consensus/scoring
+   calculations in subsequent steps.
+6. Record all Manual Review clusters for reporting under the
+   format's `Uncertain / Needs Review` section, and explicitly call
+   them out to the user before proceeding.
 
 ### Step 5: Consensus Classification
 
 Apply Phase 4 of the prompt-portability-evaluation protocol.
 
-1. Classify each claim cluster: Consensus, Majority, Singular, or
-   Contradictory.
+1. Classify each non-Manual-Review claim cluster: Consensus,
+   Majority, Singular, or Contradictory.
 2. Present the classification summary to the user:
    - How many Consensus, Majority, Singular, and Contradictory
      clusters were found.
+   - How many clusters are in Manual Review (excluded from scoring).
    - Highlight any Contradictory clusters immediately — these are the
      highest-priority signal.
 
