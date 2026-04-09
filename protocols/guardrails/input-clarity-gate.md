@@ -10,12 +10,11 @@ description: >
   Applies the pattern catalog from prompt-determinism-analysis to
   natural language input and generates targeted clarifying questions
   instead of findings.
-applicable_to:
-  - composable
-  # User-composed protocol — not auto-included by any template.
-  # Intended for: interactive templates and workflows where user-
-  # provided natural language input must be validated for clarity
-  # before task execution begins.
+applicable_to: []
+# User-composed protocol — not auto-included by any template.
+# Intended for: interactive templates and workflows where user-
+# provided natural language input must be validated for clarity
+# before task execution begins.
 ---
 
 # Protocol: Input Clarity Gate

@@ -86,13 +86,18 @@ following code.
    ### Maintainability
    - Does each function/method have a single, stated responsibility?
    - Can a new team member determine each function's purpose from its
-     name, signature, and a 10-second scan of the body?
+     name, signature, and the first 5 non-comment lines or top-level
+     statements of its body?
    - Are names (variables, functions, types) specific enough to
      distinguish them from siblings in the same scope?
    - Is error handling consistent with the codebase's conventions?
-   - Does any abstraction depend on more than 3 unrelated concepts?
+   - Does any abstraction directly combine more than 3 responsibility
+     categories from this list: state mutation, I/O, parsing/validation,
+     external service access, concurrency/synchronization,
+     formatting/presentation, domain rule orchestration?
    - Does any abstraction duplicate logic already present in a sibling
-     module or function?
+     module or function, based on the same sequence of steps or the same
+     conditional/data-transformation logic? Cite the overlapping code.
    - Does any class, module, or function lack a clear single
      responsibility (i.e., its purpose cannot be stated in one sentence)?
    - Are there concrete instances of duplicated code, missing

@@ -24,7 +24,7 @@ params:
   constraints: "Timeline, team size, technology constraints, or backward compatibility requirements"
   context: "Additional context — why this work is needed, known concerns"
 input_contract:
-  type: requirements-document | design-document
+  type: requirements-document | design-document | source-code
   description: >
     For implementation mode: ideally both a requirements doc and design doc.
     For refactoring mode: the current code to be refactored.
@@ -82,7 +82,11 @@ determines the planning approach.
    not exist or assume behaviors not shown in the code. If the inputs
    are insufficient, state what is missing.
 
-2. **If mode is "implementation"** (or unspecified), follow the
+2. **Validate the mode parameter.** Only `implementation` and `refactoring`
+   are valid values. If `mode` is empty, missing, or any other value,
+   treat it as `implementation` (the default).
+
+3. **If mode is "implementation"**, follow the
    implementation planning workflow:
 
    a. If requirements or design documents are not provided, begin
@@ -136,7 +140,7 @@ determines the planning approach.
    e. **Flag risky tasks**: tasks with high uncertainty, external
       dependencies, or novel technology that could cause delays.
 
-3. **If mode is "refactoring"**, follow the refactoring planning workflow:
+4. **If mode is "refactoring"**, follow the refactoring planning workflow:
 
    a. **Analyze the current state**:
       - What does this code do? (behavioral summary)
