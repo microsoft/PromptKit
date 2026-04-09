@@ -21,6 +21,8 @@ params:
   golden_input: "The deterministic test input to provide to each model along with the prompt"
   models: "Comma-separated list of model identifiers to evaluate. Default: claude-sonnet-4.5, gpt-4.1, claude-haiku-4.5"
   arbiter_model: "Model to use for claim extraction and semantic matching. Default: use the current session model"
+  reference_model: "Optional — designate one model as the ground-truth baseline for sufficiency analysis. When set, the report includes a model sufficiency matrix showing which cheaper models reproduce the reference model's output. Omit for pure consensus analysis."
+  sufficiency_threshold: "Minimum percentage of reference model claims a cheaper model must reproduce to be considered sufficient. Default: 90"
 input_contract: null
 output_contract:
   type: portability-report
@@ -49,6 +51,11 @@ text — you compare the **semantic claims** each model's output makes.
 
 **Arbiter Model**: {{arbiter_model}} (if blank, you are the arbiter)
 
+**Reference Model**: {{reference_model}} (if blank, skip sufficiency
+analysis — perform consensus analysis only)
+
+**Sufficiency Threshold**: {{sufficiency_threshold}}% (if blank, use 90%)
+
 ## Instructions
 
 ### Step 1: Input Validation
@@ -59,6 +66,8 @@ text — you compare the **semantic claims** each model's output makes.
 3. Parse the model list. If any model identifier is not recognized by
    the execution environment, warn the user and ask whether to skip
    it or substitute.
+4. If a reference model is specified, confirm it is included in the
+   model list. If not, add it automatically and inform the user.
 
 ### Step 2: Fan-Out Execution
 
@@ -142,8 +151,15 @@ Apply Phase 6 and Phase 7 of the prompt-portability-evaluation protocol.
 
 1. Compute the portability score.
 2. Generate hardening recommendations for each fixable divergence.
-3. Produce the full portability report in the portability-report
-   format.
+3. If a reference model is specified, apply Phase 8 (Model
+   Sufficiency Analysis):
+   - Compute per-model sufficiency rates against the reference.
+   - Classify missing and extra claims.
+   - Determine sufficiency status for each model.
+   - Identify the minimum sufficient model.
+4. Produce the full portability report in the portability-report
+   format, including the Model Sufficiency Matrix (section 10) if
+   a reference model was specified.
 
 ### Step 8: Interactive Review
 

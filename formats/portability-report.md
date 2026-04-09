@@ -193,6 +193,52 @@ frontmatter if the divergence is persistent.
 | Model | Observation | Recommended `model_notes` Entry |
 |-------|-------------|---------------------------------|
 | <model> | <behavior> | <suggested YAML> |
+
+## 10. Model Sufficiency Matrix
+
+*Include this section only when a reference model is designated.
+If no reference model was specified, state "No reference model
+designated — sufficiency analysis not performed."*
+
+**Reference Model**: <model identifier>
+**Sufficiency Threshold**: <threshold>%
+
+### Sufficiency Summary
+
+| Model | Tier | Reproduced | Missing | Extra | Contradicted | Sufficiency Rate | Critical Misses | Status |
+|-------|------|:----------:|:-------:|:-----:|:------------:|:----------------:|:---------------:|--------|
+| <reference> | reference | — | — | — | — | baseline | — | baseline |
+| <model> | <tier> | | | | | | | Sufficient · Conditionally Sufficient · Insufficient |
+
+**Minimum Sufficient Model**: <model identifier> — <brief justification>
+
+### Missing Claim Details
+
+For each model with missing claims, list what was missed:
+
+#### <model-identifier>
+
+| Baseline Claim | Type | Impact | Analysis |
+|----------------|------|--------|----------|
+| <claim text from reference> | finding · recommendation · observation · caveat | Critical miss · Minor miss | <why this model missed it> |
+
+### Extra Claim Details
+
+For each model with extra claims not in the baseline:
+
+#### <model-identifier>
+
+| Extra Claim | Type | Classification | Analysis |
+|-------------|------|----------------|----------|
+| <claim text> | finding · recommendation · observation · caveat | Valid addition · Hallucination · Noise | <assessment> |
+
+### Cost-Efficiency Recommendation
+
+<1–3 sentences recommending which model to use for this prompt,
+balancing sufficiency rate, cost, and speed. If the minimum sufficient
+model matches the reference model, state that no cheaper alternative
+produced equivalent output and recommend prompt hardening to enable
+cheaper models.>
 ```
 
 ## Formatting Rules

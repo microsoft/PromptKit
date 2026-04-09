@@ -195,3 +195,64 @@ Rules:
   phases, explicit scope bounds).
 - If a divergence is caused by `model-capability-gap`, note that no
   prompt rewrite can fix it. Instead recommend a `model_notes` entry.
+
+## Phase 8: Model Sufficiency Analysis (Reference Model Mode)
+
+This phase executes only when a **reference model** is designated. Skip
+this phase entirely if no reference model is specified.
+
+When a reference model is designated, its claim set becomes the
+**baseline** — the ground truth against which all other models are
+measured. This shifts the analysis from "do models agree?" (consensus)
+to "does model X reproduce the reference model's output?" (sufficiency).
+
+1. **Designate the baseline claim set.** The reference model's
+   extracted claims from Phase 2 become the baseline. Every claim in
+   the baseline is a **required claim**.
+
+2. **Per-model sufficiency scoring.** For each non-reference model,
+   compute:
+
+   | Metric | Definition |
+   |--------|------------|
+   | **Reproduced** | Claims from the baseline that this model also produced (matched in Phase 3) |
+   | **Missing** | Claims from the baseline that this model did NOT produce |
+   | **Extra** | Claims this model produced that are NOT in the baseline |
+   | **Contradicted** | Claims where this model asserts the opposite of the baseline |
+   | **Sufficiency Rate** | `reproduced / total_baseline_claims × 100%` |
+
+3. **Classify missing claims by impact.** For each missing claim,
+   assess its importance:
+   - **Critical miss**: A finding or recommendation that, if absent,
+     would leave a significant gap (e.g., missing a security
+     vulnerability the reference model found)
+   - **Minor miss**: An observation or caveat whose absence does not
+     meaningfully degrade the output
+
+4. **Classify extra claims.** For each claim the model produced that
+   the reference did not:
+   - **Valid addition**: A correct claim the reference model missed
+     (depth-variation in the model's favor)
+   - **Hallucination**: A claim with no basis in the input
+   - **Noise**: A low-value observation that adds length without
+     insight
+
+5. **Determine sufficiency.** A model is **sufficient** for this
+   prompt if:
+   - Sufficiency rate meets or exceeds the user-specified threshold
+     (default: 90%)
+   - Zero critical misses
+   - Zero contradicted claims
+
+   A model is **conditionally sufficient** if:
+   - Sufficiency rate meets the threshold
+   - Has critical misses, but all are traceable to a
+     `model-capability-gap` divergence cause (the model cannot be
+     fixed by prompt hardening)
+
+   A model is **insufficient** if it fails either criterion.
+
+6. **Produce the model sufficiency matrix.** Rank models by cost tier
+   (if known) and sufficiency rate. The **minimum sufficient model**
+   is the cheapest model that meets the sufficiency threshold with
+   zero critical misses and zero contradictions.
