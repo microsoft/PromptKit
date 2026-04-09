@@ -151,6 +151,15 @@ Compute a portability score for the evaluated prompt.
    - Singular = 0.0
    - Contradictory = −1.0
 
+   **Canonical cluster type rule.** When claims in a cluster were
+   assigned different types across models (e.g., one model calls it a
+   `finding`, another calls it a `recommendation`), assign the cluster
+   the type with the **highest weight** among its member claims. If
+   two types share the same weight, prefer the type that appears in
+   the majority of member claims. If still tied, the arbiter assigns
+   the canonical type. Record the original per-model types in the
+   claim cluster details for transparency.
+
 2. **Aggregate score.** First compute the weighted mean of all claim
    cluster scores, weighted by claim type priority:
    - `finding` weight = 3 (findings that differ are high-impact)

@@ -132,7 +132,7 @@ other. This is the highest-signal section of the report.
 - **Prompt Region**: <exact quote of the ambiguous prompt language>
 - **Analysis**: <why the prompt produces contradictory interpretations>
 
-## 6c. Uncertain / Needs Review
+### 6c. Uncertain / Needs Review
 
 Claim clusters where semantic matching confidence was `uncertain`.
 These are excluded from the portability score until a human reviewer
@@ -196,9 +196,10 @@ frontmatter if the divergence is persistent.
 
 ## 10. Model Sufficiency Matrix
 
-*Include this section only when a reference model is designated.
-If no reference model was specified, state "No reference model
-designated — sufficiency analysis not performed."*
+*Always include this section. If a reference model is designated,
+include the full sufficiency analysis below. If no reference model was
+specified, include only: "No reference model designated — sufficiency
+analysis not performed."*
 
 **Reference Model**: <model identifier>
 **Sufficiency Threshold**: <threshold>%
