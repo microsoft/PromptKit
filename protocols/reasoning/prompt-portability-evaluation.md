@@ -96,13 +96,20 @@ Classify each claim cluster by how many models produced it.
 | Classification | Criterion | Interpretation |
 |----------------|-----------|----------------|
 | **Consensus** | All models produced this claim | Semantically stable — the prompt reliably elicits this assertion |
-| **Majority** | ≥50% of models (but not all) produced this claim | Likely valid but not universally elicited — prompt may be ambiguous |
+| **Majority** | >50% of models (but not all) produced this claim | Likely valid but not universally elicited — prompt may be ambiguous |
 | **Singular** | Exactly one model produced this claim | Possible hallucination, unique insight, or model-specific interpretation |
 | **Contradictory** | Two or more models assert mutually exclusive things | The prompt is ambiguous on this point — different models resolve the ambiguity differently |
 
 Rules:
-- A claim cluster with `uncertain` matches should be flagged for manual
-  review rather than auto-classified.
+- A claim cluster with any `uncertain` match must be placed in a
+  **Manual Review** bucket rather than auto-classified as Consensus,
+  Majority, Singular, or Contradictory.
+- Manual Review clusters are **excluded from the portability score**
+  until a human reviewer resolves the uncertain match and assigns the
+  cluster to a standard classification.
+- Report Manual Review clusters in a separate portability report
+  section named **Uncertain / Needs Review**. Do not include them under
+  the standard classification counts until they are resolved.
 - Singular claims from high-capability models are not automatically
   hallucinations — they may represent deeper analysis that other models
   missed. Note the model capability tier.
@@ -144,13 +151,22 @@ Compute a portability score for the evaluated prompt.
    - Singular = 0.0
    - Contradictory = −1.0
 
-2. **Aggregate score.** The portability score is the weighted mean of
-   all claim cluster scores, weighted by claim type priority:
+2. **Aggregate score.** First compute the weighted mean of all claim
+   cluster scores, weighted by claim type priority:
    - `finding` weight = 3 (findings that differ are high-impact)
    - `recommendation` weight = 2
    - `classification` weight = 2
    - `observation` weight = 1
    - `caveat` weight = 1
+
+   Then normalize the weighted mean from the `[-1.0, 1.0]` range into
+   the final portability score in the `[0.0, 1.0]` range using:
+
+   `portability_score = (raw_weighted_mean + 1.0) / 2.0`
+
+   This preserves the stronger penalty for contradictory claims while
+   ensuring the reported portability score cannot be negative or exceed
+   `1.0`.
 
 3. **Interpret the score:**
 

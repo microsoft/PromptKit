@@ -132,6 +132,24 @@ other. This is the highest-signal section of the report.
 - **Prompt Region**: <exact quote of the ambiguous prompt language>
 - **Analysis**: <why the prompt produces contradictory interpretations>
 
+## 6c. Uncertain / Needs Review
+
+Claim clusters where semantic matching confidence was `uncertain`.
+These are excluded from the portability score until a human reviewer
+resolves the match and assigns a standard classification.
+
+### Claim Cluster UR-<NNN>: <Short Claim Title>
+
+| Field | Value |
+|-------|-------|
+| **Claim (Model A)** | <claim text from one model> |
+| **Claim (Model B)** | <claim text from another model> |
+| **Match Confidence** | uncertain |
+| **Reason** | <why the match is uncertain — similar but not clearly equivalent> |
+| **Reviewer Action Needed** | Classify as: Consensus match / Majority match / Distinct claims (Singular) / Contradictory |
+
+If no uncertain clusters exist, state "None identified."
+
 ## 7. Portability Scorecard
 
 ### Per-Claim-Type Breakdown
@@ -180,8 +198,8 @@ frontmatter if the divergence is persistent.
 ## Formatting Rules
 
 1. **Claim IDs** use prefixes: `CC-` (Consensus), `MC-` (Majority),
-   `SC-` (Singular), `XC-` (Contradictory), followed by a
-   zero-padded three-digit number.
+   `SC-` (Singular), `XC-` (Contradictory), `UR-` (Uncertain / Needs
+   Review), followed by a zero-padded three-digit number.
 2. **Hardening Recommendation IDs** use `HR-` prefix.
 3. **Score precision**: Report the portability score to two decimal
    places.

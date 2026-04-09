@@ -77,8 +77,20 @@ for the same prompt + input combination.
    run sequentially.
 3. Wait for all executions to complete. If any model fails (timeout,
    API error, content filter), record the failure and proceed with
-   the remaining models. A minimum of 2 successful model outputs is
-   required to produce a meaningful comparison.
+   the remaining models. Count the number of successful model
+   outputs after all executions finish.
+4. A minimum of 2 successful model outputs is required to produce a
+   meaningful comparison. If fewer than 2 models succeed, do **not**
+   continue to claim extraction, semantic matching, consensus
+   analysis, portability scoring, or hardening recommendations.
+   Instead, stop and produce an abbreviated report that includes:
+   - the full target model list,
+   - which models succeeded,
+   - which models failed,
+   - the failure reason for each failed model if known, and
+   - a clear statement that the evaluation ended early because there
+     were insufficient successful outputs for cross-model comparison.
+5. Only proceed to Step 3 if at least 2 model executions succeeded.
 
 ### Step 3: Claim Extraction
 
