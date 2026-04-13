@@ -1,5 +1,5 @@
 ---
-title: "PromptKit CLI — Requirements Specification"
+title: "PromptKit CLI ??? Requirements Specification"
 project: "PromptKit CLI (@alan-jowett/promptkit)"
 version: "0.6.1"
 date: "2026-03-31"
@@ -11,14 +11,14 @@ source_files:
   - cli/package.json
 ---
 
-# PromptKit CLI — Requirements Specification
+# PromptKit CLI ??? Requirements Specification
 
 ## Revision History
 
 | Rev | Date | Author | Description |
 |-----|------|--------|-------------|
 | 0.1 | 2025-07-17 | Spec-extraction-workflow | Initial draft extracted from source code |
-| 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired assemble command (REQ-CLI-030–037), assembly engine (REQ-CLI-040–051), manifest resolution module (REQ-CLI-060–069). Kept list command with inline manifest parsing. Modified REQ-CLI-002, 004, 011, 012, 020–023, 080, 091, 094. Retired REQ-CLI-092, CON-005, ASSUMPTION-002, ASSUMPTION-006. Added REQ-CLI-100, 101, 103. |
+| 0.2 | 2025-07-18 | Engineering-workflow Phase 2 | Retired assemble command (REQ-CLI-030???037), assembly engine (REQ-CLI-040???051), manifest resolution module (REQ-CLI-060???069). Kept list command with inline manifest parsing. Modified REQ-CLI-002, 004, 011, 012, 020???023, 080, 091, 094. Retired REQ-CLI-092, CON-005, ASSUMPTION-002, ASSUMPTION-006. Added REQ-CLI-100, 101, 103. |
 | 0.3 | 2026-03-31 | Bug-fix | Added REQ-CLI-024 (cwd preservation for claude). Updated REQ-CLI-015 and REQ-CLI-017 to reflect per-CLI spawn cwd behaviour. |
 | 0.4 | 2026-03-31 | Bug-fix | Extended cwd fix to all CLIs. Added REQ-CLI-025 (--add-dir for staging directory). Updated REQ-CLI-015, 016, 017, 024 to be CLI-agnostic. |
 
@@ -31,9 +31,9 @@ source_files:
 The PromptKit CLI is a Node.js command-line tool (`@alan-jowett/promptkit`)
 that provides two capabilities:
 
-1. **Interactive launch** — detect an LLM CLI on PATH, stage PromptKit
+1. **Interactive launch** ??? detect an LLM CLI on PATH, stage PromptKit
    content, and spawn the LLM with the bootstrap prompt.
-2. **Template listing** — enumerate available prompt templates from
+2. **Template listing** ??? enumerate available prompt templates from
    `manifest.yaml` for discovery.
 
 The CLI also includes a **build-time content bundling** script that copies
@@ -41,10 +41,10 @@ PromptKit library content from the repository root into the npm package.
 
 ### 1.2 What the CLI Is NOT
 
-- The CLI is NOT an LLM or AI tool — it launches external LLM CLIs.
-- The CLI does NOT interpret or execute prompts — it stages content and
+- The CLI is NOT an LLM or AI tool ??? it launches external LLM CLIs.
+- The CLI does NOT interpret or execute prompts ??? it stages content and
   delegates prompt assembly to the LLM via `bootstrap.md`.
-- The CLI does NOT assemble prompts programmatically — all prompt assembly
+- The CLI does NOT assemble prompts programmatically ??? all prompt assembly
   is performed by the LLM when following `bootstrap.md`.
 
 ---
@@ -79,14 +79,14 @@ executing any command, and exit with code 1 and an error message if
 ### 2.2 Interactive Command
 
 **REQ-CLI-010**: The `interactive` command MUST detect a supported LLM CLI
-on the system PATH using the detection order: `copilot` → `gh copilot` →
-`claude`.
-- *Source*: `launch.js` lines 21–35 (`detectCli()`).
+on the system PATH using the detection order: `copilot` -> `gh copilot` ->
+`claude` -> `codex`.
+- *Source*: `launch.js` (`detectCli()`).
 - *Acceptance*: With only `claude` on PATH, `detectCli()` returns `"claude"`.
 
 **REQ-CLI-011**: The `interactive` command MUST accept an optional `--cli
 <name>` flag to override auto-detection. Valid values (`copilot`,
-`gh-copilot`, `claude`) SHOULD be documented in `--help` output.
+`gh-copilot`, `claude`, `codex`) SHOULD be documented in `--help` output.
 - *Source*: `cli.js`.
 - *Acceptance*: `promptkit interactive --cli claude` uses `claude` regardless of what
   is detected. `promptkit interactive --help` lists valid `--cli` values.
@@ -103,12 +103,12 @@ directory and loading `bootstrap.md` manually as an alternative.
 **REQ-CLI-013**: If auto-detection selects a CLI other than `copilot` or
 `gh-copilot`, and the user did not pass `--cli`, the CLI SHOULD print a
 warning indicating the fallback CLI being used.
-- *Source*: `launch.js` lines 73–79.
+- *Source*: `launch.js` lines 73???79.
 - *Acceptance*: When only `claude` is detected, a warning mentions fallback.
 
 **REQ-CLI-014**: The `interactive` command MUST copy the entire content
 directory to a temporary directory before launching the LLM CLI.
-- *Source*: `launch.js` lines 37–41 (`copyContentToTemp()`).
+- *Source*: `launch.js` lines 37???41 (`copyContentToTemp()`).
 - *Acceptance*: A temp directory under the OS temp path contains all
   content files.
 
@@ -136,6 +136,7 @@ absolute path to `bootstrap.md`:
 - `copilot`: `copilot --add-dir <tmpDir> -i "Read and execute <abs>/bootstrap.md"`
 - `gh-copilot`: `gh copilot --add-dir <tmpDir> -i "Read and execute <abs>/bootstrap.md"`
 - `claude`: `claude --add-dir <tmpDir> "Read and execute <abs>/bootstrap.md"`
+- `codex`: `codex --add-dir <tmpDir> "Read and execute <abs>/bootstrap.md"`
 - *Source*: `launch.js` (`launchInteractive()`).
 - *Acceptance*: Spawn is called with the documented cmd/args for each CLI.
 
@@ -161,14 +162,14 @@ cwd is the user's original working directory.
 temporary directory (best-effort) and then exit with the child's exit code.
 If the child was killed by a signal, the CLI MUST re-send that signal to
 its own process.
-- *Source*: `launch.js` lines 122–133.
+- *Source*: `launch.js` lines 122???133.
 - *Acceptance*: After the child exits, the temp directory is removed and
   `process.exitCode` matches.
 
 **REQ-CLI-019**: If spawning the child process fails (error event), the CLI
 MUST print an error message, attempt to clean up the temp directory, and
 exit with code 1.
-- *Source*: `launch.js` lines 112–119.
+- *Source*: `launch.js` lines 112???119.
 - *Acceptance*: With an invalid CLI name, `promptkit --cli nonexistent`
   prints an error and exits 1.
 
@@ -251,8 +252,8 @@ inclusion.~~
 comments, not just the first one, handling consecutive comment blocks.~~
 
 **[RETIRED] REQ-CLI-043**: ~~The assembly engine MUST concatenate components
-in a fixed section order: Identity → Reasoning Protocols → Classification
-Taxonomy → Output Format → Task.~~
+in a fixed section order: Identity ??? Reasoning Protocols ??? Classification
+Taxonomy ??? Output Format ??? Task.~~
 
 **[RETIRED] REQ-CLI-044**: ~~Sections MUST be separated by `\n\n---\n\n`
 (horizontal rule with blank lines).~~
@@ -333,7 +334,7 @@ directories from the repository root to `cli/content/`: `personas`,
 **REQ-CLI-071**: The `copy-content.js` script MUST copy the following
 individual files from the repository root to `cli/content/`:
 `manifest.yaml`, `bootstrap.md`.
-- *Source*: `copy-content.js` lines 15, 46–50.
+- *Source*: `copy-content.js` lines 15, 46???50.
 - *Acceptance*: After running, `cli/content/manifest.yaml` and
   `cli/content/bootstrap.md` exist.
 
@@ -344,23 +345,23 @@ with `.md` or `.yaml` extensions, skipping all other file types.
 
 **REQ-CLI-073**: The script MUST delete and recreate the `cli/content/`
 directory before copying to ensure a clean state.
-- *Source*: `copy-content.js` lines 40–43.
+- *Source*: `copy-content.js` lines 40???43.
 - *Acceptance*: Stale files from a previous copy are removed.
 
 **REQ-CLI-074**: The script MUST validate that `manifest.yaml` exists at the
 repository root before proceeding, and exit with code 1 if not found.
-- *Source*: `copy-content.js` lines 32–37.
+- *Source*: `copy-content.js` lines 32???37.
 - *Acceptance*: Running from outside the repo prints an error and exits 1.
 
 **REQ-CLI-075**: The script MUST print a summary of how many entries were
 copied upon completion.
-- *Source*: `copy-content.js` lines 69–70.
+- *Source*: `copy-content.js` lines 69???70.
 - *Acceptance*: Output includes `"Copied PromptKit content to cli/content/"`.
 
 **REQ-CLI-076**: The `copy-content.js` script MUST run automatically on
 `npm publish` (via `prepublishOnly`) and `npm install` from git (via
 `prepare`).
-- *Source*: `package.json` lines 20–21.
+- *Source*: `package.json` lines 20???21.
 - *Acceptance*: `npm pack` triggers the script; `prepare` hook runs on
   `npm install` from the repository.
 
@@ -369,7 +370,7 @@ copied upon completion.
 **REQ-CLI-080**: The npm package MUST include only `bin/`, `lib/`, and
 `content/` directories (plus package.json). The `lib/` directory MUST
 contain only `launch.js`.
-- *Source*: `package.json` lines 14–18 (`files` field).
+- *Source*: `package.json` lines 14???18 (`files` field).
 - *Acceptance*: `npm pack --dry-run` lists only files under those
   directories. `lib/` contains only `launch.js`.
 
@@ -380,7 +381,7 @@ generated at build time.
 
 **REQ-CLI-082**: The package MUST be published with public access under the
 `@alan-jowett` scope.
-- *Source*: `package.json` lines 30–32 (`publishConfig`).
+- *Source*: `package.json` lines 30???32 (`publishConfig`).
 - *Acceptance*: `npm publish` uses `access: public`.
 
 ---
@@ -416,7 +417,7 @@ components when following `bootstrap.md`.*
 **REQ-CLI-094**: The CLI MUST have exactly two runtime dependencies:
 `commander` (^12.0.0) and `js-yaml` (^4.1.0). All other modules used MUST
 be Node.js built-ins.
-- *Source*: `package.json` lines 23–26.
+- *Source*: `package.json` lines 23???26.
 - *Acceptance*: `package.json` lists exactly these two dependencies.
 
 ---
@@ -436,7 +437,7 @@ any secrets. LLM authentication is handled by the external CLI.
 is stateless.
 
 **[RETIRED] CON-005**: ~~The assembly engine MUST NOT summarize, abbreviate,
-or condense component content — it includes body text verbatim (minus
+or condense component content ??? it includes body text verbatim (minus
 frontmatter/comments).~~
 
 *Retired: Assembly engine removed. The equivalent rule exists in
@@ -461,11 +462,11 @@ template entries directly.*
 
 **[ASSUMPTION-003]**: The `--cli` flag for the `interactive` command
 accepts values matching the switch cases in `launch.js`: `"copilot"`,
-`"gh-copilot"`, `"claude"`. Other values cause exit with code 1. These
+`"gh-copilot"`, `"claude"`, `"codex"`. Other values cause exit with code 1. These
 valid values SHOULD be documented in help text (see REQ-CLI-011).
 
 **[ASSUMPTION-004]**: The `copyContentToTemp` function copies the entire
-content directory recursively, including all file types — unlike
+content directory recursively, including all file types ??? unlike
 `copy-content.js` which filters to `.md` and `.yaml` only. This means
 the temp directory may contain files not present in the npm package if
 run from a development environment. [INFERRED]
@@ -480,7 +481,7 @@ This relies on standard npm lifecycle behavior.
 very beginning of the file (after HTML comment stripping). Content files
 with frontmatter not at the start will not be stripped. [INFERRED]~~
 
-*Retired: Assembly engine removed — frontmatter stripping no longer
+*Retired: Assembly engine removed ??? frontmatter stripping no longer
 applies to CLI code.*
 
 ---

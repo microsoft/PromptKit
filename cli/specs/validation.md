@@ -221,6 +221,12 @@ See REQ-CLI-100.*
 - *Steps*: Ensure only `claude` is on PATH.
 - *Expected*: Returns `"claude"`.
 
+**TC-CLI-072A**: detectCli finds codex after claude is absent.
+- *Requirement*: REQ-CLI-010
+- *Type*: Unit
+- *Steps*: Ensure only `codex` is on PATH.
+- *Expected*: Returns `"codex"`.
+
 **TC-CLI-073**: detectCli returns null when nothing found.
 - *Requirement*: REQ-CLI-010
 - *Type*: Unit
@@ -275,13 +281,15 @@ See REQ-CLI-100.*
 **TC-CLI-081**: Correct command construction for each CLI.
 - *Requirement*: REQ-CLI-017
 - *Type*: Unit
-- *Steps*: Verify spawn cmd/args for `copilot`, `gh-copilot`, `claude`.
+- *Steps*: Verify spawn cmd/args for `copilot`, `gh-copilot`, `claude`, `codex`.
 - *Expected*:
   - copilot: `cmd="copilot"`, args include `"--add-dir"`, `<tmpDir>`,
     `"-i"`, `"Read and execute <abs>/bootstrap.md"`
   - gh-copilot: `cmd="gh"`, args include `"copilot"`, `"--add-dir"`,
     `<tmpDir>`, `"-i"`, `"Read and execute <abs>/bootstrap.md"`
   - claude: `cmd="claude"`, args include `"--add-dir"`, `<tmpDir>`,
+    `"Read and execute <abs>/bootstrap.md"`
+  - codex: `cmd="codex"`, args include `"--add-dir"`, `<tmpDir>`,
     `"Read and execute <abs>/bootstrap.md"`
 
 **TC-CLI-082**: All CLIs are spawned with the user's original working directory.
@@ -422,7 +430,7 @@ concern.*
 | REQ-CLI-002 | TC-CLI-001, TC-CLI-004 | High | Active |
 | REQ-CLI-003 | TC-CLI-002 | Medium | Active |
 | REQ-CLI-004 | TC-CLI-003, TC-CLI-003a | High | Active |
-| REQ-CLI-010 | TC-CLI-070 through TC-CLI-074 | High | Active |
+| REQ-CLI-010 | TC-CLI-070 through TC-CLI-074, TC-CLI-072A | High | Active |
 | REQ-CLI-011 | TC-CLI-075 | Medium | Active |
 | REQ-CLI-012 | TC-CLI-076 | High | Active |
 | REQ-CLI-013 | TC-CLI-077 | Low | Active |

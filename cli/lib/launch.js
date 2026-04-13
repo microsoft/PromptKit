@@ -58,6 +58,24 @@ function resolveSpawnCommand(cmd) {
   return isExactFileOnPath(shim) ? shim : cmd;
 }
 
+function quoteWindowsArg(arg) {
+  if (arg === "") return '""';
+  if (!/[\s"]/u.test(arg)) return arg;
+  return `"${arg.replace(/(\\*)"/g, '$1$1\\"').replace(/(\\+)$/g, '$1$1')}"`;
+}
+
+function spawnCli(cmd, args, options) {
+  if (process.platform === "win32" && /\.cmd$/i.test(cmd)) {
+    const comspec = process.env.ComSpec || "cmd.exe";
+    const commandLine = [cmd, ...args].map(quoteWindowsArg).join(" ");
+    return spawn(comspec, ["/d", "/s", "/c", commandLine], {
+      ...options,
+      windowsVerbatimArguments: true,
+    });
+  }
+  return spawn(cmd, args, options);
+}
+
 function detectCli() {
   // Check for GitHub Copilot CLI first (most common)
   if (isOnPath("copilot")) return "copilot";
@@ -174,7 +192,7 @@ function launchInteractive(contentDir, cliName, { dryRun = false } = {}) {
 
   // All CLIs are spawned from the user's original directory so the LLM
   // session reflects the directory the user was working in.
-  const child = spawn(cmd, args, {
+  const child = spawnCli(cmd, args, {
     cwd: originalCwd,
     stdio: "inherit",
   });
