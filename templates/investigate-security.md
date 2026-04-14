@@ -14,7 +14,7 @@ protocols:
   - guardrails/operational-constraints
   - guardrails/adversarial-falsification
   - analysis/security-vulnerability
-  - reasoning/exhaustive-path-tracing  # optional — apply selectively to parser/decoder functions
+  - reasoning/exhaustive-path-tracing
 taxonomies:
   - stack-lifetime-hazards
 format: investigation-report

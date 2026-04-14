@@ -78,9 +78,12 @@ def _parse_template_frontmatter(text: str) -> dict[str, object] | None:
         if indent > 0:
             # Still collect multi-line list items at indent 2
             if current_list_field and stripped.startswith("- "):
-                result[current_list_field].append(
-                    stripped[2:].strip().strip("'\"")
-                )
+                val = stripped[2:].strip().strip("'\"")
+                # Strip inline YAML comments
+                comment_match = re.match(r"^([^#]+?)\s+#", val)
+                if comment_match:
+                    val = comment_match.group(1).strip().strip("'\"")
+                result[current_list_field].append(val)
             elif stripped and current_list_field and not stripped.startswith("#"):
                 current_list_field = None
             continue
