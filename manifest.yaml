@@ -1351,7 +1351,7 @@ templates:
         Security audit of code or a system component. Systematic
         vulnerability analysis with severity classification.
       persona: security-auditor
-      protocols: [anti-hallucination, self-verification, operational-constraints, security-vulnerability]
+      protocols: [anti-hallucination, self-verification, operational-constraints, adversarial-falsification, security-vulnerability]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 

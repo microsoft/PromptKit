@@ -36,6 +36,12 @@ presenting it as final. Treat it as a pre-submission checklist.
   - Does the evidence actually support the conclusion stated?
 - If any sampled item fails verification, **re-examine all items of
   the same type** before proceeding.
+- For each sampled finding, apply **symmetric falsification**: attempt
+  to disprove the finding with the same rigor you applied when
+  falsifying candidate findings that you concluded were safe. Ask:
+  "Is there a validation, API contract, or initialization invariant
+  I missed that makes this safe?" If you cannot answer "no" with
+  specific code evidence, downgrade or remove the finding.
 
 ### 2. Citation Audit
 

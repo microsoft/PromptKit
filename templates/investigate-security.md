@@ -12,6 +12,7 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
+  - guardrails/adversarial-falsification
   - analysis/security-vulnerability
 taxonomies:
   - stack-lifetime-hazards
