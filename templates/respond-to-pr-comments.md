@@ -172,12 +172,17 @@ Execute responses with **mandatory user confirmation at every step**:
 4. **For each thread with an explanation**:
    a. Show the draft reply to the user.
    b. Ask: "Post this reply? (yes / skip / edit)"
-   c. If confirmed, post the reply using:
+   c. If confirmed, write the reply payload to `reply.json` and post:
+      ```json
+      {
+        "body": "<reply text>",
+        "in_reply_to": <comment_id>
+      }
+      ```
       ```
       gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
         --method POST \
-        --field body="<reply text>" \
-        --field in_reply_to="<comment_id>"
+        --input reply.json
       ```
 
 5. **For threads that were fixed**:

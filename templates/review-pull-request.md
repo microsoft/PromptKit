@@ -181,6 +181,7 @@ PR review concepts to report sections:
    {
      "body": "<overall summary>",
      "event": "<APPROVE|REQUEST_CHANGES|COMMENT>",
+     "commit_id": "<PR head SHA>",
      "comments": [
        {
          "path": "path/to/file.ext",
@@ -196,9 +197,10 @@ PR review concepts to report sections:
      --method POST \
      --input review.json
    ```
-   Each inline comment object must include `path` and comment `body`, plus
-   the review location fields required by GitHub's API: typically `line`
-   and `side` for a diff comment on the new code.
+   Fetch the head SHA with `gh pr view {pr_number} --json headRefOid --jq .headRefOid`
+   before constructing the payload. Each inline comment object must include
+   `path` and comment `body`, plus the review location fields required by
+   GitHub's API: typically `line` and `side` for a diff comment on the new code.
 4. **Never post without explicit user confirmation.** If the user skips
    all findings, do not submit a review.
 
