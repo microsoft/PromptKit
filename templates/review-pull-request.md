@@ -173,14 +173,31 @@ PR review concepts to report sections:
 2. **Ask the user to confirm** which findings to post as review comments.
    Present each finding (or batch by file) and ask:
    - Post this comment? (yes / skip / edit)
-3. **Post confirmed findings** as inline review comments using:
+3. **Post confirmed findings** as inline review comments using a JSON
+   payload file so `comments` is sent as an array, not a string:
    ```
+   cat > review.json <<'EOF'
+   {
+     "body": "<overall summary>",
+     "event": "<APPROVE|REQUEST_CHANGES|COMMENT>",
+     "comments": [
+       {
+         "path": "path/to/file.ext",
+         "body": "<inline review comment>",
+         "line": 123,
+         "side": "RIGHT"
+       }
+     ]
+   }
+   EOF
+
    gh api repos/{owner}/{repo}/pulls/{pr_number}/reviews \
      --method POST \
-     --field body="<overall summary>" \
-     --field event="<APPROVE|REQUEST_CHANGES|COMMENT>" \
-     --field comments="<array of inline comments>"
+     --input review.json
    ```
+   Each inline comment object must include `path` and comment `body`, plus
+   the review location fields required by GitHub's API: typically `line`
+   and `side` for a diff comment on the new code.
 4. **Never post without explicit user confirmation.** If the user skips
    all findings, do not submit a review.
 

@@ -1436,7 +1436,7 @@ templates:
         code fixes, post replies, resolve threads via GitHub API).
         Detects contradictory feedback across reviewers.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification]
+      protocols: [anti-hallucination, self-verification, operational-constraints]
       format: pr-comment-responses
 
     - name: reconstruct-behavior

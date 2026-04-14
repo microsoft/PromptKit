@@ -12,6 +12,7 @@ persona: systems-engineer
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/operational-constraints
 format: pr-comment-responses
 params:
   pr_reference: "Pull request to respond to — URL or number (e.g., #42)"
@@ -159,8 +160,10 @@ Execute responses with **mandatory user confirmation at every step**:
    b. Ask: "Post this reply? (yes / skip / edit)"
    c. If confirmed, post the reply using:
       ```
-      gh api repos/{owner}/{repo}/pulls/{pr_number}/comments/{comment_id}/replies \
-        --method POST --field body="<reply text>"
+      gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
+        --method POST \
+        --field body="<reply text>" \
+        --field in_reply_to="<comment_id>"
       ```
 
 5. **For threads that were fixed**:

@@ -49,8 +49,10 @@ code area or design decision. For each contradiction:
 - **Reviewer A** (@handle): <position summary> — <thread reference>
 - **Reviewer B** (@handle): <position summary> — <thread reference>
 - **Conflict**: <what specifically conflicts>
-- **Recommended Resolution**: <which position to follow and why,
-  or flag for team discussion>
+- **Resolution Options / Tradeoffs**: <neutral summary of the
+  available options, tradeoffs, and implications>
+- **Decision Needed**: <what the user/team needs to decide or clarify
+  before proceeding>
 ```
 
 If no contradictions are detected, state: "No contradictions detected
