@@ -52,7 +52,7 @@ explanatory replies, or both.
 ### Phase 1: Gather Review Threads
 
 1. **Read all review threads** on the PR:
-   - Use `gh pr view --comments` for a quick overview, but use
+   - Use `gh pr view {{pr_reference}} --comments` for a quick overview, but use
      `gh api graphql` to fetch the authoritative review-thread data
      needed for deterministic action mode execution
    - For each review thread, record:
@@ -189,11 +189,13 @@ Execute responses with **mandatory user confirmation at every step**:
    a. Ask: "Resolve these threads? (yes / no)"
    b. If confirmed, resolve each thread using:
       ```
-      gh api graphql -f query='mutation {
-        resolveReviewThread(input: {threadId: "<thread_id>"}) {
-          thread { isResolved }
-        }
-      }'
+      gh api graphql \
+        -f query='mutation($threadId: ID!) {
+          resolveReviewThread(input: {threadId: $threadId}) {
+            thread { isResolved }
+          }
+        }' \
+        -F threadId="<thread_id>"
       ```
 
 6. **Never take any action without explicit user confirmation.**
