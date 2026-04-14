@@ -12,7 +12,9 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
+  - guardrails/adversarial-falsification
   - analysis/security-vulnerability
+  - reasoning/exhaustive-path-tracing  # optional — apply selectively to parser/decoder functions
 taxonomies:
   - stack-lifetime-hazards
 format: investigation-report
@@ -88,6 +90,42 @@ code or system component.
    - Prefer deterministic methods (targeted search, structured enumeration)
    - Document your search strategy for reproducibility
 
+7. **Apply the exhaustive-path-tracing protocol selectively** to
+   **parser and decoder functions** that process untrusted structured input.
+   This protocol is not applied to every function — only to functions
+   identified during Phase 2 (attack surface enumeration) that meet
+   ALL of the following criteria:
+
+   - The function **decodes multiple fields** from a wire format, file
+     format, or serialized structure controlled by an untrusted source
+   - The function **performs arithmetic** (subtraction, addition,
+     multiplication, shift) on two or more decoded values, or between
+     a decoded value and a running accumulator
+   - The function contains **loops** that iterate over a variable number
+     of decoded elements, where each iteration updates shared state
+     (offsets, remaining lengths, accumulators)
+
+   For each such function, apply the full exhaustive-path-tracing
+   protocol with particular attention to:
+
+   - **Inter-value arithmetic validation**: After decoding a new field
+     value, verify that every subsequent arithmetic operation using that
+     value against a running accumulator (e.g., `Largest -= Count`) is
+     guarded against underflow or overflow — not just at the decode site,
+     but at every use site within the function, including the *current*
+     loop iteration (not just the next iteration's entry check).
+   - **Loop-carried invariant gaps**: When a loop body decodes a fresh
+     value and uses it immediately, but the bounds check for that value
+     only runs at the *next* iteration's entry, the current iteration's
+     use is unguarded. Explicitly verify that each decoded value is
+     validated before its first arithmetic use within the same iteration.
+   - **Truncation after bounds check**: When a decoded uint64_t value
+     passes a bounds check against a uint16_t buffer length and is then
+     cast to uint16_t, the cast is safe. But when a decoded value is
+     used in arithmetic *without* a prior bounds check against the
+     current accumulator, the arithmetic may underflow even though the
+     decode itself succeeded.
+
 ## Non-Goals
 
 Explicitly define what is OUT OF SCOPE for this security audit.
@@ -110,10 +148,19 @@ Before beginning analysis, produce a concrete step-by-step plan:
    data enters the system.
 2. **Enumerate attack surface**: List every input handling path,
    authentication point, and privilege transition.
-3. **Classify**: Apply the security-vulnerability protocol systematically
+3. **Identify parser/decoder functions for deep analysis**: From the
+   attack surface enumeration, identify functions that decode multiple
+   fields from untrusted structured input and perform inter-value
+   arithmetic (see instruction 7). List these functions explicitly —
+   they will receive exhaustive path tracing.
+4. **Classify**: Apply the security-vulnerability protocol systematically
    to each attack surface element.
-4. **Rank**: Order findings by exploitability and impact.
-5. **Report**: Produce the output according to the specified format.
+5. **Deep-dive**: Apply the exhaustive-path-tracing protocol to each
+   function identified in step 3. For each, trace every arithmetic
+   operation on decoded values through every loop iteration and
+   verify underflow/overflow guards exist at every use site.
+6. **Rank**: Order findings by exploitability and impact.
+7. **Report**: Produce the output according to the specified format.
 
 ## Quality Checklist
 
@@ -127,3 +174,6 @@ Before finalizing, verify:
 - [ ] At least 3 findings have been re-verified against the source
 - [ ] Coverage statement documents what was and was not examined
 - [ ] No fabricated vulnerabilities — unknowns marked with [UNKNOWN]
+- [ ] All parser/decoder functions identified in step 3 have coverage
+      ledgers from exhaustive-path-tracing (or explicit justification
+      for skipping)
