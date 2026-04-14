@@ -53,8 +53,7 @@ code area or design decision. For each contradiction:
   before proceeding>
 ```
 
-If no contradictions are detected, state: "No contradictions detected
-across reviewer feedback."
+If no contradictions are detected, state: "None identified."
 
 ### 3. Per-Thread Responses
 
