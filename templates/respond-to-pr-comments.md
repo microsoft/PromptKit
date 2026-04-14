@@ -52,14 +52,28 @@ explanatory replies, or both.
 ### Phase 1: Gather Review Threads
 
 1. **Read all review threads** on the PR:
-   - Use `gh pr view --comments` or `gh api` to fetch review threads
-   - For each thread, note:
+   - Use `gh pr view --comments` for a quick overview, but use
+     `gh api graphql` to fetch the authoritative review-thread data
+     needed for deterministic action mode execution
+   - For each review thread, record:
+     - `thread_id`: the GraphQL review thread ID (required for
+       `resolveReviewThread`)
      - Reviewer handle
      - File path and line number
      - Thread state (pending, resolved, outdated)
      - Full comment text and any replies
      - Whether the thread is on code that still exists in the
        current diff
+   - For each review comment within the thread, record:
+     - `comment_id`: the review comment database ID (required for
+       REST `in_reply_to` when posting a reply)
+     - Author handle
+     - Comment body
+   - Use a GraphQL query via `gh api graphql` that includes each
+     thread's ID, state, path, and line metadata, plus each
+     comment's database ID, author, and body
+   - Preserve these IDs in your working notes so later action
+     steps can post replies and resolve the correct threads
 
 2. **Filter threads** based on `review_threads` parameter:
    - If `all pending` — include all threads with state `pending`

@@ -122,7 +122,7 @@ For each changed file, evaluate:
 Format each finding as:
 
 ```
-[SEVERITY: Critical|High|Medium|Low|Nit]
+[SEVERITY: Critical|High|Medium|Low|Informational]
 File: <file path>
 Line: <line number or range in the diff>
 Issue: <concise description>
@@ -166,6 +166,7 @@ PR review concepts to report sections:
 | Remediation Plan | Suggested fixes ordered by priority |
 | Prevention | Process suggestions (testing, CI checks) |
 | Open Questions | Ambiguities in the PR or linked issues |
+| Coverage | Files examined, search method, exclusions, limitations |
 
 #### Action Mode (`output_mode: action`)
 
@@ -208,8 +209,9 @@ PR review concepts to report sections:
   by or affected by the changed code.
 - Do NOT comment on personal style preferences — focus on correctness,
   safety, security, and change quality.
-- Do NOT merge or approve the PR programmatically — the verdict is
-  advisory. In action mode, post a review but do not merge.
+- Do NOT merge the PR programmatically. The verdict is advisory. In
+  action mode, you may post an `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`
+  review only after explicit user confirmation, and you must not merge.
 - Do NOT modify the PR branch or push commits.
 
 ## Quality Checklist

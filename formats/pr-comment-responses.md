@@ -17,10 +17,8 @@ The output MUST be a structured response plan for pull request review
 threads. The format adapts based on `output_mode`:
 
 - **Document mode**: produce the full report below.
-- **Action mode**: use this structure as an internal analysis plan,
-  then execute actions (with user confirmation) instead of writing
-  a report. Present findings to the user in this structure before
-  taking any action.
+- **Action mode**: use the same section structure below as an analysis
+  and planning artifact, rather than a prose report.
 
 ## Output Structure
 
@@ -105,18 +103,7 @@ For each actionable thread, in file order:
   explicit confirmation before executing any mutation (code change,
   comment post, thread resolution).
 
-## Response Type Selection
+## Response Type
 
-When `response_mode` is set to `auto`, apply these heuristics:
-
-| Reviewer Feedback | Default Response Type |
-|---|---|
-| Points out a bug, missing check, or incorrect behavior | **Fix** |
-| Asks "why" or questions a design choice | **Explain** |
-| Suggests a refactor or alternative approach | **Both** (fix + explain tradeoff) |
-| Requests documentation or comment changes | **Fix** |
-| Flags a style or convention issue | **Fix** |
-| Raises a concern without a specific ask | **Explain** |
-
-When `response_mode` is `fix` or `explain`, use that type for all
-threads regardless of heuristics. The user may override per-thread.
+- `response_type` MUST be one of: **Fix**, **Explain**, or **Both**.
+- If a per-thread override is shown, it MUST use one of the same values.
