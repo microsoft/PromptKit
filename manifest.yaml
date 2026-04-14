@@ -1349,9 +1349,11 @@ templates:
       path: templates/investigate-security.md
       description: >
         Security audit of code or a system component. Systematic
-        vulnerability analysis with severity classification.
+        vulnerability analysis with severity classification. Applies
+        exhaustive path tracing selectively to parser/decoder functions
+        that handle untrusted structured input.
       persona: security-auditor
-      protocols: [anti-hallucination, self-verification, operational-constraints, adversarial-falsification, security-vulnerability]
+      protocols: [anti-hallucination, self-verification, operational-constraints, adversarial-falsification, security-vulnerability, exhaustive-path-tracing]
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
