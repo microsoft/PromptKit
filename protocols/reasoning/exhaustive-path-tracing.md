@@ -11,6 +11,7 @@ description: >
 applicable_to:
   - review-code
   - investigate-bug
+  - investigate-security
   - exhaustive-bug-hunt
 ---
 

@@ -38,10 +38,12 @@ presenting it as final. Treat it as a pre-submission checklist.
   the same type** before proceeding.
 - For each sampled finding, apply **symmetric falsification**: attempt
   to disprove the finding with the same rigor you applied when
-  falsifying candidate findings that you concluded were safe. Ask:
-  "Is there a validation, API contract, or initialization invariant
-  I missed that makes this safe?" If you cannot answer "no" with
-  specific code evidence, downgrade or remove the finding.
+  falsifying candidate findings that you concluded were safe. Verify
+  whether any upstream validation, API contract, or initialization
+  invariant makes this safe; cite the specific call sites, checks, or
+  invariants reviewed and explain why they do not neutralize the
+  finding. If you have not verified that upstream validation does not
+  apply, downgrade or remove the finding.
 
 ### 2. Citation Audit
 
