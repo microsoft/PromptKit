@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// cli/tests/launch.test.js ??? Launch module unit tests
+// cli/tests/launch.test.js — Launch module unit tests
 
 const { describe, it, before, after } = require("node:test");
 const assert = require("node:assert");
@@ -46,7 +46,7 @@ describe("Launch Module", () => {
   before(() => {
     assert.ok(
       fs.existsSync(contentDir),
-      "content/ must exist ??? run 'npm run prepare' first"
+      "content/ must exist — run 'npm run prepare' first"
     );
   });
 
@@ -257,7 +257,7 @@ describe("Launch Module", () => {
         .join("\n");
       assert.ok(
         !/\bshell\s*:\s*true\b/.test(nonCommentLines),
-        "launch.js must not pass shell: true to spawn() ??? doing so splits the bootstrap prompt into multiple arguments"
+        "launch.js must not pass shell: true to spawn() — doing so splits the bootstrap prompt into multiple arguments"
       );
     });
   });
@@ -331,7 +331,7 @@ describe("Launch Module", () => {
     }
 
     for (const cliName of ["claude", "copilot", "gh-copilot", "codex"]) {
-      // TC-CLI-082 and TC-CLI-083 combined ??? run once per CLI
+      // TC-CLI-082 and TC-CLI-083 combined — run once per CLI
       it(`TC-CLI-082/083: ${cliName} spawned with originalCwd and --add-dir for staging dir`, () => {
         const mockBinDir = path.join(cwdTestTmpDir, `mock-bin-${cliName}`);
         fs.mkdirSync(mockBinDir, { recursive: true });
