@@ -94,7 +94,7 @@ For the full composition model and assembly internals, see the
 | Write requirements | `author-requirements-doc` | software-architect |
 | Design a system | `author-design-doc` | software-architect |
 | Plan implementation | `plan-implementation` | software-architect |
-| Plan a refactoring | `plan-refactoring` | software-architect |
+| Plan a refactoring | `plan-implementation` (mode=refactoring) | software-architect |
 | Create a test plan | `author-validation-plan` | software-architect |
 | Audit for security | `investigate-security` | security-auditor |
 | Set up CI/CD | `author-pipeline` | devops-engineer |

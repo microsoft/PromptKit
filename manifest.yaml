@@ -631,6 +631,14 @@ protocols:
         copying from external sources, screens for confidential or
         internal-only content, and verifies license compliance.
 
+    - name: prompt-portability-evaluation
+      path: protocols/reasoning/prompt-portability-evaluation.md
+      description: >
+        Systematic methodology for evaluating prompt portability across
+        LLM models. Decomposes outputs into atomic claims, performs
+        cross-model semantic matching, and classifies consensus levels
+        to identify fragile prompt language.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -844,6 +852,14 @@ formats:
       file via python-pptx, optional PDF export, embedded speaker
       notes, a presentation timeline, and an optional demo plan.
       All artifacts form a cohesive presentation kit.
+
+  - name: portability-report
+    path: formats/portability-report.md
+    produces: portability-report
+    description: >
+      Output format for prompt portability evaluation reports. Structures
+      cross-model comparison results as claim-level consensus analysis
+      with portability scoring and hardening recommendations.
 
 taxonomies:
   - name: stack-lifetime-hazards
@@ -1195,6 +1211,18 @@ templates:
       protocols: [anti-hallucination, self-verification, prompt-determinism-analysis]
       format: investigation-report
 
+    - name: evaluate-prompt-portability
+      path: templates/evaluate-prompt-portability.md
+      description: >
+        Evaluate a PromptKit-assembled prompt's portability across LLM
+        models. Runs the prompt against multiple models with a golden
+        input, decomposes outputs into semantic claims, performs
+        cross-model consensus analysis, and produces a portability
+        report with hardening recommendations.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, prompt-portability-evaluation]
+      format: portability-report
+
   standards:
     - name: extract-rfc-requirements
       path: templates/extract-rfc-requirements.md
@@ -1522,16 +1550,9 @@ templates:
       path: templates/plan-implementation.md
       description: >
         Decompose a project into an actionable implementation plan
-        with tasks, dependencies, and risk assessment.
-      persona: software-architect
-      protocols: [anti-hallucination, self-verification]
-      format: implementation-plan
-
-    - name: plan-refactoring
-      path: templates/plan-refactoring.md
-      description: >
-        Plan a safe, incremental refactoring with step-by-step
-        changes that maintain correctness at each step.
+        with tasks, dependencies, and risk assessment. Supports two
+        modes: "implementation" (new feature/project) and "refactoring"
+        (safe, incremental transformation of existing code).
       persona: software-architect
       protocols: [anti-hallucination, self-verification]
       format: implementation-plan

@@ -147,6 +147,28 @@ Plan a `.github/skills/<name>/SKILL.md` file containing:
    - The protocol methodology as step-by-step instructions
    - Clear input/output expectations
    - Any file or tool requirements
+3. **For multi-phase workflows** (source template has pipeline passes, or
+   is `mode: interactive` with more than two phases or explicit gates):
+   - Add a `## Critical Constraints — Read Before Doing Anything`
+     section immediately after the opening task description, before
+     any architecture/methodology content (see the
+     `agent-instructions` format's "Multi-phase workflow rules")
+   - Add `### Critical Rule` stop directives at each phase boundary
+   - Add a `## Current Pass Tracking` section with a status template
+   - Explicitly name prohibited output types per phase
+   - Include the anti-shortcut rationale explaining what failure mode
+     the pipeline prevents
+   - If any phase produces code that consumes artifacts from earlier
+     phases (e.g., a renderer script that reads IR files), add the
+     IR consumption rule: the code MUST read data from artifacts at
+     runtime, MUST NOT hardcode it as literals, MUST fail-stop if
+     required artifacts are missing or malformed, MUST map consumed
+     values from explicit field-level YAML paths, MUST include the
+     self-check ("if deleting the artifacts wouldn't change the
+     script's output, it's hardcoding data — rewrite it"), and MUST
+     iterate when a validation gate fails rather than asking the user
+     to accept the failure
+   - Do NOT condense the phase structure — it is the behavioral contract
 
 ### Step 3: Condense and Adapt the Content
 
@@ -163,6 +185,23 @@ Transform the loaded components into agent instruction prose:
    - Omit meta-commentary about the protocol's structure
    - Rewrite in second person ("When you encounter X, always Y")
    - If multiple protocols overlap, merge the redundant parts
+   - **Exception for multi-phase workflows**: If the source template
+     defines a multi-phase pipeline (multiple sequential phases where
+     each phase's output feeds the next), do NOT condense away the
+     phase gating logic. The sequential structure, explicit stop points,
+     and prohibited-output rules ARE the critical behavioral constraints.
+     Preserve them as imperative directives, not architectural
+     descriptions. Specifically:
+     - Keep each phase's gate rule as a `### Critical Rule` block
+     - Keep the prohibited-output-type list per phase
+     - Add a pass tracking block so the agent announces its current state
+     - Include the anti-shortcut rationale (why the pipeline exists,
+       what failure mode it prevents)
+     - For phases that produce code consuming earlier artifacts, include
+       the IR consumption rule: generated code reads data from artifacts
+       at runtime, never hardcodes it, with the self-check directive
+     See the `agent-instructions` format's "Multi-phase workflow rules"
+     for the complete set of required enforcement mechanisms.
 
 3. **Incorporate the additional behaviors** from `{{behaviors}}`:
    - Add any domain-specific or project-specific instructions

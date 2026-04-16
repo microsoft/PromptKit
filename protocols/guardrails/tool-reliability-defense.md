@@ -10,6 +10,10 @@ description: >
   confirmation. Addresses known failure modes in AI coding tools
   including edit corruption, rendering artifacts, and encoding errors.
 applicable_to: []
+# User-composed protocol — not auto-included by any template.
+# Intended for: agentic workflows and agent instruction authoring
+# where tool outputs (file edits, shell commands, search results)
+# must be independently verified before proceeding.
 ---
 
 # Protocol: Tool Reliability Defense

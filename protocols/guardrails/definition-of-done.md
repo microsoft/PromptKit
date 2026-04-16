@@ -10,6 +10,10 @@ description: >
   by requiring verification of functionality, tests, diagnostics, build
   health, regression safety, and plan alignment.
 applicable_to: []
+# User-composed protocol — not auto-included by any template.
+# Intended for: implementation planning, engineering workflows,
+# and any task where explicit completion criteria prevent premature
+# "done" declarations.
 ---
 
 # Protocol: Definition of Done

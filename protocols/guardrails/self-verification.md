@@ -39,17 +39,13 @@ presenting it as final. Treat it as a pre-submission checklist.
 
 ### 2. Citation Audit
 
-Every factual claim must use the epistemic categories defined in the
-`anti-hallucination` protocol (KNOWN / INFERRED / ASSUMED).
-
-- Every factual claim in the output MUST be traceable to:
-  - A specific location in the provided code or context, OR
-  - An explicit `[ASSUMPTION]` or `[INFERRED]` label.
-- Scan the output for claims that lack citations. For each:
-  - Add the citation if the source is identifiable.
-  - Label as `[ASSUMPTION]` if not grounded in provided context.
-  - Remove the claim if it cannot be supported or labeled.
-- **Zero uncited factual claims** is the target.
+Apply the epistemic labeling rules from the `anti-hallucination` protocol
+(Rules 1–4: KNOWN/INFERRED/ASSUMED classification, refusal to fabricate,
+uncertainty disclosure, source attribution). Scan the output for factual
+claims that lack epistemic labels or source citations, and remediate each:
+add the appropriate epistemic label (`[KNOWN]`, `[INFERRED]`, or
+`[ASSUMPTION]`), add the citation, or remove the claim. **Zero uncited factual
+claims** is the target.
 
 ### 3. Coverage Confirmation
 
@@ -59,11 +55,9 @@ Every factual claim must use the epistemic categories defined in the
     but not covered in the output?
   - If any areas were intentionally excluded, document why in a
     "Limitations" or "Coverage" section.
-- State explicitly:
-  - "**Examined**: [what was analyzed — directories, files, patterns]."
-  - "**Method**: [how items were found — search queries, commands, scripts]."
-  - "**Excluded**: [what was intentionally not examined, and why]."
-  - "**Limitations**: [what could not be examined due to access, time, or context]."
+- Include the 4-field coverage statement defined in the
+  `operational-constraints` protocol (Rule 9: Examined, Method,
+  Excluded, Limitations).
 
 ### 4. Internal Consistency Check
 
@@ -95,7 +89,9 @@ other directive text intended for LLM consumption, scan for language
 that introduces non-deterministic interpretation:
 
 - [ ] Are all instructions specific enough that two different LLMs
-      would produce structurally similar output?
+      would produce output with the same section headings, the same
+      number of items per section (±20%), and the same classification
+      labels?
 - [ ] Are quantifiers concrete (specific counts or ranges, not
       "some" or "several")?
 - [ ] Are evaluation criteria observable (not subjective adjectives

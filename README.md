@@ -579,12 +579,11 @@ personas, analysis protocols, and task templates.
 | `discover-tests-for-changes` | Find relevant tests for local code changes |
 | `scaffold-test-project` | Scaffold test project with build and runner setup |
 
-**Planning** (2 templates):
+**Planning** (1 template):
 
 | Name | Description |
 |------|-------------|
-| `plan-implementation` | Implementation task breakdown with dependencies |
-| `plan-refactoring` | Safe, incremental refactoring plan |
+| `plan-implementation` | Implementation task breakdown with dependencies. Use `mode=refactoring` for safe, incremental refactoring plans. |
 
 **Agent Authoring** (1 template):
 
