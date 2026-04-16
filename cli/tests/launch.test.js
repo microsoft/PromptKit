@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// cli/tests/launch.test.js — Launch module unit tests
+// cli/tests/launch.test.js ??? Launch module unit tests
 
 const { describe, it, before, after } = require("node:test");
 const assert = require("node:assert");
@@ -46,7 +46,7 @@ describe("Launch Module", () => {
   before(() => {
     assert.ok(
       fs.existsSync(contentDir),
-      "content/ must exist — run 'npm run prepare' first"
+      "content/ must exist ??? run 'npm run prepare' first"
     );
   });
 
@@ -110,8 +110,8 @@ describe("Launch Module", () => {
 
     // Run an inline Node script that requires launch.js by absolute path
     // and calls detectCli() with PATH set to mockDir only.
-    // isOnPath() in launch.js searches PATH directories directly (no `which`),
-    // so mockDir is sufficient — no system binary directories are needed.
+    // isOnPath() in launch.js scans PATH directories directly,
+    // so mockDir is sufficient and no system binary directories are needed.
     function runDetectCli() {
       const testPath = mockDir;
       const script = [
@@ -138,6 +138,14 @@ describe("Launch Module", () => {
       removeMockCmd("gh");
       createMockCmd("claude");
       assert.strictEqual(runDetectCli(), "claude");
+    });
+
+    it("TC-CLI-072A: detectCli finds codex after claude", () => {
+      removeMockCmd("copilot");
+      removeMockCmd("gh");
+      removeMockCmd("claude");
+      createMockCmd("codex");
+      assert.strictEqual(runDetectCli(), "codex");
     });
 
     it("TC-CLI-074: gh without copilot extension is not detected as gh-copilot", () => {
@@ -249,7 +257,7 @@ describe("Launch Module", () => {
         .join("\n");
       assert.ok(
         !/\bshell\s*:\s*true\b/.test(nonCommentLines),
-        "launch.js must not pass shell: true to spawn() — doing so splits the bootstrap prompt into multiple arguments"
+        "launch.js must not pass shell: true to spawn() ??? doing so splits the bootstrap prompt into multiple arguments"
       );
     });
   });
@@ -287,7 +295,7 @@ describe("Launch Module", () => {
       if (process.platform === "win32") {
         fs.writeFileSync(
           path.join(mockBinDir, `${binName}.cmd`),
-          `@"${process.execPath}" "${implScript}" %*\r\n`
+          `@echo off\r\n"${process.execPath}" "${implScript}" %*\r\n`
         );
       } else {
         const p = path.join(mockBinDir, binName);
@@ -322,8 +330,8 @@ describe("Launch Module", () => {
       return JSON.parse(fs.readFileSync(captureFile, "utf8"));
     }
 
-    for (const cliName of ["claude", "copilot", "gh-copilot"]) {
-      // TC-CLI-082 and TC-CLI-083 combined — run once per CLI
+    for (const cliName of ["claude", "copilot", "gh-copilot", "codex"]) {
+      // TC-CLI-082 and TC-CLI-083 combined ??? run once per CLI
       it(`TC-CLI-082/083: ${cliName} spawned with originalCwd and --add-dir for staging dir`, () => {
         const mockBinDir = path.join(cwdTestTmpDir, `mock-bin-${cliName}`);
         fs.mkdirSync(mockBinDir, { recursive: true });
@@ -371,7 +379,7 @@ describe("Launch Module", () => {
   });
 
   describe("--dry-run flag", () => {
-    for (const cliName of ["copilot", "gh-copilot", "claude"]) {
+    for (const cliName of ["copilot", "gh-copilot", "claude", "codex"]) {
       it(`TC-CLI-085: --dry-run prints spawn command for ${cliName} without launching`, () => {
         // --dry-run must print the command and args then exit 0 without
         // spawning the real LLM CLI.  We run with an empty PATH so that
@@ -379,6 +387,13 @@ describe("Launch Module", () => {
         const emptyBinDir = fs.mkdtempSync(
           path.join(os.tmpdir(), "promptkit-dryrun-empty-")
         );
+        if (process.platform === "win32" && cliName !== "gh-copilot") {
+          // Provide a local .cmd shim so resolveSpawnCommand() can find it.
+          fs.writeFileSync(
+            path.join(emptyBinDir, `${cliName}.cmd`),
+            "@echo off\r\nexit /b 0\r\n"
+          );
+        }
 
         let stdout = "";
         let exitCode = 0;
@@ -406,9 +421,24 @@ describe("Launch Module", () => {
 
           // Parse the args line as JSON so we verify structure, not wording.
           const lines = stdout.split("\n");
+          const cmdLine = lines.find((l) => l.trim().startsWith("cmd:"));
           const argsLine = lines.find((l) => l.trim().startsWith("args:"));
+          assert.ok(cmdLine, `--dry-run output should include a 'cmd:' line for ${cliName}`);
           assert.ok(argsLine, `--dry-run output should include an 'args:' line for ${cliName}`);
+          const parsedCmd = cmdLine.trim().slice("cmd:".length).trim();
           const parsedArgs = JSON.parse(argsLine.trim().slice("args:".length).trim());
+
+          if (cliName === "gh-copilot") {
+            assert.strictEqual(parsedCmd, "gh", "gh-copilot should spawn gh");
+          } else if (process.platform === "win32") {
+            assert.strictEqual(
+              parsedCmd,
+              `${cliName}.cmd`,
+              `${cliName} should spawn the Windows .cmd shim`
+            );
+          } else {
+            assert.strictEqual(parsedCmd, cliName, `${cliName} should spawn its bare command`);
+          }
 
           // The bootstrap prompt must appear as exactly one element containing bootstrap.md,
           // not split across multiple elements (the shell: true regression).
@@ -436,3 +466,4 @@ describe("Launch Module", () => {
     }
   });
 });
+

@@ -55,7 +55,7 @@ program
   .description("Launch an interactive session with your LLM CLI (default)")
   .option(
     "--cli <name>",
-    "LLM CLI to use (copilot, gh-copilot, claude)"
+    "LLM CLI to use (copilot, gh-copilot, claude, codex)"
   )
   .option(
     "--dry-run",

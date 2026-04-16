@@ -23,12 +23,12 @@ Yes. PromptKit generates standard Markdown prompts. The assembled output
 can be pasted into any LLM interface — ChatGPT, Claude, Gemini, Copilot
 Chat, or any other tool that accepts text input.
 
-Interactive mode requires GitHub Copilot CLI or Claude Code, but the
+Interactive mode requires GitHub Copilot CLI, Claude Code, or OpenAI Codex CLI, but the
 `assemble` command produces a plain text file usable anywhere.
 
 ### Do I need GitHub Copilot CLI?
 
-No. GitHub Copilot CLI (or Claude Code) is only needed for **interactive
+No. GitHub Copilot CLI (or Claude Code or OpenAI Codex CLI) is only needed for **interactive
 mode**, which launches a live prompt-building session. The `list` and
 `assemble` commands work standalone with just Node.js 18+.
 
@@ -205,8 +205,8 @@ npx promptkit list
 
 ### Interactive mode says "No supported LLM CLI found"
 
-Interactive mode requires GitHub Copilot CLI (`copilot`) or Claude Code
-(`claude`) on your PATH. Install one of them, or use `assemble` mode
+Interactive mode requires GitHub Copilot CLI (`copilot`), Claude Code
+(`claude`), or OpenAI Codex CLI (`codex`) on your PATH. Install one of them, or use `assemble` mode
 instead.
 
 ### The assembled prompt is missing a section
