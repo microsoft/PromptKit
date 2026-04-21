@@ -92,7 +92,10 @@ using profiling trace data and producing a structured investigation report.
      idle states — these are often worse for battery life than
      processes with high sustained CPU
    - Flag any process where the energy-to-CPU ratio exceeds 3:1 as
-     a high-priority finding
+     a high-priority finding. When CPU% is below 1%, do not rely on
+     the ratio alone — only elevate to high priority when energy%
+     is also significant (≥ 3%); otherwise note it as a
+     low-confidence anomaly
 
 6. **Cross-process amplification analysis**:
    - Analyze whether background processes amplify each other's impact
@@ -107,7 +110,7 @@ using profiling trace data and producing a structured investigation report.
 7. **Apply the self-verification protocol** before finalizing:
    - Sample at least 3–5 specific findings and re-verify against
      the trace data
-   - Ensure every causal claim is labeled INFERRED or ASSUMED
+   - Ensure every causal claim is labeled INFERRED or [ASSUMPTION]
    - Confirm coverage: state what data categories were examined and
      what was not
 
@@ -195,7 +198,9 @@ This plan replaces ad-hoc exploration with systematic analysis.
 Before finalizing, verify:
 
 - [ ] Every finding cites specific evidence from the trace (process
-      name, PID, metric values, timestamps, call stacks)
+      name, PID, metric values, timestamps, and call stacks when
+      available; if stack data is unavailable, document what would
+      be needed to obtain it)
 - [ ] Every finding has a severity rating with justification
 - [ ] Root cause is identified, not just the proximate trigger
 - [ ] Iterative deepening completed: broad survey → module → stack →
@@ -210,4 +215,4 @@ Before finalizing, verify:
       not examined, including any limitation where fewer than 5
       contributors were analyzable or stack/energy data was unavailable
 - [ ] No fabricated process names, PIDs, or metric values — unknowns
-      marked with [UNKNOWN]
+      marked with [UNKNOWN: <what is missing>]
