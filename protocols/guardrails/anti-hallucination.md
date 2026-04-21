@@ -28,6 +28,15 @@ Every claim in your output MUST be categorized as one of:
 - **ASSUMED**: Not established by context. The assumption MUST be flagged
   with `[ASSUMPTION]` and a justification for why it is reasonable.
 
+**Data-driven tasks**: When the source data is authoritative machine
+telemetry or tool output (e.g., profiler results, trace queries, compiler
+diagnostics, monitoring metrics), direct observations and measurements
+reported by the tool have implicit KNOWN status and do not require explicit
+`[KNOWN]` labels. However, **causal explanations**, **inferred
+correlations**, and **interpretations** of that data retain full labeling
+requirements — these are INFERRED or ASSUMED claims even when derived
+from authoritative measurements.
+
 When the number of claims categorized as ASSUMED exceeds 30% of the total
 number of categorized claims in your output, stop and request
 additional context instead of proceeding.
