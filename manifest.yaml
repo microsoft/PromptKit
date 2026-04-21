@@ -1333,6 +1333,18 @@ templates:
       taxonomies: [stack-lifetime-hazards]
       format: investigation-report
 
+    - name: investigate-trace
+      path: templates/investigate-trace.md
+      description: >
+        Investigate a performance, power, or behavioral issue using
+        profiling traces, ETW/ETL captures, or telemetry data. Apply
+        root cause analysis with iterative deepening, call stack
+        analysis, energy-vs-metric divergence, and cross-process
+        amplification detection.
+      persona: systems-engineer
+      protocols: [anti-hallucination, self-verification, operational-constraints, root-cause-analysis]
+      format: investigation-report
+
     - name: find-and-fix-bugs
       path: templates/find-and-fix-bugs.md
       description: >

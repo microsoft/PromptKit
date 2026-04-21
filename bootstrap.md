@@ -350,6 +350,14 @@ If no naming mechanism is available, skip session naming.
   for a code review of C code, suggest adding the `memory-safety-c` protocol.
 - **Suggest taxonomies** when the task involves classification. For example,
   if investigating stack corruption, suggest the `stack-lifetime-hazards` taxonomy.
+- **Evaluate taxonomy relevance** before including template-declared
+  taxonomies. If a template declares a default taxonomy that is clearly
+  irrelevant to the user's specific investigation (e.g., `stack-lifetime-hazards`
+  for a power trace analysis, or a CWE taxonomy for a non-security task),
+  ask the user whether to include it. Omit irrelevant taxonomies rather
+  than wasting context window on classification schemes that do not apply.
+  When omitting a template-declared taxonomy, note the omission briefly
+  so the user understands the deviation from defaults.
 - **Ask for the audit domain** when the selected template is
   `investigate-security`, `review-code`, `review-cpp-code`, or
   `exhaustive-bug-hunt`. The library includes CWE-derived per-domain

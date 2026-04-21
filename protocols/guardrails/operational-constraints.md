@@ -29,6 +29,12 @@ creep, non-reproducible analysis, and context window exhaustion.
   exhaustive or comprehensive review, you may exceed 50 files but only
   in batches of at most 50 files, with a summary after each batch
   before continuing.
+- **For trace, telemetry, or log analysis**: the equivalent scoping
+  constraint is data categories and time ranges, not file counts. Before
+  querying, identify which data categories (e.g., CPU sampling, disk I/O,
+  energy estimation, network activity) and which time ranges are relevant.
+  Do NOT process all available categories or the full trace duration
+  without first establishing which subset matters.
 - Before reading code or data, establish your **search strategy**:
   - What directories, files, or patterns are likely relevant?
   - What naming conventions, keywords, or symbols should guide search?
@@ -64,6 +70,11 @@ Use a funnel approach:
   - Summarize intermediate findings as you go.
   - Prefer reading specific functions over entire files.
   - Use search tools (grep, find, symbol lookup) before reading files.
+- **For structured data sources** (trace queries, database results, API
+  responses): limit query result volume to what is needed for the current
+  analysis layer. Retrieve summary/aggregated data first, then drill into
+  detail only for top contributors. Do NOT retrieve full detail for all
+  items in a single query.
 
 ### 5. Tool Usage Discipline
 
