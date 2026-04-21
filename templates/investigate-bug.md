@@ -85,9 +85,9 @@ and producing a structured investigation report.
    - Identify tests that would have caught this bug
    - Suggest defensive measures to prevent recurrence
 
-8. **Use the full investigation report format** (all 8 sections). Root cause
-   investigation requires the causal chain, prevention, and open questions
-   sections — do not use the abbreviated format.
+8. **Use the full investigation report format**. Root cause investigation
+   requires the causal chain, prevention, and open questions sections — do
+   not use the abbreviated format.
 
 ## Non-Goals
 

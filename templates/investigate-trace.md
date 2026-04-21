@@ -68,7 +68,7 @@ using profiling trace data and producing a structured investigation report.
      events that are not evidenced in the provided data
 
 3. **Format the output** according to the investigation-report format
-   specification. **Use the full investigation report format** (all 8
+   specification. **Use the full investigation report format** (all
    sections). Root cause investigation requires the causal chain,
    prevention, and open questions sections — do not use the abbreviated
    format.
