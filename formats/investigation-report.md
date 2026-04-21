@@ -28,10 +28,10 @@ Before writing the report, **enumerate and classify all findings first**
 If the invoking template or workflow explicitly requires the full
 9-section structure, use the full format regardless of finding count.
 Templates that include a "use the full investigation report format"
-instruction (e.g., `investigate-bug`, `investigate-trace`,
-`root-cause-ci-failure`) always require the full format because the
-causal chain, prevention, and open questions sections contain the most
-actionable content for root cause investigations.
+instruction (e.g., `investigate-bug`, `investigate-trace`) always
+require the full format because the causal chain, prevention, and open
+questions sections contain the most actionable content for root cause
+investigations.
 
 ## Abbreviated Format
 

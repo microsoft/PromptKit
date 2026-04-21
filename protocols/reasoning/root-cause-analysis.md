@@ -10,6 +10,7 @@ description: >
   and elimination. Language-agnostic.
 applicable_to:
   - investigate-bug
+  - investigate-trace
   - root-cause-ci-failure
 ---
 
@@ -80,9 +81,15 @@ informs the next — do NOT skip layers or jump directly to deep analysis.
 4. **Cross-component tracing**: Identify causal chains that span component
    or process boundaries (see Phase 4a).
 
-Do NOT write the final report until layer 3 is complete for at least the
-top 5 contributors. Premature reporting produces surface-level findings
-that miss the actual root cause.
+Do NOT write the final report until layer 3 is complete for the top
+contributors, up to 5, using the most detailed evidence available.
+If fewer than 5 contributors exist, analyze all of them. If available
+evidence does not support layer-3 completion for some contributors, you
+MAY proceed to the final report only if you explicitly document the
+limitation, identify which contributors remain inconclusive, and state
+what additional evidence would be needed. Premature reporting without
+this disclosure produces surface-level findings that miss the actual
+root cause.
 
 ## Phase 4: Root Cause Identification
 

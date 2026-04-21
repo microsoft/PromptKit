@@ -60,7 +60,7 @@ using profiling trace data and producing a structured investigation report.
    - Direct observations from trace queries (metrics, measurements,
      counters) have implicit KNOWN status
    - Causal explanations and correlations MUST be explicitly labeled
-     as INFERRED or ASSUMED
+     as INFERRED or [ASSUMPTION]
    - If you cannot determine the root cause from the available data,
      say so and describe exactly what additional traces or data
      categories are needed
@@ -199,12 +199,15 @@ Before finalizing, verify:
 - [ ] Every finding has a severity rating with justification
 - [ ] Root cause is identified, not just the proximate trigger
 - [ ] Iterative deepening completed: broad survey → module → stack →
-      cross-process for at least the top 5 contributors
-- [ ] Energy-vs-CPU divergence checked for all top consumers
+      cross-process for the top contributors (up to 5), limited by
+      available meaningful contributors and stack data
+- [ ] Energy-vs-CPU divergence checked for top consumers where both
+      energy and CPU data are available
 - [ ] Cross-process amplification cascades documented where present
 - [ ] Remediation recommendations are specific and actionable
 - [ ] At least 3 findings have been re-verified against the trace data
 - [ ] Coverage statement documents what data categories were and were
-      not examined
+      not examined, including any limitation where fewer than 5
+      contributors were analyzable or stack/energy data was unavailable
 - [ ] No fabricated process names, PIDs, or metric values — unknowns
       marked with [UNKNOWN]
