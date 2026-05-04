@@ -24,17 +24,40 @@ threads. The format adapts based on `output_mode`:
 
 ### 1. Thread Summary
 
-Summarize all review threads by state:
+Summarize all review threads by state, using the **source platform's
+native status vocabulary**. Do not normalize statuses across platforms.
+
+**GitHub** uses three states: `pending`, `outdated`, `resolved`.
 
 | State | Count | Description |
 |-------|-------|-------------|
-| **Pending** | N | Active threads requiring response |
+| **Pending** | N | Unresolved threads requiring response |
 | **Outdated** | N | Threads on code that has since changed |
 | **Resolved** | N | Already resolved — skipped unless user requests |
 
+**Azure DevOps** uses five primary statuses (`active`, `pending`,
+`fixed`, `wontFix`, `closed`) plus the edge values `byDesign` and
+`unknown` and a derived "potentially outdated" flag. ADO uses
+`fixed` for an addressed thread — NOT GitHub's `resolved`:
+
+| State | Count | Description |
+|-------|-------|-------------|
+| **Active** | N | New / open threads requiring response |
+| **Pending** | N | Author marked awaiting something — flag for user |
+| **Fixed** | N | Issue addressed — skipped unless user requests |
+| **Won't fix** | N | Noted but won't be fixed — skipped unless user requests |
+| **Closed** | N | Discussion closed — skipped unless user requests |
+| **By design** / **Unknown** | N | Already triaged — skipped unless user requests |
+| **Potentially outdated** | N | Thread tracked from older iteration / location no longer exists |
+
 - **Total threads**: count
-- **Actionable threads**: count (pending only, unless user overrides)
-- **Skipped threads**: count and reason (resolved, outdated)
+- **Actionable threads**: count (the platform's "needs response" states,
+  unless the user overrides)
+- **Skipped threads**: count and reason (use the platform's native
+  status names — do not translate)
+- **System threads** (ADO only): count of system-generated threads
+  (merge attempts, vote updates, reviewer changes, ref updates) that
+  were excluded from analysis
 
 ### 2. Contradiction Report
 
@@ -63,7 +86,9 @@ For each actionable thread, in file order:
 #### Thread T-<NNN>: <File>:<Line> — <Short Description>
 
 - **Reviewer**: @handle
-- **Thread State**: Pending / Outdated
+- **Thread State**: <native platform status — e.g., `Pending` /
+  `Outdated` for GitHub; `Active` / `Pending` / `Potentially outdated`
+  for ADO>
 - **Comment Summary**: <1–2 sentence summary of the reviewer's point>
 - **Response Type**: Fix / Explain / Both
 - **Analysis**: <why this feedback is valid/invalid, what it implies>
@@ -80,8 +105,10 @@ For each actionable thread, in file order:
 |----------|-------|---------|
 | **Code fixes applied** | N | Threads where code was changed |
 | **Explanations provided** | N | Threads answered with rationale |
-| **Skipped (resolved)** | N | Already resolved threads |
-| **Skipped (outdated)** | N | Threads on changed code |
+| **Threads marked resolved/closed** | N | Threads transitioned to a closed status (use the platform's native term: GitHub `resolved`; ADO `fixed` / `closed` / `wontFix` / `byDesign`) |
+| **Skipped (already closed)** | N | Threads already in a non-actionable state at start (GitHub `resolved`; ADO `fixed` / `closed` / `wontFix` / `byDesign`) |
+| **Skipped (outdated / potentially outdated)** | N | Threads on changed code |
+| **Skipped (system threads, ADO only)** | N | System-generated threads excluded from analysis |
 | **Needs discussion** | N | Contradictions or ambiguous feedback |
 
 - **Files modified**: list of files changed by fixes
