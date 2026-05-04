@@ -177,11 +177,13 @@ PR review concepts to report sections:
    - Post this comment? (yes / skip / edit)
 
    Apply the **human-voice-fidelity** protocol when drafting the
-   inline comment `body` and the overall review summary `body` — these
-   are posted to GitHub under the user's identity. Run the self-check
-   pass (no em-dash, no AI-tell phrases) on each drafted comment
-   before presenting. The protocol scopes to drafted prose only;
-   code references, file paths, and quoted reviewer text are exempt.
+   inline comment `body` and the overall review summary `body` —
+   these are posted to GitHub under the user's identity. Run the
+   protocol's Phase 4 self-check on each drafted comment before
+   presenting (see the protocol for the exact rules; do not restate
+   them here to avoid drift). The protocol scopes to drafted prose
+   only; code references, file paths, and quoted reviewer text are
+   exempt.
 3. **Post confirmed findings** as inline review comments using a JSON
    payload file so `comments` is sent as an array, not a string:
    ```

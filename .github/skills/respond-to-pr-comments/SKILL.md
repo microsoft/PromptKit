@@ -283,7 +283,13 @@ For each thread, produce:
   of surrounding context.
 - A **draft reply** when applicable — professional, concise, and
   technical. Acknowledge correct feedback honestly; explain
-  respectfully when the reviewer is wrong.
+  respectfully when the reviewer is wrong. Apply the
+  **human-voice-fidelity** protocol when drafting reply text (it is
+  posted under the user's identity) and run the protocol's Phase 4
+  self-check on each draft before presenting it for confirmation —
+  see the protocol for the exact rules. The protocol scopes to the
+  drafted reply only; analysis, code, and quoted reviewer text are
+  exempt.
 
 ### Step 6: Present Plan
 

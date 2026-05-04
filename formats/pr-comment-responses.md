@@ -31,9 +31,9 @@ native status vocabulary**. Do not normalize statuses across platforms.
 
 | State | Count | Description |
 |-------|-------|-------------|
-| **Pending** | N | Unresolved threads requiring response |
-| **Outdated** | N | Threads on code that has since changed |
-| **Resolved** | N | Already resolved — skipped unless user requests |
+| `pending` | N | Unresolved threads requiring response |
+| `outdated` | N | Threads on code that has since changed |
+| `resolved` | N | Already resolved — skipped unless user requests |
 
 **Azure DevOps** uses five primary statuses (`active`, `pending`,
 `fixed`, `wontFix`, `closed`) plus the edge values `byDesign` and
@@ -42,13 +42,13 @@ native status vocabulary**. Do not normalize statuses across platforms.
 
 | State | Count | Description |
 |-------|-------|-------------|
-| **Active** | N | New / open threads requiring response |
-| **Pending** | N | Author marked awaiting something — flag for user |
-| **Fixed** | N | Issue addressed — skipped unless user requests |
-| **Won't fix** | N | Noted but won't be fixed — skipped unless user requests |
-| **Closed** | N | Discussion closed — skipped unless user requests |
-| **By design** / **Unknown** | N | Already triaged — skipped unless user requests |
-| **Potentially outdated** | N | Thread tracked from older iteration / location no longer exists |
+| `active` | N | New / open threads requiring response |
+| `pending` | N | Author marked awaiting something — flag for user |
+| `fixed` | N | Issue addressed — skipped unless user requests |
+| `wontFix` | N | Noted but won't be fixed — skipped unless user requests |
+| `closed` | N | Discussion closed — skipped unless user requests |
+| `byDesign` / `unknown` | N | Already triaged — skipped unless user requests |
+| _Potentially outdated_ | N | Derived (not an API status); thread tracked from older iteration or location no longer exists |
 
 - **Total threads**: count
 - **Actionable threads**: count (the platform's "needs response" states,

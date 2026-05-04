@@ -359,9 +359,10 @@ For each thread, produce:
 - **Explanation** (if applicable): A draft reply to the reviewer
   that explains the design decision, tradeoff, or rationale. Apply
   the **human-voice-fidelity** protocol to this drafted text — match
-  the user's observed style and run the self-check pass (no em-dash,
-  no AI-tell phrases) before presenting. The voice protocol scopes
-  to the drafted reply only; surrounding analysis, code, and quoted
+  the user's observed style and run the protocol's Phase 4 self-check
+  before presenting (see the protocol for the exact rules; do not
+  restate them here to avoid drift). The voice protocol scopes to
+  the drafted reply only; surrounding analysis, code, and quoted
   reviewer text are exempt.
 
 ### Phase 5: Output

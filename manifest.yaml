@@ -179,9 +179,10 @@ protocols:
         Preserve the user's communication style when drafting externally
         visible text on their behalf (PR replies, issue comments, emails).
         Pluggable voice sources, calibrated style extraction, and a
-        per-output self-check that bans em-dashes and AI-tell phrases in
-        drafted replies. Scoped to user-authored text only; does not
-        affect analysis, code, or quoted content.
+        per-output self-check that flags AI-tell patterns (em-dashes,
+        formulaic phrases, etc.) — conditionally permitted when present
+        in the user's own samples. Scoped to user-authored text only;
+        does not affect analysis, code, or quoted content.
 
   analysis:
     - name: memory-safety-c
