@@ -76,17 +76,32 @@ prose from whichever SCM hosts the project.
    In all cases, prefer **inline review-comment bodies** over commit
    messages — they are closer to the conversational register of the
    text being drafted. Use commit messages only as a fallback.
-3. **Prior Copilot CLI session history**, when the agent has access to
-   `session_store_sql` or equivalent. Query recent `events` where
-   `type = 'user.message'` for natural-language samples.
+3. **Prior agent session history with this user**, when the agent has
+   access to a persisted transcript store. The mechanism is
+   agent-specific; the intent is the same — surface recent
+   `user.message`-shaped content for natural-language samples. Examples
+   (non-exhaustive):
+   - **GitHub Copilot CLI**: query `session_store_sql` (the `events`
+     table where `type = 'user.message'`).
+   - **Claude Code**: read recent JSONL transcripts under
+     `~/.claude/projects/<project-hash>/*.jsonl` and filter to
+     `type: "user"` entries.
+   - **Cursor / Windsurf / other IDE-embedded agents**: use whatever
+     local conversation history the IDE exposes (often a SQLite store
+     under the IDE's user-data directory).
+   - **Any other agent**: if a queryable or readable conversation log
+     exists for the user, sample recent user-authored turns from it.
+     If no such store is available, skip this source.
 4. **Organization-specific communication tools**, where available and
    permitted. Examples (non-exhaustive, environment-dependent):
    - Microsoft 365 Copilot / WorkIQ MCP server (`workiq-ask_work_iq`)
      for users in Microsoft tenants
    - Slack / Teams export tools where the user has provided access
    - Any user-provided dump of personal correspondence
-5. **Explicit style notes** the user has written down (e.g., a
-   `STYLE.md` or `.github/copilot-instructions.md` voice section).
+5. **Explicit style notes** the user has written down — e.g., a
+   `STYLE.md`, or a voice section inside an agent-instruction file
+   such as `.github/copilot-instructions.md`, `CLAUDE.md`,
+   `AGENTS.md`, `.cursorrules`, or `.windsurfrules`.
 
 If **no voice sources are available**:
 
