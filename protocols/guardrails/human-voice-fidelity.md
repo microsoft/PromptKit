@@ -49,9 +49,9 @@ prose from whichever SCM hosts the project.
      APIs filtered by the user's identity. After `az login`:
      ```bash
      az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
-       --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullrequests?searchCriteria.creatorId={userId}&api-version=7.1"
+       --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullrequests?searchCriteria.creatorId={userId}&api-version=7.1"
      az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
-       --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
+       --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
      ```
      Filter the resulting `comments[*]` to those whose
      `author.uniqueName` matches the user.
@@ -102,6 +102,26 @@ prose from whichever SCM hosts the project.
    `STYLE.md`, or a voice section inside an agent-instruction file
    such as `.github/copilot-instructions.md`, `CLAUDE.md`,
    `AGENTS.md`, `.cursorrules`, or `.windsurfrules`.
+
+**Consent and confidentiality.** Before sampling from any source
+outside the current repository / PR context (sources 3 and 4 above —
+prior agent session history and organization-specific communication
+tools), the agent **MUST**:
+
+- Disclose to the user which source it intends to access and what it
+  will sample (e.g., "I'll read the last 20 user turns from your
+  Copilot CLI session store to calibrate voice").
+- Obtain explicit confirmation before accessing the source.
+- Use sampled content **only** for in-process style calibration. Do
+  NOT quote sampled content verbatim in externally posted text. Do
+  NOT include sampled content in tool-call arguments to third-party
+  services. Do NOT persist sampled content to disk outside the
+  current session's working memory.
+
+Sources 1, 2, and 5 (explicit user samples, prior repo PRs/MRs by the
+user, and explicit style notes already in the repo) do not require
+additional consent — they are either user-volunteered or already part
+of the project context.
 
 If **no voice sources are available**:
 
@@ -155,7 +175,10 @@ only, not to surrounding analysis, code blocks, or quoted material.
 
 **Hard rules — failure means rewrite:**
 
-- [ ] No em-dash (U+2014 `—`) anywhere in the drafted text.
+- [ ] No em-dash (U+2014 `—`) anywhere in the drafted text, **unless
+      em-dashes appear in the user's own samples**. Em-dashes are a
+      strong AI tell when absent from the user's baseline; permitted
+      when present.
 - [ ] No en-dash (U+2013 `–`) used as a punctuation separator
       (en-dash in numeric ranges like `2020–2024` is allowed).
 - [ ] None of these AI-tell phrases appear unless they appear in the
@@ -170,8 +193,6 @@ only, not to surrounding analysis, code blocks, or quoted material.
   - "Certainly!"
   - "Absolutely!"
   - Opening with "I'd be happy to..."
-- [ ] No exhaustive bulleted list when 1-2 sentences of prose would
-      read more naturally.
 - [ ] No unsupported technical claims — every factual statement is
       backed by code, tests, docs, or reviewer text already in
       context.
@@ -182,6 +203,10 @@ only, not to surrounding analysis, code blocks, or quoted material.
 
 **Soft rules — flag for user review if violated:**
 
+- Avoid bulleted lists of more than 3 items when 1-2 sentences of
+  prose would convey the same information, **unless the user's
+  samples show frequent list use**. Long bulleted lists are an AI
+  tell when absent from the user's baseline.
 - Reply length is within ~1.5x the observed user average for the
   channel.
 - Greeting/sign-off matches user habit.

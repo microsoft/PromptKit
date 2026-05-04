@@ -17,8 +17,8 @@ protocols:
   - guardrails/human-voice-fidelity
 format: pr-comment-responses
 params:
-  pr_reference: "Pull request to respond to — full URL (GitHub or Azure DevOps Services), PR number (e.g., #42 for GitHub), or PR id (e.g., !123 for ADO). Platform is auto-detected from the URL when given; otherwise inferred from `git remote -v` of the current repo. If both signals are absent or ambiguous, the workflow prompts you to pick rather than guessing."
-  review_threads: "Review feedback to address — 'all pending', specific thread URLs, or pasted comments"
+  pr_reference: "Pull request to respond to — full URL (GitHub or Azure DevOps Services), PR number (e.g., #42 for GitHub), or bare numeric PR id (e.g., 123, optionally prefixed `ado:123` to disambiguate). Platform is auto-detected from the URL when given; otherwise inferred from `git remote -v` of the current repo. If both signals are absent or ambiguous, the workflow prompts you to pick rather than guessing."
+  review_threads: "Review feedback to address — 'all open' (GitHub: unresolved threads; ADO: status `active`), specific thread URLs, or pasted comments"
   codebase_context: "What this code does, relevant architecture, design decisions that inform responses"
   response_mode: "How to respond per-thread — 'auto' (heuristic), 'fix' (code changes), or 'explain' (rationale)"
   output_mode: "Output mode — 'document' (produce response plan) or 'action' (make changes and post replies via the platform's CLI/API)"
@@ -67,7 +67,8 @@ Services pull request. Use this resolution order:
      **Azure DevOps Services** (legacy host)
    - URL-decode `<project>` and `<repo>` segments before using them.
 
-2. **If `pr_reference` is not a URL** (e.g., bare `#42` or `!123`),
+2. **If `pr_reference` is not a URL** (e.g., bare `#42` for GitHub or
+   `123` / `ado:123` for ADO),
    inspect `git remote -v` in the current working directory:
    - Match HTTPS or SSH remotes:
      - GitHub: `github.com`, `git@github.com`
@@ -99,7 +100,8 @@ Record the detected platform; the rest of the phases branch on it.
      segment** (or preserve the already-encoded segments from the
      original URL) so values containing spaces or other reserved
      characters do not produce malformed requests.
-   - **If `pr_reference` is a bare id** (`#42`, `!123`), derive
+   - **If `pr_reference` is a bare id** (`#42` for GitHub, `123` or
+     `ado:123` for ADO), derive
      `owner`/`repo` (GitHub) or `org`/`project`/`repoName` (ADO) from
      the selected upstream remote. Recognise these forms:
      - GitHub HTTPS: `https://github.com/{owner}/{repo}(.git)?`
@@ -152,7 +154,7 @@ Fetch all review threads from the platform.
      steps can post replies and resolve the correct threads
 
 2. **Filter threads** based on `review_threads` parameter:
-   - If `all pending` — include all threads with state `pending`
+   - If `all open` — include all threads where `isResolved: false`
    - If specific threads are listed — include only those
    - Skip `resolved` threads unless the user explicitly requests them
    - Flag `outdated` threads (code has changed since the comment)
@@ -175,27 +177,34 @@ the user to mint a Personal Access Token.
 1. **Resolve the repository GUID and PR id.** Parse the PR URL:
    - `org`, `project`, `repoName`, `prId` from the URL path
      (URL-decode `project` and `repoName`).
+   - When constructing the API URIs below, **URL-encode** `project`
+     and `repoName` (they may contain spaces or reserved characters).
+     `{projectEnc}` and `{repoNameEnc}` denote the encoded forms;
+     `{org}` and GUIDs (`{repoId}`) need no encoding.
    - Look up the repository GUID — needed by some thread endpoints:
 
      ```powershell
      az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 `
        --method GET `
-       --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoName}?api-version=7.1"
+       --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoNameEnc}?api-version=7.1"
      ```
 
      Record the returned `id` as `repoId`.
    - For fork PRs, ADO targets the **target repository** for thread
      operations; `repoId` from the URL above is correct.
 
-2. **List all PR threads.** This endpoint returns the full collection
-   in a single response — there is **no `$top`/`$skip` pagination**
-   documented for this endpoint, and comments are embedded inline
-   in each thread:
+2. **List all PR threads.** The documented schema for this endpoint
+   does not expose `$top`/`$skip` pagination parameters, and comments
+   are embedded inline in each thread. Treat the response defensively
+   anyway: if a `continuationToken` field appears in the body or an
+   `x-ms-continuationtoken` header is returned, follow it (passing
+   `?continuationToken=<token>` on the next request) until no further
+   token is returned.
 
    ```powershell
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 `
      --method GET `
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
    ```
 
    Read `value[]` from the response. For each thread, record:
@@ -221,7 +230,7 @@ the user to mint a Personal Access Token.
    ```powershell
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 `
      --method GET `
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/iterations?api-version=7.1"
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/iterations?api-version=7.1"
    ```
 
    Record the highest `id` as `latestIteration`.
@@ -239,8 +248,10 @@ the user to mint a Personal Access Token.
    should NOT be auto-skipped — flag them and ask the user.
 
 5. **Filter remaining threads** based on `review_threads` parameter:
-   - If `all pending` — include threads with status `active` (the
-     default state for new comments needing response).
+   - If `all open` — include threads with status `active` (the
+     default state for new comments needing response). Note: ADO's
+     `pending` status is distinct (author-marked awaiting something)
+     and is handled in the next bullet, not as part of `all open`.
    - **Pending threads (status `pending`)**: flag and ask the user
      whether to address now — the comment author marked them as
      awaiting something.
@@ -420,7 +431,7 @@ differ.
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 \
      --method POST \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" \
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" \
      --headers "Content-Type=application/json" \
      --body @reply.json
    ```
@@ -465,7 +476,7 @@ differ.
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 \
      --method PATCH \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \
      --headers "Content-Type=application/json" \
      --body '{ "status": "fixed" }'
    ```

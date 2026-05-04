@@ -72,8 +72,8 @@ Source them as follows:
   already-encoded segments from the original URL). Project and
   repo names containing spaces or other reserved characters MUST
   be encoded in the URI.
-- **From a bare id** (`#42`, `!123`) — derive the rest from the
-  selected upstream remote. Recognise:
+- **From a bare id** (`#42` for GitHub, `123` or `ado:123` for ADO) —
+  derive the rest from the selected upstream remote. Recognise:
   - GitHub HTTPS: `https://github.com/{owner}/{repo}(.git)?`
   - GitHub SSH:   `git@github.com:{owner}/{repo}(.git)?`
   - ADO HTTPS:    `https://dev.azure.com/{org}/{project}/_git/{repo}`
@@ -170,21 +170,25 @@ query($threadId: ID!, $commentCursor: String) {
 
 Run `az login` once. Then:
 
-1. Resolve `repoId`:
+1. Resolve `repoId` (use URL-encoded `{projectEnc}` / `{repoNameEnc}`
+   per the encoding note above; `{org}` and GUIDs need no encoding):
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoName}?api-version=7.1"
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoNameEnc}?api-version=7.1"
    ```
-2. List threads (returns full `value[]` in one response — no
-   `$top`/`$skip` pagination on this endpoint; comments are embedded):
+2. List threads. The documented schema does not expose `$top`/`$skip`
+   pagination and comments are embedded inline. Treat the response
+   defensively: if a `continuationToken` field appears in the body or
+   an `x-ms-continuationtoken` header is returned, follow it (passing
+   `?continuationToken=<token>`) until no further token is returned.
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
    ```
 3. Get latest iteration (for outdated detection):
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/iterations?api-version=7.1"
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/iterations?api-version=7.1"
    ```
 
 For each ADO thread, record:
@@ -335,7 +339,7 @@ Execute with **mandatory user confirmation at every step**.
    { "content": "<reply text>", "parentCommentId": <comment_id>, "commentType": "text" }
    EOF
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method POST \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" \
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" \
      --headers "Content-Type=application/json" \
      --body @reply.json
    ```
@@ -363,7 +367,7 @@ Execute with **mandatory user confirmation at every step**.
    is safe here):
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method PATCH \
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \
+     --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \
      --headers "Content-Type=application/json" \
      --body '{ "status": "fixed" }'
    ```
