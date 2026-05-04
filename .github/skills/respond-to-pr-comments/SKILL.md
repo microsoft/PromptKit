@@ -195,8 +195,9 @@ For each ADO thread, record:
 - `id`: the thread id (integer; required for status updates and
   posting replies)
 - `status`: one of `active`, `pending`, `fixed`, `wontFix`,
-  `closed`, `byDesign`, `unknown` (lowercase API enum values —
-  ADO uses `fixed`, NOT `resolved`)
+  `closed`, `byDesign`, `unknown` (exact API enum values —
+  **case-sensitive**; note `wontFix` and `byDesign` are camelCase.
+  ADO uses `fixed`, NOT `resolved`.)
 - `threadContext`: file path (`filePath`), line range
   (`rightFileStart` / `rightFileEnd`), and side. May be `null` for
   PR-wide threads or system threads.
@@ -362,9 +363,10 @@ Execute with **mandatory user confirmation at every step**.
    }' -F threadId="<thread_id>"
    ```
 
-   **ADO** — PATCH with exact lowercase enum (the body is a fixed
-   small JSON literal with no user content, so inlining `--body '...'`
-   is safe here):
+   **ADO** — PATCH with exact case-sensitive enum value (`wontFix`
+   and `byDesign` are camelCase; the body is a fixed small JSON
+   literal with no user content, so inlining `--body '...'` is safe
+   here):
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method PATCH \
      --uri "https://dev.azure.com/{org}/{projectEnc}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \

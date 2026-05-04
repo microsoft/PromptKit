@@ -211,8 +211,9 @@ the user to mint a Personal Access Token.
    - `id`: the thread id (integer; required for status updates and
      posting replies)
    - `status`: one of `active`, `pending`, `fixed`, `wontFix`,
-     `closed`, `byDesign`, `unknown` (lowercase API enum values —
-     ADO uses `fixed`, NOT `resolved`)
+     `closed`, `byDesign`, `unknown` (exact API enum values —
+     **case-sensitive**; note `wontFix` and `byDesign` are camelCase.
+     ADO uses `fixed`, NOT `resolved`.)
    - `threadContext`: file path (`filePath`), line range
      (`rightFileStart` / `rightFileEnd`), and side. May be `null`
      for PR-wide threads or system threads.
@@ -470,9 +471,10 @@ differ.
    ```
 
    **Azure DevOps Services** — PATCH the thread status (use the
-   exact lowercase enum value: `active`, `pending`, `fixed`,
-   `wontFix`, `closed`, `byDesign` — note ADO uses `fixed`, NOT
-   GitHub's `resolved`):
+   exact API enum value with **case-sensitive casing**: `active`,
+   `pending`, `fixed`, `wontFix`, `closed`, `byDesign` — note the
+   camelCase on `wontFix` and `byDesign`, and that ADO uses `fixed`,
+   NOT GitHub's `resolved`):
    ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 \
      --method PATCH \
@@ -548,9 +550,9 @@ Before finalizing, verify:
       vocabulary (no cross-platform normalization)
 - [ ] On ADO: every `az rest` invocation includes
       `--resource 499b84ac-1321-427f-aa17-267ca6975798`
-- [ ] On ADO: status PATCH payloads use the exact lowercase enum
-      values (`active`, `pending`, `fixed`, `wontFix`, `closed`,
-      `byDesign`)
+- [ ] On ADO: status PATCH payloads use the exact case-sensitive enum
+      values (`active`, `pending`, `fixed`, `wontFix`, `byDesign`,
+      `closed`) — `wontFix` and `byDesign` are camelCase
 - [ ] On ADO: reply POST bodies use `content` + `parentCommentId` +
       `commentType: "text"` (NOT GitHub's `body` / `in_reply_to`)
 - [ ] Files modified by fixes are listed in the action summary

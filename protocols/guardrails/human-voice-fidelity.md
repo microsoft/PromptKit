@@ -92,8 +92,11 @@ prose from whichever SCM hosts the project.
    - **Any other agent**: if a queryable or readable conversation log
      exists for the user, sample recent user-authored turns from it.
      If no such store is available, skip this source.
-4. **Organization-specific communication tools**, where available and
-   permitted. Examples (non-exhaustive, environment-dependent):
+4. **Organization-specific communication tools**, only with
+   **explicit, per-session opt-in user permission**. The user must
+   actively choose to enable each such source for the current task —
+   default behavior is to skip. Examples (non-exhaustive,
+   environment-dependent):
    - Microsoft 365 Copilot / WorkIQ MCP server (`workiq-ask_work_iq`)
      for users in Microsoft tenants
    - Slack / Teams export tools where the user has provided access
@@ -108,10 +111,13 @@ outside the current repository / PR context (sources 3 and 4 above —
 prior agent session history and organization-specific communication
 tools), the agent **MUST**:
 
-- Disclose to the user which source it intends to access and what it
-  will sample (e.g., "I'll read the last 20 user turns from your
-  Copilot CLI session store to calibrate voice").
-- Obtain explicit confirmation before accessing the source.
+- Disclose to the user **which source** it intends to access, **what
+  it will sample**, and the **approximate volume** (e.g., "I'll read
+  the last 20 user turns from your Copilot CLI session store to
+  calibrate voice").
+- Obtain explicit confirmation before accessing the source. **Default
+  behavior is to skip** these sources unless the user opts in for the
+  current session; consent does not carry over between sessions.
 - Use sampled content **only** for in-process style calibration. Do
   NOT quote sampled content verbatim in externally posted text. Do
   NOT include sampled content in tool-call arguments to third-party
@@ -232,11 +238,16 @@ phrase rules; only the surrounding user-authored prose is checked.
 
 ## Output Annotation
 
-When this protocol is applied, the output should include a brief
-**Voice Calibration** note (one or two lines) stating:
+When this protocol is applied, the agent reports a brief **Voice
+Calibration** note (one or two lines) stating:
 
 - Which voice sources were used (e.g., "5 prior PR replies in repo,
   3 user-provided samples"), or
 - That no samples were available and a neutral default was used.
 
-This note is internal-facing and is not posted externally.
+**Placement.** This note is **internal-facing only** — the agent
+reports it in its chat-style response to the user (in document mode)
+or as part of the action-mode change summary. It is **NOT** inserted
+into the produced format artifact (e.g., the `pr-comment-responses`
+or `investigation-report` document) and **NOT** posted externally.
+This keeps consuming formats unchanged and avoids format drift.
