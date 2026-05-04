@@ -13,6 +13,7 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
+  - guardrails/human-voice-fidelity
 format: investigation-report
 params:
   pr_reference: "Pull request to review — URL, number (e.g., #42), or pasted diff"
@@ -174,6 +175,13 @@ PR review concepts to report sections:
 2. **Ask the user to confirm** which findings to post as review comments.
    Present each finding (or batch by file) and ask:
    - Post this comment? (yes / skip / edit)
+
+   Apply the **human-voice-fidelity** protocol when drafting the
+   inline comment `body` and the overall review summary `body` — these
+   are posted to GitHub under the user's identity. Run the self-check
+   pass (no em-dash, no AI-tell phrases) on each drafted comment
+   before presenting. The protocol scopes to drafted prose only;
+   code references, file paths, and quoted reviewer text are exempt.
 3. **Post confirmed findings** as inline review comments using a JSON
    payload file so `comments` is sent as an array, not a string:
    ```

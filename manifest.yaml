@@ -1449,7 +1449,7 @@ templates:
         (post inline review comments via GitHub API). Language-agnostic
         by default with optional language-specific focus.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification, operational-constraints]
+      protocols: [anti-hallucination, self-verification, operational-constraints, human-voice-fidelity]
       format: investigation-report
 
     - name: respond-to-pr-comments

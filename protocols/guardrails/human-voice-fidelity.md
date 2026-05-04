@@ -11,6 +11,7 @@ description: >
   as machine-generated.
 applicable_to:
   - respond-to-pr-comments
+  - review-pull-request
 ---
 
 # Protocol: Human Voice Fidelity
