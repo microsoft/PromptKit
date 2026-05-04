@@ -31,13 +31,51 @@ protocol in their `protocols:` frontmatter.
 ### Phase 1: Source Voice Samples
 
 Voice sources are **pluggable**. Use whichever are available, in
-priority order:
+priority order. The recipes below are concrete examples per platform;
+the underlying intent is the same — sample the user's recent authored
+prose from whichever SCM hosts the project.
 
 1. **Explicit samples pasted by the user** in the current session.
-2. **Prior text the user has authored in this repository** — recent PR
-   review replies, issue comments, or commit messages by the user. Use
-   `gh pr list --author @me --state all --limit 20`, then sample
-   `gh pr view <n> --comments` and `gh api` for review-thread bodies.
+2. **Prior text the user has authored in this repository or project** —
+   recent PR/MR review replies, issue/work-item comments, or commit
+   messages by the user. Use whichever interface the host SCM provides:
+
+   - **GitHub** (`github.com`): `gh pr list --author @me --state all
+     --limit 20`, then `gh pr view <n> --comments` and
+     `gh api repos/{owner}/{repo}/pulls/{n}/comments` for inline
+     review-thread bodies.
+   - **Azure DevOps Services** (`dev.azure.com`,
+     `*.visualstudio.com`): query the Pull Requests and Threads REST
+     APIs filtered by the user's identity. After `az login`:
+     ```bash
+     az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
+       --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullrequests?searchCriteria.creatorId={userId}&api-version=7.1"
+     az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
+       --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
+     ```
+     Filter the resulting `comments[*]` to those whose
+     `author.uniqueName` matches the user.
+   - **GitLab**: `glab mr list --author=@me`, then `glab mr view <n>
+     --comments`. Or hit the REST API:
+     `GET /projects/:id/merge_requests?author_username=<user>` and
+     `GET /projects/:id/merge_requests/:mr/notes`.
+   - **Bitbucket Cloud**: REST API
+     `GET /2.0/repositories/{ws}/{repo}/pullrequests?q=author.uuid="{uuid}"`,
+     then `GET .../pullrequests/{id}/comments`.
+   - **Gitea / Forgejo**: REST API
+     `GET /repos/{owner}/{repo}/pulls?state=all&poster={user}`, then
+     `GET .../issues/{n}/comments`.
+   - **Other / unspecified SCM**: detect the host from `git remote -v`
+     (or ask the user). If the platform exposes an authenticated API
+     or CLI for listing the user's own PRs/MRs and their inline
+     comments, use it; the goal is 5–20 recent comment bodies authored
+     by the user. If no such interface is available or accessible,
+     skip this source and continue with the remaining sources in
+     priority order.
+
+   In all cases, prefer **inline review-comment bodies** over commit
+   messages — they are closer to the conversational register of the
+   text being drafted. Use commit messages only as a fallback.
 3. **Prior Copilot CLI session history**, when the agent has access to
    `session_store_sql` or equivalent. Query recent `events` where
    `type = 'user.message'` for natural-language samples.
