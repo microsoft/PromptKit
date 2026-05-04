@@ -176,7 +176,8 @@ when the shell uses a non-UTF-8 codepage.
 
   Use `body.md` (or `body.txt`) for Markdown bodies and `body.json`
   only when the API actually consumes JSON (e.g., `az rest --body
-  @body.json`).
+  "@body.json"` — the quotes are required in PowerShell to prevent
+  `@body.json` from being parsed as a splat token; harmless in bash).
 - **Windows PowerShell 5.x** (the default on Windows 10 / 11 without
   PowerShell 7+ installed): do NOT use `Out-File` or `Set-Content`
   for body files containing non-ASCII characters. Their defaults are
