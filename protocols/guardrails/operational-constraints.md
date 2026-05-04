@@ -159,14 +159,31 @@ when the shell uses a non-UTF-8 codepage.
   strings. (The temp-file pattern is already required for ADO POSTs to
   avoid JSON escaping pitfalls; reuse it everywhere for the same
   reason and for encoding safety.)
-- **bash / zsh / PowerShell 7+**: default UTF-8 is fine. Write with
-  `cat > body.json <<'EOF' … EOF` (bash/zsh) or `Set-Content -Encoding
-  utf8NoBOM` (PowerShell 7+).
+- **bash / zsh / PowerShell 7+**: default UTF-8 is fine. Use a
+  heredoc (bash/zsh):
+
+  ```bash
+  cat > body.md <<'EOF'
+  Comment body — em-dashes and accented names like Ångström survive.
+  EOF
+  ```
+
+  Or in PowerShell 7+:
+
+  ```powershell
+  Set-Content -Encoding utf8NoBOM -Path body.md -Value $content
+  ```
+
+  Use `body.md` (or `body.txt`) for Markdown bodies and `body.json`
+  only when the API actually consumes JSON (e.g., `az rest --body
+  @body.json`).
 - **Windows PowerShell 5.x** (the default on Windows 10 / 11 without
   PowerShell 7+ installed): do NOT use `Out-File` or `Set-Content`
-  for body files containing non-ASCII characters. `Out-File` defaults
-  to Windows-1252; `Out-File -Encoding utf8` writes UTF-8 **with a
-  BOM**. Use:
+  for body files containing non-ASCII characters. Their defaults are
+  not UTF-8: `Out-File` defaults to UTF-16LE (with a BOM),
+  `Set-Content` defaults to the system ANSI codepage (typically
+  Windows-1252 on en-US), and `Out-File -Encoding utf8` writes UTF-8
+  **with a BOM**. Use:
 
   ```powershell
   [System.IO.File]::WriteAllText($path, $content,
