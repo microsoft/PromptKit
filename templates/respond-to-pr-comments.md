@@ -423,6 +423,12 @@ differ.
    and POST. Always use a temp file (not an inlined `--body '...'`
    string): real reply text contains apostrophes, newlines, and
    backslashes that break shell quoting in both bash and PowerShell.
+   Use **literal UTF-8 characters** in reply text — do NOT use
+   shell-specific character escape sequences (e.g., PowerShell
+   `$([char]0x...)`, bash `$'\u...'`) to produce Unicode characters.
+   Serialization to JSON may preserve the escape syntax literally
+   rather than the intended character. Write `§`, `—`, `→` etc.
+   directly.
    ```json
    {
      "content": "<reply text>",
