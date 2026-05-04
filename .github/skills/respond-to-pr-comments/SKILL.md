@@ -171,18 +171,18 @@ query($threadId: ID!, $commentCursor: String) {
 Run `az login` once. Then:
 
 1. Resolve `repoId`:
-   ```
+   ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
      --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoName}?api-version=7.1"
    ```
 2. List threads (returns full `value[]` in one response — no
    `$top`/`$skip` pagination on this endpoint; comments are embedded):
-   ```
+   ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
      --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads?api-version=7.1"
    ```
 3. Get latest iteration (for outdated detection):
-   ```
+   ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method GET \
      --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/iterations?api-version=7.1"
    ```
@@ -311,7 +311,7 @@ Execute with **mandatory user confirmation at every step**.
    - Post if confirmed:
 
    **GitHub:**
-   ```
+   ```bash
    cat > reply.json <<'EOF'
    { "body": "<reply text>", "in_reply_to": <comment_database_id> }
    EOF
@@ -325,11 +325,19 @@ Execute with **mandatory user confirmation at every step**.
    comment (or the first comment if the thread has only one). Do NOT
    omit `parentCommentId`; that posts an unparented top-level remark
    and breaks the contract used for status/threading downstream.
-   ```
+
+   Always write the reply body to a temp file and pass `--body @file`
+   — never inline as `--body '...'`. Real reply text contains
+   apostrophes, newlines, and backslashes that break shell quoting in
+   both bash and PowerShell.
+   ```bash
+   cat > reply.json <<'EOF'
+   { "content": "<reply text>", "parentCommentId": <comment_id>, "commentType": "text" }
+   EOF
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method POST \
      --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" \
      --headers "Content-Type=application/json" \
-     --body '{ "content": "<reply text>", "parentCommentId": <comment_id>, "commentType": "text" }'
+     --body @reply.json
    ```
 
 4. **Update thread status** — always confirm each transition with
@@ -344,14 +352,16 @@ Execute with **mandatory user confirmation at every step**.
    | Intentional design | (no change) | `byDesign` |
 
    **GitHub** — resolve:
-   ```
+   ```bash
    gh api graphql -f query='mutation($threadId: ID!) {
      resolveReviewThread(input: {threadId: $threadId}) { thread { isResolved } }
    }' -F threadId="<thread_id>"
    ```
 
-   **ADO** — PATCH with exact lowercase enum:
-   ```
+   **ADO** — PATCH with exact lowercase enum (the body is a fixed
+   small JSON literal with no user content, so inlining `--body '...'`
+   is safe here):
+   ```bash
    az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method PATCH \
      --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \
      --headers "Content-Type=application/json" \

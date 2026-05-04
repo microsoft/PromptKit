@@ -16,7 +16,7 @@ protocols:
   - guardrails/operational-constraints
 format: pr-comment-responses
 params:
-  pr_reference: "Pull request to respond to — full URL (GitHub or Azure DevOps Services), PR number (e.g., #42 for GitHub), or PR id (e.g., !123 for ADO). Platform is auto-detected from the URL."
+  pr_reference: "Pull request to respond to — full URL (GitHub or Azure DevOps Services), PR number (e.g., #42 for GitHub), or PR id (e.g., !123 for ADO). Platform is auto-detected from the URL when given; otherwise inferred from `git remote -v` of the current repo. If both signals are absent or ambiguous, the workflow prompts you to pick rather than guessing."
   review_threads: "Review feedback to address — 'all pending', specific thread URLs, or pasted comments"
   codebase_context: "What this code does, relevant architecture, design decisions that inform responses"
   response_mode: "How to respond per-thread — 'auto' (heuristic), 'fix' (code changes), or 'explain' (rationale)"
@@ -401,13 +401,23 @@ differ.
      --input reply.json
    ```
 
-   **Azure DevOps Services** — POST inline (no temp file needed):
-   ```powershell
-   az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 `
-     --method POST `
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" `
-     --headers "Content-Type=application/json" `
-     --body '{ "content": "<reply text>", "parentCommentId": <comment_id>, "commentType": "text" }'
+   **Azure DevOps Services** — write the reply payload to `reply.json`
+   and POST. Always use a temp file (not an inlined `--body '...'`
+   string): real reply text contains apostrophes, newlines, and
+   backslashes that break shell quoting in both bash and PowerShell.
+   ```json
+   {
+     "content": "<reply text>",
+     "parentCommentId": <comment_id>,
+     "commentType": "text"
+   }
+   ```
+   ```bash
+   az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 \
+     --method POST \
+     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}/comments?api-version=7.1" \
+     --headers "Content-Type=application/json" \
+     --body @reply.json
    ```
 
    ADO replies MUST always include `parentCommentId` — choose the
@@ -447,11 +457,11 @@ differ.
    exact lowercase enum value: `active`, `pending`, `fixed`,
    `wontFix`, `closed`, `byDesign` — note ADO uses `fixed`, NOT
    GitHub's `resolved`):
-   ```powershell
-   az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 `
-     --method PATCH `
-     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" `
-     --headers "Content-Type=application/json" `
+   ```bash
+   az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 \
+     --method PATCH \
+     --uri "https://dev.azure.com/{org}/{project}/_apis/git/repositories/{repoId}/pullRequests/{prId}/threads/{threadId}?api-version=7.1" \
+     --headers "Content-Type=application/json" \
      --body '{ "status": "fixed" }'
    ```
 
