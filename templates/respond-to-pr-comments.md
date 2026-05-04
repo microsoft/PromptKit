@@ -14,6 +14,7 @@ protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
   - guardrails/operational-constraints
+  - guardrails/human-voice-fidelity
 format: pr-comment-responses
 params:
   pr_reference: "Pull request to respond to — full URL (GitHub or Azure DevOps Services), PR number (e.g., #42 for GitHub), or PR id (e.g., !123 for ADO). Platform is auto-detected from the URL when given; otherwise inferred from `git remote -v` of the current repo. If both signals are absent or ambiguous, the workflow prompts you to pick rather than guessing."
@@ -344,8 +345,12 @@ For each thread, produce:
 - **Fix** (if applicable): The specific code change, shown as
   before/after with at least 3 lines of surrounding context.
 - **Explanation** (if applicable): A draft reply to the reviewer
-  that explains the design decision, tradeoff, or rationale. Keep
-  it professional, concise, and technical.
+  that explains the design decision, tradeoff, or rationale. Apply
+  the **human-voice-fidelity** protocol to this drafted text — match
+  the user's observed style and run the self-check pass (no em-dash,
+  no AI-tell phrases) before presenting. The voice protocol scopes
+  to the drafted reply only; surrounding analysis, code, and quoted
+  reviewer text are exempt.
 
 ### Phase 5: Output
 
