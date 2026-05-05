@@ -59,7 +59,16 @@ output — do NOT translate statuses across platforms.
 Determine whether `pr_reference` points to a GitHub or Azure DevOps
 Services pull request. Use this resolution order:
 
-1. **Parse the URL**:
+1. **Recognise explicit platform prefixes first.** Before any URL or
+   remote inspection, if `pr_reference` matches `ado:<n>` (e.g.,
+   `ado:123`), treat that as an unambiguous **Azure DevOps Services**
+   override — record the platform as ADO, strip the `ado:` prefix to
+   yield the numeric `prId`, and skip step 3 (remote inspection).
+   Coordinates still need to be resolved from the upstream remote in
+   step 6; carry only the numeric `prId`, never the literal
+   `ado:<n>` string.
+
+2. **Parse the URL**:
    - `github.com/<owner>/<repo>/pull/<n>` → **GitHub**
    - `dev.azure.com/<org>/<project>/_git/<repo>/pullrequest/<n>` →
      **Azure DevOps Services**
@@ -67,19 +76,20 @@ Services pull request. Use this resolution order:
      **Azure DevOps Services** (legacy host)
    - URL-decode `<project>` and `<repo>` segments before using them.
 
-2. **If `pr_reference` is not a URL** (e.g., bare `#42` for GitHub or
-   `123` / `ado:123` for ADO),
-   inspect `git remote -v` in the current working directory:
+3. **If `pr_reference` is not a URL and has no `ado:` prefix** (e.g.,
+   bare `#42` or `42` for GitHub, bare `123` for ADO when the working
+   tree is unambiguously an ADO clone), inspect `git remote -v` in
+   the current working directory:
    - Match HTTPS or SSH remotes:
      - GitHub: `github.com`, `git@github.com`
      - ADO: `dev.azure.com`, `git@ssh.dev.azure.com:v3/...`,
        `<org>.visualstudio.com`, `<org>@vs-ssh.visualstudio.com:v3/...`
    - If multiple remotes exist, prefer the upstream of the current branch.
 
-3. **If still ambiguous**, ask the user explicitly:
+4. **If still ambiguous**, ask the user explicitly:
    "Is this PR on GitHub or Azure DevOps Services?" Do NOT guess.
 
-4. **Out of scope**: Azure DevOps Server (on-prem) and TFS custom
+5. **Out of scope**: Azure DevOps Server (on-prem) and TFS custom
    hostnames are NOT supported by this template's auth path. If you
    detect such a host, stop and inform the user that they must run
    this template against a supported platform or provide their own
@@ -87,7 +97,7 @@ Services pull request. Use this resolution order:
 
 Record the detected platform; the rest of the phases branch on it.
 
-5. **Resolve connection coordinates** before any API call. The set
+6. **Resolve connection coordinates** before any API call. The set
    of values needed depends on the platform:
    - **GitHub**: `owner`, `repo`, `pr_number`.
    - **ADO**: `org`, `project`, `repoName`, `prId` (and later `repoId`,
@@ -100,8 +110,8 @@ Record the detected platform; the rest of the phases branch on it.
      segment** (or preserve the already-encoded segments from the
      original URL) so values containing spaces or other reserved
      characters do not produce malformed requests.
-   - **If `pr_reference` is a bare id** (`#42` for GitHub, `123` or
-     `ado:123` for ADO), derive
+   - **If `pr_reference` is a bare id** (`#42` or `42` for GitHub,
+     `123` or `ado:123` for ADO), derive
      `owner`/`repo` (GitHub) or `org`/`project`/`repoName` (ADO) from
      the selected upstream remote. Recognise these forms:
      - GitHub HTTPS: `https://github.com/{owner}/{repo}(.git)?`
@@ -110,7 +120,11 @@ Record the detected platform; the rest of the phases branch on it.
      - ADO SSH: `git@ssh.dev.azure.com:v3/{org}/{project}/{repo}`
      - ADO legacy HTTPS: `https://{org}.visualstudio.com/{project}/_git/{repo}`
      - ADO legacy SSH: `{org}@vs-ssh.visualstudio.com:v3/{org}/{project}/{repo}`
-     The bare id provides `pr_number` / `prId`.
+     The bare id provides `pr_number` (GitHub) or `prId` (ADO). When
+     the input was `ado:123`, the prefix has already been stripped in
+     step 1 — `prId` is the numeric value (`123`), never the literal
+     `ado:123` string. Strip a leading `#` from GitHub bare ids
+     similarly.
    - If any required field cannot be determined unambiguously, prompt
      the user. Do NOT invent values.
 
@@ -125,22 +139,25 @@ Fetch all review threads from the platform.
      `gh api graphql` to fetch the authoritative review-thread data
      needed for deterministic action mode execution
    - For each review thread, record:
-     - `thread_id`: the GraphQL review thread ID (required for
+     - `thread_id`: the GraphQL review thread `id` (required for
        `resolveReviewThread`)
+     - `isResolved` and `isOutdated` (these are the concrete fields
+       GitHub exposes — there is no single `state` field; the
+       template derives the workflow classification `open` /
+       `outdated` / `resolved` from these flags)
      - Reviewer handle
-     - File path and line number
-     - Thread state (pending, resolved, outdated)
+     - File path (`path`) and line number (`line`)
      - Full comment text and any replies
      - Whether the thread is on code that still exists in the
        current diff
    - For each review comment within the thread, record:
-     - `comment_id`: the review comment database ID (required for
+     - `comment_id`: the review comment `databaseId` (required for
        REST `in_reply_to` when posting a reply)
      - Author handle
      - Comment body
-   - Use a GraphQL query via `gh api graphql` that includes each
-     thread's ID, state, path, and line metadata, plus each
-     comment's database ID, author, and body
+   - Use a GraphQL query via `gh api graphql` that selects each
+     thread's `id`, `isResolved`, `isOutdated`, `path`, and `line`,
+     plus each comment's `databaseId`, `author`, and `body`
    - **Paginate exhaustively.** Both `reviewThreads` and the inner
      `comments` connection paginate independently. Page outer
      `reviewThreads(first: 100, after: $cursor)` until
@@ -174,9 +191,9 @@ omit `--resource` — without it, `az rest` may attach a token for the
 wrong audience and the call will fail authorization. Do NOT instruct
 the user to mint a Personal Access Token.
 
-1. **Resolve the repository GUID and PR id.** Parse the PR URL:
-   - `org`, `project`, `repoName`, `prId` from the URL path
-     (URL-decode `project` and `repoName`).
+1. **Resolve the repository GUID.** Use the `org`, `project`,
+   `repoName`, and `prId` already resolved in Phase 1 (from the URL
+   or from the upstream remote) — do NOT require a PR URL here.
    - When constructing the API URIs below, **URL-encode** `project`
      and `repoName` (they may contain spaces or reserved characters).
      `{projectEnc}` and `{repoNameEnc}` denote the encoded forms;

@@ -49,14 +49,18 @@ statuses to GitHub terms or vice versa.
 
 ### Step 1: Detect Platform
 
-1. Parse PR URL: `github.com/...` → **GitHub**;
+1. **Explicit prefix override first.** `ado:<n>` (e.g., `ado:123`)
+   → unambiguous **ADO**. Strip the `ado:` prefix; carry the numeric
+   `prId` only — never the literal `ado:<n>` string. Skip remote
+   inspection in step 3.
+2. Parse PR URL: `github.com/...` → **GitHub**;
    `dev.azure.com/{org}/{project}/_git/{repo}/pullrequest/{n}` or
    `{org}.visualstudio.com/...` → **ADO**.
-2. Else inspect `git remote -v` (handle SSH: `git@github.com`,
+3. Else inspect `git remote -v` (handle SSH: `git@github.com`,
    `git@ssh.dev.azure.com:v3/...`, `{org}@vs-ssh.visualstudio.com:v3/...`).
    Prefer current branch's upstream when multiple remotes exist.
-3. Still ambiguous → ask the user. Do NOT guess.
-4. ADO Server / on-prem / TFS host → stop with a clear message.
+4. Still ambiguous → ask the user. Do NOT guess.
+5. ADO Server / on-prem / TFS host → stop with a clear message.
 
 #### Resolve connection coordinates
 
@@ -72,8 +76,11 @@ Source them as follows:
   already-encoded segments from the original URL). Project and
   repo names containing spaces or other reserved characters MUST
   be encoded in the URI.
-- **From a bare id** (`#42` for GitHub, `123` or `ado:123` for ADO) —
-  derive the rest from the selected upstream remote. Recognise:
+- **From a bare id** (`#42` or `42` for GitHub, `123` or `ado:123`
+  for ADO) — derive the rest from the selected upstream remote. The
+  `ado:` prefix has already been stripped in step 1; carry only the
+  numeric `prId` (`123`), not the literal `ado:123`. Strip a leading
+  `#` from GitHub ids similarly. Recognise:
   - GitHub HTTPS: `https://github.com/{owner}/{repo}(.git)?`
   - GitHub SSH:   `git@github.com:{owner}/{repo}(.git)?`
   - ADO HTTPS:    `https://dev.azure.com/{org}/{project}/_git/{repo}`
@@ -137,7 +144,8 @@ For each thread, record:
 - `thread_id`: the GraphQL `id` (required for `resolveReviewThread`)
 - Reviewer handle(s)
 - File path and line number
-- Thread state: **pending** (unresolved + not outdated),
+- Workflow classification (derived from `isResolved` / `isOutdated`,
+  not a single API field): **open** (unresolved + not outdated),
   **outdated** (code has changed), or **resolved**
 - Full comment text and replies
 
@@ -218,7 +226,7 @@ For each comment within the thread, record:
 #### GitHub
 
 Skip `resolved` (count). Flag `outdated` — ask before processing.
-Group `pending` by file path.
+Group `open` by file path.
 
 #### Azure DevOps
 

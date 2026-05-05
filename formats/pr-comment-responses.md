@@ -27,13 +27,16 @@ threads. The format adapts based on `output_mode`:
 Summarize all review threads by state, using the **source platform's
 native status vocabulary**. Do not normalize statuses across platforms.
 
-**GitHub** uses three states: `pending`, `outdated`, `resolved`.
+**GitHub** review threads expose two boolean flags — `isResolved` and
+`isOutdated` — and have no single API status field. This format
+groups them into three workflow classification labels (the labels
+below are template names, not GitHub API literals):
 
-| State | Count | Description |
+| Label | Count | Description |
 |-------|-------|-------------|
-| `pending` | N | Unresolved threads requiring response |
-| `outdated` | N | Threads on code that has since changed |
-| `resolved` | N | Already resolved — skipped unless user requests |
+| `open` | N | Unresolved threads requiring response (`isResolved: false`, `isOutdated: false`) |
+| `outdated` | N | Threads on code that has since changed (`isOutdated: true`) |
+| `resolved` | N | Already resolved (`isResolved: true`) — skipped unless user requests |
 
 **Azure DevOps** uses five primary statuses (`active`, `pending`,
 `fixed`, `wontFix`, `closed`) plus the edge values `byDesign` and
@@ -86,9 +89,11 @@ For each actionable thread, in file order:
 #### Thread T-<NNN>: <File>:<Line> — <Short Description>
 
 - **Reviewer**: @handle
-- **Thread State**: <native platform status — e.g., `Pending` /
-  `Outdated` for GitHub; `Active` / `Pending` / `Potentially outdated`
-  for ADO>
+- **Thread State**: <use the same literals/casing as the Thread
+  Summary tables above — e.g., `open` / `outdated` for GitHub;
+  `active` / `pending` / `wontFix` / `byDesign` for ADO. Mark the
+  derived ADO value as _potentially outdated_ in italics (it is not
+  an API status).>
 - **Comment Summary**: <1–2 sentence summary of the reviewer's point>
 - **Response Type**: Fix / Explain / Both
 - **Analysis**: <why this feedback is valid/invalid, what it implies>
