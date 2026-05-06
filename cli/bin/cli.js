@@ -6,6 +6,7 @@ const { Command } = require("commander");
 const path = require("path");
 const fs = require("fs");
 const { launchInteractive } = require("../lib/launch");
+const { checkForUpdate, formatBanner } = require("../lib/update-check");
 const {
   loadManifest,
   allComponents,
@@ -61,8 +62,23 @@ program
     "--dry-run",
     "Print the spawn command and args without launching the LLM CLI"
   )
-  .action((opts) => {
+  .option(
+    "--no-update-check",
+    "Skip checking the npm registry for a newer PromptKit version"
+  )
+  .action(async (opts) => {
     ensureContent();
+    if (opts.updateCheck !== false) {
+      try {
+        const result = await checkForUpdate(pkg.name, pkg.version);
+        if (result && result.isUpdate) {
+          console.log(formatBanner(pkg.name, pkg.version, result.latest));
+          console.log();
+        }
+      } catch {
+        // Update checks are strictly best-effort; never fail the CLI over them.
+      }
+    }
     launchInteractive(contentDir, opts.cli || null, { dryRun: !!opts.dryRun });
   });
 
