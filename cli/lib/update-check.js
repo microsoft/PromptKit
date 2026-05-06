@@ -74,9 +74,11 @@ function fetchLatest(pkgName) {
   return new Promise((resolve) => {
     const url = `${REGISTRY_BASE}/${pkgName}/latest`;
     let settled = false;
+    let hardTimer = null;
     const done = (value) => {
       if (settled) return;
       settled = true;
+      if (hardTimer) clearTimeout(hardTimer);
       resolve(value);
     };
     try {
@@ -101,7 +103,11 @@ function fetchLatest(pkgName) {
           res.on("end", () => {
             try {
               const json = JSON.parse(body);
-              done(typeof json.version === "string" ? json.version : null);
+              const version =
+                typeof json.version === "string" ? json.version : null;
+              // Only return parseable semver so we never cache or surface
+              // a malformed value (e.g., missing patch, garbage string).
+              done(version && parseVersion(version) ? version : null);
             } catch {
               done(null);
             }
@@ -109,6 +115,15 @@ function fetchLatest(pkgName) {
           res.on("error", () => done(null));
         }
       );
+      // The { timeout } option above is only a socket-inactivity timeout —
+      // a server that trickles bytes can keep the request alive well past
+      // FETCH_TIMEOUT_MS. Add an overall hard deadline so interactive
+      // startup is never delayed longer than intended.
+      hardTimer = setTimeout(() => {
+        req.destroy();
+        done(null);
+      }, FETCH_TIMEOUT_MS);
+      if (typeof hardTimer.unref === "function") hardTimer.unref();
       req.on("timeout", () => {
         req.destroy();
         done(null);
@@ -139,6 +154,10 @@ async function checkForUpdate(
 ) {
   if (suppressionReason({ force })) return null;
 
+  // Dispatch through module.exports._internals so tests can stub these
+  // without depending on the real filesystem or network.
+  const { readCache, writeCache, fetchLatest } = module.exports._internals;
+
   const cache = readCache();
   let latest = null;
 
@@ -147,14 +166,19 @@ async function checkForUpdate(
     cache &&
     cache.pkg === pkgName &&
     typeof cache.latest === "string" &&
+    parseVersion(cache.latest) &&
     typeof cache.checkedAt === "number" &&
     now - cache.checkedAt < CACHE_TTL_MS
   ) {
     latest = cache.latest;
   } else {
     latest = await fetchLatest(pkgName);
-    if (latest) {
+    // fetchLatest already filters to parseable semver, but guard again so
+    // a future change to that contract can't poison the cache.
+    if (latest && parseVersion(latest)) {
       writeCache({ pkg: pkgName, latest, checkedAt: now });
+    } else {
+      latest = null;
     }
   }
 
