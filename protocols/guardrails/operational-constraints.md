@@ -145,3 +145,61 @@ Every analysis MUST include a coverage statement:
 - **Excluded**: <what was intentionally not examined, and why>
 - **Limitations**: <what could not be examined due to access, time, or context>
 ```
+
+### 10. Encoding Discipline for External Posts
+
+When drafting comment, reply, description, or release-note bodies that
+will be posted to an external API (e.g., `gh api`, `gh pr edit`,
+`gh pr comment`, `az rest`), the body **MUST** reach the API as
+**UTF-8 without a BOM**. Non-ASCII characters (em-dashes, smart quotes,
+accented names, currency symbols, non-Latin scripts) corrupt silently
+when the shell uses a non-UTF-8 codepage.
+
+- **Always pass bodies via a temp file**, not as inline command-line
+  strings. (The temp-file pattern is already required for ADO POSTs to
+  avoid JSON escaping pitfalls; reuse it everywhere for the same
+  reason and for encoding safety.)
+- **bash / zsh / PowerShell 7+**: default UTF-8 is fine. Use a
+  heredoc (bash/zsh):
+
+  ```bash
+  cat > body.md <<'EOF'
+  Comment body — em-dashes and accented names like Ångström survive.
+  EOF
+  ```
+
+  Or in PowerShell 7+:
+
+  ```powershell
+  Set-Content -Encoding utf8NoBOM -Path body.md -Value $content
+  ```
+
+  Use `body.md` (or `body.txt`) for Markdown bodies and `body.json`
+  only when the API actually consumes JSON (e.g., `az rest --body
+  "@body.json"` — the quotes are required in PowerShell to prevent
+  `@body.json` from being parsed as a splat token; harmless in bash).
+- **Windows PowerShell 5.x** (the default on Windows 10 / 11 without
+  PowerShell 7+ installed): do NOT use `Out-File` or `Set-Content`
+  for body files containing non-ASCII characters. Their defaults are
+  not UTF-8: `Out-File` defaults to UTF-16LE (with a BOM),
+  `Set-Content` defaults to the system ANSI codepage (typically
+  Windows-1252 on en-US), and `Out-File -Encoding utf8` writes UTF-8
+  **with a BOM**. Use:
+
+  ```powershell
+  [System.IO.File]::WriteAllText($path, $content,
+    [System.Text.UTF8Encoding]::new($false))
+  ```
+
+- **Never round-trip existing posted content** through
+  `gh pr view --jq … | Out-File` (or `Set-Content`) for editing on
+  Windows PowerShell 5.x. The pipe decodes the UTF-8 byte stream from
+  `gh` as the console codepage, then re-encodes it — producing
+  classic UTF-8 → CP1252 → UTF-8 mojibake (e.g., `—` becomes
+  `╫ô├ç├╣`). Write the new content from scratch in clean UTF-8.
+
+- **Verify after posting** when the body contained non-ASCII
+  characters — fetch the posted artifact (e.g., `gh pr view`,
+  `gh api`) and visually confirm em-dashes and accented characters
+  rendered correctly. If corruption is detected, repost using the
+  encoding-safe pattern above.
