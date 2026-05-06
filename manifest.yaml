@@ -173,6 +173,17 @@ protocols:
         pre-edit snapshots, one logical change per tool call, and
         escalation on repeated failures.
 
+    - name: human-voice-fidelity
+      path: protocols/guardrails/human-voice-fidelity.md
+      description: >
+        Preserve the user's communication style when drafting externally
+        visible text on their behalf (PR replies, issue comments, emails).
+        Pluggable voice sources, calibrated style extraction, and a
+        per-output self-check that flags AI-tell patterns (em-dashes,
+        formulaic phrases, etc.) — conditionally permitted when present
+        in the user's own samples. Scoped to user-authored text only;
+        does not affect analysis, code, or quoted content.
+
   analysis:
     - name: memory-safety-c
       path: protocols/analysis/memory-safety-c.md
@@ -1439,18 +1450,19 @@ templates:
         (post inline review comments via GitHub API). Language-agnostic
         by default with optional language-specific focus.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification, operational-constraints]
+      protocols: [anti-hallucination, self-verification, operational-constraints, human-voice-fidelity]
       format: investigation-report
 
     - name: respond-to-pr-comments
       path: templates/respond-to-pr-comments.md
       description: >
-        Process PR review feedback and generate per-thread responses.
-        Supports document mode (response plan) or action mode (make
-        code fixes, post replies, resolve threads via GitHub API).
-        Detects contradictory feedback across reviewers.
+        Process PR review feedback and generate per-thread responses on
+        GitHub or Azure DevOps Services. Supports document mode (response
+        plan) or action mode (make code fixes, post replies, update
+        thread status via the platform's API). Auto-detects platform
+        from the PR URL. Detects contradictory feedback across reviewers.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification, operational-constraints]
+      protocols: [anti-hallucination, self-verification, operational-constraints, human-voice-fidelity]
       format: pr-comment-responses
 
     - name: reconstruct-behavior
