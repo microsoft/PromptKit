@@ -10,6 +10,25 @@ addon rather than a native feature of the AI tooling.
 **Goal**: Make PromptKit's prompt composition feel like a built-in capability of
 GitHub Copilot CLI — discoverable, invokable with natural commands, and seamless.
 
+> **Implementation status (May 2026 update).** Several strategies in this
+> document have shipped since the original research:
+>
+> | Strategy | Status | Evidence |
+> |---|---|---|
+> | A. Skills (`/promptkit`, `/boot`, `/bootstrap`) | ✅ Shipped | PRs #175, #176, #229, #245; `.github/skills/` |
+> | B. Custom Agents (as PromptKit *output target*) | 🟡 Partial | PR #174 — `agent-instructions` format can generate `.github/agents/*.agent.md`, but PromptKit itself is not yet distributed as agents |
+> | E. Custom Instructions | ✅ Pre-existing | `.github/copilot-instructions.md` + `agent-instructions` format |
+> | C. MCP Server | ❌ Not started | — |
+> | D. Plugin (composite distribution) | ❌ Not started | — |
+> | F. Hooks | ❌ Not started | — |
+> | G. LSP Configs | ❌ Not started | — |
+>
+> The skill work resolved part of the **discoverability + invocation** pain
+> (users can now type `/promptkit` instead of `Read and execute bootstrap.md`),
+> but the **assembly-fidelity** problem (LLM honor-system reading 500KB of
+> Markdown) and the **context-discontinuity across artifacts** problem
+> remain. Strategies C / D / F / G are the forward work this document scopes.
+
 ---
 
 ## Current Architecture (Baseline)
@@ -715,10 +734,19 @@ vehicle; skills, agents, MCP, hooks, and LSP are its contents.
 | **Skill** (A) | Primary invocation path — `/promptkit` | P0 (must-have) |
 | **MCP Server** (C) | Deterministic assembly engine | P0 (must-have) |
 | **Meta-Agent** (B1) | Interactive templates + full composition | P1 (high-value) |
+| **Per-Template Agents** (B2) | Pre-composed workflows (investigator, reviewer, requirements) | P1 (high-value) |
 | **Hooks** (F) | Output validation, telemetry, guardrails | P1 (high-value) |
-| **Per-Template Agents** (B2) | High-value pre-composed workflows | P2 (nice-to-have) |
 | **LSP Config** (G) | Enhanced code intelligence | P2 (nice-to-have) |
 | **Custom Instructions** (E) | Fallback / lightweight alternative | Standalone option |
+
+> **Why per-template agents are P1, not P2.** The
+> [sonde case study](./case-studies/sonde-protocol-evolution.md) shows that
+> pre-composed coder/reviewer/validator workflows — personas and protocols
+> baked in — are where PromptKit delivers the most value in practice. A
+> `promptkit-investigator.agent.md` that hard-wires `systems-engineer` +
+> `root-cause-analysis` + `memory-safety-c` is immediately useful with
+> **no manifest lookup and no assembly round-trip**, which is where most
+> of the per-invocation latency and friction live today.
 
 ### Recommended Plugin Architecture
 
@@ -728,8 +756,7 @@ promptkit/
 │
 ├── skills/
 │   └── promptkit/
-│       ├── SKILL.md              # Invocation entry point — uses MCP tools
-│       └── [minimal inline content for fallback if MCP unavailable]
+│       └── SKILL.md              # Invocation entry point — calls MCP tools
 │
 ├── agents/
 │   ├── promptkit.agent.md        # Full composition meta-agent
@@ -771,17 +798,76 @@ For **interactive templates** (`mode: interactive`), the skill delegates to
 the `promptkit.agent.md` custom agent, which runs in its own context window
 and executes the multi-turn reasoning workflow directly.
 
+### Key UX Gap to Prototype
+
+Step 4 of the flow above — *"Copilot adopts assembled prompt as working
+instructions"* — is the load-bearing step everything else flows from, and
+also the least understood. Copilot CLI does not currently expose a
+documented "set working instructions" primitive that a tool result can
+populate. Three candidate mechanisms, in order of how cheap each is to
+prototype:
+
+1. **Temp file + `read`.** The skill instructs Copilot, "call
+   `promptkit_assemble`, write the returned prompt to a session-scoped
+   temp file (e.g., `~/.copilot/sessions/<id>/promptkit-active.md`),
+   then `read` that file before continuing." Leans entirely on existing
+   primitives. This is the recommended **first prototype** — if it works,
+   the rest of the architecture is unblocked.
+2. **Tool result as system-style context.** MCP returns the prompt in a
+   structured tool response that Copilot is instructed to treat as
+   system-level context for the remainder of the session. Cleaner UX, but
+   depends on whether tool results can carry that semantic weight in
+   Copilot CLI today.
+3. **Behavioral-override directive.** The skill emits a directive
+   ("From this point forward, follow the protocol below verbatim…")
+   that re-frames the rest of the session. Most fragile — relies on the
+   LLM honoring the directive without a runtime enforcement mechanism.
+
+**Implementation prerequisite.** Mechanism (1) must be validated end-to-end
+on Copilot CLI before any of the per-template agents (B2), MCP server (C),
+or plugin (D) work begins — they all depend on a working "adopt as
+instructions" path. If (1) is insufficient, the architecture needs to
+fall back to per-template agents for everything, since agents *do* have
+a stable system-prompt slot.
+
+### Design Recommendations
+
+Two design choices have been promoted out of Open Questions based on
+review feedback:
+
+- **MCP is mandatory; no direct-file-read fallback.** If the MCP server
+  is not running, the skill stops and tells the user to run
+  `copilot plugin update promptkit` (or the equivalent start command) —
+  it does **not** silently degrade to LLM-reads-500KB-of-Markdown. A
+  fallback path would reintroduce the assembly-fidelity problem this
+  whole effort is trying to eliminate.
+- **`promptkit_get_interactive_context` is the seam between MCP and the
+  meta-agent.** MCP owns deterministic assembly (request/response);
+  the meta-agent owns multi-turn conversational execution. For
+  interactive templates (`mode: interactive`), the agent calls
+  `promptkit_get_interactive_context(template, params)` once to load
+  the persona + protocols + format + template body, then runs the
+  reasoning loop in its own context window. This cleanly resolves the
+  request/response-vs-interactive tension without forcing MCP to model
+  long-running sessions.
+
 ---
 
 ## Open Questions
+
+> Items that were originally listed here as questions and have since been
+> resolved into design decisions: **MCP-vs-fallback** (MCP mandatory — see
+> *Design Recommendations*) and **interactive templates in MCP** (resolved
+> via `promptkit_get_interactive_context` — see *Design Recommendations*).
 
 1. **Skill + MCP interaction**: Can a skill's instructions direct Copilot to
    call specific MCP tools? This is the key integration pattern — skill provides
    discovery/invocation, MCP provides deterministic assembly.
 
-2. **Skill size limits**: PromptKit's content is ~500KB+ of Markdown. If the MCP
-   server handles assembly, the skill only needs instructions + manifest (much smaller).
-   But what if MCP is unavailable — can the skill fall back to direct file reading?
+2. **Adopt-as-instructions mechanism**: Of the three candidate mechanisms in
+   *Key UX Gap to Prototype* above, which actually works on current Copilot CLI?
+   Mechanism (1) — temp-file + `read` — needs to be validated end-to-end before
+   any of the C/D/F/G work proceeds.
 
 3. **Plugin MCP lifecycle**: When a plugin includes `.mcp.json`, does Copilot
    auto-start the MCP server process? If so, `npx @promptkit/mcp-server` could
@@ -795,15 +881,10 @@ and executes the multi-turn reasoning workflow directly.
    as a tool result, how does this affect available context? Tool results may be
    more efficient than file reads since they're structured.
 
-6. **Interactive templates in MCP**: MCP tools are request/response. For interactive
-   templates (`mode: interactive`), the custom agent (B1) is likely needed. Can the
-   MCP server provide a `promptkit_get_interactive_context` tool that returns the
-   persona + protocols + template for the agent to use directly?
-
-7. **Plugin marketplace publishing**: Can PromptKit be listed on `github/copilot-plugins`
+6. **Plugin marketplace publishing**: Can PromptKit be listed on `github/copilot-plugins`
    or `github/awesome-copilot`? What's the submission process?
 
-8. **LSP server detection**: Can hooks or skills detect whether recommended LSP
+7. **LSP server detection**: Can hooks or skills detect whether recommended LSP
    servers are installed and warn if not? This would improve the setup experience.
 
 ---
