@@ -22,6 +22,7 @@ params:
   additional_protocols: "Optional — specific protocols to apply (e.g., memory-safety-c, thread-safety)"
   context: "What this PR does, which system it affects, any known concerns"
   output_mode: "Output mode — 'document' (produce investigation report) or 'action' (post review comments via gh CLI)"
+  executive_summary: "Whether to include a holistic change narrative explaining what the PR is actually doing — 'auto' (default; produced for broad-scope or large PRs based on diff size, breadth, and impact signals), 'always', or 'never'. Blank or invalid values are treated as 'auto'."
 input_contract: null
 output_contract:
   type: investigation-report
@@ -51,6 +52,8 @@ isolation, but the diff, commit history, linked issues, and CI status.
 
 **Output Mode**: {{output_mode}}
 
+**Executive Summary Mode**: {{executive_summary}}
+
 ## Instructions
 
 ### Phase 1: Gather PR Context
@@ -77,6 +80,83 @@ isolation, but the diff, commit history, linked issues, and CI status.
 4. **If language focus is specified**, identify which additional analysis
    protocols are relevant (e.g., `memory-safety-c` for C,
    `thread-safety` for concurrent code). Apply these in Phase 2.
+
+5. **Establish Change Narrative** (when applicable per `executive_summary`).
+
+   **Normalization.** If `executive_summary` is blank, unset, or not one
+   of `auto`, `always`, or `never`, treat it as `auto`. This guards
+   against missing values when the template is packaged as a Copilot
+   prompt file or agentic workflow.
+
+   **Determine scope:**
+   - `never` — skip the rest of this step.
+   - `always` — produce the narrative.
+   - `auto` (default) — produce the narrative when **any** of these
+     triggers fires:
+     - **Size signals**: more than ~300 lines changed (additions +
+       deletions, excluding lockfiles, generated code, and vendored
+       deps), OR more than ~15 source files modified (same exclusions).
+       If exact filtered counts are unavailable, estimate
+       conservatively rather than spending excessive effort calculating.
+     - **Breadth signals**: the PR touches multiple unrelated subsystems
+       (e.g., distinct top-level code roots that don't simply mirror
+       each other like `src/` and `tests/`).
+     - **Impact signals**: the PR introduces public API or interface
+       changes, schema or data-model changes, auth / permission /
+       security changes, CI or deployment / infrastructure changes, or
+       broad dependency or configuration changes.
+     - **Description-gap signals**: the PR description is sparse
+       (< 2 short paragraphs) AND total change exceeds 100 LOC.
+
+   **Skip condition (`auto` only):** even when a trigger fires, skip
+   the narrative if the PR description already provides a clear,
+   accurate change overview AND the diff does not reveal materially
+   different scope from what the description claims.
+
+   **Compose narrative** (1–3 paragraphs, ≤ ~300 words). Answer:
+   - **What** the PR changes functionally (user-visible behavior, API
+     surface, data model)
+   - **How** it changes things architecturally (key restructurings,
+     new modules, removed code paths)
+   - **Why**, per the PR description and linked issues — state the
+     author's stated motivation; do not speculate beyond it
+   - **Scope boundaries** — what is *not* changed despite appearing
+     in the diff (generated files, formatting-only edits, vendored deps)
+
+   Ground every narrative claim in the diff, PR description, linked
+   issues, or context files you read. Omit ungrounded claims.
+
+   **Compose suggested focus areas** (1–5 bulleted items; omit element
+   when none warrant calling out). Produce only when the narrative was
+   produced above; otherwise omit. For each item state:
+   - The specific file path(s) or module — do not generalize
+   - The motivating signal: an **impact signal** that fired in the
+     trigger evaluation above (public API, schema, auth, CI/deploy,
+     broad deps), OR an observable **concentration of complexity** in
+     the diff (e.g., a single file with disproportionate change density
+     or intricate logic)
+   - The **risk angle** in one short phrase (correctness, safety,
+     security, or test coverage)
+
+   Identify focus areas only when at least one of the conditions above
+   holds. If neither an impact signal fired nor concentration of
+   complexity is observable, omit the focus-areas element rather than
+   fabricating items. Focus areas are advisory pointers for reviewer
+   attention; they do **not** reduce required Phase 2 coverage — every
+   changed file remains subject to analysis regardless of whether it
+   appears in the focus list.
+
+   **Format requirement.** If either the narrative or the focus areas
+   were produced, the report MUST use the **full** investigation-report
+   format (so the `Problem Statement` section is present), regardless
+   of finding count or severity. This overrides the format's default
+   abbreviated-vs-full selection rule.
+
+   Internally record whether the narrative was produced and, in `auto`
+   mode, which trigger fired (or why it was skipped). In document mode,
+   surface this briefly in the Coverage section in Phase 5. In action
+   mode, the narrative (if produced) is shown to the user during step 1
+   of the action flow; no Coverage-section recording applies.
 
 ### Phase 2: Analyze Changes
 
@@ -159,19 +239,22 @@ PR review concepts to report sections:
 
 | Report Section | PR Review Content |
 |---|---|
-| Executive Summary | Overall verdict + key findings |
-| Problem Statement | What the PR claims to change and why |
+| Executive Summary | Overall verdict + key findings (2–4 sentences per format) |
+| Problem Statement | What the PR claims to change and why. When the change narrative was produced in Phase 1, lead this section with the holistic narrative, then the suggested focus areas (if any were produced), then state the author's motivation. |
 | Investigation Scope | Files changed, diff size, linked issues |
 | Findings | Per-file findings with severity |
 | Root Cause Analysis | Omit or use for systemic patterns |
 | Remediation Plan | Suggested fixes ordered by priority |
 | Prevention | Process suggestions (testing, CI checks) |
 | Open Questions | Ambiguities in the PR or linked issues |
-| Coverage | Files examined, search method, exclusions, limitations |
+| Coverage | Files examined, search method, exclusions, limitations. In `auto` mode for `executive_summary`, briefly note whether the change narrative was produced and the triggering condition (or reason for skipping). |
 
 #### Action Mode (`output_mode: action`)
 
 1. **Present findings** to the user using the document structure above.
+   If a change narrative or suggested focus areas were produced in
+   Phase 1, present them (from `Problem Statement`) before walking
+   through individual findings.
 2. **Ask the user to confirm** which findings to post as review comments.
    Present each finding (or batch by file) and ask:
    - Post this comment? (yes / skip / edit)
@@ -185,7 +268,17 @@ PR review concepts to report sections:
    only; code references, file paths, and quoted reviewer text are
    exempt.
 3. **Post confirmed findings** as inline review comments using a JSON
-   payload file so `comments` is sent as an array, not a string:
+   payload file so `comments` is sent as an array, not a string.
+
+   **Constructing the `body` field**: the review `body` is the
+   overall verdict summary (findings + recommended review event).
+   Do NOT prepend the Phase 1 change narrative or suggested focus
+   areas — the PR author already wrote the PR description, and
+   reviewer feedback should focus on the verdict, not on re-describing
+   the change. These are reviewer-internal grounding artifacts; do not
+   add them to the body unless the user explicitly requests it as part
+   of confirming the review.
+
    ```
    cat > review.json <<'EOF'
    {
@@ -225,6 +318,12 @@ PR review concepts to report sections:
   action mode, you may post an `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`
   review only after explicit user confirmation, and you must not merge.
 - Do NOT modify the PR branch or push commits.
+- Do NOT speculate in the change narrative or suggested focus areas
+  beyond what is visible in the diff, PR description, or linked
+  issues — including author intent that is not explicitly stated.
+- Do NOT use suggested focus areas to reduce Phase 2 coverage. Focus
+  areas advise reviewer attention only; every changed file remains
+  subject to analysis.
 
 ## Quality Checklist
 
@@ -238,4 +337,7 @@ Before finalizing, verify:
 - [ ] Linked issues were checked against the actual changes
 - [ ] CI status was noted (or stated as unavailable)
 - [ ] At least 3 findings have been re-verified against the diff
+- [ ] In `auto` mode for `executive_summary`, the decision to produce or skip the change narrative was made deliberately; in document mode, the decision is also recorded in the Coverage section
+- [ ] If the change narrative was produced, every claim in it is grounded in the diff, PR description, linked issues, or context files (no speculation about author intent)
+- [ ] If suggested focus areas were produced, each item is anchored to an observable impact signal that fired or to concentration of complexity in the diff (no fabrication)
 - [ ] In action mode: user confirmation was obtained before every post
