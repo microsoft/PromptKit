@@ -22,7 +22,7 @@ params:
   additional_protocols: "Optional — specific protocols to apply (e.g., memory-safety-c, thread-safety)"
   context: "What this PR does, which system it affects, any known concerns"
   output_mode: "Output mode — 'document' (produce investigation report) or 'action' (post review comments via gh CLI)"
-  executive_summary: "Whether to include a holistic change narrative explaining what the PR is actually doing — 'auto' (default; produced for broad-scope or large PRs based on diff size, breadth, and impact signals), 'always', or 'never'. Blank or invalid values are treated as 'auto'."
+  change_narrative: "Whether to include a holistic change narrative explaining what the PR is actually doing — 'auto' (default; produced for broad-scope or large PRs based on diff size, breadth, and impact signals), 'always', or 'never'. Blank or invalid values are treated as 'auto'."
 input_contract: null
 output_contract:
   type: investigation-report
@@ -52,7 +52,7 @@ isolation, but the diff, commit history, linked issues, and CI status.
 
 **Output Mode**: {{output_mode}}
 
-**Executive Summary Mode**: {{executive_summary}}
+**Change Narrative Mode**: {{change_narrative}}
 
 ## Instructions
 
@@ -81,9 +81,9 @@ isolation, but the diff, commit history, linked issues, and CI status.
    protocols are relevant (e.g., `memory-safety-c` for C,
    `thread-safety` for concurrent code). Apply these in Phase 2.
 
-5. **Establish Change Narrative** (when applicable per `executive_summary`).
+5. **Establish Change Narrative** (when applicable per `change_narrative`).
 
-   **Normalization.** If `executive_summary` is blank, unset, or not one
+   **Normalization.** If `change_narrative` is blank, unset, or not one
    of `auto`, `always`, or `never`, treat it as `auto`. This guards
    against missing values when the template is packaged as a Copilot
    prompt file or agentic workflow.
@@ -247,7 +247,7 @@ PR review concepts to report sections:
 | Remediation Plan | Suggested fixes ordered by priority |
 | Prevention | Process suggestions (testing, CI checks) |
 | Open Questions | Ambiguities in the PR or linked issues |
-| Coverage | Files examined, search method, exclusions, limitations. In `auto` mode for `executive_summary`, briefly note whether the change narrative was produced and the triggering condition (or reason for skipping). |
+| Coverage | Files examined, search method, exclusions, limitations. In `auto` mode for `change_narrative`, briefly note whether the change narrative was produced and the triggering condition (or reason for skipping). |
 
 #### Action Mode (`output_mode: action`)
 
@@ -337,7 +337,7 @@ Before finalizing, verify:
 - [ ] Linked issues were checked against the actual changes
 - [ ] CI status was noted (or stated as unavailable)
 - [ ] At least 3 findings have been re-verified against the diff
-- [ ] In `auto` mode for `executive_summary`, the decision to produce or skip the change narrative was made deliberately; in document mode, the decision is also recorded in the Coverage section
+- [ ] In `auto` mode for `change_narrative`, the decision to produce or skip the change narrative was made deliberately; in document mode, the decision is also recorded in the Coverage section
 - [ ] If the change narrative was produced, every claim in it is grounded in the diff, PR description, linked issues, or context files (no speculation about author intent)
 - [ ] If suggested focus areas were produced, each item is anchored to an observable impact signal that fired or to concentration of complexity in the diff (no fabrication)
 - [ ] In action mode: user confirmation was obtained before every post
