@@ -92,7 +92,7 @@ isolation, but the diff, commit history, linked issues, and CI status.
    - `never` — skip the rest of this step.
    - `always` — produce the narrative.
    - `auto` (default) — produce the narrative when **any** of these
-     triggers fires:
+     triggers fire:
      - **Size signals**: more than ~300 lines changed (additions +
        deletions, excluding lockfiles, generated code, and vendored
        deps), OR more than ~15 source files modified (same exclusions).
