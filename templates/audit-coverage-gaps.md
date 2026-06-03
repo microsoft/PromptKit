@@ -104,7 +104,7 @@ coverage signals missing validation or undocumented behavior.
 5. **Apply the anti-hallucination protocol.** Every finding must cite:
    - the coverage region location and raw coverage evidence
    - the requirement or design location, or explicit absence for D9
-   - the validation-plan location
+   - the validation-plan location, or explicit absence for D2
    - the test-code location, or explicit absence for D11
 
    Do NOT invent requirements, tests, branch boundaries, or intended
