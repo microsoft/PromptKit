@@ -639,6 +639,14 @@ protocols:
         cross-model semantic matching, and classifies consensus levels
         to identify fragile prompt language.
 
+    - name: coverage-gap-analysis
+      path: protocols/reasoning/coverage-gap-analysis.md
+      description: >
+        Deterministic protocol for turning code coverage gaps into
+        specification drift candidates. Normalizes uncovered regions,
+        filters incidental code, and classifies missing validation
+        versus undocumented behavior.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -1133,6 +1141,19 @@ templates:
         criterion assertions, and assertion mismatches.
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, operational-constraints, test-compliance-audit]
+      taxonomies: [specification-drift]
+      format: investigation-report
+      requires: [requirements-document, validation-plan]
+
+    - name: audit-coverage-gaps
+      path: templates/audit-coverage-gaps.md
+      description: >
+        Audit uncovered code regions against requirements, validation
+        artifacts, and tests. Uses coverage data as a deterministic
+        discovery signal for missing validation and undocumented
+        behavior.
+      persona: specification-analyst
+      protocols: [anti-hallucination, self-verification, operational-constraints, coverage-gap-analysis]
       taxonomies: [specification-drift]
       format: investigation-report
       requires: [requirements-document, validation-plan]
