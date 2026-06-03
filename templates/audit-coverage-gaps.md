@@ -89,8 +89,13 @@ coverage signals missing validation or undocumented behavior.
    - `D12_UNTESTED_ACCEPTANCE_CRITERION`
    - `D13_ASSERTION_MISMATCH`
 
-   Excluded or inconclusive regions belong in coverage notes or open
-   questions, not in the findings list.
+   `D8_UNIMPLEMENTED_REQUIREMENT` is intentionally out of scope for this
+   workflow: this audit starts from uncovered implemented regions in a
+   coverage artifact, so requirements with no implementation at all are
+   better handled by `audit-code-compliance`.
+
+   Excluded regions belong in **Investigation Scope** and inconclusive
+   regions belong in **Open Questions**, not in the findings list.
 
 3. **If the design document is not provided**, skip design-specific
    tracing. Trace uncovered regions directly from requirements to code.
@@ -131,6 +136,7 @@ coverage signals missing validation or undocumented behavior.
 
 9. **Quality checklist** — before finalizing, verify:
    - [ ] Every finding has exactly one drift label from D2, D9, D11, D12, D13
+   - [ ] Each normalized candidate region maps to at most one finding; split distinct behavioral units instead of stacking labels
    - [ ] Every finding cites coverage evidence and concrete artifact locations
    - [ ] Excluded regions are documented with rationale and are not reported as findings
    - [ ] Inconclusive regions state what evidence is missing

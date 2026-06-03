@@ -80,6 +80,7 @@ behaviorally significant.
    - state transitions
    - error contracts, retry logic, or timeout behavior
    - resource lifecycle or requirement-bound constraints
+   - synchronization or shared resource access enforcement contracts
 
 4. **Only advance significant, in-scope regions**:
    - Regions that are excluded or inconclusive stop here.
@@ -154,12 +155,18 @@ missing tests, or weak assertions.
 
 Turn only the confirmed regions into findings.
 
-1. **Assign exactly one classification** to each confirmed region:
+1. **Assign exactly one classification from the specification-drift
+   taxonomy** to each confirmed region:
    - `D2_UNTESTED_REQUIREMENT`
    - `D9_UNDOCUMENTED_BEHAVIOR`
    - `D11_UNIMPLEMENTED_TEST_CASE`
    - `D12_UNTESTED_ACCEPTANCE_CRITERION`
    - `D13_ASSERTION_MISMATCH`
+
+   If one source location appears to support multiple labels, split it
+   into separate normalized candidate regions only when the evidence
+   supports distinct behavioral units. Do NOT stack multiple drift
+   labels onto one confirmed region.
 
 2. **For each finding provide**:
    - the coverage region location
@@ -169,7 +176,7 @@ Turn only the confirmed regions into findings.
    - the impact of leaving the region uncovered
    - a concrete recommended next action
 
-3. **Recommended escalation paths**:
+3. **Recommended next actions**:
    - D9 findings that appear to describe real behavior with no governing
      requirement are good candidates for
      `requirements-from-implementation` or `spec-extraction-workflow`.
