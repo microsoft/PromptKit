@@ -27,9 +27,10 @@ use exactly one label from this taxonomy.
 This taxonomy serves two roles in the `enhance-prompt` workflow:
 
 1. **User focus selector (input).** The user MAY name one or more labels (by
-   ID or short name) to scope the enhancement to specific areas. When a focus
-   is set, only opportunities in the named categories are proposed; others are
-   recorded under "Residual Gaps" but not applied.
+   numeric ID E1–E8, or full label ID such as E1_MISSING_GUARDRAIL) to scope
+   the enhancement to specific areas. When a focus is set, only opportunities
+   in the named categories are proposed; others are recorded under "Residual
+   Gaps" but not applied.
 2. **Classification scheme (output).** When the user does NOT specify a focus,
    the workflow analyzes the asset, discovers opportunities across all
    categories, and labels each one. The user then selects which to apply.

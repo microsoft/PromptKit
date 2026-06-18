@@ -71,7 +71,9 @@ recommended (document mode).>
 
 ## 3. Coverage
 - **Examined**: <assets and files read>
+- **Method**: <how the asset was assessed and how the library was compared>
 - **Excluded**: <what was not assessed, and why>
+- **Limitations**: <constraints affecting confidence>
 ```
 
 All formatting rules from the full format still apply. If there are **zero**

@@ -22,7 +22,7 @@ taxonomies:
 format: enhancement-report
 params:
   asset: "The prompt asset(s) to enhance — file path(s) or inline content. May be a raw prompt, Copilot prompt file, agent definition, instruction/skill file, or a combination."
-  focus: "Optional — one or more enhancement categories (E1-E8 or short names from the enhancement-categories taxonomy) to scope the work. Leave blank to let PromptKit scan the asset and suggest categories."
+  focus: "Optional — one or more enhancement categories (numeric IDs E1–E8, or full label IDs like E1_MISSING_GUARDRAIL, from the enhancement-categories taxonomy) to scope the work. Leave blank to let PromptKit scan the asset and suggest categories."
   output_mode: "Output mode — 'document' (produce an enhancement plan/report) or 'action' (apply confirmed enhancements in place)."
   context: "Optional — how the asset is used, target runtime/platform, audience, and any constraints or regions to leave unchanged."
 input_contract: null
