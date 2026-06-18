@@ -68,10 +68,10 @@ result, not a failure.
    Name` header; or verbatim phrasing matching known components. Record this as
    **inferred provenance** `[INFERRED]` and name the evidence.
 3. **Classify provenance** as one of:
-   - **PromptKit-generated, version known** — marker with a version.
-   - **PromptKit-generated, version unknown** — marker or strong structural
-     match, but no recoverable version.
-   - **Not PromptKit-generated** — no marker and no structural match.
+   - **PromptKit provenance detected, version known** — marker with a version.
+   - **PromptKit provenance detected, version unknown** — marker or strong
+     structural match, but no recoverable version.
+   - **No PromptKit provenance detected** — no marker and no structural match.
 4. **Set the upgrade eligibility.** Version upgrades (E3) are eligible only
    when there is **provenance evidence tied to a specific component**: an
    explicit PromptKit marker, OR a strong content-level match showing the asset

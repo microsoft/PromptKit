@@ -66,6 +66,11 @@ rewrite.
 
 ## Instructions
 
+**Validate `output_mode` first.** It MUST be exactly `document` or `action`.
+If `{{output_mode}}` is blank or any other value, ask the user which mode they
+want before proceeding; never enter action mode (which writes to the asset)
+without an explicit `action`.
+
 Apply the **prompt-enhancement protocol** end to end, and classify every
 opportunity with the **enhancement-categories taxonomy**. Work interactively:
 do not apply any change to the asset until the user confirms.
@@ -82,7 +87,7 @@ the asset, ask the user before proceeding.
 Execute prompt-enhancement Phase 2. Determine whether the asset was previously
 shaped by PromptKit and, if so, its version. Treat a missing marker as a normal
 result — never fabricate a version. Record the provenance classification for
-the report's section 3.
+the report's Provenance and Version Detection section.
 
 ### Phase 3: Baseline and Gap Analysis
 
@@ -105,12 +110,13 @@ Execute prompt-enhancement Phase 5.
    residual. If `{{focus}}` is blank, present opportunities across all
    categories and ask the user which to apply.
 2. **Present the enhancement plan** using the `enhancement-report` format's
-   Enhancement Plan section (full or abbreviated per that format's own
-   selection rule), ordered by priority then by the taxonomy Ranking Criteria.
-   Each opportunity starts at status `Proposed`.
-3. **Ask the user to confirm** which opportunities to apply (in action mode) or
-   to accept as the recommended plan (in document mode). For each, offer:
-   apply / defer / skip.
+   Enhancement Plan section (summary table + per-opportunity detail), ordered
+   by priority then by the taxonomy Ranking Criteria. Each opportunity starts
+   at status `Proposed`.
+3. **Ask the user to confirm** which opportunities to act on. In **action
+   mode**, offer per opportunity: apply / defer / skip. In **document mode**
+   (no edits are written), offer: recommend (keep as `Proposed`) / defer /
+   skip.
 
    **Do NOT modify the asset until the user confirms.**
 
@@ -118,7 +124,7 @@ Execute prompt-enhancement Phase 5.
 
 #### Document Mode (`output_mode: document`)
 
-Produce the full `enhancement-report`. Section 6 (Applied Changes) states
+Produce the `enhancement-report`. The Applied Changes section states
 "Not applicable — document mode; no changes were written." All opportunities
 carry status `Proposed`, `Deferred`, or `Skipped`. This report is the
 deliverable; do not edit the asset.
@@ -133,12 +139,12 @@ deliverable; do not edit the asset.
    only if the user accepted it, and do it last.
 2. Execute prompt-enhancement Phase 7 to verify coherence, intent preservation,
    no regressions, and determinism of the additions.
-3. Produce the full `enhancement-report` recording each opportunity's final
+3. Produce the `enhancement-report` recording each opportunity's final
    status (`Applied` / `Deferred` / `Skipped`) and a per-file summary of
-   applied changes in section 6.
+   applied changes in the Applied Changes section.
 4. **Never write changes the user did not confirm.** If the user confirmed
-   nothing, apply nothing and report all opportunities as `Proposed` or
-   `Skipped`.
+   nothing, apply nothing and report all opportunities as `Proposed`,
+   `Deferred`, or `Skipped` as applicable.
 
 ## Non-Goals
 
