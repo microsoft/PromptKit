@@ -104,10 +104,10 @@ Execute prompt-enhancement Phase 5.
    include only those categories in the actionable plan and record the rest as
    residual. If `{{focus}}` is blank, present opportunities across all
    categories and ask the user which to apply.
-2. **Present the enhancement plan** using the `enhancement-report` Enhancement
-   Plan structure (summary table + per-opportunity detail), ordered by priority
-   then by the taxonomy Ranking Criteria. Each opportunity starts at status
-   `Proposed`.
+2. **Present the enhancement plan** using the `enhancement-report` format's
+   Enhancement Plan section (full or abbreviated per that format's own
+   selection rule), ordered by priority then by the taxonomy Ranking Criteria.
+   Each opportunity starts at status `Proposed`.
 3. **Ask the user to confirm** which opportunities to apply (in action mode) or
    to accept as the recommended plan (in document mode). For each, offer:
    apply / defer / skip.

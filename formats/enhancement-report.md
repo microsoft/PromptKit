@@ -66,6 +66,7 @@ recommended (document mode).>
 - **Target**: <file and location in the asset>
 - **Source component**: <PromptKit component or convention>
 - **Change**: <concrete description of the enhancement>
+- **Preserves**: <user customizations protected by this change, or "n/a">
 - **Priority**: High / Medium / Low
 - **Status**: Proposed / Applied / Deferred / Skipped
 

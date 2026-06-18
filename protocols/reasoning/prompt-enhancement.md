@@ -37,8 +37,9 @@ finalizing.
 2. **Classify each asset's type** as exactly one of:
    - **Raw prompt** — a standalone prompt for a fresh LLM session.
    - **Copilot prompt file** — a `.github/prompts/*.prompt.md` slash command
-     (has `description`/`agent`/`tools` frontmatter).
-   - **Agent definition** — a custom agent file (e.g., `.github/agents/*.md`).
+     (has `description` and `agent` frontmatter; `tools` is optional).
+   - **Agent definition** — a custom agent file (e.g.,
+     `.github/agents/*.agent.md`).
    - **Instruction / skill file** — a persistent file auto-loaded by a runtime
      (e.g., `.github/instructions/*.instructions.md` with `applyTo`,
      `CLAUDE.md`, `.cursorrules`).
