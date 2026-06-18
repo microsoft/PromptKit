@@ -625,6 +625,15 @@ protocols:
         segments. Maps each to existing library components or marks
         as novel for assimilation.
 
+    - name: prompt-enhancement
+      path: protocols/reasoning/prompt-enhancement.md
+      description: >
+        Reasoning protocol for enhancing an existing prompt asset with
+        current PromptKit capabilities. Covers ingestion, provenance and
+        version detection, capability baselining, gap analysis against the
+        library, enhancement proposal, in-place application, and
+        verification. Preserves original intent and user customizations.
+
     - name: manufacturing-artifact-generation
       path: protocols/reasoning/manufacturing-artifact-generation.md
       description: >
@@ -759,6 +768,16 @@ formats:
       (.github/workflows/*.md). Packages an assembled PromptKit prompt
       as a scheduled or event-driven automation running in GitHub
       Actions with a coding agent. Requires `gh aw` CLI for compilation.
+
+  - name: enhancement-report
+    path: formats/enhancement-report.md
+    produces: enhancement-report
+    description: >
+      Output format for prompt asset enhancement. Structures asset
+      identification, provenance and version detection, a capability
+      baseline, a prioritized enhancement plan classified by the
+      enhancement-categories taxonomy, application status, residual gaps,
+      and coverage.
 
   - name: implementation-plan
     path: formats/implementation-plan.md
@@ -944,6 +963,16 @@ taxonomies:
       pressure, confidence-driven misdiagnosis, infinite retry loops,
       context hoarding, premature optimization, and ephemeral memory
       failure.
+
+  - name: enhancement-categories
+    path: taxonomies/enhancement-categories.md
+    domain: prompt-asset-enhancement
+    description: >
+      Classification scheme (E1-E8) for enhancement opportunities when
+      upgrading an existing prompt asset with PromptKit capabilities. Covers
+      missing guardrails, new capabilities, version upgrades, format
+      modernization, determinism hardening, persona/expertise gaps,
+      structural decomposition, and provenance stamping.
 
   - name: cwe-cli-tools
     path: taxonomies/cwe-cli-tools.md
@@ -1656,6 +1685,20 @@ templates:
         that gathers state and produces a handoff file.
       persona: systems-engineer
       protocols: [anti-hallucination, self-verification, session-handoff]
+
+    - name: enhance-prompt
+      path: templates/enhance-prompt.md
+      description: >
+        Enhance an existing prompt asset (raw prompt, Copilot prompt file,
+        agent definition, instruction/skill file, or a combination) with
+        current PromptKit capabilities. Detects PromptKit provenance,
+        baselines current capabilities, performs a gap analysis against the
+        library, and proposes prioritized, category-classified enhancements.
+        Supports document mode (plan) or action mode (apply in place).
+      persona: promptkit-contributor
+      protocols: [anti-hallucination, self-verification, prompt-enhancement]
+      taxonomies: [enhancement-categories]
+      format: enhancement-report
 
   contribution:
     - name: extend-library
