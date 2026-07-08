@@ -23,6 +23,21 @@ high-cost cloning. The goal is to distinguish clones that preserve a
 clear ownership boundary from clones that merely silence the borrow
 checker or duplicate expensive data without need.
 
+## Deterministic Baseline
+
+If deterministic tool output is available (for example, Clippy warnings
+such as `clippy::redundant_clone`), treat it as a baseline input to the
+review:
+
+1. Record the lint findings first and carry them forward as direct
+   evidence.
+2. Do NOT stop at the lint output. Continue the semantic review for
+   borrow-vs-owning decisions, loop-local cloning, `Option` / `Result`
+   extraction patterns, repeated last-use clones, and API-shape issues
+   that deterministic lints may miss.
+3. If the lint and semantic review disagree, cite both and explain why
+   the broader ownership analysis changes the conclusion.
+
 ## Phase 1: Clone Inventory
 
 Build an explicit inventory before judging any clone site.
