@@ -207,6 +207,15 @@ protocols:
         boundaries, interior mutability, and resource leaks.
       language: Rust
 
+    - name: clone-discipline-rust
+      path: protocols/analysis/clone-discipline-rust.md
+      description: >
+        Rust review protocol for challenging unnecessary or high-cost
+        cloning. Covers borrow-first alternatives, loop and closure clone
+        hotspots, Option/Result extraction patterns, and false-positive
+        suppression for deliberate ownership boundaries.
+      language: Rust
+
     - name: thread-safety
       path: protocols/analysis/thread-safety.md
       description: >
@@ -596,6 +605,14 @@ protocols:
         identification via real-time search, technical evaluation, sourcing
         verification, cross-component compatibility, and decision matrix
         generation. Scoped to core functional components.
+
+    - name: design-context-mapping
+      path: protocols/reasoning/design-context-mapping.md
+      description: >
+        Pre-review reasoning protocol for discovering repository standards
+        and mapping changed modules to relevant design documents. Covers
+        standards inventory, design-doc discovery, file-to-doc matching,
+        and explicit handling of gaps when no governing design exists.
 
     - name: schematic-design
       path: protocols/reasoning/schematic-design.md
