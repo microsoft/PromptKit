@@ -34,9 +34,11 @@ preservation of technical meaning.
    Record the tier and the signal that chose it. The proxy thresholds apply
    regardless of tier; the tier sets only the Flesch band.
 2. **Bound the corpus.** Apply the readability corpus boundary from the
-   `readability-gate` protocol (Rule 1). Measure and revise only human-facing
-   prose. Leave code, data, markup, quoted text, normative keywords,
-   identifiers, requirement IDs, and defined terms untouched.
+   `readability-gate` protocol (Rule 1), which is the operative exclusion set.
+   Measure and revise only human-facing prose; leave everything Rule 1 excludes
+   unchanged — for example code, data, markup, URLs and file paths, logs and
+   error strings, diagrams, tables, quoted text, normative keywords,
+   identifiers, requirement IDs, and defined terms.
 3. **Record scope.** Note what you will measure and what you will exclude, for
    the report's measurement-scope section.
 
@@ -104,9 +106,12 @@ Plain-language rules:
 6. Keep terminology consistent — one term per concept, not a rotation of
    synonyms.
 
-Accuracy lock — never change, only edit prose around:
+Accuracy lock — never change, only edit prose around the protected tokens
+defined by the readability-gate corpus boundary (Rule 1). That boundary is
+authoritative; the list below restates it and is not exhaustive:
 
-- Normative keywords (MUST, SHALL, SHOULD, MAY and their negations).
+- Normative keywords (MUST, SHALL, SHOULD, MAY, REQUIRED, OPTIONAL, and their
+  negations).
 - Code identifiers, API signatures, enum values, config keys, and CLI flags.
 - Numbers, units, and quantities.
 - Requirement IDs, section anchors and headings referenced elsewhere, and

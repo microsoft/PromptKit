@@ -64,7 +64,8 @@ Format each category as:>
 
 ## 5. Accuracy Attestation
 <State that every protected token (normative keywords, identifiers, requirement
-IDs, quantities, defined terms, citations, quoted text) is unchanged.
+IDs, quantities, defined terms, citations, quoted text, and other protected
+tokens) is unchanged.
 
 **High-risk edits**: any edit a reviewer should confirm because it could carry a
 meaning change. For each: the location, the before -> after text, and why it is

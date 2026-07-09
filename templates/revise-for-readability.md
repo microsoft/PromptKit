@@ -47,9 +47,11 @@ prose becomes short, direct, plain prose; technical meaning stays exact.
 ## Instructions
 
 1. **Bound the corpus first.** Apply the `readability-gate` corpus boundary
-   (Rule 1). Measure and revise only human-facing prose. Leave code, YAML,
-   tables, identifiers, normative keywords, requirement IDs, citations, quoted
-   text, and anything named in {{constraints}} exactly as written.
+   (Rule 1), which is the operative exclusion set. Measure and revise only
+   human-facing prose; leave everything Rule 1 excludes unchanged — for example
+   code, YAML, tables, URLs and file paths, logs and error strings, diagrams,
+   identifiers, normative keywords, requirement IDs, citations, and quoted
+   text — plus anything named in {{constraints}}.
 
 2. **Set the target from the audience.** Select the tier with the
    `readability-gate` tier-selection ladder (Rule 3): classify
@@ -110,7 +112,7 @@ Before finalizing, verify:
 - [ ] Scorecard shows before and after values for every metric, with target and
       status
 - [ ] Every protected token (normative keywords, identifiers, requirement IDs,
-      quantities, defined terms, citations, quoted text) is unchanged
+      quantities, defined terms, citations, quoted text, and others) is unchanged
 - [ ] Every required epistemic label and citation from the source is preserved
 - [ ] Change summary reports only categories that had edits, with representative
       examples
