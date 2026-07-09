@@ -107,8 +107,8 @@ Before finalizing, verify:
 
 - [ ] The Revised Document section (report Section 1) contains the full revised
       document, usable as-is
-- [ ] Measurement scope lists what was included and excluded, and the metric
-      source (computed / not measured)
+- [ ] Measurement scope lists what was included and excluded, and the Flesch
+      metric source (computed / not measured)
 - [ ] Scorecard shows before and after values for every metric, with target and
       status
 - [ ] Every protected token (normative keywords, identifiers, requirement IDs,

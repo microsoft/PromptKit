@@ -35,7 +35,7 @@ headings, code blocks, tables, and identifiers; only the prose is revised.>
 - **Excluded**: <code, YAML, tables, identifiers, normative keywords,
   requirement IDs, citations, quoted text, and other protected tokens>
 - **Audience tier**: Broad | General-technical | Expert (target: FRE ≥ <n>, FKGL ≤ <n>); basis: stated audience | document purpose | default
-- **Metric source**: Computed (<tool/library>) | Not measured
+- **Flesch metric source**: Computed (<tool/library>) | Not measured — proxy metrics are always measured (Rule 2)
 
 ## 3. Readability Scorecard
 

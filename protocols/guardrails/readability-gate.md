@@ -144,10 +144,12 @@ unavoidable domain vocabulary depresses the score regardless of clarity.
   on first use.
 
 The gate passes when the proxy thresholds hold and, if computed scores are
-available, the tier's Flesch band is met. Where a threshold cannot be met without
-losing precision (for example, a sentence that must name several protected
-terms), the gate passes only if that sentence is listed as a justified
-residual issue with the reason it cannot be shortened.
+available, the tier's Flesch band is met. For the Expert tier the proxy
+thresholds are authoritative: report the Flesch scores, but a missed Flesch band
+does not by itself fail the gate — record it as a residual issue instead. Where a
+proxy threshold cannot be met without losing precision (for example, a sentence
+that must name several protected terms), the gate passes only if that sentence is
+listed as a justified residual issue with the reason it cannot be shortened.
 
 ## Rule 4: Accuracy and Precedence Carve-Outs
 
