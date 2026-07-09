@@ -101,7 +101,10 @@ Plain-language rules:
 1. One idea per sentence. Split a sentence that carries more than one.
 2. Front-load the point. State the conclusion or action first, then the detail.
 3. Prefer the plain word ("use" over "utilize", "help" over "assist").
-4. Define a needed term or expand an acronym on first use.
+4. Define a needed term or expand an acronym on first use, but only by restating
+   meaning already present in or established by the document. If a correct
+   definition would introduce information not derivable from the source, do not
+   invent it — record the undefined term as a residual issue instead.
 5. Vary sentence length so the rhythm is not a drone.
 6. Keep terminology consistent — one term per concept, not a rotation of
    synonyms.

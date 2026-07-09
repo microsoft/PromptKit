@@ -96,8 +96,11 @@ prose becomes short, direct, plain prose; technical meaning stays exact.
   edit the prose around them.
 - Do NOT rewrite code, data, tables, diagrams, quoted text, or format
   scaffolding.
-- Do NOT restructure the document, reorder sections, or add or remove content;
-  this task revises prose, it does not redesign the document.
+- Do NOT restructure the document, reorder sections, or add or remove
+  substantive content or claims; this task revises prose, it does not redesign
+  the document. Adding a minimal definition or acronym expansion that restates
+  meaning already present in the source counts as prose revision, not new
+  content.
 - Do NOT report an estimated Flesch score as a computed one, and do NOT claim a
   readability gain without a before/after comparison.
 
