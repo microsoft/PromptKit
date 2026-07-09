@@ -35,14 +35,14 @@ headings, code blocks, tables, and identifiers; only the prose is revised.>
 - **Excluded**: <code, YAML, tables, identifiers, normative keywords,
   requirement IDs, citations, quoted text, and other protected tokens>
 - **Audience tier**: Broad | General-technical | Expert (target: FRE ≥ <n>, FKGL ≤ <n>); basis: stated audience | document purpose | default
-- **Metric source**: Computed (<tool/library>) | Estimated | Not measured
+- **Metric source**: Computed (<tool/library>) | Not measured
 
 ## 3. Readability Scorecard
 
 | Metric | Before | After | Target | Status |
 |--------|--------|-------|--------|--------|
 | Flesch Reading Ease | <value / not measured> | <value / not measured> | ≥ <band> | Met / Not met / Not measured |
-| Flesch-Kincaid Grade | <value / not measured> | <value / not measured> | ≤ <band> | Met / Not met / Not measured |
+| Flesch-Kincaid Grade Level | <value / not measured> | <value / not measured> | ≤ <band> | Met / Not met / Not measured |
 | Mean sentence length (words) | <n> | <n> | ≤ 20 | Met / Not met |
 | Longest sentence (words) | <n> | <n> | ≤ 40 | Met / Not met |
 | Sentences > 25 words | <n>% | <n>% | ≤ 15% | Met / Not met |
@@ -56,11 +56,11 @@ headings, code blocks, tables, and identifiers; only the prose is revised.>
 ## 4. Change Summary
 <Grouped by defect category, with a count and one or two representative
 before -> after examples per category. Report only categories that had edits.
+Format each category as:>
 
 ### <Defect category> (<count>)
 - Before: "<original phrase>"
 - After: "<revised phrase>"
->
 
 ## 5. Accuracy Attestation
 <State that every protected token (normative keywords, identifiers, requirement
@@ -83,9 +83,9 @@ it fails. If none, state "None identified".>
 - The revision changes prose only. Headings, code blocks, tables, YAML,
   identifiers, and other protected tokens MUST appear unchanged in Section 1.
 - Scorecard values MUST come from the measurement method stated in Section 2.
-  When Flesch scores are estimated or unavailable, enter `not measured` in the
-  Flesch rows and set their Status to "Not measured"; do not enter an estimated
-  Flesch value as if it were computed.
+  Flesch is either computed (Rule 2 of readability-gate) or `not measured` —
+  there is no estimated path. When Flesch is not computed, enter `not measured`
+  in the Flesch rows and set their Status to "Not measured".
 - The Change Summary reports categories that had edits. Do not pad it with
   categories that had none.
 - Every count in the scorecard and the change summary MUST reflect the actual

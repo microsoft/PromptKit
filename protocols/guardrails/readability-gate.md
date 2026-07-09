@@ -107,8 +107,6 @@ Measure the corpus and state, for every number, how it was produced.
 
 ### Target band by audience
 
-### Target band by audience
-
 Select the tier in this order, and stop at the first that applies:
 
 1. **Stated audience.** Use the invoking template's audience parameter, or an
@@ -123,7 +121,7 @@ it from the draft's sentence length, jargon density, or reading difficulty:
 those are the defects this gate removes, and keying the target to them would
 relax the target for exactly the prose that needs the most work.
 
-| Tier | Example audiences | Genre cues | Flesch Reading Ease | Flesch-Kincaid Grade |
+| Tier | Example audiences | Genre cues | Flesch Reading Ease | Flesch-Kincaid Grade Level |
 |------|-------------------|-----------|---------------------|----------------------|
 | Broad | non-specialists, new hires, external users, mixed readers | README, getting-started, tutorial, user guide, overview, FAQ, onboarding, prerequisites | ≥ 60 | ≤ 10 |
 | General-technical (default) | practicing engineers, general technical readers | requirements, design doc, architecture spec, interface contract, runbook, engineering proposal | ≥ 50 | ≤ 12 |
