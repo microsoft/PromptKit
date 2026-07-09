@@ -19,11 +19,7 @@ params:
   document: "The document (or section) to revise — pasted text or a file path"
   target_audience: "Who reads this document (e.g., expert engineers, new team members, general technical audience); sets the readability target band"
   constraints: "Any terms, style rules, or sections that must be preserved verbatim, beyond the default protected tokens"
-input_contract:
-  type: null
-  description: >
-    Any prose document or document section supplied as a parameter — Markdown,
-    plain text, or a file path. No prior pipeline artifact is required.
+input_contract: null
 output_contract:
   type: readability-revision-report
   description: >
@@ -110,7 +106,7 @@ Before finalizing, verify:
 - [ ] The Revised Document section (report Section 1) contains the full revised
       document, usable as-is
 - [ ] Measurement scope lists what was included and excluded, and the metric
-      source (computed / estimated / not measured)
+      source (computed / not measured)
 - [ ] Scorecard shows before and after values for every metric, with target and
       status
 - [ ] Every protected token (normative keywords, identifiers, requirement IDs,

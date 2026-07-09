@@ -190,10 +190,10 @@ Metrics: FRE <value|not measured>, FKGL <value|not measured>,
 Residual issues: <count, or "None">
 ```
 
-Report this to the user (or in the change summary); do NOT inject it into the
-produced artifact. A consuming format MAY fold these metrics into its own
-scorecard section — this keeps consuming formats unchanged and avoids format
-drift.
+Report this block to the user (or in the change summary). Do NOT inject the
+block verbatim into the produced artifact. A consuming format MAY populate its
+own existing scorecard fields from these metrics — that is not injecting the
+block, and it keeps consuming formats unchanged and avoids format drift.
 
 ## Composability
 
