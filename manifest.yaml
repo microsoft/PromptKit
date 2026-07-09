@@ -115,6 +115,13 @@ personas:
       message formats, backward compatibility, and interoperability
       across protocol layers.
 
+  - name: plain-language-editor
+    path: personas/plain-language-editor.md
+    description: >
+      Plain-language technical editor. Revises dense, jargon-heavy prose into
+      clear, direct writing without changing technical meaning. Measures
+      readability and edits at the sentence level.
+
 protocols:
   guardrails:
     - name: anti-hallucination
@@ -183,6 +190,14 @@ protocols:
         formulaic phrases, etc.) — conditionally permitted when present
         in the user's own samples. Scoped to user-authored text only;
         does not affect analysis, code, or quoted content.
+
+    - name: readability-gate
+      path: protocols/guardrails/readability-gate.md
+      description: >
+        Lightweight final-pass check that verifies human-facing prose is clear
+        and readable before an artifact is finalized. Scores a bounded prose
+        corpus, applies reliably-countable proxy thresholds, and preserves
+        technical meaning, required labels, and format scaffolding.
 
   analysis:
     - name: memory-safety-c
@@ -658,6 +673,14 @@ protocols:
         filters incidental code, and classifies missing validation
         versus undocumented behavior.
 
+    - name: readability-revision-workflow
+      path: protocols/reasoning/readability-revision-workflow.md
+      description: >
+        Corrective methodology for revising an existing technical document into
+        clear, readable prose. Measures a bounded prose corpus, diagnoses named
+        clarity defects, revises with the Paramedic Method and plain-language
+        rules, re-measures, and verifies that no technical meaning changed.
+
 formats:
   - name: requirements-doc
     path: formats/requirements-doc.md
@@ -887,6 +910,14 @@ formats:
       Output format for prompt portability evaluation reports. Structures
       cross-model comparison results as claim-level consensus analysis
       with portability scoring and hardening recommendations.
+
+  - name: readability-revision-report
+    path: formats/readability-revision-report.md
+    produces: readability-revision-report
+    description: >
+      Output format for a readability revision. Presents the revised document,
+      the measured prose corpus, a before/after readability scorecard, an
+      accuracy attestation with any high-risk edits, and residual issues.
 
 taxonomies:
   - name: stack-lifetime-hazards
@@ -1262,6 +1293,18 @@ templates:
       persona: specification-analyst
       protocols: [anti-hallucination, self-verification, prompt-portability-evaluation]
       format: portability-report
+
+    - name: revise-for-readability
+      path: templates/revise-for-readability.md
+      description: >
+        Revise an existing technical document into clear, readable prose
+        without changing its technical meaning. Measure a bounded prose corpus,
+        diagnose clarity defects, revise with the Paramedic Method and
+        plain-language rules, re-measure, and produce a readability revision
+        report.
+      persona: plain-language-editor
+      protocols: [anti-hallucination, self-verification, readability-gate, readability-revision-workflow]
+      format: readability-revision-report
 
   standards:
     - name: extract-rfc-requirements
