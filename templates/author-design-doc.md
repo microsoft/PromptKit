@@ -10,6 +10,7 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
 format: design-doc
 params:
   project_name: "Name of the project or feature"

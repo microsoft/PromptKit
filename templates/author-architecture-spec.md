@@ -14,6 +14,7 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
 format: architecture-spec
 params:
   project_name: "Name of the project, component, or system"

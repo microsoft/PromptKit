@@ -11,6 +11,7 @@ persona: devops-engineer
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
 format: release-notes
 params:
   platform: "DevOps platform (e.g., 'GitHub', 'Azure DevOps', 'GitLab')"

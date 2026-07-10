@@ -170,6 +170,10 @@ When drafting each piece of externally visible text:
 - Use observed openers and closers (or none if the user uses none).
 - Reuse characteristic phrases where they fit naturally; do NOT
   force them.
+- Within the user's voice, favor clarity: plain words where the
+  meaning is unchanged, one idea per sentence, and no filler ("just",
+  "actually", "basically", "in order to"). Do NOT flatten the user's
+  register or cadence, or drop characteristic phrasing, to achieve it.
 - Keep the substance accurate — voice fidelity does not override
   technical correctness or anti-hallucination constraints.
 
@@ -218,6 +222,11 @@ only, not to surrounding analysis, code blocks, or quoted material.
 - Greeting/sign-off matches user habit.
 - Opening word/phrase is one the user has used before, or a neutral
   alternative.
+- Clarity within voice: the draft reads clearly on the first pass —
+  plain words over needless jargon, one idea per sentence, and no
+  filler. Apply this only **within** the user's voice: if reaching it
+  would flatten the user's register, cadence, or characteristic
+  phrasing, preserve the voice and leave the text as drafted.
 
 ### Phase 5: Scope Boundary
 

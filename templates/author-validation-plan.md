@@ -10,6 +10,7 @@ persona: systems-engineer
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
 format: validation-plan
 params:
   project_name: "Name of the project or feature"

@@ -10,6 +10,7 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
   - reasoning/requirements-elicitation
 format: requirements-doc
 params:

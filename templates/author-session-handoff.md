@@ -13,6 +13,7 @@ persona: systems-engineer
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
   - reasoning/session-handoff
 format: null
 params:

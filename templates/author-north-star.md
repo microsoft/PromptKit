@@ -13,6 +13,7 @@ persona: software-architect
 protocols:
   - guardrails/anti-hallucination
   - guardrails/self-verification
+  - guardrails/readability-gate
 format: north-star-document
 params:
   project_name: "Name of the project, system, or initiative"

@@ -11,6 +11,13 @@ description: >
   meaning, required labels, and format scaffolding.
 applicable_to:
   - revise-for-readability
+  - author-requirements-doc
+  - author-architecture-spec
+  - author-design-doc
+  - author-north-star
+  - author-release
+  - author-validation-plan
+  - author-session-handoff
 ---
 
 # Protocol: Readability Gate

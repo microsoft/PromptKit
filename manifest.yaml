@@ -1076,7 +1076,7 @@ templates:
         Single-shot generation. For complex/ambiguous projects, use
         interactive-design instead.
       persona: software-architect
-      protocols: [anti-hallucination, self-verification, requirements-elicitation]
+      protocols: [anti-hallucination, self-verification, readability-gate, requirements-elicitation]
       format: requirements-doc
       pipeline_position: 1
 
@@ -1088,7 +1088,7 @@ templates:
         or system. Covers protocol/system description, network and software
         architecture, interfaces, and architectural implications.
       persona: software-architect
-      protocols: [anti-hallucination, self-verification]
+      protocols: [anti-hallucination, self-verification, readability-gate]
       format: architecture-spec
 
     - name: interactive-design
@@ -1108,7 +1108,7 @@ templates:
         document. Evidence-grounded, section-by-section drafting with
         user review. Use for strategic direction documents.
       persona: software-architect
-      protocols: [anti-hallucination, self-verification]
+      protocols: [anti-hallucination, self-verification, readability-gate]
       format: north-star-document
 
     - name: author-design-doc
@@ -1116,7 +1116,7 @@ templates:
       description: >
         Generate a design document that addresses a requirements document.
       persona: software-architect
-      protocols: [anti-hallucination, self-verification]
+      protocols: [anti-hallucination, self-verification, readability-gate]
       format: design-doc
       pipeline_position: 2
       requires: requirements-document
@@ -1126,7 +1126,7 @@ templates:
       description: >
         Generate a validation plan covering all requirements.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification]
+      protocols: [anti-hallucination, self-verification, readability-gate]
       format: validation-plan
       pipeline_position: 3
       requires: requirements-document
@@ -1698,7 +1698,7 @@ templates:
         prioritized plan for the next session. Interactive workflow
         that gathers state and produces a handoff file.
       persona: systems-engineer
-      protocols: [anti-hallucination, self-verification, session-handoff]
+      protocols: [anti-hallucination, self-verification, readability-gate, session-handoff]
 
   contribution:
     - name: extend-library
@@ -1786,7 +1786,7 @@ templates:
         Generate structured release notes from commits, PRs, and issues
         between two versions. Changelog, breaking changes, upgrade instructions.
       persona: devops-engineer
-      protocols: [anti-hallucination, self-verification]
+      protocols: [anti-hallucination, self-verification, readability-gate]
       format: release-notes
 
     - name: review-infrastructure
