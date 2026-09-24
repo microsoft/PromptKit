@@ -57,6 +57,34 @@ team-wide deployment via org-level extension install.
 selection and parameter gathering happen through Copilot Chat's
 conversational interface.
 
+## Copilot CLI Native Integration
+
+> **Status: Research complete.** See
+> [`copilot-cli-integration-research.md`](./copilot-cli-integration-research.md)
+> for the full analysis.
+
+A complementary integration path: embed PromptKit directly into
+**GitHub Copilot CLI** using its plugin, skill, agent, and MCP server
+extension points — making PromptKit available as a native capability
+within terminal-based workflows.
+
+```sh
+/promptkit investigate this bug — segfault in packet_handler.c
+```
+
+The research evaluates seven integration strategies (skills, custom
+agents, MCP server, plugins, hooks, LSP configs, and custom
+instructions) and recommends a **plugin-first approach** bundling a
+skill for invocation, an MCP server for deterministic assembly, and
+agents for interactive templates.
+
+**Compared to a Copilot Extension**, CLI integration works within
+existing local sessions (no context switching), leverages local code
+intelligence (LSP), supports lifecycle hooks for guardrails, and
+distributes via `copilot plugin install`. However, it only targets
+terminal users, whereas a Copilot Extension reaches Copilot Chat
+across web, IDE, and CLI surfaces.
+
 ## VS Code Extension
 
 > **Status: Not yet started.** Exploratory idea.
